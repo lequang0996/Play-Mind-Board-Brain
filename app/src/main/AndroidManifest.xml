@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- Mã định danh quảng cáo cho AdMob (khai báo trong Data safety trên Play Console) -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+
+    <!-- Google Nearby Connections: quyền theo từng phiên bản Android -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:minSdkVersion="29" android:maxSdkVersion="31" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" android:minSdkVersion="31" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" android:minSdkVersion="31" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:minSdkVersion="31" />
+    <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES" android:usesPermissionFlags="neverForLocation" android:minSdkVersion="32" />
+
+    <uses-feature android:name="android.hardware.bluetooth" android:required="false" />
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="false" />
+    <uses-feature android:name="android.hardware.wifi" android:required="false" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+
+    <application
+        android:name=".PlayMindApp"
+        android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:theme="@style/Theme.PlayMind"
+        android:allowBackup="false"
+        android:fullBackupContent="@xml/backup_rules"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:localeConfig="@xml/locales_config"
+        android:supportsRtl="true"
+        android:usesCleartextTraffic="false">
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="${admobAppId}" />
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="keyboardHidden|uiMode">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Lưu ngôn ngữ đã chọn cho Android 12 trở xuống (AppCompat per-app language) -->
+        <service
+            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+            android:enabled="false"
+            android:exported="false">
+            <meta-data android:name="autoStoreLocales" android:value="true" />
+        </service>
+    </application>
+</manifest>

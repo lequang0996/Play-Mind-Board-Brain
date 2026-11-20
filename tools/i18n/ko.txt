@@ -1,0 +1,127 @@
+about|앱 정보
+about_text|Play Mind는 보드 게임과 두뇌 게임 모음입니다. 광고는 Google AdMob이 표시합니다. 다이아몬드는 가상 아이템이며 현금 가치가 없습니다.
+accept_rematch|재대결 수락
+ad_unavailable|지금은 표시할 광고가 없습니다. 나중에 다시 시도해 주세요.
+back|뒤로
+back_to_lobby|메뉴로 돌아가기
+cancel|취소
+check|장군!
+check_in|출석 체크
+check_in_done|출석 완료!
+checked_in|오늘 출석 완료
+choose_side|진영 선택
+close|닫기
+coming_soon|출시 예정
+coming_soon_desc|새로운 게임이 준비 중입니다.
+computer|컴퓨터
+connect|연결
+connecting|연결 중…
+copy|복사
+costs_one|게임당 다이아몬드 1개
+create_reply|응답 코드 만들기
+create_room|방 만들기
+empty|
+enter_invite|초대 코드 입력
+free_today|오늘 무료 플레이 가능
+game_caro|오목 (카로)
+game_caro_desc|다섯 개를 이으면 승리합니다. 양쪽 끝이 막히면 인정되지 않습니다.
+game_chess|체스
+game_chess_desc|왕과 전략의 고전 게임.
+game_xiangqi|샹치 (중국 장기)
+game_xiangqi_desc|장수와 포, 그리고 건너야 할 강.
+guide|가이드
+guide_app_title|Play Mind 사용법
+guide_app|• 홈: 주제 카드나 아래의 게임을 선택하세요. ‘더 보기’를 누르면 해당 주제의 모든 게임이 보입니다.\n• 다이아몬드: 하루 한 번 출석하면 +1. 게임마다 하루 1회 무료이며, 이후에는 게임당 다이아몬드 1개가 듭니다. 승리하면 +1입니다.\n• 연승: 같은 게임에서 5연승하면 +2, 10연승하면 +3.\n• 충성 보너스: 다이아몬드가 10개를 넘고 연속 출석이 7일을 넘으면 매일 출석 시 +2입니다.\n• 컴퓨터와 대결, 가까운 친구와 대결(인터넷 불필요), 또는 방 코드/QR을 교환해 온라인으로 대결할 수 있습니다.\n• 방: 한동안 아무도 입장하지 않으면 상대가 자동으로 추가됩니다. 방의 상대는 컴퓨터가 조종할 수 있습니다.\n• 언어, 화면 테마, 닉네임은 설정에서 바꿀 수 있습니다.
+guide_chess|목표: 상대 킹을 체크메이트하는 것.\n• 폰은 앞으로 한 칸 가고 대각선으로 잡습니다. 나이트는 L자로 점프하고, 비숍은 대각선, 룩은 직선, 퀸은 둘 다, 킹은 한 칸 움직입니다.\n• 특수 이동: 캐슬링, 앙파상, 마지막 줄에서의 프로모션.\n• 말을 누른 뒤 강조된 칸을 누르세요. 스테일메이트, 동일 국면 반복, 50수 규칙, 기물 부족이면 무승부입니다.
+guide_xiangqi|목표: 상대 장수를 외통수로 몰기. 홍(빨강)이 먼저 둡니다.\n• 장수와 사(士)는 궁 안에서만 움직입니다. 두 장수는 막힘없는 같은 줄에서 마주 볼 수 없습니다.\n• 상(象)은 대각선으로 두 칸 가며 강을 건널 수 없고 중간이 막히면 움직일 수 없습니다.\n• 마(馬)는 L자로 움직이지만 인접한 말이 막으면 못 갑니다. 차(車)는 직선으로 갑니다.\n• 포(炮)는 직선으로 가고 정확히 한 개의 말을 뛰어넘어 잡습니다. 졸(兵)은 앞으로 가며 강을 건넌 뒤에는 옆으로도 갑니다.\n• 둘 수 있는 수가 없으면 패배합니다. 이 앱에서는 같은 국면이 3번 반복되면 무승부입니다.
+guide_caro|목표: 가로, 세로, 대각선으로 자신의 돌 다섯 개 이상을 잇기. 흑이 먼저 둡니다.\n• 줄의 양쪽 끝이 상대 돌이나 판 가장자리로 막혀 있으면 인정되지 않습니다.\n• 빈 교차점을 눌러 돌을 놓으세요. 상대의 열린 3, 4를 막으세요!
+how_to_play|게임 방법
+how_to_use|사용 가이드
+internet|인터넷
+internet_note|인터넷 대결은 무료 STUN 서버를 사용합니다. 일부 네트워크는 직접 연결을 막습니다. 실패하면 근거리 대결이나 컴퓨터 대결을 이용해 보세요.
+invite|친구 초대
+join_net_hint|방장에게 초대 코드를 받아 붙여넣거나 스캔하세요.
+join_room|방 입장
+kick|상대 내보내기
+language|언어
+leave|나가기
+leave_confirm|지금 나가면 이 게임에서 패배합니다.
+leave_game|게임에서 나갈까요?
+nearby|근거리 (인터넷 불필요)
+nearby_host_hint|친구에게 같은 게임에서 ‘방 입장’을 열어 달라고 하세요. 내 방은 가까운 기기에 표시됩니다.
+nearby_unavailable|이 기기에서는 근거리 대결을 사용할 수 없습니다. Bluetooth와 Wi-Fi를 확인하고 다시 시도하세요.
+nickname|닉네임
+notice_bad_code|유효하지 않은 코드입니다. 확인 후 다시 시도하세요.
+notice_conn_failed|연결할 수 없습니다. 네트워크를 확인하고 다시 시도하세요.
+notice_conn_lost|연결이 끊어져 게임이 종료되었습니다.
+notice_host_left|방장이 방을 나갔습니다.
+notice_kicked|방장이 회원님을 내보냈습니다.
+notice_not_enough|플레이하려면 다이아몬드 1개가 필요합니다. 매일 출석하거나, 승리하거나, 광고를 시청하면 얻을 수 있습니다.
+notice_opp_left|상대가 방을 나갔습니다.
+notice_permission|근처 플레이어를 찾으려면 권한이 필요합니다. 앱 설정에서 허용할 수 있습니다.
+notice_title|알림
+notice_unverified|상대와 결과를 확인하지 못해 보상이 지급되지 않았습니다.
+ok|확인
+paste|붙여넣기
+paste_invite|초대 코드 붙여넣기
+paste_reply|친구의 응답 코드 붙여넣기
+play_again|다시 하기
+play_friends|친구와 플레이
+play_now|지금 플레이
+privacy_options|개인정보 옵션
+privacy_policy|개인정보 처리방침
+random|무작위
+reason_checkmate|체크메이트
+reason_fifty|무승부: 오랫동안 진전 없음
+reason_five|다섯 개 연결
+reason_full|판이 가득 찼습니다
+reason_leave|플레이어가 게임을 나갔습니다
+reason_material|무승부: 이기기에 기물 부족
+reason_nomoves|둘 수 있는 수 없음
+reason_repetition|반복으로 무승부
+reason_resign|플레이어가 기권했습니다
+reason_stalemate|스테일메이트: 무승부
+reply_hint|응답 코드를 방장에게 보내세요. 방장이 입력하면 연결됩니다.
+resign|기권
+resign_confirm|기권할까요? 이 게임에서 패배합니다.
+restart|재시작
+result_draw|무승부
+result_lose|패배
+result_win|승리!
+rewards_paused|보상 일시 중지: 이 기기가 보안 검사를 통과하지 못했습니다.
+room|방
+scan_qr|QR 스캔
+searching_rooms|근처 방을 찾는 중…
+see_less|접기
+see_more|더 보기
+settings|설정
+share|공유
+show_reply|내 응답 코드 보기
+side_black|흑
+side_red|홍
+side_white|백
+start|시작
+start_game|게임 시작
+stone_black|흑돌
+stone_white|백돌
+their_turn|상대 차례
+theme|화면 테마
+theme_dark|다크
+theme_light|라이트
+theme_system|시스템
+thinking|생각 중…
+topic_math|계산
+topic_memory|기억
+topic_mind|지력
+topic_puzzle|퍼즐
+update_ready|업데이트를 다운로드했습니다.
+verifying|상대와 결과를 확인하는 중…
+vs_computer|컴퓨터와 대결
+waiting_host_start|연결되었습니다. 방장이 시작하기를 기다리는 중…
+waiting_opponent|상대를 기다리는 중…
+waiting_rematch|상대의 응답을 기다리는 중…
+watch_ad|광고 보기 (+다이아몬드 1개)
+you|나
+your_invite_code|내 초대 코드
+your_reply_code|내 응답 코드
+your_turn|내 차례

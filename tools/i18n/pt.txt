@@ -1,0 +1,127 @@
+about|Sobre
+about_text|O Play Mind é uma coleção de jogos de tabuleiro e de raciocínio. Os anúncios são exibidos pelo Google AdMob. Os diamantes são virtuais e não têm valor em dinheiro.
+accept_rematch|Aceitar revanche
+ad_unavailable|Nenhum anúncio disponível agora. Tente novamente mais tarde.
+back|Voltar
+back_to_lobby|Voltar ao menu
+cancel|Cancelar
+check|Xeque!
+check_in|Fazer check-in
+check_in_done|Check-in feito!
+checked_in|Check-in de hoje feito
+choose_side|Escolha seu lado
+close|Fechar
+coming_soon|Em breve
+coming_soon_desc|Novos jogos estão a caminho.
+computer|Computador
+connect|Conectar
+connecting|Conectando…
+copy|Copiar
+costs_one|1 diamante por partida
+create_reply|Criar código de resposta
+create_room|Criar sala
+empty|
+enter_invite|Inserir código de convite
+free_today|Partida grátis disponível hoje
+game_caro|Gomoku (Caro)
+game_caro_desc|Cinco em linha vence. Se as duas pontas estiverem bloqueadas, não vale.
+game_chess|Xadrez
+game_chess_desc|O clássico jogo de reis e estratégia.
+game_xiangqi|Xiangqi (xadrez chinês)
+game_xiangqi_desc|Generais, canhões e um rio para atravessar.
+guide|Guia
+guide_app_title|Como usar o Play Mind
+guide_app|• Início: escolha um cartão de tema ou qualquer jogo abaixo. Toque em Ver mais para listar todos os jogos de um tema.\n• Diamantes: faça check-in uma vez por dia para +1 diamante. Cada jogo dá 1 partida grátis por dia; depois, cada partida custa 1 diamante. Vencer dá +1 diamante.\n• Sequências: 5 vitórias seguidas em um jogo dão +2 diamantes e 10 seguidas dão +3.\n• Bônus de fidelidade: com mais de 10 diamantes e uma sequência de check-in acima de 7 dias, o check-in diário dá +2.\n• Jogue contra o computador, com um amigo por perto (sem internet) ou online trocando um código de sala ou QR.\n• Salas: se ninguém entrar na sua sala, um adversário é adicionado automaticamente. Os adversários nas salas podem ser controlados pelo computador.\n• Mude o idioma, a aparência e o apelido em Configurações.
+guide_chess|Objetivo: dar xeque-mate no rei adversário.\n• Peões avançam e capturam na diagonal. Cavalos saltam em L. Bispos deslizam na diagonal, torres em linha reta, a dama de ambos os modos e o rei anda uma casa.\n• Jogadas especiais: roque, en passant e promoção na última fileira.\n• Toque em uma peça e depois em uma casa destacada. O jogo empata por afogamento, repetição, regra dos 50 lances ou material insuficiente.
+guide_xiangqi|Objetivo: dar xeque-mate no general adversário. O vermelho começa.\n• O general e os conselheiros ficam dentro do palácio. Os dois generais nunca podem se encarar em uma coluna livre.\n• Elefantes andam duas casas na diagonal, não atravessam o rio e podem ser bloqueados no ponto médio.\n• Cavalos andam em L, mas uma peça adjacente os bloqueia. Carros deslizam em linha reta.\n• Canhões deslizam em linha reta e capturam saltando exatamente uma peça. Soldados avançam e, depois de atravessar o rio, também andam de lado.\n• Quem não tem lance legal perde. Neste app, repetir uma posição três vezes é empate.
+guide_caro|Objetivo: formar cinco ou mais pedras suas em linha, na horizontal, vertical ou diagonal. As pretas começam.\n• Se as duas pontas da sua linha estiverem bloqueadas por pedras adversárias ou pela borda, não vale.\n• Toque em uma interseção vazia para colocar uma pedra. Bloqueie as trincas e quadras abertas do adversário!
+how_to_play|Como jogar
+how_to_use|Guia de uso
+internet|Pela internet
+internet_note|O jogo pela internet usa um servidor STUN gratuito. Algumas redes bloqueiam conexões diretas. Se falhar, tente o jogo por proximidade ou jogue contra o computador.
+invite|Convidar um amigo
+join_net_hint|Peça ao anfitrião o código de convite e cole ou escaneie.
+join_room|Entrar na sala
+kick|Remover adversário
+language|Idioma
+leave|Sair
+leave_confirm|Se sair agora, você perde esta partida.
+leave_game|Sair da partida?
+nearby|Por perto (sem internet)
+nearby_host_hint|Peça ao seu amigo para abrir Entrar na sala no mesmo jogo. Sua sala fica visível para dispositivos por perto.
+nearby_unavailable|O jogo por proximidade não está disponível neste dispositivo. Verifique o Bluetooth e o Wi-Fi e tente novamente.
+nickname|Apelido
+notice_bad_code|Esse código não é válido. Confira e tente novamente.
+notice_conn_failed|Não foi possível conectar. Verifique sua rede e tente novamente.
+notice_conn_lost|A conexão foi perdida. A partida terminou.
+notice_host_left|O anfitrião saiu da sala.
+notice_kicked|O anfitrião removeu você da sala.
+notice_not_enough|Você precisa de 1 diamante para jogar. Ganhe um com o check-in diário, vencendo partidas ou assistindo a um anúncio.
+notice_opp_left|Seu adversário saiu da sala.
+notice_permission|É necessária permissão para encontrar jogadores por perto. Você pode permitir nas configurações do app.
+notice_title|Aviso
+notice_unverified|Não foi possível verificar o resultado com seu adversário, então nenhuma recompensa foi dada.
+ok|OK
+paste|Colar
+paste_invite|Cole o código de convite
+paste_reply|Cole o código de resposta do seu amigo
+play_again|Jogar novamente
+play_friends|Jogar com amigos
+play_now|Jogar agora
+privacy_options|Opções de privacidade
+privacy_policy|Política de privacidade
+random|Aleatório
+reason_checkmate|Xeque-mate
+reason_fifty|Empate: muito tempo sem progresso
+reason_five|Cinco em linha
+reason_full|O tabuleiro está cheio
+reason_leave|Um jogador saiu da partida
+reason_material|Empate: material insuficiente para vencer
+reason_nomoves|Sem lances legais
+reason_repetition|Empate por repetição
+reason_resign|Um jogador desistiu
+reason_stalemate|Afogamento: empate
+reply_hint|Envie seu código de resposta ao anfitrião. A partida conecta quando ele o inserir.
+resign|Desistir
+resign_confirm|Desistir da partida? Você perderá.
+restart|Reiniciar
+result_draw|Empate
+result_lose|Você perdeu
+result_win|Você venceu!
+rewards_paused|Recompensas pausadas: este dispositivo não passou em uma verificação de segurança.
+room|Sala
+scan_qr|Escanear QR
+searching_rooms|Procurando salas por perto…
+see_less|Ver menos
+see_more|Ver mais
+settings|Configurações
+share|Compartilhar
+show_reply|Mostrar meu código de resposta
+side_black|Pretas
+side_red|Vermelhas
+side_white|Brancas
+start|Iniciar
+start_game|Iniciar partida
+stone_black|Pedras pretas
+stone_white|Pedras brancas
+their_turn|Vez do adversário
+theme|Aparência
+theme_dark|Escuro
+theme_light|Claro
+theme_system|Sistema
+thinking|Pensando…
+topic_math|Cálculo
+topic_memory|Memória
+topic_mind|Intelecto
+topic_puzzle|Quebra-cabeças
+update_ready|Uma atualização foi baixada.
+verifying|Verificando o resultado com seu adversário…
+vs_computer|Jogar contra o computador
+waiting_host_start|Conectado. Aguardando o anfitrião iniciar…
+waiting_opponent|Aguardando um adversário…
+waiting_rematch|Aguardando seu adversário…
+watch_ad|Assistir a um anúncio (+1 diamante)
+you|Você
+your_invite_code|Seu código de convite
+your_reply_code|Seu código de resposta
+your_turn|Sua vez

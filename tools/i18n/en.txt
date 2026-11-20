@@ -1,0 +1,127 @@
+about|About
+about_text|Play Mind is a collection of board and brain games. Ads are shown by Google AdMob. Diamonds are virtual and have no cash value.
+accept_rematch|Accept rematch
+ad_unavailable|No ad is available right now. Please try again later.
+back|Back
+back_to_lobby|Back to menu
+cancel|Cancel
+check|Check!
+check_in|Check in
+check_in_done|Checked in!
+checked_in|Checked in today
+choose_side|Choose your side
+close|Close
+coming_soon|Coming soon
+coming_soon_desc|New games are on the way.
+computer|Computer
+connect|Connect
+connecting|Connecting…
+copy|Copy
+costs_one|1 diamond per game
+create_reply|Create reply code
+create_room|Create room
+empty|
+enter_invite|Enter invitation code
+free_today|Free game available today
+game_caro|Gomoku (Caro)
+game_caro_desc|Five in a row wins. If both ends are blocked, it doesn't count.
+game_chess|Chess
+game_chess_desc|The classic game of kings and strategy.
+game_xiangqi|Xiangqi (Chinese Chess)
+game_xiangqi_desc|Generals, cannons and a river to cross.
+guide|Guide
+guide_app_title|Using Play Mind
+guide_app|• Home: pick a topic card or any game below it. Tap See more to list every game in a topic.\n• Diamonds: check in once a day for +1 diamond. Each game gives you 1 free play per day; after that every game costs 1 diamond. Winning gives +1 diamond.\n• Win streaks: 5 wins in a row in one game give +2 diamonds, 10 in a row give +3.\n• Loyalty bonus: with more than 10 diamonds and a check-in streak above 7 days, your daily check-in gives +2.\n• Play against the computer, with a friend nearby (no internet), or online by exchanging a room code or QR.\n• Rooms: if nobody joins your room, an opponent is added automatically. Opponents in rooms may be computer-controlled.\n• Change language, appearance and nickname in Settings.
+guide_chess|Goal: checkmate the enemy king.\n• Pawns step forward and capture diagonally. Knights jump in an L. Bishops slide diagonally, rooks slide straight, queens do both, kings step one square.\n• Special moves: castling, en passant and promotion on the last rank.\n• Tap a piece, then a highlighted square. A game is drawn by stalemate, repetition, the 50-move rule or too few pieces.
+guide_xiangqi|Goal: checkmate the enemy general. Red moves first.\n• The general and advisors stay inside the palace. The two generals may never face each other on an open file.\n• Elephants move two points diagonally, cannot cross the river and can be blocked at the midpoint.\n• Horses move like an L but are blocked by an adjacent piece. Chariots slide straight.\n• Cannons slide straight and capture by jumping over exactly one piece. Soldiers step forward, and sideways after crossing the river.\n• A player with no legal move loses. Repeating a position three times is a draw in this app.
+guide_caro|Goal: make five or more of your stones in a row, across, down or diagonally. Black moves first.\n• If both ends of your line are blocked by enemy stones or the edge, it does not count.\n• Tap an empty intersection to place a stone. Block your opponent's open threes and fours!
+how_to_play|How to play
+how_to_use|User guide
+internet|Over the internet
+internet_note|Internet play uses a free STUN server. A few networks block direct connections. If it fails, try Nearby play or play against the computer.
+invite|Invite a friend
+join_net_hint|Ask the host for their invitation code, then paste or scan it.
+join_room|Join room
+kick|Remove opponent
+language|Language
+leave|Leave
+leave_confirm|If you leave now, you lose this game.
+leave_game|Leave game?
+nearby|Nearby (no internet needed)
+nearby_host_hint|Ask your friend to open Join room for the same game. Your room is visible to devices nearby.
+nearby_unavailable|Nearby play is unavailable on this device. Check Bluetooth and Wi-Fi, then try again.
+nickname|Nickname
+notice_bad_code|That code isn't valid. Check it and try again.
+notice_conn_failed|Couldn't connect. Check your network and try again.
+notice_conn_lost|The connection was lost. The game ended.
+notice_host_left|The host left the room.
+notice_kicked|The host removed you from the room.
+notice_not_enough|You need 1 diamond to play. Check in daily, win games or watch an ad to earn one.
+notice_opp_left|Your opponent left the room.
+notice_permission|Permission is needed to find players nearby. You can allow it in the app settings.
+notice_title|Notice
+notice_unverified|The result couldn't be verified with your opponent, so no reward was given.
+ok|OK
+paste|Paste
+paste_invite|Paste the invitation code
+paste_reply|Paste your friend's reply code
+play_again|Play again
+play_friends|Play with friends
+play_now|Play now
+privacy_options|Privacy options
+privacy_policy|Privacy policy
+random|Random
+reason_checkmate|Checkmate
+reason_fifty|Draw: no progress for too long
+reason_five|Five in a row
+reason_full|The board is full
+reason_leave|A player left the game
+reason_material|Draw: not enough pieces to win
+reason_nomoves|No legal moves
+reason_repetition|Draw by repetition
+reason_resign|A player resigned
+reason_stalemate|Stalemate: draw
+reply_hint|Send your reply code to the host. The game connects once they enter it.
+resign|Resign
+resign_confirm|Resign this game? You will lose.
+restart|Restart
+result_draw|Draw
+result_lose|You lost
+result_win|You won!
+rewards_paused|Rewards are paused: this device failed a security check.
+room|Room
+scan_qr|Scan QR
+searching_rooms|Looking for nearby rooms…
+see_less|Show less
+see_more|See more
+settings|Settings
+share|Share
+show_reply|Show my reply code
+side_black|Black
+side_red|Red
+side_white|White
+start|Start
+start_game|Start game
+stone_black|Black stones
+stone_white|White stones
+their_turn|Their turn
+theme|Appearance
+theme_dark|Dark
+theme_light|Light
+theme_system|System
+thinking|Thinking…
+topic_math|Calculation
+topic_memory|Memory
+topic_mind|Intellect
+topic_puzzle|Puzzle
+update_ready|An update has been downloaded.
+verifying|Verifying the result with your opponent…
+vs_computer|Play against the computer
+waiting_host_start|Connected. Waiting for the host to start…
+waiting_opponent|Waiting for an opponent…
+waiting_rematch|Waiting for your opponent…
+watch_ad|Watch an ad (+1 diamond)
+you|You
+your_invite_code|Your invitation code
+your_reply_code|Your reply code
+your_turn|Your turn

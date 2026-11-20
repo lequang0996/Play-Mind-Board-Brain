@@ -1,0 +1,127 @@
+about|このアプリについて
+about_text|Play Mind はボードゲームと頭脳ゲームのコレクションです。広告は Google AdMob が表示します。ダイヤは仮想アイテムで、現金価値はありません。
+accept_rematch|再戦を受ける
+ad_unavailable|現在表示できる広告がありません。後でもう一度お試しください。
+back|戻る
+back_to_lobby|メニューに戻る
+cancel|キャンセル
+check|王手！
+check_in|チェックイン
+check_in_done|チェックインしました！
+checked_in|本日チェックイン済み
+choose_side|手番を選ぶ
+close|閉じる
+coming_soon|近日公開
+coming_soon_desc|新しいゲームを準備中です。
+computer|コンピュータ
+connect|接続
+connecting|接続中…
+copy|コピー
+costs_one|1 ゲームにつきダイヤ 1 個
+create_reply|返信コードを作成
+create_room|ルームを作成
+empty|
+enter_invite|招待コードを入力
+free_today|本日の無料プレイあり
+game_caro|五目並べ（カロ）
+game_caro_desc|五つ並べたら勝ち。両端が塞がれていると無効です。
+game_chess|チェス
+game_chess_desc|王と戦略の定番ゲーム。
+game_xiangqi|シャンチー（中国将棋）
+game_xiangqi_desc|将、砲、そして渡るべき川。
+guide|ガイド
+guide_app_title|Play Mind の使い方
+guide_app|• ホーム：テーマのカードか下のゲームを選びます。「もっと見る」でそのテーマの全ゲームを表示します。\n• ダイヤ：1 日 1 回のチェックインで +1。各ゲームは 1 日 1 回無料で、以降は 1 ゲームにつきダイヤ 1 個。勝つと +1 です。\n• 連勝：同じゲームで 5 連勝すると +2、10 連勝すると +3。\n• ロイヤルティボーナス：ダイヤが 10 個を超え、連続チェックインが 7 日を超えると、毎日のチェックインが +2 になります。\n• コンピュータと対戦、近くの友だちと対戦（通信不要）、またはルームコード／QR を交換してオンライン対戦できます。\n• ルーム：しばらく誰も参加しないと対戦相手が自動で追加されます。ルームの相手はコンピュータが操作している場合があります。\n• 言語・外観・ニックネームは設定で変更できます。
+guide_chess|目的：相手のキングをチェックメイトすること。\n• ポーンは前に 1 マス進み、斜めに取ります。ナイトは L 字に跳び、ビショップは斜め、ルークは縦横、クイーンは両方、キングは 1 マス動きます。\n• 特殊な動き：キャスリング、アンパッサン、最終段でのプロモーション。\n• 駒をタップし、ハイライトされたマスをタップして動かします。ステイルメイト、同一局面の繰り返し、50 手ルール、駒不足で引き分けです。
+guide_xiangqi|目的：相手の将（帥）を詰ませること。赤が先手です。\n• 将と士は九宮の中だけを動きます。両方の将が遮るもののない同じ筋で向かい合ってはいけません。\n• 象は斜めに 2 つ進み、川を渡れず、中間点を塞がれると動けません。\n• 馬は L 字に動きますが、隣の駒に塞がれます。車はまっすぐ進みます。\n• 砲はまっすぐ進み、ちょうど 1 つの駒を飛び越えて取ります。兵は前に進み、川を渡ると横にも進めます。\n• 合法手がない側が負けです。このアプリでは同一局面が 3 回で引き分けです。
+guide_caro|目的：縦・横・斜めに自分の石を 5 つ以上並べること。黒が先手です。\n• 並びの両端が相手の石または盤の端で塞がれていると無効です。\n• 空いている交点をタップして石を置きます。相手の三や四を止めましょう！
+how_to_play|遊び方
+how_to_use|使い方ガイド
+internet|インターネット
+internet_note|オンライン対戦は無料の STUN サーバーを使います。直接接続を遮断するネットワークもあります。失敗したら近くで対戦かコンピュータ戦をお試しください。
+invite|友だちを招待
+join_net_hint|ホストから招待コードをもらい、貼り付けるかスキャンしてください。
+join_room|ルームに参加
+kick|相手を退出させる
+language|言語
+leave|退出
+leave_confirm|今退出すると、このゲームは負けになります。
+leave_game|ゲームを退出しますか？
+nearby|近くで対戦（通信不要）
+nearby_host_hint|友だちに同じゲームで「ルームに参加」を開いてもらってください。近くの端末にルームが表示されます。
+nearby_unavailable|この端末では近くで対戦を利用できません。Bluetooth と Wi-Fi を確認して再試行してください。
+nickname|ニックネーム
+notice_bad_code|このコードは無効です。確認してもう一度お試しください。
+notice_conn_failed|接続できませんでした。ネットワークを確認して再試行してください。
+notice_conn_lost|接続が切れました。ゲームは終了しました。
+notice_host_left|ホストがルームを退出しました。
+notice_kicked|ホストにルームから退出させられました。
+notice_not_enough|プレイにはダイヤが 1 個必要です。毎日のチェックイン、勝利、広告視聴で獲得できます。
+notice_opp_left|相手がルームを退出しました。
+notice_permission|近くのプレイヤーを探すには権限が必要です。アプリの設定で許可できます。
+notice_title|お知らせ
+notice_unverified|相手と結果を照合できなかったため、報酬は付与されませんでした。
+ok|OK
+paste|貼り付け
+paste_invite|招待コードを貼り付け
+paste_reply|友だちの返信コードを貼り付け
+play_again|もう一度遊ぶ
+play_friends|友だちと遊ぶ
+play_now|今すぐ遊ぶ
+privacy_options|プライバシー オプション
+privacy_policy|プライバシーポリシー
+random|ランダム
+reason_checkmate|チェックメイト
+reason_fifty|引き分け：長く進展なし
+reason_five|五つ並び
+reason_full|盤面が埋まりました
+reason_leave|プレイヤーが退出しました
+reason_material|引き分け：勝てる駒が不足
+reason_nomoves|合法手なし
+reason_repetition|同一局面の繰り返しで引き分け
+reason_resign|プレイヤーが投了しました
+reason_stalemate|ステイルメイト：引き分け
+reply_hint|返信コードをホストに送ってください。入力されると接続されます。
+resign|投了
+resign_confirm|投了しますか？負けになります。
+restart|再起動
+result_draw|引き分け
+result_lose|負けました
+result_win|勝利！
+rewards_paused|報酬は一時停止中：この端末はセキュリティ チェックに合格しませんでした。
+room|ルーム
+scan_qr|QR をスキャン
+searching_rooms|近くのルームを探しています…
+see_less|閉じる
+see_more|もっと見る
+settings|設定
+share|共有
+show_reply|自分の返信コードを表示
+side_black|黒
+side_red|赤
+side_white|白
+start|開始
+start_game|ゲーム開始
+stone_black|黒石
+stone_white|白石
+their_turn|相手の番
+theme|外観
+theme_dark|ダーク
+theme_light|ライト
+theme_system|システム
+thinking|考え中…
+topic_math|計算
+topic_memory|記憶
+topic_mind|知力
+topic_puzzle|パズル
+update_ready|アップデートをダウンロードしました。
+verifying|相手と結果を照合しています…
+vs_computer|コンピュータと対戦
+waiting_host_start|接続しました。ホストの開始を待っています…
+waiting_opponent|対戦相手を待っています…
+waiting_rematch|相手の返事を待っています…
+watch_ad|広告を見る（ダイヤ +1）
+you|あなた
+your_invite_code|あなたの招待コード
+your_reply_code|あなたの返信コード
+your_turn|あなたの番

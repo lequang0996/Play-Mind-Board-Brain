@@ -1,0 +1,127 @@
+about|Giới thiệu
+about_text|Play Mind là bộ sưu tập game bàn cờ và trí tuệ. Quảng cáo do Google AdMob hiển thị. Kim cương là vật phẩm ảo, không có giá trị quy đổi thành tiền.
+accept_rematch|Đồng ý đấu lại
+ad_unavailable|Hiện chưa có quảng cáo khả dụng. Vui lòng thử lại sau.
+back|Quay lại
+back_to_lobby|Về menu
+cancel|Hủy
+check|Chiếu!
+check_in|Điểm danh
+check_in_done|Điểm danh thành công!
+checked_in|Hôm nay đã điểm danh
+choose_side|Chọn bên của bạn
+close|Đóng
+coming_soon|Sắp ra mắt
+coming_soon_desc|Các game mới đang trên đường tới.
+computer|Máy
+connect|Kết nối
+connecting|Đang kết nối…
+copy|Sao chép
+costs_one|1 kim cương mỗi ván
+create_reply|Tạo mã trả lời
+create_room|Tạo phòng
+empty|
+enter_invite|Nhập mã mời
+free_today|Hôm nay còn 1 ván miễn phí
+game_caro|Cờ caro (Gomoku)
+game_caro_desc|Xếp đủ năm quân liên tiếp để thắng. Bị chặn cả hai đầu thì không tính.
+game_chess|Cờ vua
+game_chess_desc|Trò chơi kinh điển của các vị vua và chiến thuật.
+game_xiangqi|Cờ tướng
+game_xiangqi_desc|Tướng, pháo và con sông phải vượt qua.
+guide|Hướng dẫn
+guide_app_title|Cách dùng Play Mind
+guide_app|• Trang chủ: chọn thẻ chủ đề hoặc game bên dưới. Bấm Xem thêm để hiện hết game của một chủ đề.\n• Kim cương: điểm danh mỗi ngày +1 kim cương. Mỗi game được chơi miễn phí 1 ván/ngày, sau đó mỗi ván tốn 1 kim cương. Thắng được +1 kim cương.\n• Chuỗi thắng: thắng liên tiếp 5 ván ở một game được +2 kim cương, 10 ván được +3.\n• Thưởng gắn bó: có hơn 10 kim cương và điểm danh liên tục hơn 7 ngày thì mỗi lần điểm danh được +2.\n• Chơi với máy, chơi với bạn ở gần (không cần internet) hoặc chơi online bằng cách trao đổi mã phòng/QR.\n• Phòng: nếu không ai vào phòng, hệ thống tự thêm đối thủ. Đối thủ trong phòng có thể do máy điều khiển.\n• Đổi ngôn ngữ, giao diện và biệt danh trong Cài đặt.
+guide_chess|Mục tiêu: chiếu hết vua đối phương.\n• Tốt đi thẳng một ô và ăn chéo. Mã nhảy hình chữ L. Tượng đi chéo, xe đi thẳng, hậu đi cả hai kiểu, vua đi một ô.\n• Nước đặc biệt: nhập thành, bắt tốt qua đường và phong cấp khi tốt tới hàng cuối.\n• Chạm vào quân rồi chạm ô được tô sáng để đi. Ván hòa khi hết nước đi (hòa cờ), lặp thế cờ, luật 50 nước hoặc không đủ quân để thắng.
+guide_xiangqi|Mục tiêu: chiếu bí tướng đối phương. Bên Đỏ đi trước.\n• Tướng và sĩ chỉ đi trong cung. Hai tướng không được đối mặt nhau trên cùng một cột khi không có quân cản.\n• Tượng đi chéo hai ô, không qua sông và bị cản nếu có quân ở giữa đường.\n• Mã đi hình chữ L nhưng bị cản nếu có quân sát chân. Xe đi thẳng.\n• Pháo đi thẳng và ăn quân bằng cách nhảy qua đúng một quân. Tốt đi tới, qua sông thì được đi ngang.\n• Bên hết nước đi hợp lệ là thua. Trong app này, lặp lại một thế cờ ba lần là hòa.
+guide_caro|Mục tiêu: xếp năm quân trở lên của bạn liên tiếp theo hàng ngang, dọc hoặc chéo. Quân đen đi trước.\n• Nếu cả hai đầu của hàng bị quân đối phương hoặc mép bàn chặn thì không tính thắng.\n• Chạm vào giao điểm trống để đặt quân. Hãy chặn các hàng ba, hàng bốn hở của đối phương!
+how_to_play|Cách chơi
+how_to_use|Hướng dẫn sử dụng
+internet|Qua internet
+internet_note|Chơi qua internet dùng máy chủ STUN miễn phí. Một số mạng chặn kết nối trực tiếp. Nếu thất bại, hãy thử chơi gần nhau hoặc chơi với máy.
+invite|Mời bạn bè
+join_net_hint|Hãy xin chủ phòng mã mời, rồi dán hoặc quét mã.
+join_room|Vào phòng
+kick|Mời đối thủ ra
+language|Ngôn ngữ
+leave|Rời đi
+leave_confirm|Nếu rời đi bây giờ, bạn sẽ thua ván này.
+leave_game|Rời khỏi ván?
+nearby|Gần nhau (không cần internet)
+nearby_host_hint|Nhờ bạn của bạn mở Vào phòng ở cùng game. Phòng của bạn hiển thị với các thiết bị ở gần.
+nearby_unavailable|Thiết bị này không dùng được chế độ chơi gần nhau. Hãy kiểm tra Bluetooth và Wi-Fi rồi thử lại.
+nickname|Biệt danh
+notice_bad_code|Mã không hợp lệ. Hãy kiểm tra rồi thử lại.
+notice_conn_failed|Không thể kết nối. Hãy kiểm tra mạng rồi thử lại.
+notice_conn_lost|Mất kết nối. Ván đấu đã kết thúc.
+notice_host_left|Chủ phòng đã rời phòng.
+notice_kicked|Chủ phòng đã mời bạn ra khỏi phòng.
+notice_not_enough|Bạn cần 1 kim cương để chơi. Hãy điểm danh mỗi ngày, thắng ván hoặc xem quảng cáo để nhận thêm.
+notice_opp_left|Đối thủ đã rời phòng.
+notice_permission|Cần cấp quyền để tìm người chơi ở gần. Bạn có thể cho phép trong phần cài đặt ứng dụng.
+notice_title|Thông báo
+notice_unverified|Không thể đối chiếu kết quả với đối thủ nên không có thưởng.
+ok|OK
+paste|Dán
+paste_invite|Dán mã mời
+paste_reply|Dán mã trả lời của bạn bè
+play_again|Chơi lại
+play_friends|Chơi với bạn bè
+play_now|Chơi ngay
+privacy_options|Tùy chọn quyền riêng tư
+privacy_policy|Chính sách quyền riêng tư
+random|Ngẫu nhiên
+reason_checkmate|Chiếu hết
+reason_fifty|Hòa: quá lâu không có tiến triển
+reason_five|Đủ năm quân liên tiếp
+reason_full|Bàn cờ đã đầy
+reason_leave|Một người chơi đã rời ván
+reason_material|Hòa: không đủ quân để thắng
+reason_nomoves|Hết nước đi hợp lệ
+reason_repetition|Hòa do lặp thế cờ
+reason_resign|Một người chơi đã đầu hàng
+reason_stalemate|Hòa cờ (hết nước đi)
+reply_hint|Gửi mã trả lời của bạn cho chủ phòng. Ván sẽ kết nối khi họ nhập mã.
+resign|Đầu hàng
+resign_confirm|Đầu hàng ván này? Bạn sẽ thua.
+restart|Khởi động lại
+result_draw|Hòa
+result_lose|Bạn đã thua
+result_win|Bạn đã thắng!
+rewards_paused|Tạm dừng thưởng: thiết bị này không qua được kiểm tra bảo mật.
+room|Phòng
+scan_qr|Quét QR
+searching_rooms|Đang tìm phòng ở gần…
+see_less|Thu gọn
+see_more|Xem thêm
+settings|Cài đặt
+share|Chia sẻ
+show_reply|Hiện mã trả lời của tôi
+side_black|Đen
+side_red|Đỏ
+side_white|Trắng
+start|Bắt đầu
+start_game|Bắt đầu ván
+stone_black|Quân đen
+stone_white|Quân trắng
+their_turn|Lượt đối thủ
+theme|Giao diện
+theme_dark|Tối
+theme_light|Sáng
+theme_system|Theo hệ thống
+thinking|Đang suy nghĩ…
+topic_math|Tính toán
+topic_memory|Ghi nhớ
+topic_mind|Trí tuệ
+topic_puzzle|Giải đố
+update_ready|Đã tải xong bản cập nhật.
+verifying|Đang đối chiếu kết quả với đối thủ…
+vs_computer|Chơi với máy
+waiting_host_start|Đã kết nối. Đang chờ chủ phòng bắt đầu…
+waiting_opponent|Đang chờ đối thủ…
+waiting_rematch|Đang chờ đối thủ…
+watch_ad|Xem quảng cáo (+1 kim cương)
+you|Bạn
+your_invite_code|Mã mời của bạn
+your_reply_code|Mã trả lời của bạn
+your_turn|Lượt của bạn

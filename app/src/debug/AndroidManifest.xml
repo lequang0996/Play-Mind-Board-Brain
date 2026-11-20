@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <!-- Chỉ có trong bản debug: dùng để chụp ảnh cửa hàng trong CI (tools/take_screenshots.sh) -->
+        <activity android:name="com.fws.playmind.ScreenshotActivity" android:exported="true" android:screenOrientation="portrait" />
+    </application>
+</manifest>
