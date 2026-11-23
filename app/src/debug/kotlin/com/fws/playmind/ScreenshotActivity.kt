@@ -34,8 +34,8 @@ class ScreenshotActivity : AppCompatActivity() {
         val dark = intent.getBooleanExtra("dark", false)
         intent.getStringExtra("lang")?.let { Langs.apply(it) }
         app.prefs.langChosen = true
-        app.prefs.setTheme(if (dark) 2 else 1)
-        app.prefs.setNickname("Alex")
+        app.prefs.updateTheme(if (dark) 2 else 1)
+        app.prefs.updateNickname("Alex")
         if (app.wallet.state.value.diamonds == 0) { app.wallet.addDiamonds(12); app.wallet.checkIn() }
 
         when (scene) {

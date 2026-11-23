@@ -74,12 +74,12 @@ fun SettingsScreen(app: PlayMindApp, onBack: () -> Unit, onGuide: () -> Unit) {
             SectionTitle(stringResource(R.string.theme))
             Segmented(
                 listOf(stringResource(R.string.theme_system), stringResource(R.string.theme_light), stringResource(R.string.theme_dark)),
-                app.prefs.theme, { app.prefs.setTheme(it) }, Modifier.fillMaxWidth(),
+                app.prefs.theme, { app.prefs.updateTheme(it) }, Modifier.fillMaxWidth(),
             )
 
             SectionTitle(stringResource(R.string.nickname))
             OutlinedTextField(
-                nick, { nick = it.take(16); app.prefs.setNickname(nick) }, Modifier.fillMaxWidth(), singleLine = true,
+                nick, { nick = it.take(16); app.prefs.updateNickname(nick) }, Modifier.fillMaxWidth(), singleLine = true,
                 shape = RoundedCornerShape(14.dp),
                 colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = pm.gold, unfocusedBorderColor = pm.outline, focusedTextColor = pm.ink, unfocusedTextColor = pm.ink, cursorColor = pm.gold),
             )

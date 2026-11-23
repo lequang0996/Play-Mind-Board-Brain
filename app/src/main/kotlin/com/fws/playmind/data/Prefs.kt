@@ -19,12 +19,12 @@ class Prefs(ctx: Context) {
     var theme by mutableIntStateOf(sp.getInt("theme", 0))
         private set
 
-    fun setTheme(v: Int) { theme = v; sp.edit().putInt("theme", v).apply() }
+    fun updateTheme(v: Int) { theme = v; sp.edit().putInt("theme", v).apply() }
 
     var nickname by mutableStateOf(sp.getString("nick", null) ?: ("Player" + Random.nextInt(1000, 9999)))
         private set
 
-    fun setNickname(v: String) {
+    fun updateNickname(v: String) {
         val clean = v.filter { it != '|' && it != '\n' }.trim().take(16).ifEmpty { "Player" }
         nickname = clean; sp.edit().putString("nick", clean).apply()
     }
