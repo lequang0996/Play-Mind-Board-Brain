@@ -24,7 +24,7 @@ Mỗi lần push lên `main` (và mỗi pull request), workflow **Build** (`.git
 ### Ký bản release (bắt buộc để upload lên Play)
 ```bash
 keytool -genkeypair -v -keystore release.jks -alias playmind -keyalg RSA -keysize 4096 -validity 10000
-[Convert]::ToBase64String([System.IO.File]::ReadAllBytes("release.jks"))
+base64 -w0 release.jks     # macOS: base64 -i release.jks
 ```
 Thêm vào *Settings → Secrets and variables → Actions → Secrets*: `KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`. **Không commit file .jks.** Nên bật *Play App Signing* khi tạo app trên Play Console.
 
@@ -49,6 +49,8 @@ Mặc định dùng **ID thử nghiệm của Google** (an toàn khi phát tri�
 - [ ] Tải `mapping.txt` (Play Console → App bundle explorer → Downloads) để đọc stack trace đã làm rối.
 
 ## 4b. Thêm game mới
+> Muốn bot của game mới đạt mức cao thủ: làm theo [`BOT_GUIDE.md`](BOT_GUIDE.md). Gặp lỗi build: xem [`TROUBLESHOOTING.md`](TROUBLESHOOTING.md).
+
 1. Tạo luật + AI trong `core/` (implement `BoardGame`) và thêm kiểm thử vào `SelfCheck.kt`.
 2. Thêm một dòng `GameInfo(...)` vào `Catalog.games` (chọn `Topic`) và các chuỗi `game_*`, `guide_*` trong `tools/i18n/*.txt`, rồi chạy `python3 tools/i18n/generate.py`.
 3. Thêm bàn cờ vào `ui/Boards.kt` và nhánh `when (info.id)` trong `GameScreen`.

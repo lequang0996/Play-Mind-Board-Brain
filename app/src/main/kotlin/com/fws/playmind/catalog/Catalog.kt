@@ -27,6 +27,7 @@ data class GameInfo(
     @StringRes val secondSide: Int,
     /** Số nước tối thiểu để ván đầu hàng/rời đi vẫn được tính thưởng. */
     val minPlies: Int,
+    /** Thời gian suy nghĩ tối đa của bot cho mỗi nước (ms). Bot luôn ở mức mạnh nhất. */
     val botMillis: Long,
     val create: () -> BoardGame,
 )
@@ -34,11 +35,11 @@ data class GameInfo(
 object Catalog {
     val games: List<GameInfo> = listOf(
         GameInfo("chess", Topic.MIND, R.string.game_chess, R.string.game_chess_desc, R.string.guide_chess,
-            R.string.side_white, R.string.side_black, 12, 2400) { ChessGame() },
+            R.string.side_white, R.string.side_black, 12, 4500) { ChessGame() },
         GameInfo("xiangqi", Topic.MIND, R.string.game_xiangqi, R.string.game_xiangqi_desc, R.string.guide_xiangqi,
-            R.string.side_red, R.string.side_black, 12, 2400) { XiangqiGame() },
+            R.string.side_red, R.string.side_black, 12, 4500) { XiangqiGame() },
         GameInfo("caro", Topic.MIND, R.string.game_caro, R.string.game_caro_desc, R.string.guide_caro,
-            R.string.stone_black, R.string.stone_white, 9, 2000) { GomokuGame() },
+            R.string.stone_black, R.string.stone_white, 9, 3500) { GomokuGame() },
     )
 
     fun byId(id: String) = games.first { it.id == id }

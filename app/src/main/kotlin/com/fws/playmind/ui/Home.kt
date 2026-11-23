@@ -72,8 +72,8 @@ fun featuredGame(t: Topic, slot: Long): GameInfo? {
 @Composable
 fun BannerAd(modifier: Modifier = Modifier) {
     val width = LocalConfiguration.current.screenWidthDp.coerceAtMost(640)
-    AndroidView(
-        modifier.fillMaxWidth(),
+    // Lưu ý: tham số đầu tiên của AndroidView là factory, modifier phải truyền theo tên.
+    AndroidView<AdView>(
         factory = { c ->
             AdView(c).apply {
                 setAdSize(AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(c, width))
@@ -81,7 +81,8 @@ fun BannerAd(modifier: Modifier = Modifier) {
                 loadAd(AdRequest.Builder().build())
             }
         },
-        onRelease = { it.destroy() },
+        modifier = modifier.fillMaxWidth(),
+        onRelease = { adView -> adView.destroy() },
     )
 }
 
