@@ -28,13 +28,7 @@ jobs:
       - name: Core self-check
         run: gradle :core:selfCheck --no-daemon
 
-      # 2) Build debug để chắc chắn app biên dịch được
-      - name: Assemble debug
-        run: gradle :app:assembleDebug --no-daemon
-        env:
-          VERSION_CODE: ${{ github.run_number }}
-
-      # 3) Build release có ký (chỉ khi đã cấu hình secrets)
+      # 2) Giải mã keystore và kiểm tra alias/mật khẩu
       - name: Decode keystore
         id: ks
         env:
@@ -44,16 +38,16 @@ jobs:
         run: |
           if [ -n "$KEYSTORE_BASE64" ]; then
             echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.jks"
-            # Kiểm tra keystore + alias trước khi dùng để ký
             if keytool -list -keystore "$RUNNER_TEMP/release.jks" -storepass "$KEYSTORE_PASSWORD" -alias "$KEY_ALIAS" >/dev/null 2>&1; then
               echo "path=$RUNNER_TEMP/release.jks" >> "$GITHUB_OUTPUT"
             else
               echo "::warning::Keystore/alias/mật khẩu không hợp lệ -> build release KHÔNG ký. Kiểm tra secrets KEYSTORE_PASSWORD và KEY_ALIAS."
-              echo "Các alias có trong keystore (nếu mật khẩu đúng):"
-              keytool -list -keystore "$RUNNER_TEMP/release.jks" -storepass "$KEYSTORE_PASSWORD" 2>&1 | grep -i "PrivateKeyEntry\|trustedCertEntry\|Alias\|," || true
             fi
+          else
+            echo "::warning::Chưa có secret KEYSTORE_BASE64 -> build release KHÔNG ký."
           fi
 
+      # 3) Build release (AAB + APK, R8 bật)
       - name: Build release (AAB + APK, R8 bật)
         run: gradle :app:bundleRelease :app:assembleRelease --no-daemon
         env:
@@ -69,19 +63,17 @@ jobs:
           ADMOB_REWARDED: ${{ vars.ADMOB_REWARDED }}
           PRIVACY_URL: ${{ vars.PRIVACY_URL }}
 
+      # 4) Chỉ xuất đúng 2 file: APK release và AAB release
       - uses: actions/upload-artifact@v4
         with:
-          name: playmind-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
-          retention-days: 1   # Artifacts tự động bị xóa sau 1 ngày
+          name: playmind-release-apk
+          path: app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
+          retention-days: 1
 
       - uses: actions/upload-artifact@v4
         with:
-          name: playmind-release
-          path: |
-            app/build/outputs/bundle/release/*.aab
-            app/build/outputs/apk/release/*.apk
-            app/build/outputs/mapping/release/mapping.txt
-            app/build/outputs/native-debug-symbols/release/native-debug-symbols.zip
-          if-no-files-found: warn
-          retention-days: 1   # Artifacts tự động bị xóa sau 1 ngày
+          name: playmind-release-aab
+          path: app/build/outputs/bundle/release/*.aab
+          if-no-files-found: error
+          retention-days: 1

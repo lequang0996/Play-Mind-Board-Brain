@@ -8,8 +8,9 @@
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
 
     <!-- Google Nearby Connections: quyền theo từng phiên bản Android -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" android:maxSdkVersion="32" />
+    <!-- Hai quyền Wi-Fi này phải có trên MỌI phiên bản Android (kể cả 13+), nếu không Nearby báo lỗi thiếu quyền -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" android:maxSdkVersion="28" />

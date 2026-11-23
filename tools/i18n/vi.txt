@@ -31,10 +31,10 @@ game_xiangqi|Cờ tướng
 game_xiangqi_desc|Tướng, pháo và con sông phải vượt qua.
 guide|Hướng dẫn
 guide_app_title|Cách dùng Play Mind
-guide_app|• Trang chủ: chọn thẻ chủ đề hoặc game bên dưới. Bấm Xem thêm để hiện hết game của một chủ đề.\n• Kim cương: điểm danh mỗi ngày +1 kim cương. Mỗi game được chơi miễn phí 1 ván/ngày, sau đó mỗi ván tốn 1 kim cương. Thắng được +1 kim cương.\n• Chuỗi thắng: thắng liên tiếp 5 ván ở một game được +2 kim cương, 10 ván được +3.\n• Thưởng gắn bó: có hơn 10 kim cương và điểm danh liên tục hơn 7 ngày thì mỗi lần điểm danh được +2.\n• Chơi với máy, chơi với bạn ở gần (không cần internet) hoặc chơi online bằng cách trao đổi mã phòng/QR.\n• Phòng: nếu không ai vào phòng, hệ thống tự thêm đối thủ. Đối thủ trong phòng có thể do máy điều khiển.\n• Đổi ngôn ngữ, giao diện và biệt danh trong Cài đặt.
+guide_app|• Trang chủ: chọn thẻ chủ đề hoặc game bên dưới. Bấm Xem thêm để hiện hết game của một chủ đề.\n• Kim cương: điểm danh mỗi ngày +1 kim cương. Mỗi game được chơi miễn phí 1 ván/ngày, sau đó mỗi ván tốn 1 kim cương. Thắng được +1 kim cương.\n• Chuỗi thắng: thắng liên tiếp 5 ván ở một game được +2 kim cương, 10 ván được +3.\n• Thưởng gắn bó: có hơn 10 kim cương và điểm danh liên tục hơn 7 ngày thì mỗi lần điểm danh được +2.\n• Chơi với máy (bạn luôn đi trước), chơi với bạn ở gần (không cần internet) hoặc chơi online bằng cách trao đổi mã phòng/QR.\n• Phòng: nếu không ai vào phòng, hệ thống tự thêm đối thủ. Đối thủ trong phòng có thể do máy điều khiển.\n• Đổi ngôn ngữ, giao diện và biệt danh trong Cài đặt.
 guide_chess|Mục tiêu: chiếu hết vua đối phương.\n• Tốt đi thẳng một ô và ăn chéo. Mã nhảy hình chữ L. Tượng đi chéo, xe đi thẳng, hậu đi cả hai kiểu, vua đi một ô.\n• Nước đặc biệt: nhập thành, bắt tốt qua đường và phong cấp khi tốt tới hàng cuối.\n• Chạm vào quân rồi chạm ô được tô sáng để đi. Ván hòa khi hết nước đi (hòa cờ), lặp thế cờ, luật 50 nước hoặc không đủ quân để thắng.
 guide_xiangqi|Mục tiêu: chiếu bí tướng đối phương. Bên Đỏ đi trước.\n• Tướng và sĩ chỉ đi trong cung. Hai tướng không được đối mặt nhau trên cùng một cột khi không có quân cản.\n• Tượng đi chéo hai ô, không qua sông và bị cản nếu có quân ở giữa đường.\n• Mã đi hình chữ L nhưng bị cản nếu có quân sát chân. Xe đi thẳng.\n• Pháo đi thẳng và ăn quân bằng cách nhảy qua đúng một quân. Tốt đi tới, qua sông thì được đi ngang.\n• Bên hết nước đi hợp lệ là thua. Trong app này, lặp lại một thế cờ ba lần là hòa.
-guide_caro|Mục tiêu: xếp năm quân trở lên của bạn liên tiếp theo hàng ngang, dọc hoặc chéo. Quân đen đi trước.\n• Nếu cả hai đầu của hàng bị quân đối phương hoặc mép bàn chặn thì không tính thắng.\n• Chạm vào giao điểm trống để đặt quân. Hãy chặn các hàng ba, hàng bốn hở của đối phương!
+guide_caro|Mục tiêu: xếp năm quân trở lên của bạn liên tiếp theo hàng ngang, dọc hoặc chéo. X (đỏ) đi trước.\n• Nếu cả hai đầu của hàng bị quân đối phương hoặc mép bàn chặn thì không tính thắng.\n• Chạm vào ô trống để đặt quân. Hãy chặn các hàng ba, hàng bốn hở của đối phương!
 how_to_play|Cách chơi
 how_to_use|Hướng dẫn sử dụng
 internet|Qua internet
@@ -102,8 +102,8 @@ side_red|Đỏ
 side_white|Trắng
 start|Bắt đầu
 start_game|Bắt đầu ván
-stone_black|Quân đen
-stone_white|Quân trắng
+stone_black|Quân X (đỏ)
+stone_white|Quân O (đen)
 their_turn|Lượt đối thủ
 theme|Giao diện
 theme_dark|Tối
@@ -125,3 +125,4 @@ you|Bạn
 your_invite_code|Mã mời của bạn
 your_reply_code|Mã trả lời của bạn
 your_turn|Lượt của bạn
+view_guide|Xem hướng dẫn chơi

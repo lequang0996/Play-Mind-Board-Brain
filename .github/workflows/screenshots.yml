@@ -37,6 +37,10 @@ jobs:
           profile: pixel_6
           disable-animations: true
           script: bash tools/take_screenshots.sh
+      - name: Compress screenshots (lossless)
+        run: |
+          pip install pillow pyoxipng
+          python3 tools/compress_images.py
       - name: Commit screenshots
         run: |
           git config user.name "github-actions"

@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
@@ -33,9 +34,12 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.graphics.drawscope.withTransform
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.vector.PathParser
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
@@ -77,16 +81,27 @@ private object PieceArt {
 }
 
 fun DrawScope.drawChessPiece(type: Int, white: Boolean, topLeft: Offset, cell: Float) {
-    val fill = if (white) Color(0xFFFFF7E6) else Color(0xFF2B2E4D)
-    val line = if (white) Color(0xFF3B3346) else Color(0xFFE7E2F4)
     val sc = cell * 0.84f / 100f
+    val fill = if (white)
+        Brush.linearGradient(listOf(Color(0xF5FFFFFF), Color(0xE0D3E8FF), Color(0xEBA3C2F2)), Offset(10f, 5f), Offset(90f, 100f))
+    else
+        Brush.linearGradient(listOf(GlassPalette.obsHi, GlassPalette.obs, GlassPalette.obsLo), Offset(10f, 5f), Offset(90f, 100f))
+    val edge = if (white) Color(0xFF5A82C0) else Color(0xFFC9C3F5)
+    val thick = if (white) Color(0x669BB4E0) else Color(0xAA05061A)
+    val sheen = Brush.linearGradient(listOf(Color.White.copy(alpha = if (white) .9f else .42f), Color.Transparent), Offset(15f, 5f), Offset(65f, 60f))
+    // bóng đổ dưới chân quân
+    drawOval(Color.Black.copy(alpha = .2f), Offset(topLeft.x + cell * .2f, topLeft.y + cell * .83f), Size(cell * .6f, cell * .09f))
     withTransform({ translate(topLeft.x + cell * 0.08f, topLeft.y + cell * 0.1f); scale(sc, sc, pivot = Offset.Zero) }) {
-        PieceArt.fills[type]?.forEach { path ->
+        val parts = PieceArt.fills[type]
+        // độ dày của khối kính (bản sao lệch xuống dưới-phải)
+        parts?.forEach { path -> withTransform({ translate(1.6f, 2.6f) }) { drawPath(path, thick) } }
+        parts?.forEach { path ->
             drawPath(path, fill)
-            drawPath(path, line, style = Stroke(width = 3f, join = StrokeJoin.Round, cap = StrokeCap.Round))
+            clipPath(path) { drawRect(sheen, Offset.Zero, Size(100f, 100f)) }
+            drawPath(path, edge, style = Stroke(width = 2.6f, join = StrokeJoin.Round, cap = StrokeCap.Round))
         }
         PieceArt.details[type]?.let { d ->
-            if (type == ChessGame.N) drawPath(d, line) else drawPath(d, line, style = Stroke(width = 2.4f, cap = StrokeCap.Round))
+            if (type == ChessGame.N) drawPath(d, edge) else drawPath(d, edge, style = Stroke(width = 2.4f, cap = StrokeCap.Round))
         }
     }
 }
@@ -136,10 +151,16 @@ fun ChessBoardView(vm: SessionViewModel, modifier: Modifier = Modifier) {
         @Suppress("UNUSED_VARIABLE") val dep = tick
         val s = size.width / 8f
         fun pos(sq: Int): Offset { val f = sq and 7; val r = sq shr 3; return if (flip) Offset((7 - f) * s, r * s) else Offset(f * s, (7 - r) * s) }
+        val lightSq = if (c.dark) Color(0xFF7388C9) else Color(0xFFE3EEFA)
+        val darkSq = if (c.dark) Color(0xFF34417F) else Color(0xFF9BBFE3)
         for (sq in 0 until 64) {
             val light = ((sq and 7) + (sq shr 3)) % 2 == 1
-            drawRect(if (light) c.boardLight else c.boardDark, pos(sq), Size(s, s))
+            val o = pos(sq)
+            drawRect(if (light) lightSq else darkSq, o, Size(s, s))
+            // vát kính: sáng ở trên-trái
+            drawRect(Brush.linearGradient(listOf(Color.White.copy(alpha = if (light) .7f else .35f), Color.Transparent), o, o + Offset(s, s)), o, Size(s, s))
         }
+        drawGlassSheen(c.dark)
         val last = g.lastMove
         if (last >= 0) for (q in listOf(ChessGame.fromSq(last), ChessGame.toSq(last))) drawRect(c.gold.copy(alpha = .38f), pos(q), Size(s, s))
         if (g.result == Outcome.ONGOING && g.inCheck()) {
@@ -148,7 +169,7 @@ fun ChessBoardView(vm: SessionViewModel, modifier: Modifier = Modifier) {
         }
         if (sel >= 0) drawRect(c.gold.copy(alpha = .55f), pos(sel), Size(s, s))
         // toạ độ
-        val lab = TextStyle(color = (if (c.dark) Color.White else Color(0xFF3B2C14)).copy(alpha = .55f), fontSize = (s * .17f).toSp(), fontWeight = FontWeight.SemiBold)
+        val lab = TextStyle(color = (if (c.dark) Color.White else Color(0xFF2F4F7A)).copy(alpha = .6f), fontSize = (s * .17f).toSp(), fontWeight = FontWeight.SemiBold)
         for (i in 0 until 8) {
             val fileChar = ('a' + (if (flip) 7 - i else i)).toString()
             drawText(tm.measure(fileChar, lab), topLeft = Offset(i * s + s * .06f, size.height - s * .24f))
@@ -159,6 +180,7 @@ fun ChessBoardView(vm: SessionViewModel, modifier: Modifier = Modifier) {
             val p = g.board[sq]; if (p == 0) continue
             drawChessPiece(abs(p), p > 0, pos(sq), s)
         }
+        drawRect(if (c.dark) Color(0xFF9AA8E0).copy(alpha = .5f) else Color(0xFF8FB0D8), Offset.Zero, size, style = Stroke(s * .07f))
         for (t in targets) {
             val o = pos(t) + Offset(s / 2, s / 2)
             if (g.board[t] != 0 || (g.board[sel] != 0 && abs(g.board[sel]) == ChessGame.P && (t and 7) != (sel and 7)))
@@ -184,6 +206,15 @@ fun ChessBoardView(vm: SessionViewModel, modifier: Modifier = Modifier) {
 }
 
 // ───────────────────────── Cờ tướng ─────────────────────────
+/** Quân cờ tướng: hồng ngọc (đỏ) hoặc hắc ngọc (đen), chữ khắc màu kem có bóng. */
+private fun DrawScope.drawXiangqiPiece(c: Offset, rad: Float, red: Boolean, ch: String, tm: TextMeasurer) {
+    if (red) drawGlassDisc(c, rad, GlassPalette.rubyHi, GlassPalette.ruby, GlassPalette.rubyLo)
+    else drawGlassDisc(c, rad, GlassPalette.obsHi, GlassPalette.obs, GlassPalette.obsLo)
+    val r = tm.measure(ch, TextStyle(color = GlassPalette.cream, fontSize = (rad * 1.16f).toSp(), fontWeight = FontWeight.Bold,
+        shadow = Shadow(Color(0x99000000), Offset(rad * .03f, rad * .06f), rad * .08f)))
+    drawText(r, topLeft = c - Offset(r.size.width / 2f, r.size.height / 2f))
+}
+
 private val RED_CHARS = arrayOf("", "帥", "仕", "相", "傌", "俥", "炮", "兵")
 private val BLK_CHARS = arrayOf("", "將", "士", "象", "馬", "車", "砲", "卒")
 
@@ -224,8 +255,9 @@ fun XiangqiBoardView(vm: SessionViewModel, modifier: Modifier = Modifier) {
             val x = (if (flip) 8 - f else f) + .5f; val y = (if (flip) r else 9 - r) + .5f
             return Offset(x * s, y * s)
         }
-        drawRect(Brush.linearGradient(if (c.dark) listOf(Color(0xFF39406C), Color(0xFF2A3059)) else listOf(Color(0xFFEFDDB4), Color(0xFFE0C48A)), Offset.Zero, Offset(size.width, size.height)))
-        val line = if (c.dark) Color(0xFFBBC0E6) else Color(0xFF5B3F1C)
+        drawRect(Brush.linearGradient(if (c.dark) listOf(Color(0xFF3A4F8C), Color(0xFF202E5E)) else listOf(Color(0xFFF3F9FF), Color(0xFFCBE1F5)), Offset.Zero, Offset(size.width, size.height)))
+        drawGlassSheen(c.dark)
+        val line = if (c.dark) Color(0xFFC4D2F7) else Color(0xFF4A7CAD)
         val lw = s * .035f
         for (r in 0..9) drawLine(line, ctr(r * 9), ctr(r * 9 + 8), lw)
         drawLine(line, ctr(0), ctr(81), lw); drawLine(line, ctr(8), ctr(89), lw)
@@ -250,17 +282,10 @@ fun XiangqiBoardView(vm: SessionViewModel, modifier: Modifier = Modifier) {
         // quân
         for (sq in 0 until 90) {
             val p = g.board[sq]; if (p == 0) continue
-            val o = ctr(sq); val red = p > 0; val rad = s * .43f
-            val ink = if (red) Color(0xFFB3261E) else Color(0xFF1C1E36)
-            drawCircle(Color.Black.copy(alpha = .18f), rad, o + Offset(0f, s * .03f))
-            drawCircle(Brush.radialGradient(listOf(Color(0xFFFFFBEF), Color(0xFFEBD9AE)), o - Offset(rad * .3f, rad * .3f), rad * 1.5f), rad, o)
-            drawCircle(ink, rad, o, style = Stroke(width = s * .045f))
-            drawCircle(ink, rad * .82f, o, style = Stroke(width = s * .018f))
-            val ch = (if (red) RED_CHARS else BLK_CHARS)[abs(p)]
-            val r = tm.measure(ch, TextStyle(color = ink, fontSize = (s * .5f).toSp(), fontWeight = FontWeight.Bold))
-            drawText(r, topLeft = o - Offset(r.size.width / 2f, r.size.height / 2f))
+            drawXiangqiPiece(ctr(sq), s * .43f, p > 0, (if (p > 0) RED_CHARS else BLK_CHARS)[abs(p)], tm)
         }
         if (sel >= 0) drawCircle(c.gold, s * .5f, ctr(sel), style = Stroke(width = s * .07f))
+        drawRect(if (c.dark) Color(0xFF9AA8E0).copy(alpha = .5f) else Color(0xFF8FB0D8), Offset.Zero, size, style = Stroke(s * .08f))
         for (t in targets) {
             val o = ctr(t)
             if (g.board[t] != 0) drawCircle(c.gold, s * .5f, o, style = Stroke(width = s * .07f)) else drawCircle(c.gold.copy(alpha = .9f), s * .13f, o)
@@ -290,23 +315,32 @@ fun GomokuBoardView(vm: SessionViewModel, modifier: Modifier = Modifier) {
         @Suppress("UNUSED_VARIABLE") val dep = tick
         val s = size.width / n
         fun ctr(i: Int) = Offset((i % n + .5f) * s, (i / n + .5f) * s)
-        drawRect(Brush.linearGradient(if (c.dark) listOf(Color(0xFF39406C), Color(0xFF2A3059)) else listOf(Color(0xFFEFDDB4), Color(0xFFE0C48A)), Offset.Zero, Offset(size.width, size.height)))
-        val line = if (c.dark) Color(0xFFBBC0E6).copy(alpha = .8f) else Color(0xFF5B3F1C).copy(alpha = .8f)
-        for (i in 0 until n) { drawLine(line, ctr(i), ctr((n - 1) * n + i), s * .035f); drawLine(line, ctr(i * n), ctr(i * n + n - 1), s * .035f) }
-        for (p in intArrayOf(3, 7, 11)) for (q in intArrayOf(3, 7, 11)) if ((p == 7) == (q == 7)) drawCircle(line, s * .1f, ctr(q * n + p))
-        val rad = s * .43f
+        // nền khung: kính xanh băng nhạt, các ô trống là những viên gạch kính trắng
+        drawRect(if (c.dark) Color(0xFF151B45) else Color(0xFFC9D8EA))
+        val gap = s * .07f
+        val corner = CornerRadius(s * .16f)
+        val cellTop = if (c.dark) Color(0xFF3B4890) else Color.White
+        val cellBottom = if (c.dark) Color(0xFF2A3470) else Color(0xFFE4ECF7)
+        val cellEdge = if (c.dark) Color(0xFF6F7CC4).copy(alpha = .6f) else Color(0xFFB9CBE0)
         for (i in 0 until n * n) {
-            val v = g.cells[i]; if (v == 0) continue
-            val o = ctr(i)
-            drawCircle(Color.Black.copy(alpha = .25f), rad, o + Offset(s * .03f, s * .05f))
-            if (v == 1) drawCircle(Brush.radialGradient(listOf(Color(0xFF5B5E85), Color(0xFF0D0E1C)), o - Offset(rad * .35f, rad * .35f), rad * 1.4f), rad, o)
-            else {
-                drawCircle(Brush.radialGradient(listOf(Color.White, Color(0xFFCFCFE2)), o - Offset(rad * .35f, rad * .35f), rad * 1.4f), rad, o)
-                drawCircle(Color(0xFF8C8CA8), rad, o, style = Stroke(width = s * .02f))
-            }
+            val y0 = (i / n) * s
+            val tl = Offset((i % n) * s + gap / 2, y0 + gap / 2)
+            val sz = Size(s - gap, s - gap)
+            drawRoundRect(Brush.verticalGradient(listOf(cellTop, cellBottom), y0, y0 + s), tl, sz, corner)
+            drawRoundRect(Color.White.copy(alpha = if (c.dark) .14f else .9f), tl + Offset(s * .05f, s * .04f), Size(sz.width - s * .1f, sz.height * .3f), CornerRadius(s * .12f))
+            drawRoundRect(cellEdge, tl, sz, corner, style = Stroke(s * .02f))
         }
         val last = g.lastMove
-        if (last >= 0) drawCircle(c.danger, s * .12f, ctr(last))
+        if (last >= 0) {
+            val tl = Offset((last % n) * s + gap / 2, (last / n) * s + gap / 2)
+            drawRoundRect(c.gold.copy(alpha = .22f), tl, Size(s - gap, s - gap), corner)
+            drawRoundRect(c.gold, tl, Size(s - gap, s - gap), corner, style = Stroke(s * .06f))
+        }
+        // X (đỏ, đi trước) và O (đen, đi sau)
+        for (i in 0 until n * n) {
+            val v = g.cells[i]; if (v == 0) continue
+            if (v == 1) drawGlassX(ctr(i), s * .3f) else drawGlassO(ctr(i), s * .3f)
+        }
         if (g.winLine.isNotEmpty()) {
             val a = ctr(g.winLine.first()); val b = ctr(g.winLine.last())
             drawLine(c.gold.copy(alpha = .35f), a, b, s * .5f, cap = StrokeCap.Round)
@@ -315,7 +349,7 @@ fun GomokuBoardView(vm: SessionViewModel, modifier: Modifier = Modifier) {
     }
 }
 
-/** Vẽ nhỏ quân đại diện cho một bên (dùng ở thanh người chơi). */
+/** Vẽ nhỏ quân đại diện cho một bên (dùng ở thanh người chơi và ô game). */
 @Composable
 fun SideBadge(gameId: String, side: Int, modifier: Modifier = Modifier) {
     val rm = rememberTextMeasurer()
@@ -323,17 +357,8 @@ fun SideBadge(gameId: String, side: Int, modifier: Modifier = Modifier) {
         val s = size.width
         when (gameId) {
             "chess" -> drawChessPiece(ChessGame.K, side == 0, Offset.Zero, s)
-            "xiangqi" -> {
-                val ink = if (side == 0) Color(0xFFB3261E) else Color(0xFF1C1E36)
-                drawCircle(Color(0xFFF6E9C8), s * .46f); drawCircle(ink, s * .46f, style = Stroke(width = s * .07f))
-                val r = rm.measure(if (side == 0) "帥" else "將", TextStyle(color = ink, fontSize = (s * .5f).toSp(), fontWeight = FontWeight.Bold))
-                drawText(r, topLeft = Offset(s / 2 - r.size.width / 2f, s / 2 - r.size.height / 2f))
-            }
-            else -> {
-                drawCircle(if (side == 0) Brush.radialGradient(listOf(Color(0xFF5B5E85), Color(0xFF0D0E1C)), Offset(s * .38f, s * .38f), s * .6f)
-                else Brush.radialGradient(listOf(Color.White, Color(0xFFCFCFE2)), Offset(s * .38f, s * .38f), s * .6f), s * .44f)
-                if (side == 1) drawCircle(Color(0xFF8C8CA8), s * .44f, style = Stroke(width = s * .04f))
-            }
+            "xiangqi" -> drawXiangqiPiece(Offset(s / 2, s / 2), s * .44f, side == 0, if (side == 0) "帥" else "將", rm)
+            else -> if (side == 0) drawGlassX(Offset(s / 2, s / 2), s * .34f) else drawGlassO(Offset(s / 2, s / 2), s * .38f)
         }
     }
 }

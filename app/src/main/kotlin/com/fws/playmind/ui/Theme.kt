@@ -24,7 +24,7 @@ data class Pm(
     val boardLight: Color, val boardDark: Color, val danger: Color, val good: Color,
 )
 
-val PmLight = Pm(false, Color(0xFFF5F3FA), Color(0xFFFFFFFF), Color(0xFFECE8F5), Color(0xFF16162F), Color(0xFF5C5C7A),
+val PmLight = Pm(false, Color(0xFFFFFFFF), Color(0xFFFFFFFF), Color(0xFFECE8F5), Color(0xFF16162F), Color(0xFF5C5C7A),
     Color(0xFF9C6D12), Color(0xFFF6E8C3), Color(0xFFDAD5E8), Color(0xFFEFE4CC), Color(0xFFB08F5B), Color(0xFFC0392B), Color(0xFF14937A))
 val PmDark = Pm(true, Color(0xFF0A0D1D), Color(0xFF141832), Color(0xFF1E2347), Color(0xFFF2EFFA), Color(0xFFA4A7CB),
     Color(0xFFE8C56E), Color(0xFF3A3354), Color(0xFF2C3158), Color(0xFF8E97BC), Color(0xFF4C5584), Color(0xFFFF6B5E), Color(0xFF3FD0B0))

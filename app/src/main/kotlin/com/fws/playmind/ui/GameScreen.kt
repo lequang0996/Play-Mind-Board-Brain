@@ -3,6 +3,7 @@ package com.fws.playmind.ui
 import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,7 +48,7 @@ import com.fws.playmind.match.SessionViewModel
 private fun PlayerBar(info: GameInfo, side: Int, name: String, active: Boolean, status: String?, showCheck: Boolean) {
     Row(
         Modifier.fillMaxWidth().padding(horizontal = 18.dp, vertical = 8.dp).clip(RoundedCornerShape(16.dp))
-            .background(if (active) pm.goldSoft else pm.surface).padding(horizontal = 12.dp, vertical = 8.dp),
+            .background(if (active) pm.goldSoft else pm.surface).border(1.dp, if (active) pm.gold.copy(alpha = .5f) else pm.outline, RoundedCornerShape(16.dp)).padding(horizontal = 12.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         SideBadge(info.id, side)

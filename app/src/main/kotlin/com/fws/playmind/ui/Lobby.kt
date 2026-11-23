@@ -18,13 +18,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.fws.playmind.PlayMindApp
@@ -56,7 +57,6 @@ fun LobbyScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onBack: 
     val ctx = LocalContext.current
     val wallet by app.wallet.state.collectAsState()
     val freeAvail = wallet.freeDay[info.id] != app.wallet.today()
-    var side by remember { mutableIntStateOf(2) }
     var pending by remember { mutableStateOf<(() -> Unit)?>(null) }
     val perms = NearbyTransport.requiredPermissions()
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { res ->
@@ -69,7 +69,7 @@ fun LobbyScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onBack: 
     }
 
     Column(Modifier.fillMaxSize()) {
-        TopBar(stringResource(info.name), onBack) { PmIconButton(Ic.Help, stringResource(R.string.how_to_play), onGuide) }
+        TopBar(stringResource(info.name), onBack)
         Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 18.dp)) {
             SurfaceCard(Modifier.fillMaxWidth()) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -79,7 +79,13 @@ fun LobbyScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onBack: 
                     Spacer(Modifier.width(14.dp))
                     Column(Modifier.weight(1f)) {
                         Text(stringResource(info.desc), style = MaterialTheme.typography.bodyMedium, color = pm.ink)
-                        Spacer(Modifier.height(6.dp))
+                        Spacer(Modifier.height(4.dp))
+                        Text(
+                            stringResource(R.string.view_guide),
+                            Modifier.clip(RoundedCornerShape(6.dp)).clickable(onClick = onGuide).padding(vertical = 2.dp),
+                            style = MaterialTheme.typography.labelLarge, color = pm.gold, textDecoration = TextDecoration.Underline,
+                        )
+                        Spacer(Modifier.height(4.dp))
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             if (freeAvail) { Icon(Ic.Check, null, Modifier.size(16.dp), tint = pm.good); Spacer(Modifier.width(4.dp)); Text(stringResource(R.string.free_today), style = MaterialTheme.typography.labelMedium, color = pm.good) }
                             else { GemMark(14.dp); Spacer(Modifier.width(4.dp)); Text(stringResource(R.string.costs_one), style = MaterialTheme.typography.labelMedium, color = pm.inkSoft) }
@@ -91,13 +97,8 @@ fun LobbyScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onBack: 
             SectionTitle(stringResource(R.string.vs_computer))
             Gap(10)
             SurfaceCard(Modifier.fillMaxWidth()) {
-                Column {
-                    Text(stringResource(R.string.choose_side), style = MaterialTheme.typography.labelMedium, color = pm.inkSoft)
-                    Spacer(Modifier.height(8.dp))
-                    Segmented(listOf(stringResource(info.firstSide), stringResource(info.secondSide), stringResource(R.string.random)), side, { side = it }, Modifier.fillMaxWidth())
-                    Spacer(Modifier.height(14.dp))
-                    GoldButton(stringResource(R.string.start), { vm.startVsComputer(side) }, Modifier.fillMaxWidth(), Ic.Computer)
-                }
+                // Chơi với máy: bạn luôn đi trước nên không cần chọn bên.
+                GoldButton(stringResource(R.string.start), { vm.startVsComputer() }, Modifier.fillMaxWidth(), Ic.Computer)
             }
             Gap(20)
             SectionTitle(stringResource(R.string.play_friends))

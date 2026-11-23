@@ -3,6 +3,7 @@ package com.fws.playmind.net
 import android.Manifest
 import android.content.Context
 import android.os.Build
+import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.nearby.Nearby
 import com.google.android.gms.nearby.connection.AdvertisingOptions
 import com.google.android.gms.nearby.connection.ConnectionInfo
@@ -30,9 +31,15 @@ class NearbyTransport(ctx: Context, private val gameId: String) : Transport {
         fun requiredPermissions(): Array<String> = buildList {
             if (Build.VERSION.SDK_INT >= 31) {
                 add(Manifest.permission.BLUETOOTH_ADVERTISE); add(Manifest.permission.BLUETOOTH_CONNECT); add(Manifest.permission.BLUETOOTH_SCAN)
-            } else add(Manifest.permission.ACCESS_FINE_LOCATION)
+            }
+            // Android 12 trở xuống vẫn cần quyền vị trí cho Bluetooth/Wi-Fi quét (khớp với manifest: tối đa API 31)
+            if (Build.VERSION.SDK_INT <= 31) add(Manifest.permission.ACCESS_FINE_LOCATION)
             if (Build.VERSION.SDK_INT >= 33) add(Manifest.permission.NEARBY_WIFI_DEVICES)
         }.toTypedArray()
+
+        // Mã trạng thái "đang phát/đang tìm rồi" không phải lỗi thật (gọi lặp), bỏ qua.
+        private const val ALREADY_ADVERTISING = 8001
+        private const val ALREADY_DISCOVERING = 8002
     }
 
     private val client: ConnectionsClient = Nearby.getConnectionsClient(ctx.applicationContext)
@@ -44,6 +51,16 @@ class NearbyTransport(ctx: Context, private val gameId: String) : Transport {
     val rooms: StateFlow<List<FoundRoom>> = _rooms
     private val _error = MutableStateFlow(false)
     val error: StateFlow<Boolean> = _error
+    /** Mã lỗi gần nhất của Nearby (để hiển thị cho người dùng/nhà phát triển tra cứu). */
+    private val _errorCode = MutableStateFlow(0)
+    val errorCode: StateFlow<Int> = _errorCode
+
+    private fun fail(e: Exception) {
+        val code = (e as? ApiException)?.statusCode ?: -1
+        if (code == ALREADY_ADVERTISING || code == ALREADY_DISCOVERING) return
+        _errorCode.value = code
+        _error.value = true
+    }
 
     private var peer: String? = null
 
@@ -73,8 +90,8 @@ class NearbyTransport(ctx: Context, private val gameId: String) : Transport {
 
     /** Chủ phòng: phát sóng để người khác tìm thấy. */
     fun host(nickname: String) {
-        val opts = AdvertisingOptions.Builder().setStrategy(Strategy.P2P_POINT_TO_POINT).build()
-        client.startAdvertising("$gameId|$nickname", SERVICE, lifecycle, opts).addOnFailureListener { _error.value = true }
+        val opts = AdvertisingOptions.Builder().setStrategy(Strategy.P2P_CLUSTER).build()
+        client.startAdvertising("$gameId|$nickname", SERVICE, lifecycle, opts).addOnFailureListener { fail(it) }
     }
 
     /** Khách: tìm các phòng cùng game ở gần. */
@@ -87,8 +104,8 @@ class NearbyTransport(ctx: Context, private val gameId: String) : Transport {
             }
             override fun onEndpointLost(endpointId: String) { _rooms.value = _rooms.value.filter { it.endpointId != endpointId } }
         }
-        val opts = DiscoveryOptions.Builder().setStrategy(Strategy.P2P_POINT_TO_POINT).build()
-        client.startDiscovery(SERVICE, cb, opts).addOnFailureListener { _error.value = true }
+        val opts = DiscoveryOptions.Builder().setStrategy(Strategy.P2P_CLUSTER).build()
+        client.startDiscovery(SERVICE, cb, opts).addOnFailureListener { fail(it) }
     }
 
     fun connect(room: FoundRoom, nickname: String) {

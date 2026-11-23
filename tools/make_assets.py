@@ -67,3 +67,9 @@ for label, col in [("Puzzle", "#14937A"), ("Intellect", "#6A5FE0"), ("Calculatio
 d.text((434, 380), "Chess  ·  Xiangqi  ·  Gomoku", font=ImageFont.truetype(sans, 26), fill="#A4A7CB")
 bg.convert("RGB").save(os.path.join(root, "store", "feature-graphic-1024x500.png"))
 print("assets ok")
+
+# Nén không mất dữ liệu: icon launcher → WebP lossless, ảnh cửa hàng → PNG tối ưu (xem tools/compress_images.py)
+import sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import compress_images
+compress_images.run()

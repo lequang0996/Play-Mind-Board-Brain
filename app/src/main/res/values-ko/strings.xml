@@ -32,9 +32,9 @@
     <string name="game_xiangqi">샹치 (중국 장기)</string>
     <string name="game_xiangqi_desc">장수와 포, 그리고 건너야 할 강.</string>
     <string name="guide">가이드</string>
-    <string name="guide_app">• 홈: 주제 카드나 아래의 게임을 선택하세요. ‘더 보기’를 누르면 해당 주제의 모든 게임이 보입니다.\n• 다이아몬드: 하루 한 번 출석하면 +1. 게임마다 하루 1회 무료이며, 이후에는 게임당 다이아몬드 1개가 듭니다. 승리하면 +1입니다.\n• 연승: 같은 게임에서 5연승하면 +2, 10연승하면 +3.\n• 충성 보너스: 다이아몬드가 10개를 넘고 연속 출석이 7일을 넘으면 매일 출석 시 +2입니다.\n• 컴퓨터와 대결, 가까운 친구와 대결(인터넷 불필요), 또는 방 코드/QR을 교환해 온라인으로 대결할 수 있습니다.\n• 방: 한동안 아무도 입장하지 않으면 상대가 자동으로 추가됩니다. 방의 상대는 컴퓨터가 조종할 수 있습니다.\n• 언어, 화면 테마, 닉네임은 설정에서 바꿀 수 있습니다.</string>
+    <string name="guide_app">• 홈: 주제 카드나 아래의 게임을 선택하세요. ‘더 보기’를 누르면 해당 주제의 모든 게임이 보입니다.\n• 다이아몬드: 하루 한 번 출석하면 +1. 게임마다 하루 1회 무료이며, 이후에는 게임당 다이아몬드 1개가 듭니다. 승리하면 +1입니다.\n• 연승: 같은 게임에서 5연승하면 +2, 10연승하면 +3.\n• 충성 보너스: 다이아몬드가 10개를 넘고 연속 출석이 7일을 넘으면 매일 출석 시 +2입니다.\n• 컴퓨터와 대결(항상 먼저 둡니다), 가까운 친구와 대결(인터넷 불필요), 또는 방 코드/QR을 교환해 온라인으로 대결할 수 있습니다.\n• 방: 한동안 아무도 입장하지 않으면 상대가 자동으로 추가됩니다. 방의 상대는 컴퓨터가 조종할 수 있습니다.\n• 언어, 화면 테마, 닉네임은 설정에서 바꿀 수 있습니다.</string>
     <string name="guide_app_title">Play Mind 사용법</string>
-    <string name="guide_caro">목표: 가로, 세로, 대각선으로 자신의 돌 다섯 개 이상을 잇기. 흑이 먼저 둡니다.\n• 줄의 양쪽 끝이 상대 돌이나 판 가장자리로 막혀 있으면 인정되지 않습니다.\n• 빈 교차점을 눌러 돌을 놓으세요. 상대의 열린 3, 4를 막으세요!</string>
+    <string name="guide_caro">목표: 가로, 세로, 대각선으로 자신의 표시 다섯 개 이상을 잇기. X(빨강)가 먼저 둡니다.\n• 줄의 양쪽 끝이 상대 표시나 판 가장자리로 막혀 있으면 인정되지 않습니다.\n• 빈 칸을 눌러 표시를 놓으세요. 상대의 열린 3, 4를 막으세요!</string>
     <string name="guide_chess">목표: 상대 킹을 체크메이트하는 것.\n• 폰은 앞으로 한 칸 가고 대각선으로 잡습니다. 나이트는 L자로 점프하고, 비숍은 대각선, 룩은 직선, 퀸은 둘 다, 킹은 한 칸 움직입니다.\n• 특수 이동: 캐슬링, 앙파상, 마지막 줄에서의 프로모션.\n• 말을 누른 뒤 강조된 칸을 누르세요. 스테일메이트, 동일 국면 반복, 50수 규칙, 기물 부족이면 무승부입니다.</string>
     <string name="guide_xiangqi">목표: 상대 장수를 외통수로 몰기. 홍(빨강)이 먼저 둡니다.\n• 장수와 사(士)는 궁 안에서만 움직입니다. 두 장수는 막힘없는 같은 줄에서 마주 볼 수 없습니다.\n• 상(象)은 대각선으로 두 칸 가며 강을 건널 수 없고 중간이 막히면 움직일 수 없습니다.\n• 마(馬)는 L자로 움직이지만 인접한 말이 막으면 못 갑니다. 차(車)는 직선으로 갑니다.\n• 포(炮)는 직선으로 가고 정확히 한 개의 말을 뛰어넘어 잡습니다. 졸(兵)은 앞으로 가며 강을 건넌 뒤에는 옆으로도 갑니다.\n• 둘 수 있는 수가 없으면 패배합니다. 이 앱에서는 같은 국면이 3번 반복되면 무승부입니다.</string>
     <string name="how_to_play">게임 방법</string>
@@ -104,8 +104,8 @@
     <string name="side_white">백</string>
     <string name="start">시작</string>
     <string name="start_game">게임 시작</string>
-    <string name="stone_black">흑돌</string>
-    <string name="stone_white">백돌</string>
+    <string name="stone_black">X (빨강)</string>
+    <string name="stone_white">O (검정)</string>
     <string name="their_turn">상대 차례</string>
     <string name="theme">화면 테마</string>
     <string name="theme_dark">다크</string>
@@ -118,6 +118,7 @@
     <string name="topic_puzzle">퍼즐</string>
     <string name="update_ready">업데이트를 다운로드했습니다.</string>
     <string name="verifying">상대와 결과를 확인하는 중…</string>
+    <string name="view_guide">게임 방법 보기</string>
     <string name="vs_computer">컴퓨터와 대결</string>
     <string name="waiting_host_start">연결되었습니다. 방장이 시작하기를 기다리는 중…</string>
     <string name="waiting_opponent">상대를 기다리는 중…</string>

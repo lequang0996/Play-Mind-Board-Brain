@@ -161,6 +161,7 @@ fun RoomScreen(vm: SessionViewModel, onLeave: () -> Unit) {
     val link by vm.linkState.collectAsState()
     val rooms by vm.nearbyRooms.collectAsState()
     val nearbyErr by vm.nearbyError.collectAsState()
+    val nearbyCode by vm.nearbyErrorCode.collectAsState()
     val ctx = LocalContext.current
     var showInvite by remember { mutableStateOf(false) }
     DisposableEffect(showInvite) { vm.inviteOpen = showInvite; onDispose { vm.inviteOpen = false } }
@@ -172,7 +173,7 @@ fun RoomScreen(vm: SessionViewModel, onLeave: () -> Unit) {
                 Mode.HOST_NEARBY, Mode.HOST_NET -> {
                     Seat(vm.prefs.nickname, true, "")
                     Seat(if (vm.opp == Opp.NONE) null else vm.oppName, false, stringResource(R.string.waiting_opponent))
-                    if (nearbyErr) Text(stringResource(R.string.nearby_unavailable), color = pm.danger, style = MaterialTheme.typography.bodyMedium)
+                    if (nearbyErr) Text(stringResource(R.string.nearby_unavailable) + " [$nearbyCode]", color = pm.danger, style = MaterialTheme.typography.bodyMedium)
                     if (vm.mode == Mode.HOST_NET && vm.opp != Opp.HUMAN) {
                         OutlineButton(stringResource(R.string.invite), { showInvite = true }, Modifier.fillMaxWidth(), Ic.Qr)
                         if (link == LinkState.CONNECTING) Text(stringResource(R.string.connecting), color = pm.inkSoft, style = MaterialTheme.typography.bodyMedium)
@@ -193,7 +194,7 @@ fun RoomScreen(vm: SessionViewModel, onLeave: () -> Unit) {
                             Spacer(Modifier.width(10.dp))
                             Text(stringResource(R.string.searching_rooms), color = pm.inkSoft, style = MaterialTheme.typography.bodyMedium)
                         }
-                        if (nearbyErr) Text(stringResource(R.string.nearby_unavailable), color = pm.danger, style = MaterialTheme.typography.bodyMedium)
+                        if (nearbyErr) Text(stringResource(R.string.nearby_unavailable) + " [$nearbyCode]", color = pm.danger, style = MaterialTheme.typography.bodyMedium)
                         rooms.forEach { r -> RoomRow(r, link == LinkState.CONNECTING) { vm.connectTo(r) } }
                     }
                 }

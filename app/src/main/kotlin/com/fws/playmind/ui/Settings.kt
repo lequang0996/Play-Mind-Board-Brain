@@ -108,15 +108,16 @@ fun GuideScreen(onBack: () -> Unit, focusGame: String?) {
         TopBar(stringResource(R.string.how_to_use), onBack)
         Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 18.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
             if (focusGame == null) {
+                // Từ trang chủ / cài đặt: chỉ hướng dẫn dùng app
                 SurfaceCard(Modifier.fillMaxWidth()) {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text(stringResource(R.string.guide_app_title), style = MaterialTheme.typography.titleLarge, color = pm.ink)
                         Text(stringResource(R.string.guide_app), style = MaterialTheme.typography.bodyMedium, color = pm.inkSoft)
                     }
                 }
-            }
-            val list = Catalog.games.let { l -> if (focusGame == null) l else l.sortedByDescending { it.id == focusGame } }
-            list.forEach { g ->
+            } else {
+                // Từ màn hình game: chỉ luật chơi của riêng game đó
+                val g = Catalog.byId(focusGame)
                 SurfaceCard(Modifier.fillMaxWidth()) {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Row(verticalAlignment = Alignment.CenterVertically) {

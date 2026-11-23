@@ -71,6 +71,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
     var oppAskedRematch by mutableStateOf(false); private set
     val nearbyRooms = MutableStateFlow<List<FoundRoom>>(emptyList())
     val nearbyError = MutableStateFlow(false)
+    val nearbyErrorCode = MutableStateFlow(0)
     val linkState: StateFlow<LinkState> get() = _link
     private val _link = MutableStateFlow(LinkState.IDLE)
 
@@ -119,17 +120,17 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         game = null; opp = Opp.NONE; oppName = ""; botThinking = false; verifying = false
         inviteCode = ""; replyCode = ""; inviteBusy = false; inviteOpen = false; guestConnected = false
         rematchAsked = false; oppAskedRematch = false; localEnd = null; remoteEnd = null; finalized = false
-        nearbyRooms.value = emptyList(); nearbyError.value = false; _link.value = LinkState.IDLE
+        nearbyRooms.value = emptyList(); nearbyError.value = false; nearbyErrorCode.value = 0; _link.value = LinkState.IDLE
     }
 
     // ───────────────────────── chơi với máy ─────────────────────────
-    /** [sideChoice]: 0 = đi trước, 1 = đi sau, 2 = ngẫu nhiên. Trả về false nếu không đủ kim cương. */
-    fun startVsComputer(sideChoice: Int): Boolean {
+    /** Chơi với máy: người chơi LUÔN đi trước. Trả về false nếu không đủ kim cương. */
+    fun startVsComputer(): Boolean {
         val inf = info ?: return false
         if (!wallet.canStart(inf.id)) { notice = Notice.NOT_ENOUGH; return false }
         teardown()
         mode = Mode.BOT; opp = Opp.COMPUTER
-        mySide = if (sideChoice == 2) Random.nextInt(2) else sideChoice
+        mySide = 0
         return beginMatch()
     }
 
@@ -153,6 +154,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
             val t = NearbyTransport(ctx, inf.id); transport = t
             t.host(prefs.nickname)
             viewModelScope.launch { t.error.collect { nearbyError.value = it } }
+            viewModelScope.launch { t.errorCode.collect { nearbyErrorCode.value = it } }
         } else {
             val t = WebRtcTransport(ctx); transport = t
             inviteCode = ""; replyCode = ""; inviteBusy = true
@@ -214,6 +216,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         t.discover()
         viewModelScope.launch { t.rooms.collect { nearbyRooms.value = it } }
         viewModelScope.launch { t.error.collect { nearbyError.value = it } }
+        viewModelScope.launch { t.errorCode.collect { nearbyErrorCode.value = it } }
         attachTransport()
         return true
     }
@@ -433,7 +436,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         if (phase != Phase.OVER) return
         if (!wallet.canStart(inf.id)) { notice = Notice.NOT_ENOUGH; return }
         if (isOnline && opp == Opp.HUMAN) { rematchAsked = true; transport?.send(Proto.REMATCH); maybeRematch() }
-        else if (oppIsMachine) { mySide = 1 - mySide; beginMatch() }
+        else if (oppIsMachine) { mySide = 0; beginMatch() }
     }
 
     private fun maybeRematch() {

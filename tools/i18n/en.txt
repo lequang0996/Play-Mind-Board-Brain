@@ -31,10 +31,10 @@ game_xiangqi|Xiangqi (Chinese Chess)
 game_xiangqi_desc|Generals, cannons and a river to cross.
 guide|Guide
 guide_app_title|Using Play Mind
-guide_app|• Home: pick a topic card or any game below it. Tap See more to list every game in a topic.\n• Diamonds: check in once a day for +1 diamond. Each game gives you 1 free play per day; after that every game costs 1 diamond. Winning gives +1 diamond.\n• Win streaks: 5 wins in a row in one game give +2 diamonds, 10 in a row give +3.\n• Loyalty bonus: with more than 10 diamonds and a check-in streak above 7 days, your daily check-in gives +2.\n• Play against the computer, with a friend nearby (no internet), or online by exchanging a room code or QR.\n• Rooms: if nobody joins your room, an opponent is added automatically. Opponents in rooms may be computer-controlled.\n• Change language, appearance and nickname in Settings.
+guide_app|• Home: pick a topic card or any game below it. Tap See more to list every game in a topic.\n• Diamonds: check in once a day for +1 diamond. Each game gives you 1 free play per day; after that every game costs 1 diamond. Winning gives +1 diamond.\n• Win streaks: 5 wins in a row in one game give +2 diamonds, 10 in a row give +3.\n• Loyalty bonus: with more than 10 diamonds and a check-in streak above 7 days, your daily check-in gives +2.\n• Play against the computer (you always move first), with a friend nearby (no internet), or online by exchanging a room code or QR.\n• Rooms: if nobody joins your room, an opponent is added automatically. Opponents in rooms may be computer-controlled.\n• Change language, appearance and nickname in Settings.
 guide_chess|Goal: checkmate the enemy king.\n• Pawns step forward and capture diagonally. Knights jump in an L. Bishops slide diagonally, rooks slide straight, queens do both, kings step one square.\n• Special moves: castling, en passant and promotion on the last rank.\n• Tap a piece, then a highlighted square. A game is drawn by stalemate, repetition, the 50-move rule or too few pieces.
 guide_xiangqi|Goal: checkmate the enemy general. Red moves first.\n• The general and advisors stay inside the palace. The two generals may never face each other on an open file.\n• Elephants move two points diagonally, cannot cross the river and can be blocked at the midpoint.\n• Horses move like an L but are blocked by an adjacent piece. Chariots slide straight.\n• Cannons slide straight and capture by jumping over exactly one piece. Soldiers step forward, and sideways after crossing the river.\n• A player with no legal move loses. Repeating a position three times is a draw in this app.
-guide_caro|Goal: make five or more of your stones in a row, across, down or diagonally. Black moves first.\n• If both ends of your line are blocked by enemy stones or the edge, it does not count.\n• Tap an empty intersection to place a stone. Block your opponent's open threes and fours!
+guide_caro|Goal: make five or more of your marks in a row, across, down or diagonally. X (red) moves first.\n• If both ends of your line are blocked by enemy marks or the edge, it does not count.\n• Tap an empty cell to place your mark. Block your opponent's open threes and fours!
 how_to_play|How to play
 how_to_use|User guide
 internet|Over the internet
@@ -102,8 +102,8 @@ side_red|Red
 side_white|White
 start|Start
 start_game|Start game
-stone_black|Black stones
-stone_white|White stones
+stone_black|X (red)
+stone_white|O (black)
 their_turn|Their turn
 theme|Appearance
 theme_dark|Dark
@@ -125,3 +125,4 @@ you|You
 your_invite_code|Your invitation code
 your_reply_code|Your reply code
 your_turn|Your turn
+view_guide|View how to play

@@ -162,15 +162,15 @@ GAMES = {
 <h2>Mẹo</h2><ul><li>Đưa xe ra sớm, dùng pháo ở cột giữa, giữ sĩ và tượng để bảo vệ tướng, và đề phòng bị cản chân mã.</li></ul>"""),
 "caro": dict(
   en_name="Gomoku (Caro)", vi_name="Cờ caro (Gomoku)",
-  en_intro="Take turns placing stones on a 15×15 board. Black moves first. The first player to make an unbroken line of five or more stones wins.",
-  vi_intro="Hai người lần lượt đặt quân lên bàn 15×15. Quân đen đi trước. Ai xếp được năm quân trở lên liên tiếp trước sẽ thắng.",
+  en_intro="Take turns placing marks on a 15×15 grid of cells. X (red) moves first and O is black. The first player to make an unbroken line of five or more marks wins. Against the computer you always move first.",
+  vi_intro="Hai người lần lượt đặt quân vào các ô của bàn 15×15. X (đỏ) đi trước, O màu đen. Ai xếp được năm quân trở lên liên tiếp trước sẽ thắng. Khi chơi với máy, bạn luôn đi trước.",
   en_body="""
 <h2>How to win</h2>
-<ul><li>Make a line of <b>five or more</b> of your own stones in a row: horizontal, vertical or diagonal.</li>
-<li><b>Blocked at both ends does not count.</b> If both ends of your line are closed by enemy stones (or the edge of the board), the line is not a win. At least one end must be open.</li>
+<ul><li>Make a line of <b>five or more</b> of your own marks in a row: horizontal, vertical or diagonal.</li>
+<li><b>Blocked at both ends does not count.</b> If both ends of your line are closed by enemy marks (or the edge of the board), the line is not a win. At least one end must be open.</li>
 <li>If the board fills up with no winner, the game is a draw.</li></ul>
 <h2>Using the app</h2>
-<ul><li>Tap an empty intersection to place a stone. The last stone has a small red dot.</li>
+<ul><li>Tap an empty cell to place your mark. The last move is outlined in gold.</li>
 <li>A winning line is drawn in gold.</li></ul>
 <h2>Terms</h2>
 <table><tr><th>Name</th><th>Meaning</th></tr>
@@ -185,7 +185,7 @@ GAMES = {
 <li><b>Bị chặn cả hai đầu thì không tính.</b> Nếu cả hai đầu của hàng bị quân đối phương (hoặc mép bàn) chặn, hàng đó không thắng. Ít nhất một đầu phải còn trống.</li>
 <li>Nếu bàn cờ đầy mà chưa ai thắng, ván cờ hòa.</li></ul>
 <h2>Dùng trong app</h2>
-<ul><li>Chạm vào giao điểm trống để đặt quân. Quân vừa đi có một chấm đỏ nhỏ.</li>
+<ul><li>Chạm vào ô trống để đặt quân. Nước vừa đi được viền vàng.</li>
 <li>Hàng thắng được vẽ bằng vạch vàng.</li></ul>
 <h2>Thuật ngữ</h2>
 <table><tr><th>Tên</th><th>Ý nghĩa</th></tr>

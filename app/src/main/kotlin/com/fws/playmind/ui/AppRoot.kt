@@ -30,7 +30,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -123,11 +122,11 @@ fun AppRoot(app: PlayMindApp, vm: SessionViewModel, update: UpdateManager) {
     if (noEarn) SimpleDialog(stringResource(R.string.notice_title), stringResource(R.string.ad_unavailable), stringResource(R.string.ok), { noEarn = false })
 }
 
-/** Khung nền chung: gradient nhẹ, giới hạn bề rộng 640dp cho máy tính bảng, tránh thanh hệ thống. */
+/** Khung nền chung: nền đặc (sáng = trắng tinh), giới hạn bề rộng 640dp cho máy tính bảng, tránh thanh hệ thống. */
 @Composable
 fun AppFrame(content: @Composable () -> Unit) {
     Box(
-        Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(pm.bg, pm.bg, pm.surfaceHigh.copy(alpha = if (pm.dark) .35f else .6f)))),
+        Modifier.fillMaxSize().background(pm.bg),
         contentAlignment = Alignment.TopCenter,
     ) {
         Box(Modifier.widthIn(max = 640.dp).fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing)) { content() }

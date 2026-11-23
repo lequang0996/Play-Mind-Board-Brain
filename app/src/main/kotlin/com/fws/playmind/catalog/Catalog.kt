@@ -8,11 +8,11 @@ import com.fws.playmind.core.ChessGame
 import com.fws.playmind.core.GomokuGame
 import com.fws.playmind.core.XiangqiGame
 
-/** 4 chủ đề của app. Mỗi chủ đề có một màu nhận diện dùng xuyên suốt giao diện. */
+/** 4 chủ đề của app, theo thứ tự hiển thị: Trí tuệ, Tính toán, Giải đố, Ghi nhớ. Mỗi chủ đề có một màu nhận diện dùng xuyên suốt giao diện. */
 enum class Topic(@StringRes val title: Int, val color: Color, val colorDark: Color) {
-    PUZZLE(R.string.topic_puzzle, Color(0xFF14937A), Color(0xFF3FD0B0)),
     MIND(R.string.topic_mind, Color(0xFF5348C9), Color(0xFF9A93FF)),
     MATH(R.string.topic_math, Color(0xFFC27A0A), Color(0xFFF2B84B)),
+    PUZZLE(R.string.topic_puzzle, Color(0xFF14937A), Color(0xFF3FD0B0)),
     MEMORY(R.string.topic_memory, Color(0xFFC93E6B), Color(0xFFFF86A8)),
 }
 
