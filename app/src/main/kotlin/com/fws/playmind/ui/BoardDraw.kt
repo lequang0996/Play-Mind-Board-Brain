@@ -33,6 +33,7 @@ import kotlin.math.sin
  */
 internal object Lux {
     val goldHi = Color(0xFFFFE9A6); val gold = Color(0xFFD9A93A); val goldLo = Color(0xFF8C6414)
+    val goldBright = Color(0xFFE3B64E)
     fun goldBrush(a: Offset, b: Offset) = Brush.linearGradient(0f to goldHi, .45f to gold, 1f to goldLo, start = a, end = b)
 }
 
