@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -41,12 +42,14 @@ import com.fws.playmind.catalog.Catalog
 
 @Composable
 fun LanguageList(selected: String, onSelect: (String) -> Unit) {
-    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+    Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Langs.all.forEach { (tag, name) ->
             val on = tag == selected
+            val shape = RoundedCornerShape(16.dp)
             Row(
-                Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp))
-                    .background(if (on) pm.goldSoft else pm.surfaceHigh).clickable { onSelect(tag) }.padding(horizontal = 16.dp, vertical = 14.dp),
+                Modifier.fillMaxWidth().clip(shape)
+                    .background(if (on) pm.goldSoft else pm.surface).border(if (on) 1.5.dp else 1.dp, if (on) pm.goldBright else pm.outline, shape)
+                    .clickable { onSelect(tag) }.padding(horizontal = 16.dp, vertical = 14.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(name, Modifier.weight(1f), style = MaterialTheme.typography.titleMedium, color = pm.ink)
@@ -55,8 +58,6 @@ fun LanguageList(selected: String, onSelect: (String) -> Unit) {
         }
     }
 }
-
-private fun Modifier.background(c: androidx.compose.ui.graphics.Color) = this.then(Modifier.background(c))
 
 @Composable
 fun SettingsScreen(app: PlayMindApp, onBack: () -> Unit, onGuide: () -> Unit) {
@@ -71,17 +72,11 @@ fun SettingsScreen(app: PlayMindApp, onBack: () -> Unit, onGuide: () -> Unit) {
             SectionTitle(stringResource(R.string.language))
             LanguageList(lang) { lang = it; Langs.apply(it) }
 
-            SectionTitle(stringResource(R.string.theme))
-            Segmented(
-                listOf(stringResource(R.string.theme_system), stringResource(R.string.theme_light), stringResource(R.string.theme_dark)),
-                app.prefs.theme, { app.prefs.updateTheme(it) }, Modifier.fillMaxWidth(),
-            )
-
             SectionTitle(stringResource(R.string.nickname))
             OutlinedTextField(
                 nick, { nick = it.take(16); app.prefs.updateNickname(nick) }, Modifier.fillMaxWidth(), singleLine = true,
-                shape = RoundedCornerShape(14.dp),
-                colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = pm.gold, unfocusedBorderColor = pm.outline, focusedTextColor = pm.ink, unfocusedTextColor = pm.ink, cursorColor = pm.gold),
+                shape = RoundedCornerShape(16.dp),
+                colors = OutlinedTextFieldDefaults.colors(focusedContainerColor = pm.surface, unfocusedContainerColor = pm.surface, focusedBorderColor = pm.goldBright, unfocusedBorderColor = pm.outline, focusedTextColor = pm.ink, unfocusedTextColor = pm.ink, cursorColor = pm.gold),
             )
 
             SectionTitle(stringResource(R.string.about))

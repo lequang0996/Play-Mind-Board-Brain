@@ -6,7 +6,7 @@ Tài liệu này ghi lại cách bot của **Play Mind** được nâng từ m�
 |---|---|---|
 | Cờ vua | `Chess.kt` | PVS, bảng băm, null-move, LMR, SEE, đánh giá tapered, sách khai cuộc |
 | Cờ tướng | `Xiangqi.kt` | Cùng khung, thêm đánh giá riêng (cung, sĩ tượng, pháo ghim tướng, tốt qua sông) |
-| Cờ caro | `Gomoku.kt` | Đánh giá cửa sổ tăng dần, tìm kiếm chuỗi đe dọa VCF, phòng thủ trước VCF (VCT có sẵn nhưng tắt) |
+| Cờ caro | `GomokuEngine.kt` (AI, bàn cố định) + `Gomoku.kt` (bàn vô hạn) | Đánh giá cửa sổ tăng dần, tìm kiếm chuỗi đe dọa VCF, phòng thủ trước VCF (VCT có sẵn nhưng tắt) |
 
 ## 1. Bốn trụ cột của một bot mạnh
 
@@ -95,7 +95,11 @@ Cờ tướng áp dụng cùng ý tưởng với yếu tố riêng: giá trị m
 
 Một danh sách dòng khai cuộc (chuỗi nước dạng chữ). Khi lịch sử ván trùng với đầu một dòng, chọn ngẫu nhiên nước kế tiếp trong các dòng khớp. Mỗi nước vẫn được kiểm tra bằng `findMove` nên một dòng sai sẽ bị bỏ qua chứ không gây lỗi. Sách giúp bot đi nhanh, đa dạng và tránh sai lầm khai cuộc.
 
-## 6. Cờ caro: tìm kiếm chuỗi đe dọa
+## 6. Cờ caro: bàn vô hạn và tìm kiếm chuỗi đe dọa
+
+**Bàn cờ vô hạn.** `GomokuGame` (`Gomoku.kt`) không có mép bàn: quân lưu trong `HashMap`, nước đi là một số Int đóng gói tọa độ (`GomokuGame.pack(x, y)`, `px`, `py`; phạm vi ±16384 ô). Luật thắng: 5 quân trở lên, trừ khi cả hai đầu bị *quân đối phương* chặn. Thuật toán bên dưới (cửa sổ 5 ô, VCF, alpha-beta) nằm trong `GomokuEngine` - engine bàn vuông cỡ cố định (tối đa 24x24) đã được tinh chỉnh và đo A/B. Mỗi lần bot nghĩ, `GomokuGame.bestMove` cắt một **cửa sổ vuông** bao các quân đang có (lề 5 ô, cỡ 15..24), nạp vào `GomokuEngine.setPosition`, tìm nước rồi dịch tọa độ ngược lại. Khi quân rải rộng hơn 24 ô, cửa sổ được đặt vào cụm quân "nóng" nhất (trọng số theo số quân kề + hai nước vừa đi), quân ngoài cửa sổ bị bỏ qua. Các bài kiểm thử `caro vo han: ...` trong `SelfCheck.kt` bảo vệ phần này.
+
+**Tìm kiếm chuỗi đe dọa (trong `GomokuEngine`).**
 
 Caro là game *chiến thuật thuần túy*, người giỏi thắng bằng các chuỗi đe dọa nên bot phải có tìm kiếm đe dọa chuyên dụng:
 

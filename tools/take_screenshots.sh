@@ -12,9 +12,9 @@ adb shell am broadcast -a com.android.systemui.demo -e command clock -e hhmm 100
 adb shell am broadcast -a com.android.systemui.demo -e command battery -e level 100 -e plugged false || true
 adb shell am broadcast -a com.android.systemui.demo -e command notifications -e visible false || true
 
-shot() { # tên  scene  dark  lang
+shot() { # tên  scene  lang
   adb shell am force-stop "$PKG"
-  adb shell am start -n "$PKG/com.fws.playmind.ScreenshotActivity" --es scene "$2" --ez dark "$3" --es lang "$4" >/dev/null
+  adb shell am start -n "$PKG/com.fws.playmind.ScreenshotActivity" --es scene "$2" --es lang "$3" >/dev/null
   sleep 4
   adb exec-out screencap -p > "$OUT/$1.png"
 }
@@ -22,11 +22,8 @@ shot() { # tên  scene  dark  lang
 n=1
 for lang in en vi; do
   for scene in home lobby chess xiangqi caro settings; do
-    for mode in light dark; do
-      dark=false; [ "$mode" = dark ] && dark=true
-      shot "$(printf '%02d' $n)_${lang}_${scene}_${mode}" "$scene" "$dark" "$lang"
-      n=$((n+1))
-    done
+    shot "$(printf '%02d' $n)_${lang}_${scene}" "$scene" "$lang"
+    n=$((n+1))
   done
 done
 adb shell am broadcast -a com.android.systemui.demo -e command exit || true

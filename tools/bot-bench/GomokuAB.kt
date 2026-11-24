@@ -4,7 +4,7 @@ fun main(args: Array<String>) {
     var nw = 0; var dr = 0; var ol = 0
     for (i in 0 until games) {
         val newBlack = i % 2 == 0
-        val n = GomokuGame(); val o = GomokuOld()
+        val n = GomokuEngine(); val o = GomokuOld()
         val rnd = kotlin.random.Random(i + 11)
         repeat(2) { val lm = n.legalMoves().filter { x -> x % 15 in 5..9 && x / 15 in 5..9 }; val mv = lm[rnd.nextInt(lm.size)]; n.play(mv); o.play(mv) }
         while (n.result == Outcome.ONGOING) {

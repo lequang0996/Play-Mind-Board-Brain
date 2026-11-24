@@ -1,6 +1,7 @@
 package com.fws.playmind
 
 import android.os.Bundle
+import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -16,13 +17,17 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        // Chỉ có giao diện sáng: thanh trạng thái/điều hướng trong suốt, biểu tượng hệ thống màu tối
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT),
+        )
         val app = application as PlayMindApp
         update = UpdateManager(this)
         app.ads.gatherConsent(this)   // UMP trước, chỉ yêu cầu quảng cáo khi được phép
         update.start()                // In-App Update (Flexible)
         setContent {
-            PlayMindTheme(app.prefs.theme) { AppRoot(app, vm, update) }
+            PlayMindTheme { AppRoot(app, vm, update) }
         }
     }
 

@@ -2,6 +2,7 @@ package com.fws.playmind.ui
 
 import android.app.Activity
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +30,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -43,24 +50,34 @@ import com.fws.playmind.core.Outcome
 import com.fws.playmind.match.Opp
 import com.fws.playmind.match.Phase
 import com.fws.playmind.match.SessionViewModel
+import kotlin.math.PI
+import kotlin.math.cos
+import kotlin.math.sin
 
 @Composable
 private fun PlayerBar(info: GameInfo, side: Int, name: String, active: Boolean, status: String?, showCheck: Boolean) {
+    val shape = RoundedCornerShape(20.dp)
     Row(
-        Modifier.fillMaxWidth().padding(horizontal = 18.dp, vertical = 8.dp).clip(RoundedCornerShape(16.dp))
-            .background(if (active) pm.goldSoft else pm.surface).border(1.dp, if (active) pm.gold.copy(alpha = .5f) else pm.outline, RoundedCornerShape(16.dp)).padding(horizontal = 12.dp, vertical = 8.dp),
+        Modifier.fillMaxWidth().padding(horizontal = 18.dp, vertical = 6.dp)
+            .shadow(if (active) 8.dp else 2.dp, shape, ambientColor = pm.goldLo.copy(alpha = .15f), spotColor = pm.goldLo.copy(alpha = if (active) .45f else .15f))
+            .clip(shape)
+            .background(if (active) Brush.linearGradient(listOf(pm.goldSoft, pm.surface)) else Brush.linearGradient(listOf(pm.surface, pm.surface)))
+            .border(if (active) 1.6.dp else 1.dp, if (active) pm.goldBright else pm.outline, shape)
+            .padding(horizontal = 12.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        SideBadge(info.id, side)
-        Spacer(Modifier.width(10.dp))
+        Box(Modifier.size(46.dp).clip(RoundedCornerShape(14.dp)).background(pm.surfaceHigh).border(1.dp, pm.outline, RoundedCornerShape(14.dp)), contentAlignment = Alignment.Center) {
+            SideBadge(info.id, side)
+        }
+        Spacer(Modifier.width(12.dp))
         Column(Modifier.weight(1f)) {
             Text(name, style = MaterialTheme.typography.titleMedium, color = pm.ink, maxLines = 1, overflow = TextOverflow.Ellipsis)
             Text(stringResource(if (side == 0) info.firstSide else info.secondSide), style = MaterialTheme.typography.labelMedium, color = pm.inkSoft)
         }
         if (showCheck) Text(stringResource(R.string.check), Modifier.clip(RoundedCornerShape(50)).background(pm.danger).padding(horizontal = 10.dp, vertical = 4.dp),
-            style = MaterialTheme.typography.labelMedium, color = androidx.compose.ui.graphics.Color.White)
-        else if (status != null) Text(status, style = MaterialTheme.typography.labelMedium, color = if (active) pm.gold else pm.inkSoft)
-        if (active && status == null) Box(Modifier.size(10.dp).clip(CircleShape).background(pm.gold))
+            style = MaterialTheme.typography.labelMedium, color = Color.White)
+        else if (status != null) Text(status, style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold), color = if (active) pm.gold else pm.inkSoft)
+        if (active && status == null) Box(Modifier.size(10.dp).clip(CircleShape).background(goldBrush()))
     }
 }
 
@@ -86,11 +103,11 @@ fun GameScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onExit: (
             if (!over) PmIconButton(Ic.Flag, stringResource(R.string.resign), { confirmResign = true })
         }
         PlayerBar(info, vm.oppSide, oppName, oppTurn, if (oppTurn && vm.botThinking) stringResource(R.string.thinking) else if (oppTurn) stringResource(R.string.their_turn) else null, inCheck && oppTurn)
-        Box(Modifier.weight(1f).fillMaxWidth().padding(horizontal = 12.dp), contentAlignment = Alignment.Center) {
+        Box(Modifier.weight(1f).fillMaxWidth().padding(horizontal = 12.dp, vertical = 4.dp), contentAlignment = Alignment.Center) {
             when (info.id) {
                 "chess" -> ChessBoardView(vm)
                 "xiangqi" -> XiangqiBoardView(vm)
-                else -> GomokuBoardView(vm)
+                else -> GomokuBoardView(vm, Modifier.fillMaxSize())   // bàn vô hạn: lấp đầy khoảng trống, kéo/thu phóng được
             }
         }
         PlayerBar(info, vm.mySide, myName, myTurn, if (myTurn) stringResource(R.string.your_turn) else null, inCheck && myTurn)
@@ -128,14 +145,31 @@ private fun ResultDialog(app: PlayMindApp, vm: SessionViewModel, info: GameInfo,
     val reward = vm.reward
     val exit = { app.ads.onMatchFinished(activity); onExit() }
     Dialog(onDismissRequest = {}) {
+        val frame = RoundedCornerShape(30.dp)
         Column(
-            Modifier.clip(RoundedCornerShape(28.dp)).background(pm.surface).padding(24.dp),
+            Modifier.shadow(20.dp, frame, ambientColor = pm.goldLo.copy(alpha = .3f), spotColor = pm.goldLo.copy(alpha = .5f)).clip(frame)
+                .background(Brush.verticalGradient(listOf(pm.surface, pm.goldSoft))).border(1.5.dp, pm.goldBright.copy(alpha = .8f), frame).padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            Box(Modifier.size(64.dp).clip(CircleShape).background(goldBrush()), contentAlignment = Alignment.Center) {
-                Icon(if (win) Ic.Crown else if (draw) Ic.Check else Ic.Flag, null, Modifier.size(32.dp), tint = if (pm.dark) androidx.compose.ui.graphics.Color(0xFF241A04) else androidx.compose.ui.graphics.Color.White)
+            Box(Modifier.size(92.dp), contentAlignment = Alignment.Center) {
+                val hiGold = pm.goldHi; val brGold = pm.goldBright
+                Canvas(Modifier.fillMaxSize()) {
+                    val c = Offset(size.width / 2f, size.height / 2f)
+                    drawCircle(Brush.radialGradient(0f to hiGold.copy(alpha = .75f), 1f to Color.Transparent, center = c, radius = size.width / 2f), size.width / 2f, c)
+                    drawCircle(brGold.copy(alpha = .85f), size.width * .43f, c, style = Stroke(1.5.dp.toPx()))
+                    for (k in 0 until 8) {
+                        val a = k * PI.toFloat() / 4f
+                        drawCircle(brGold, if (k % 2 == 0) 2.6.dp.toPx() else 1.6.dp.toPx(), c + Offset(cos(a), sin(a)) * (size.width * .47f))
+                    }
+                }
+                Box(
+                    Modifier.size(64.dp).shadow(8.dp, CircleShape, ambientColor = pm.goldLo.copy(alpha = .4f), spotColor = pm.goldLo.copy(alpha = .6f))
+                        .clip(CircleShape).background(goldBrush()).border(1.5.dp, Color.White.copy(alpha = .7f), CircleShape),
+                    contentAlignment = Alignment.Center,
+                ) { Icon(if (win) Ic.Crown else if (draw) Ic.Check else Ic.Flag, null, Modifier.size(32.dp), tint = pm.navy) }
             }
             Text(title, style = MaterialTheme.typography.headlineSmall, color = pm.ink)
+            OrnamentDivider(Modifier.width(160.dp))
             Text(reasonText(g.reason), style = MaterialTheme.typography.bodyMedium, color = pm.inkSoft)
             if (vm.verifying) Row(verticalAlignment = Alignment.CenterVertically) {
                 CircularProgressIndicator(Modifier.size(16.dp), color = pm.gold, strokeWidth = 2.dp); Spacer(Modifier.width(8.dp))
@@ -143,7 +177,7 @@ private fun ResultDialog(app: PlayMindApp, vm: SessionViewModel, info: GameInfo,
             }
             if (reward != null && reward.diamonds > 0) {
                 Row(
-                    Modifier.clip(RoundedCornerShape(50)).background(pm.goldSoft).padding(horizontal = 16.dp, vertical = 8.dp),
+                    Modifier.clip(RoundedCornerShape(50)).background(pm.surface).border(1.dp, pm.goldBright.copy(alpha = .7f), RoundedCornerShape(50)).padding(horizontal = 16.dp, vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     GemMark(20.dp)

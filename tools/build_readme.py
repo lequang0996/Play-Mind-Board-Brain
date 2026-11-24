@@ -12,7 +12,7 @@ EN = dict(
 AVAILABLE NOW — INTELLECT
 • Chess: full rules including castling, en passant, promotion, check, checkmate, stalemate and draws.
 • Xiangqi (Chinese Chess): generals, advisors, elephants, horses, chariots, cannons and soldiers on the river board, including the flying-general rule.
-• Gomoku (Caro): make five in a row on a 15×15 board. A line blocked at both ends does not count.
+• Gomoku (Caro): make five in a row on an endless board - drag to explore, pinch to zoom. A line blocked at both ends does not count.
 More games for the Puzzle, Calculation and Memory topics are coming soon.
 
 PLAY YOUR WAY
@@ -29,7 +29,7 @@ DAILY DIAMONDS
 • Diamonds are virtual, cannot be bought and have no cash value.
 
 DESIGNED WITH CARE
-• An elegant light and dark appearance with a refined colour for each topic.
+• A luxurious ivory-and-gold look, with hand-drawn boards and pieces and a refined colour for each topic.
 • 8 languages: English, 简体中文, Español, Português, Русский, 日本語, 한국어 and Tiếng Việt. Choose yours on first launch and change it any time in Settings.
 • Clear in-app guides for the app and for every game.
 • Your progress is stored on your device and protected with encryption. No account required.
@@ -49,7 +49,7 @@ VI = dict(
 ĐÃ CÓ — CHỦ ĐỀ TRÍ TUỆ
 • Cờ vua: đầy đủ luật gồm nhập thành, bắt tốt qua đường, phong cấp, chiếu, chiếu hết, hòa cờ và các thế hòa.
 • Cờ tướng: tướng, sĩ, tượng, mã, xe, pháo và tốt trên bàn cờ có sông, kể cả luật hai tướng không được đối mặt.
-• Cờ caro (Gomoku): xếp năm quân liên tiếp trên bàn 15×15. Hàng bị chặn cả hai đầu thì không tính.
+• Cờ caro (Gomoku): xếp năm quân liên tiếp trên bàn cờ vô hạn - kéo để di chuyển, chụm để thu phóng. Hàng bị chặn cả hai đầu thì không tính.
 Các game thuộc chủ đề Giải đố, Tính toán và Ghi nhớ sẽ sớm ra mắt.
 
 CHƠI THEO CÁCH CỦA BẠN

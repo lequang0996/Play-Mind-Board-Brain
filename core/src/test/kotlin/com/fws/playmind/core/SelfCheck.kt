@@ -8,7 +8,8 @@ private fun expect(name: String, cond: Boolean) {
     if (!cond) failures++
 }
 
-private fun idx(x: Int, y: Int) = y * 15 + x
+/** Tọa độ trong các bài test cũ là 0..14 trên bàn 15x15; trên bàn vô hạn dịch về quanh gốc (0,0). */
+private fun idx(x: Int, y: Int) = GomokuGame.pack(x - 7, y - 7)
 private fun sqName(m: Int) = "" + ('a' + ChessGame.fromSq(m) % 8) + ('1' + ChessGame.fromSq(m) / 8) + ('a' + ChessGame.toSq(m) % 8) + ('1' + ChessGame.toSq(m) / 8)
 
 fun main() {
@@ -84,6 +85,39 @@ fun main() {
     listOf(idx(7, 7), idx(7, 8), idx(8, 7), idx(8, 8), idx(9, 7)).forEach { o.play(it) }
     val ob = o.bestMove(800)
     expect("caro AI chan ba ho", ob == idx(6, 7) || ob == idx(10, 7) || ob == idx(5, 7) || ob == idx(11, 7))
+
+    // ── Cờ caro bàn vô hạn ──
+    val fx = 5000; val fy = -3000
+    val far = GomokuGame()
+    for (i in 0 until 5) { far.play(GomokuGame.pack(fx + i, fy)); if (i < 4) far.play(GomokuGame.pack(fx + i, fy + 2 + i * 3)) }
+    expect("caro vo han: thang o toa do xa goc", far.result == Outcome.WIN_FIRST && far.winLine.size == 5)
+    val neg = GomokuGame()
+    for (i in 0 until 5) { neg.play(GomokuGame.pack(-20, -30 - i)); if (i < 4) neg.play(GomokuGame.pack(-10 + i * 2, -3)) }
+    expect("caro vo han: thang theo cot, toa do am", neg.result == Outcome.WIN_FIRST)
+    val six = GomokuGame()
+    listOf(1, 2, 3, 5, 6).forEachIndexed { i, x -> six.play(GomokuGame.pack(x, 0)); six.play(GomokuGame.pack(x, 10 + i * 3)) }
+    six.play(GomokuGame.pack(4, 0))
+    expect("caro vo han: 6 quan lien tiep van thang", six.result == Outcome.WIN_FIRST && six.winLine.size == 6)
+    val dup = GomokuGame()
+    dup.play(GomokuGame.pack(0, 0))
+    expect("caro vo han: khong dat len o da co / ngoai pham vi", !dup.play(GomokuGame.pack(0, 0)) && !dup.play(Int.MAX_VALUE) && !dup.play(-1))
+    // AI trên bàn vô hạn: hoàn thành 5 ở xa gốc tọa độ
+    val fa = GomokuGame()
+    listOf(4 to 7, 4 to 3, 5 to 7, 9 to 3, 6 to 7, 12 to 12, 7 to 7, 1 to 12).forEach { (x, y) -> fa.play(GomokuGame.pack(fx + x, fy + y)) }
+    val fm = fa.bestMove(800)
+    expect("caro vo han: AI hoan thanh 5 o xa goc", fm == GomokuGame.pack(fx + 3, fy + 7) || fm == GomokuGame.pack(fx + 8, fy + 7))
+    // AI khi quân rải rộng hơn cửa sổ 24: vẫn thấy hàng bốn của mình dù nước vừa đi của đối thủ ở rất xa
+    val wide = GomokuGame()
+    val xs = listOf(0 to 0, 1 to 0, 2 to 0, 3 to 0)
+    val os = listOf(40 to 40, -40 to 35, 35 to -38, -30 to -30)
+    for (i in xs.indices) { wide.play(GomokuGame.pack(xs[i].first, xs[i].second)); wide.play(GomokuGame.pack(os[i].first, os[i].second)) }
+    val wm = wide.bestMove(800)
+    expect("caro vo han: AI thang hang bon khi quan rai rong", wm == GomokuGame.pack(-1, 0) || wm == GomokuGame.pack(4, 0))
+    val ai = GomokuGame()
+    var legalAll = true
+    var n = 0
+    while (n < 30 && ai.result == Outcome.ONGOING) { val m = ai.bestMove(60); if (!ai.play(m)) legalAll = false; n++ }
+    expect("caro vo han: bot tu choi toi 30 nuoc deu hop le", legalAll && ai.plies >= 9)
 
     println(if (failures == 0) "ALL CHECKS PASSED" else "$failures CHECK(S) FAILED")
     if (failures > 0) exitProcess(1)

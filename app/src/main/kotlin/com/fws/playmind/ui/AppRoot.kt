@@ -3,6 +3,7 @@ package com.fws.playmind.ui
 import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +23,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.window.Dialog
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -122,11 +127,21 @@ fun AppRoot(app: PlayMindApp, vm: SessionViewModel, update: UpdateManager) {
     if (noEarn) SimpleDialog(stringResource(R.string.notice_title), stringResource(R.string.ad_unavailable), stringResource(R.string.ok), { noEarn = false })
 }
 
-/** Khung nền chung: nền đặc (sáng = trắng tinh), giới hạn bề rộng 640dp cho máy tính bảng, tránh thanh hệ thống. */
+/**
+ * Khung nền chung: nền ngà chuyển sắc nhẹ kèm hai vầng sáng vàng/xanh hoàng gia (cùng tông icon),
+ * giới hạn bề rộng 640dp cho máy tính bảng, tránh thanh hệ thống.
+ */
 @Composable
 fun AppFrame(content: @Composable () -> Unit) {
+    val p = pm
     Box(
-        Modifier.fillMaxSize().background(pm.bg),
+        Modifier.fillMaxSize()
+            .background(Brush.verticalGradient(listOf(p.bg, p.bgDeep)))
+            .drawBehind {
+                val r = size.maxDimension * .7f
+                drawCircle(Brush.radialGradient(0f to p.goldHi.copy(alpha = .38f), 1f to Color.Transparent, center = Offset(0f, 0f), radius = r), r, Offset(0f, 0f))
+                drawCircle(Brush.radialGradient(0f to p.royal.copy(alpha = .10f), 1f to Color.Transparent, center = Offset(size.width, size.height), radius = r), r, Offset(size.width, size.height))
+            },
         contentAlignment = Alignment.TopCenter,
     ) {
         Box(Modifier.widthIn(max = 640.dp).fillMaxSize().windowInsetsPadding(WindowInsets.safeDrawing)) { content() }
@@ -137,7 +152,7 @@ fun AppFrame(content: @Composable () -> Unit) {
 private fun FirstRunLanguage(onPick: (String) -> Unit) {
     Dialog(onDismissRequest = {}) {
         Column(
-            Modifier.clip(RoundedCornerShape(28.dp)).background(pm.surface).padding(24.dp),
+            Modifier.clip(RoundedCornerShape(28.dp)).background(pm.surface).border(1.dp, pm.goldBright.copy(alpha = .6f), RoundedCornerShape(28.dp)).padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Icon(Ic.Globe, null, Modifier.size(32.dp), tint = pm.gold)

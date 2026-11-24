@@ -31,10 +31,10 @@ game_xiangqi|Xiangqi (ajedrez chino)
 game_xiangqi_desc|Generales, cañones y un río que cruzar.
 guide|Guía
 guide_app_title|Cómo usar Play Mind
-guide_app|• Inicio: elige una tarjeta de tema o cualquier juego de debajo. Pulsa Ver más para listar todos los juegos de un tema.\n• Diamantes: marca asistencia una vez al día para +1 diamante. Cada juego te da 1 partida gratis al día; después cada partida cuesta 1 diamante. Ganar da +1 diamante.\n• Rachas: 5 victorias seguidas en un juego dan +2 diamantes y 10 seguidas dan +3.\n• Bonus de fidelidad: con más de 10 diamantes y una racha de asistencia superior a 7 días, la asistencia diaria da +2.\n• Juega contra el ordenador (siempre mueves primero), con un amigo cercano (sin internet) o en línea intercambiando un código de sala o un QR.\n• Salas: si nadie entra en tu sala, se añade un rival automáticamente. Los rivales de las salas pueden estar controlados por el ordenador.\n• Cambia el idioma, la apariencia y el apodo en Ajustes.
+guide_app|• Inicio: elige una tarjeta de tema o cualquier juego de debajo. Pulsa Ver más para listar todos los juegos de un tema.\n• Diamantes: marca asistencia una vez al día para +1 diamante. Cada juego te da 1 partida gratis al día; después cada partida cuesta 1 diamante. Ganar da +1 diamante.\n• Rachas: 5 victorias seguidas en un juego dan +2 diamantes y 10 seguidas dan +3.\n• Bonus de fidelidad: con más de 10 diamantes y una racha de asistencia superior a 7 días, la asistencia diaria da +2.\n• Juega contra el ordenador (siempre mueves primero), con un amigo cercano (sin internet) o en línea intercambiando un código de sala o un QR.\n• Salas: si nadie entra en tu sala, se añade un rival automáticamente. Los rivales de las salas pueden estar controlados por el ordenador.\n• Cambia el idioma y el apodo en Ajustes.
 guide_chess|Objetivo: dar jaque mate al rey rival.\n• Los peones avanzan y capturan en diagonal. Los caballos saltan en L. Los alfiles se deslizan en diagonal, las torres en línea recta, la dama de ambas formas y el rey avanza una casilla.\n• Jugadas especiales: enroque, captura al paso y coronación en la última fila.\n• Toca una pieza y luego una casilla resaltada. Hay tablas por rey ahogado, repetición, la regla de los 50 movimientos o material insuficiente.
 guide_xiangqi|Objetivo: dar jaque mate al general rival. Empiezan las rojas.\n• El general y los consejeros permanecen en el palacio. Los dos generales nunca pueden quedar frente a frente en una columna libre.\n• Los elefantes se mueven dos puntos en diagonal, no cruzan el río y pueden ser bloqueados en el punto medio.\n• Los caballos se mueven en L pero los bloquea una pieza adyacente. Los carros avanzan en línea recta.\n• Los cañones avanzan en línea recta y capturan saltando exactamente una pieza. Los soldados avanzan y, tras cruzar el río, también van de lado.\n• Quien no tiene movimientos legales pierde. En esta app, repetir una posición tres veces es tablas.
-guide_caro|Objetivo: alinear cinco o más marcas tuyas en horizontal, vertical o diagonal. Empieza X (rojo).\n• Si ambos extremos de tu línea están bloqueados por marcas rivales o por el borde, no cuenta.\n• Toca una casilla vacía para colocar tu marca. ¡Bloquea los tres y cuatro abiertos de tu rival!
+guide_caro|Objetivo: alinear cinco o más marcas tuyas en horizontal, vertical o diagonal. Empieza X (oscura).\n• El tablero no tiene bordes: arrastra con un dedo para moverte y pellizca para hacer zoom.\n• Si ambos extremos de tu línea están bloqueados por marcas rivales, no cuenta.\n• Toca una casilla vacía para colocar tu marca. ¡Bloquea los tres y cuatro abiertos de tu rival!
 how_to_play|Cómo jugar
 how_to_use|Guía de uso
 internet|Por internet
@@ -102,13 +102,9 @@ side_red|Rojas
 side_white|Blancas
 start|Empezar
 start_game|Empezar partida
-stone_black|Fichas X (rojas)
-stone_white|Fichas O (negras)
+stone_black|Fichas X (madera oscura)
+stone_white|Fichas O (madera clara)
 their_turn|Turno del rival
-theme|Apariencia
-theme_dark|Oscuro
-theme_light|Claro
-theme_system|Sistema
 thinking|Pensando…
 topic_math|Cálculo
 topic_memory|Memoria
@@ -126,3 +122,7 @@ your_invite_code|Tu código de invitación
 your_reply_code|Tu código de respuesta
 your_turn|Tu turno
 view_guide|Ver cómo se juega
+caro_recenter|Centrar
+caro_zoom_in|Acercar
+caro_zoom_out|Alejar
+caro_hint|Arrastra para mover · pellizca para zoom

@@ -50,6 +50,9 @@ object Ic {
     val Hourglass = build("hourglass", false, "M7 3.5h10M7 20.5h10M8 3.5c0 5 8 5 8 8.5s-8 3.5-8 8.5M16 3.5c0 5-8 5-8 8.5")
     val Info = build("info", false, circle(12f, 12f, 9f), "M12 11v5.5M12 7.8v.01")
     val Shield = build("shield", false, "M12 3l7.5 3v5.5c0 4.5-3 7.8-7.5 9.5-4.5-1.7-7.5-5-7.5-9.5V6z")
+    val Plus = build("plus", false, "M12 5v14M5 12h14")
+    val Minus = build("minus", false, "M5 12h14")
+    val Target = build("target", false, circle(12f, 12f, 6.5f), "M12 2.5v4M12 17.5v4M2.5 12h4M17.5 12h4M12 12v.01")
     val Video = build("video", false, "M4 6.5h11v11H4zM15 10.5l5-2.5v8l-5-2.5z")
 
     // Biểu tượng 4 chủ đề

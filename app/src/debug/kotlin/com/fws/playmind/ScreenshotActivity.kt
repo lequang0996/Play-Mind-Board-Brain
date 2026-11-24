@@ -21,7 +21,7 @@ import com.fws.playmind.ui.SettingsScreen
 
 /**
  * Chỉ dành cho bản debug. Hiển thị một "cảnh" cố định bằng chính giao diện thật của app để CI chụp ảnh:
- *   adb shell am start -n com.fws.playmind.debug/com.fws.playmind.ScreenshotActivity --es scene chess --ez dark true --es lang vi
+ *   adb shell am start -n com.fws.playmind.debug/com.fws.playmind.ScreenshotActivity --es scene chess  --es lang vi
  * scene: home | lobby | chess | xiangqi | caro | settings | guide
  */
 class ScreenshotActivity : AppCompatActivity() {
@@ -31,10 +31,8 @@ class ScreenshotActivity : AppCompatActivity() {
         val app = application as PlayMindApp
         val vm = ViewModelProvider(this)[SessionViewModel::class.java]
         val scene = intent.getStringExtra("scene") ?: "home"
-        val dark = intent.getBooleanExtra("dark", false)
         intent.getStringExtra("lang")?.let { Langs.apply(it) }
         app.prefs.langChosen = true
-        app.prefs.updateTheme(if (dark) 2 else 1)
         app.prefs.updateNickname("Alex")
         if (app.wallet.state.value.diamonds == 0) { app.wallet.addDiamonds(12); app.wallet.checkIn() }
 
@@ -45,7 +43,7 @@ class ScreenshotActivity : AppCompatActivity() {
             "caro" -> vm.loadDemo(Catalog.byId("caro"), demoCaro(), 0, "Kenji88")
         }
         setContent {
-            PlayMindTheme(app.prefs.theme) {
+            PlayMindTheme {
                 AppFrame {
                     when (scene) {
                         "lobby" -> LobbyScreen(app, vm, Catalog.byId("chess"), {}, {}, {})
@@ -79,7 +77,7 @@ class ScreenshotActivity : AppCompatActivity() {
 
     private fun demoCaro(): GomokuGame {
         val g = GomokuGame()
-        listOf(7 to 7, 8 to 8, 8 to 7, 6 to 7, 7 to 6, 7 to 8, 9 to 6, 6 to 5, 10 to 5, 5 to 8, 6 to 6, 9 to 7).forEach { (x, y) -> g.play(y * 15 + x) }
+        listOf(7 to 7, 8 to 8, 8 to 7, 6 to 7, 7 to 6, 7 to 8, 9 to 6, 6 to 5, 10 to 5, 5 to 8, 6 to 6, 9 to 7).forEach { (x, y) -> g.play(GomokuGame.pack(x - 7, y - 7)) }
         return g
     }
 }
