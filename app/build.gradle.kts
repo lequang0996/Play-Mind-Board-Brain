@@ -47,6 +47,7 @@ android {
             isShrinkResources = true      // loại bỏ tài nguyên không dùng
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfigs.findByName("release")?.let { signingConfig = it }
+			ndk { debugSymbolLevel = "SYMBOL_TABLE" }
         }
         debug {
             applicationIdSuffix = ".debug"
