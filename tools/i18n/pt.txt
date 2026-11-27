@@ -29,7 +29,7 @@ game_xiangqi|Xiangqi (xadrez chinês)
 game_xiangqi_desc|Generais, canhões e um rio para atravessar.
 guide|Guia
 guide_app_title|Como usar o Play Mind
-guide_app|• Início: escolha o cartão em destaque (muda a cada 2 minutos) ou qualquer jogo nas linhas abaixo.\n• Diamantes: o check-in diário dá +1 diamante. Cada jogo tem 1 partida grátis por dia (plano mensal: 3, plano anual: ilimitadas); depois cada partida custa 1 diamante. Vencer dá +1 diamante.\n• Sequências: 5 vitórias seguidas em um jogo dão +2 diamantes, 10 seguidas dão +3.\n• Bônus de fidelidade: após 30 dias seguidos de check-in, cada check-in seguinte dá +2 diamantes (planos mensal e anual: +4).\n• Modos: jogue contra a máquina (você começa), com um amigo por perto sem internet, ou online trocando um código de sala ou QR. Alguns jogos aceitam 3-4 jogadores contra a máquina.\n• Loja: remova anúncios, ganhe mais partidas grátis ou compre diamantes.\n• Altere idioma e apelido em Configurações.
+guide_app|• Início: escolha o cartão em destaque (muda a cada 2 minutos) ou qualquer jogo nas linhas abaixo.\n• Diamantes: o check-in diário dá +1 diamante. Cada jogo tem 1 partida grátis por dia (plano mensal: 3, plano anual: ilimitadas); depois cada partida custa 1 diamante. Vencer dá +1 diamante.\n• Sequências: 5 vitórias seguidas em um jogo dão +2 diamantes, 10 seguidas dão +3.\n• Bônus de fidelidade: após 30 dias seguidos de check-in, cada check-in seguinte dá +2 diamantes (planos mensal e anual: +4).\n• Modos: jogue contra a máquina (você começa), com um amigo por perto sem internet, ou online trocando um código de sala ou QR. Alguns jogos aceitam 3-4 jogadores contra a máquina.\n• Tempo por jogada: Caro 45 s, Wall Go e Quoridor 1 min, xadrez e xiangqi 3 min, go até 1 dia. Se o tempo acabar, perde quem deve jogar.\n• Loja: remova anúncios, ganhe mais partidas grátis ou compre diamantes.\n• Altere idioma e apelido em Configurações.
 guide_chess|Objetivo: dar xeque-mate no rei adversário.\n• Peões avançam e capturam na diagonal. Cavalos saltam em L. Bispos deslizam na diagonal, torres em linha reta, a dama de ambos os modos e o rei anda uma casa.\n• Jogadas especiais: roque, en passant e promoção na última fileira.\n• Toque em uma peça e depois em uma casa destacada. O jogo empata por afogamento, repetição, regra dos 50 lances ou material insuficiente.
 guide_xiangqi|Objetivo: dar xeque-mate no general adversário. O vermelho começa.\n• O general e os conselheiros ficam dentro do palácio. Os dois generais nunca podem se encarar em uma coluna livre.\n• Elefantes andam duas casas na diagonal, não atravessam o rio e podem ser bloqueados no ponto médio.\n• Cavalos andam em L, mas uma peça adjacente os bloqueia. Carros deslizam em linha reta.\n• Canhões deslizam em linha reta e capturam saltando exatamente uma peça. Soldados avançam e, depois de atravessar o rio, também andam de lado.\n• Quem não tem lance legal perde. Neste app, repetir uma posição três vezes é empate.
 guide_caro|Objetivo: formar cinco ou mais marcas suas em linha, na horizontal, vertical ou diagonal. O X (escuro) começa.\n• O tabuleiro não tem bordas: arraste com um dedo para se mover e use o gesto de pinça para dar zoom.\n• Se as duas pontas da sua linha estiverem bloqueadas por marcas adversárias, não vale.\n• Toque em uma casa vazia para colocar sua marca. Bloqueie as trincas e quadras abertas do adversário!
@@ -53,7 +53,7 @@ notice_conn_failed|Não foi possível conectar. Verifique sua rede e tente novam
 notice_conn_lost|A conexão foi perdida. A partida terminou.
 notice_host_left|O anfitrião saiu da sala.
 notice_kicked|O anfitrião removeu você da sala.
-notice_not_enough|Você precisa de 1 diamante para jogar. Ganhe um com o check-in diário, vencendo partidas ou assistindo a um anúncio.
+notice_not_enough|Você precisa de 1 diamante para jogar. Ganhe um com o check-in diário, vencendo partidas ou na loja.
 notice_opp_left|Seu adversário saiu da sala.
 notice_permission|É necessária permissão para encontrar jogadores por perto. Você pode permitir nas configurações do app.
 notice_title|Aviso
@@ -148,7 +148,7 @@ go_place|Colocar pedra
 go_score|Preto %1$d – Branco %2$d (+%3$s de komi)
 guide_go|Objetivo: controlar mais do tabuleiro que o oponente. As pretas começam.\n• Captura: um grupo de pedras sem pontos vazios adjacentes (sem liberdades) é retirado.\n• Proibido: não pode jogar se o seu grupo ficar sem liberdades (a não ser que capture) nem repetir uma posição anterior.\n• Fim: quando o oponente passa e não resta nada útil, toque em Encerrar partida para contar os pontos.\n• Pontuação: por área - suas pedras mais as regiões vazias que só você cerca. As brancas recebem 7,5 de komi. Pedras mortas não saem sozinhas: capture-as antes de passar.\n• Toque numa interseção para ver a pedra e pressione Colocar pedra.
 guide_quoridor|Objetivo: ser o primeiro a chegar ao lado oposto do tabuleiro.\n• Mover: ande uma casa para cima, baixo, esquerda ou direita. Se houver um peão rival ao lado, salte-o, ou ande na diagonal se atrás houver um muro ou a borda.\n• Muros: em vez de mover, você pode colocar um muro de duas casas. Muros não podem se sobrepor nem se cruzar, e você nunca pode fechar todos os caminhos até uma meta.\n• Muros: 10 por jogador com 2 jogadores, 5 com 4 jogadores.\n• Construir: escolha Muro, toque perto do cruzamento onde ele vai para ver (verde = permitido) e pressione Colocar muro.
-guide_sudoku|Objetivo: preencha todas as casas para que cada linha, coluna e bloco 3×3 contenha de 1 a 9 uma única vez.\n• Inserir: toque numa casa e depois num número. Números errados ficam vermelhos; corrija-os com Apagar.\n• Notas: ative o lápis para anotar pequenos números candidatos (em vermelho).\n• Apagar limpa a casa selecionada. Cada puzzle tem uma única solução.
+guide_sudoku|Objetivo: preencha todas as casas para que cada linha, coluna e bloco 3×3 contenha de 1 a 9 uma única vez.\n• Inserir: toque numa casa e depois num número. Números errados ficam vermelhos; corrija-os com Apagar.\n• Notas: ative o lápis para anotar pequenos números candidatos (em vermelho).\n• Apagar limpa a casa selecionada. Cada bloco 3×3 começa com um só número (9 no total), por isso qualquer grelha que siga as regras vence. 5 minutos sem jogar = derrota.
 guide_wallgo|Objetivo: terminar com mais território que os rivais.\n• Preparação: em turnos, coloque suas pedras em casas vazias (4 cada com 2 jogadores, 3 com 3 jogadores, 2 com 4 jogadores).\n• Sua vez: escolha uma das suas pedras e mova-a 0, 1 ou 2 casas para cima, baixo, esquerda ou direita. Ela não atravessa muros nem outras pedras.\n• Muro: depois de mover, você DEVE colocar um muro em um lado livre da casa onde parou.\n• Território: quando cada área cercada tiver pedras de um só jogador, a partida termina. Você pontua as casas das áreas que contêm só as suas pedras.\n• Empates: vence a maior área única; senão, empate. Quem não puder mover perde a vez.
 leave_confirm_local|Sair desta partida? Partidas no mesmo aparelho não são registradas.
 local_no_reward|Partidas no mesmo aparelho não dão diamantes nem gastam partidas.
@@ -175,7 +175,7 @@ restore_purchases|Restaurar compras
 sd_erase|Apagar
 sd_generating|Preparando seu puzzle…
 sd_lost|Fim de jogo
-sd_lost_text|Três erros encerraram este puzzle.
+sd_lost_text|O tempo acabou: nenhuma jogada foi feita a tempo.
 sd_notes|Notas
 sd_won|Resolvido!
 sd_won_text|Tempo %1$s · %2$d erros
@@ -212,3 +212,4 @@ nearby_why_title|Encontrar jogadores por perto
 nearby_why_text|O Play Mind usa apenas Bluetooth e Wi-Fi para encontrar e conectar amigos por perto. Ele nunca coleta nem guarda sua localização. O Android coloca essa permissão em “dispositivos por perto”, por isso o próximo aviso menciona posição relativa.
 continue_label|Continuar
 go_end_game|Encerrar partida
+reason_timeout|O tempo para jogar acabou

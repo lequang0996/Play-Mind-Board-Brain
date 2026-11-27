@@ -66,9 +66,10 @@ fun TopicScreen(app: PlayMindApp, topic: Topic, onBack: () -> Unit, onOpenGame: 
 @Composable
 private fun TopicRow(app: PlayMindApp, g: GameInfo, t: Topic, rank: Int, onOpen: (GameInfo) -> Unit) {
     val shape = RoundedCornerShape(22.dp)
+    val src = rememberPress()
     val free = app.wallet.freeLeft(g.id)
     Row(
-        Modifier.fillMaxWidth().lift(shape, 8.dp).clip(shape).background(pm.surface).border(1.dp, pm.outline, shape).clickable { onOpen(g) },
+        Modifier.bounce(src, .98f).fillMaxWidth().lift(shape, 10.dp).clip(shape).background(cardBrush()).border(1.dp, hairline(), shape).tap(src) { onOpen(g) },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(

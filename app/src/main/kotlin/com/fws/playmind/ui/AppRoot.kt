@@ -1,7 +1,15 @@
 package com.fws.playmind.ui
 
-import android.app.Activity
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -35,7 +43,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.fws.playmind.PlayMindApp
@@ -63,11 +70,9 @@ sealed interface Screen {
 
 @Composable
 fun AppRoot(app: PlayMindApp, vm: SessionViewModel, update: UpdateManager) {
-    val activity = LocalContext.current as Activity
     var stack by remember { mutableStateOf<List<Screen>>(listOf(Screen.Home)) }
     val top = stack.last()
     var langChosen by remember { mutableStateOf(app.prefs.langChosen) }
-    var noEarn by remember { mutableStateOf(false) }
 
     fun push(s: Screen) { stack = stack + s }
     fun pop() { if (stack.size > 1) stack = stack.dropLast(1) }
@@ -90,7 +95,18 @@ fun AppRoot(app: PlayMindApp, vm: SessionViewModel, update: UpdateManager) {
     AppFrame {
         if (!walletReady) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = pm.gold) }
-        } else when (val s = top) {
+        } else AnimatedContent(
+            targetState = top,
+            transitionSpec = {
+                // tiến vào màn mới: trượt nhẹ từ phải + mờ dần; quay lại: trượt từ trái
+                val forward = stack.size >= depthOf(initialState, stack)
+                val dir = if (forward) 1 else -1
+                (fadeIn(tween(240, delayMillis = 40)) + slideInHorizontally(tween(320, easing = FastOutSlowInEasing)) { it / 10 * dir } +
+                    scaleIn(tween(320), initialScale = .985f)) togetherWith
+                    (fadeOut(tween(160)) + slideOutHorizontally(tween(320, easing = FastOutSlowInEasing)) { -it / 14 * dir })
+            },
+            label = "screen",
+        ) { s -> when (s) {
             Screen.Home -> HomeScreen(
                 app, update.downloaded, { update.complete() },
                 onOpenGame = { vm.open(it); push(Screen.Lobby(it.id)) },
@@ -104,7 +120,7 @@ fun AppRoot(app: PlayMindApp, vm: SessionViewModel, update: UpdateManager) {
             Screen.Settings -> SettingsScreen(app, { pop() }, { push(Screen.Guide(null)) }, { push(Screen.Shop) })
             Screen.Shop -> ShopScreen(app) { pop() }
             is Screen.Guide -> GuideScreen({ pop() }, s.gameId)
-        }
+        } }
     }
 
     // Hộp thoại chọn ngôn ngữ ở lần mở đầu tiên (bắt buộc chọn)
@@ -128,21 +144,20 @@ fun AppRoot(app: PlayMindApp, vm: SessionViewModel, update: UpdateManager) {
         if (n == Notice.NOT_ENOUGH) {
             SimpleDialog(
                 stringResource(R.string.notice_title), stringResource(msg),
-                stringResource(R.string.watch_ad), {
-                    vm.notice = Notice.NONE
-                    app.ads.showRewarded(activity, { app.wallet.addDiamonds(1) }, { noEarn = true })
-                },
+                stringResource(R.string.shop), { vm.notice = Notice.NONE; if (stack.last() !is Screen.Shop) push(Screen.Shop) },
                 stringResource(R.string.close), { vm.notice = Notice.NONE }, tone = DialogTone.GEM,
             )
         } else SimpleDialog(stringResource(R.string.notice_title), stringResource(msg), stringResource(R.string.ok), { vm.notice = Notice.NONE }, tone = DialogTone.WARN)
     }
-    if (noEarn) SimpleDialog(stringResource(R.string.notice_title), stringResource(R.string.ad_unavailable), stringResource(R.string.ok), { noEarn = false })
 }
 
 /**
  * Khung nền chung: nền ngọc trai chuyển sắc rất nhẹ kèm hai vầng sáng mờ (vàng champagne ở góc trên, tím nhạt ở góc dưới),
  * giới hạn bề rộng 640dp cho máy tính bảng, tránh thanh hệ thống.
  */
+/** Vị trí (độ sâu) của một màn hình trong ngăn xếp; không có thì coi như sâu hơn hiện tại (đang quay lại). */
+private fun depthOf(s: Screen, stack: List<Screen>): Int { val i = stack.indexOf(s); return if (i < 0) Int.MAX_VALUE else i + 1 }
+
 @Composable
 fun AppFrame(content: @Composable () -> Unit) {
     val p = pm
@@ -150,9 +165,12 @@ fun AppFrame(content: @Composable () -> Unit) {
         Modifier.fillMaxSize()
             .background(Brush.verticalGradient(listOf(p.bg, p.bgDeep)))
             .drawBehind {
+                // "Aurora" rất nhẹ: vàng champagne góc trên trái, xanh chàm góc trên phải, hồng ngọc góc dưới
                 val r = size.maxDimension * .75f
-                drawCircle(Brush.radialGradient(0f to p.goldBright.copy(alpha = .20f), 1f to Color.Transparent, center = Offset(0f, 0f), radius = r), r, Offset(0f, 0f))
-                drawCircle(Brush.radialGradient(0f to Color(0xFF6C5CFF).copy(alpha = .10f), 1f to Color.Transparent, center = Offset(size.width, size.height), radius = r), r, Offset(size.width, size.height))
+                drawCircle(Brush.radialGradient(0f to p.goldBright.copy(alpha = .22f), 1f to Color.Transparent, center = Offset(0f, 0f), radius = r), r, Offset(0f, 0f))
+                val r2 = size.maxDimension * .55f
+                drawCircle(Brush.radialGradient(0f to Color(0xFF6C7CFF).copy(alpha = .13f), 1f to Color.Transparent, center = Offset(size.width, size.height * .18f), radius = r2), r2, Offset(size.width, size.height * .18f))
+                drawCircle(Brush.radialGradient(0f to Color(0xFFB36CFF).copy(alpha = .09f), 1f to Color.Transparent, center = Offset(size.width * .2f, size.height), radius = r), r, Offset(size.width * .2f, size.height))
             },
         contentAlignment = Alignment.TopCenter,
     ) {

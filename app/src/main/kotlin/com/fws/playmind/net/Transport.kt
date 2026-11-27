@@ -34,4 +34,6 @@ object Proto {
     const val QUIT = "Q"
     const val KICK = "K"
     const val REMATCH = "RM"
+    /** Người gửi đã hết thời gian suy nghĩ cho nước đi hiện tại (tự xử thua). */
+    const val TIMEOUT = "T"
 }

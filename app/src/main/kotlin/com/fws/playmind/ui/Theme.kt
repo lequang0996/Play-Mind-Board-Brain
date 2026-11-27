@@ -29,6 +29,8 @@ data class Pm(
     val gold: Color,
     /** Vàng sáng cho mảng màu, đường viền, hiệu ứng. */
     val goldBright: Color, val goldHi: Color, val goldLo: Color, val goldSoft: Color, val outline: Color,
+    /** Viền đậm hơn một bậc (mép dưới của viền "kính"). */
+    val outlineDeep: Color,
     val navy: Color, val navy2: Color, val royal: Color,
     val danger: Color, val good: Color,
     /** Bộ màu tối dành cho thẻ nhấn: nền, nền nổi, chữ chính, chữ phụ trên nền tối. */
@@ -36,13 +38,13 @@ data class Pm(
 )
 
 val PmLight = Pm(
-    bg = Color(0xFFF4F5FA), bgDeep = Color(0xFFE7EAF4), surface = Color(0xFFFFFFFF), surfaceHigh = Color(0xFFF6F7FC),
-    ink = Color(0xFF141A33), inkSoft = Color(0xFF5E6684),
-    gold = Color(0xFF8F6210), goldBright = Color(0xFFD4A237), goldHi = Color(0xFFF3DC95), goldLo = Color(0xFFA97C1F),
-    goldSoft = Color(0xFFFBF2D9), outline = Color(0xFFE2E5F0),
-    navy = Color(0xFF1A1630), navy2 = Color(0xFF1B2350), royal = Color(0xFF3F5BEF),
-    danger = Color(0xFFD93C3C), good = Color(0xFF139A66),
-    deep = Color(0xFF121733), deepHigh = Color(0xFF222A5A), onDeep = Color(0xFFF6F1E4), onDeepSoft = Color(0xFFB7BCD8),
+    bg = Color(0xFFF3F4FA), bgDeep = Color(0xFFE4E7F3), surface = Color(0xFFFFFFFF), surfaceHigh = Color(0xFFF7F8FD),
+    ink = Color(0xFF0F1430), inkSoft = Color(0xFF5A6282),
+    gold = Color(0xFF8A5C0B), goldBright = Color(0xFFD6A53A), goldHi = Color(0xFFF7E4A8), goldLo = Color(0xFFA4761B),
+    goldSoft = Color(0xFFFCF3DC), outline = Color(0xFFE3E6F1), outlineDeep = Color(0xFFD3D8E8),
+    navy = Color(0xFF17132B), navy2 = Color(0xFF1B2350), royal = Color(0xFF4659F0),
+    danger = Color(0xFFD93C3C), good = Color(0xFF119A66),
+    deep = Color(0xFF0E1230), deepHigh = Color(0xFF232C62), onDeep = Color(0xFFF7F2E6), onDeepSoft = Color(0xFFB4BAD9),
 )
 
 val LocalPm = staticCompositionLocalOf { PmLight }
@@ -72,7 +74,7 @@ private val pmTypography = Typography(
     headlineLarge = TextStyle(fontFamily = DisplayFont, fontSize = 26.sp, lineHeight = 32.sp),
     headlineMedium = TextStyle(fontFamily = DisplayFont, fontWeight = FontWeight.Bold, fontSize = 22.sp, lineHeight = 28.sp, letterSpacing = (-0.2).sp),
     headlineSmall = TextStyle(fontFamily = DisplayFont, fontWeight = FontWeight.Bold, fontSize = 19.sp, lineHeight = 25.sp),
-    titleLarge = TextStyle(fontFamily = DisplayFont, fontWeight = FontWeight.SemiBold, fontSize = 16.sp, lineHeight = 22.sp),
+    titleLarge = TextStyle(fontFamily = DisplayFont, fontWeight = FontWeight.SemiBold, fontSize = 16.sp, lineHeight = 22.sp, letterSpacing = (-0.1).sp),
     titleMedium = TextStyle(fontFamily = BodyFont, fontWeight = FontWeight.Bold, fontSize = 16.sp, lineHeight = 22.sp),
     titleSmall = TextStyle(fontFamily = BodyFont, fontWeight = FontWeight.Bold, fontSize = 14.sp, lineHeight = 20.sp),
     bodyLarge = TextStyle(fontFamily = BodyFont, fontSize = 16.sp, lineHeight = 24.sp),

@@ -71,6 +71,10 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
     var sudokuTick by mutableIntStateOf(0); private set
     private var sudokuJob: Job? = null
     private var sudokuClock: Job? = null
+    /** Đồng hồ nước đi: thời điểm (ms, đồng hồ hệ thống) hết giờ của lượt hiện tại và số giây còn lại để hiển thị. */
+    var turnDeadline by mutableStateOf(0L); private set
+    var turnSecondsLeft by mutableIntStateOf(0); private set
+    private var turnClock: Job? = null
     var mySide by mutableIntStateOf(0); private set
     var opp by mutableStateOf(Opp.NONE); private set
     var oppName by mutableStateOf(""); private set
@@ -144,7 +148,8 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
 
     private fun teardown() {
         epoch++
-        botJob?.cancel(); timerJob?.cancel(); linkJob?.cancel(); verifyJob?.cancel()
+        botJob?.cancel(); timerJob?.cancel(); linkJob?.cancel(); verifyJob?.cancel(); turnClock?.cancel()
+        turnDeadline = 0L; turnSecondsLeft = 0
         transport?.onMessage = null
         transport?.close(); transport = null
         game = null; opp = Opp.NONE; oppName = ""; botThinking = false; verifying = false
@@ -192,6 +197,8 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
             if (my != epoch) return@launch
             sudoku = g; sudokuLoading = false; sudokuTick++
             sudokuClock = launch { while (true) { delay(1000); if (sudoku?.status == SudokuStatus.PLAYING) sudokuSeconds++ } }
+            resetTurnClock()
+            startTurnClock()
         }
         return true
     }
@@ -202,6 +209,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         if (phase != Phase.PLAYING) return
         block(g)
         sudokuTick++
+        resetTurnClock()
         if (g.status != SudokuStatus.PLAYING) {
             phase = Phase.OVER
             settle(if (g.status == SudokuStatus.WON) MatchOutcome.WIN else MatchOutcome.LOSS, true)
@@ -373,6 +381,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
             }
             "M" -> onRemoteMove(p)
             "R" -> remoteForfeit(EndReason.RESIGN)
+            "T" -> remoteForfeit(EndReason.TIMEOUT)
             "Q" -> if (phase == Phase.PLAYING) remoteForfeit(EndReason.LEAVE)
                    else if (phase == Phase.ROOM && isHost) { /* khách rời: onLinkDown xử lý */ }
                    else if (phase == Phase.OVER) { oppAskedRematch = false; opp = Opp.NONE }
@@ -411,7 +420,67 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         game = inf.make(option); reward = null; verifying = false; finalized = false
         localEnd = null; remoteEnd = null; rematchAsked = false; oppAskedRematch = false; botThinking = false
         phase = Phase.PLAYING; tick++
+        resetTurnClock()
+        startTurnClock()
         scheduleBotIfNeeded()
+        return true
+    }
+
+    // ───────────────────────── đồng hồ nước đi ─────────────────────────
+    private fun moveMillis(): Long = (info?.moveSeconds ?: 60) * 1000L
+
+    /** Bắt đầu tính giờ lại từ đầu cho lượt hiện tại (gọi sau mỗi nước đi / thao tác). */
+    private fun resetTurnClock() {
+        turnDeadline = System.currentTimeMillis() + moveMillis()
+        turnSecondsLeft = ((turnDeadline - System.currentTimeMillis() + 999) / 1000).toInt()
+    }
+
+    /**
+     * Vòng kiểm tra đồng hồ theo giờ hệ thống (vẫn đúng khi app vào nền rồi quay lại).
+     * Hết giờ: người đang đến lượt bị xử thua. Máy không bao giờ bị tính giờ. Khi đấu online, máy của người hết giờ tự báo thua;
+     * máy đối thủ chờ thêm [GRACE_MS] rồi tự xử thắng phòng khi tin nhắn bị mất.
+     */
+    private fun startTurnClock() {
+        turnClock?.cancel()
+        val my = epoch
+        turnClock = viewModelScope.launch {
+            while (my == epoch && phase == Phase.PLAYING) {
+                delay(250)
+                if (my != epoch || phase != Phase.PLAYING) break
+                val left = turnDeadline - System.currentTimeMillis()
+                turnSecondsLeft = ((left.coerceAtLeast(0) + 999) / 1000).toInt()
+                if (left > 0) continue
+                if (onTurnTimeout(left)) break
+            }
+        }
+    }
+
+    /** Xử lý hết giờ. Trả về true nếu ván đã kết thúc. */
+    private fun onTurnTimeout(left: Long): Boolean {
+        val sd = sudoku
+        if (mode == Mode.SOLO) {
+            if (sd == null || sd.status != SudokuStatus.PLAYING) return false
+            sd.giveUp(); sudokuTick++
+            phase = Phase.OVER
+            settle(MatchOutcome.LOSS, true)
+            return true
+        }
+        val g = game ?: return true
+        if (g.result != Outcome.ONGOING) return true
+        val loser = g.turn
+        when {
+            mode == Mode.LOCAL -> g.forfeit(loser, EndReason.TIMEOUT)
+            oppIsMachine && loser != mySide -> { resetTurnClock(); return false }   // lượt của máy: không tính giờ
+            loser == mySide -> {
+                if (isOnline && opp == Opp.HUMAN) transport?.send(Proto.TIMEOUT)
+                g.forfeit(mySide, EndReason.TIMEOUT)
+            }
+            else -> {                                                             // đối thủ (người) hết giờ
+                if (left > -GRACE_MS) return false
+                g.forfeit(loser, EndReason.TIMEOUT)
+            }
+        }
+        afterMove()
         return true
     }
 
@@ -428,6 +497,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
     private fun afterMove() {
         val g = game ?: return
         tick++
+        resetTurnClock()
         if (g.result != Outcome.ONGOING) onGameOver() else scheduleBotIfNeeded()
     }
 
@@ -464,11 +534,11 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     private fun rewardValid(g: BoardGame, inf: GameInfo) =
-        !((g.reason == EndReason.RESIGN || g.reason == EndReason.LEAVE) && g.plies < inf.minPlies)
+        !((g.reason == EndReason.RESIGN || g.reason == EndReason.LEAVE || g.reason == EndReason.TIMEOUT) && g.plies < inf.minPlies)
 
     private fun onGameOver() {
         val g = game ?: return; val inf = info ?: return
-        botJob?.cancel(); botThinking = false
+        botJob?.cancel(); botThinking = false; turnClock?.cancel()
         phase = Phase.OVER
         if (mode == Mode.LOCAL) { finalized = true; return }       // chơi chung một máy: không thưởng, không thống kê
         val out = outcomeForMe(g)
@@ -521,6 +591,8 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         if (phase != Phase.OVER || !rematchAsked || !oppAskedRematch) return
         if (isHost) { hostSide = 1 - hostSide; mySide = hostSide; transport?.send(Proto.start(hostSide, option)); beginMatch() }
     }
+
+    companion object { private const val GRACE_MS = 10_000L }
 
     override fun onCleared() { teardown(); super.onCleared() }
 }

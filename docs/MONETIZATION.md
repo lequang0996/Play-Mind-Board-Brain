@@ -7,8 +7,8 @@
 | Lượt chơi miễn phí / game / ngày | 1 | 3 | không giới hạn |
 | Quảng cáo biểu ngữ | có | **không** | **không** |
 | Quảng cáo mở app | có | **không** | **không** |
-| Quảng cáo xen kẽ giữa các ván | có | **không** | **không** |
-| Quảng cáo thưởng (xem để nhận 1 kim cương) | tự nguyện | tự nguyện | tự nguyện |
+
+App chỉ có 2 loại quảng cáo: biểu ngữ (`ADMOB_BANNER`) và mở app (`ADMOB_APP_OPEN`). Không có quảng cáo xen kẽ hay quảng cáo thưởng.
 
 Hết lượt miễn phí: mỗi ván tốn 1 kim cương (không áp dụng cho gói năm). Thắng +1 kim cương, điểm danh +1, chuỗi thắng và thưởng gắn bó như cũ (xem trong app: Trợ giúp).
 Điểm danh +1 mỗi ngày; điểm danh liên tục 30 ngày thì mỗi lần tiếp theo +2 (gói tháng/năm: +4). Đã bỏ chế độ chơi chung một máy.
@@ -29,7 +29,7 @@ Tạo đúng các mã sản phẩm sau (phân biệt chữ thường), rồi **k
 Các bước khác:
 
 1. Ứng dụng phải được tải lên ít nhất một kênh (nội bộ/thử nghiệm kín) để Play Billing trả về sản phẩm. Thêm tài khoản kiểm thử ở *Cấu hình > Kiểm thử giấy phép*.
-2. Tạo đơn vị quảng cáo **App open** trong AdMob và đặt biến Actions `ADMOB_APP_OPEN` (cùng chỗ với `ADMOB_BANNER`...). Nếu không đặt, bản build dùng ID thử nghiệm của Google.
+2. Tạo đơn vị quảng cáo **App open** trong AdMob và đặt biến Actions `ADMOB_APP_OPEN` (cùng chỗ với `ADMOB_BANNER`, `ADMOB_APP_ID`). Nếu thiếu, workflow build release sẽ báo lỗi thay vì xuất bản dùng ID thử nghiệm.
 3. Cập nhật **Data safety** và chính sách quyền riêng tư: app dùng Google Play Billing, và lưu bản sao ví (số kim cương, số lượt miễn phí đã dùng) trong Google Block Store để khôi phục khi cài lại (xem bên dưới).
 
 ## Cách app xử lý giao dịch (`data/Billing.kt`)

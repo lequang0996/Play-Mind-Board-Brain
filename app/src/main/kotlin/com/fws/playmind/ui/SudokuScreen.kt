@@ -92,12 +92,14 @@ fun SudokuScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onExit:
             Row(Modifier.fillMaxWidth().padding(horizontal = 18.dp, vertical = 4.dp), horizontalArrangement = Arrangement.Center) {
                 val chip = RoundedCornerShape(50)
                 Row(
-                    Modifier.lift(chip, 6.dp).clip(chip).background(pm.surface).border(1.dp, pm.outline, chip).padding(horizontal = 14.dp, vertical = 7.dp),
+                    Modifier.lift(chip, 6.dp).clip(chip).background(cardBrush()).border(1.dp, hairline(), chip).padding(horizontal = 14.dp, vertical = 7.dp),
                     verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
                     Icon(Ic.Hourglass, null, Modifier.size(16.dp), tint = pm.gold)
                     Text(fmtTime(vm.sudokuSeconds), style = MaterialTheme.typography.titleMedium, color = pm.ink)
                 }
+                // sắp hết thời gian chờ thao tác (5 phút không điền gì sẽ bị xử thua): hiện đồng hồ đếm ngược
+                if (!over && vm.turnSecondsLeft in 1..60) { Spacer(Modifier.width(10.dp)); TurnClock(vm.turnSecondsLeft, Modifier.align(Alignment.CenterVertically)) }
             }
             BoxWithConstraints(Modifier.weight(1f).fillMaxWidth().padding(horizontal = 12.dp), contentAlignment = Alignment.Center) {
                 val boardSide = if (maxWidth < maxHeight - 140.dp) maxWidth else maxHeight - 140.dp
@@ -120,7 +122,7 @@ fun SudokuScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onExit:
     if (over && g != null) {
         val won = g.status == SudokuStatus.WON
         val reward = vm.reward
-        val exit = { app.ads.onMatchFinished(activity); onExit() }
+        val exit = onExit
         PmDialog(
             title = stringResource(if (won) R.string.sd_won else R.string.sd_lost),
             text = if (won) stringResource(R.string.sd_won_text, fmtTime(vm.sudokuSeconds), g.mistakes) else stringResource(R.string.sd_lost_text),
@@ -173,6 +175,8 @@ private fun SudokuBoard(g: SudokuGame, sel: Int, tick: Int, side: androidx.compo
         drawRect(Brush.linearGradient(listOf(Color(0xFF1B2744), Color(0xFF0F1830)), Offset.Zero, Offset(w, w)))
         val m = w * .03f
         drawRoundRect(Brush.linearGradient(listOf(Color(0xFFC59A5A), Color(0xFFA77C3E)), Offset.Zero, Offset(w, w)), Offset(m * .6f, m * .6f), Size(w - m * 1.2f, w - m * 1.2f), CornerRadius(w * .02f))
+        // viền vàng mảnh quanh mặt gỗ + vệt sáng chéo rất nhẹ cho cảm giác sơn bóng cao cấp
+        drawRoundRect(Brush.linearGradient(listOf(Lux.goldHi, Color(0xFF8C6A2E), Lux.goldHi), Offset.Zero, Offset(w, w)), Offset(m * .45f, m * .45f), Size(w - m * .9f, w - m * .9f), CornerRadius(w * .024f), style = Stroke(w * .004f))
         val selVal = if (sel >= 0) g.cells[sel] else 0
         for (i in 0 until 81) {
             val (px, c) = pos(w, i % 9); val (py, _) = pos(w, i / 9)
@@ -200,11 +204,13 @@ private fun SudokuBoard(g: SudokuGame, sel: Int, tick: Int, side: androidx.compo
 
 @Composable
 private fun ToolButton(icon: ImageVector, label: String, onClick: () -> Unit, modifier: Modifier = Modifier, active: Boolean = false, enabled: Boolean = true) {
-    val shape = RoundedCornerShape(16.dp)
+    val shape = RoundedCornerShape(18.dp)
+    val src = rememberPress()
     Row(
-        modifier.height(50.dp).lift(shape, 6.dp).clip(shape).background(if (active) pm.goldSoft else pm.surface)
-            .border(1.dp, if (active) pm.goldBright else pm.outline, shape)
-            .clickable(enabled = enabled, onClick = onClick).padding(horizontal = 12.dp),
+        modifier.bounce(src).height(50.dp).lift(shape, 6.dp).clip(shape)
+            .background(if (active) Brush.verticalGradient(listOf(pm.goldSoft, pm.goldHi.copy(alpha = .6f))) else cardBrush())
+            .border(1.dp, if (active) Brush.verticalGradient(listOf(pm.goldHi, pm.goldBright)) else hairline(), shape)
+            .tap(src, enabled = enabled, onClick = onClick).padding(horizontal = 12.dp),
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center,
     ) {
         Icon(icon, label, Modifier.size(20.dp), tint = if (!enabled) pm.outline else if (active) pm.gold else pm.ink)
@@ -221,18 +227,26 @@ private fun SudokuTools(notes: Boolean, onErase: () -> Unit, onNotes: () -> Unit
     }
 }
 
+/** Bàn phím số dạng phím gỗ bóng: số lớn + số lượng còn thiếu nhỏ bên dưới; số đã đủ 9 thì mờ đi. */
 @Composable
 private fun SudokuPad(g: SudokuGame, onDigit: (Int) -> Unit) {
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(5.dp)) {
         for (d in 1..9) {
-            val done = g.correctCount(d) >= 9
-            val shape = RoundedCornerShape(10.dp)
-            Box(
-                Modifier.weight(1f).height(48.dp).clip(shape)
-                    .background(if (done) pm.surface else Color(0xFFE2BE82)).border(1.dp, if (done) pm.outline else Color(0xFF8B5E2B), shape)
-                    .clickable(enabled = !done) { onDigit(d) },
-                contentAlignment = Alignment.Center,
-            ) { Text(d.toString(), style = MaterialTheme.typography.titleLarge.copy(fontSize = 20.sp), color = if (done) pm.outline else SdInk, textAlign = TextAlign.Center) }
+            val left = (9 - g.correctCount(d)).coerceAtLeast(0)
+            val done = left == 0
+            val shape = RoundedCornerShape(12.dp)
+            val src = rememberPress()
+            Column(
+                Modifier.weight(1f).bounce(src, .9f).height(56.dp).then(if (done) Modifier else Modifier.lift(shape, 5.dp, Color(0xFF8B5E2B))).clip(shape)
+                    .background(if (done) Brush.verticalGradient(listOf(pm.surfaceHigh, pm.bgDeep)) else Brush.verticalGradient(listOf(Color(0xFFF2D7A4), Color(0xFFDDB574), Color(0xFFC99A58))))
+                    .background(Brush.verticalGradient(0f to Color.White.copy(alpha = if (done) 0f else .35f), .45f to Color.Transparent))
+                    .border(1.dp, if (done) hairline() else Brush.verticalGradient(listOf(Color(0xFFFFF1D2), Color(0xFF8B5E2B))), shape)
+                    .tap(src, enabled = !done) { onDigit(d) },
+                horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center,
+            ) {
+                Text(d.toString(), style = MaterialTheme.typography.titleLarge.copy(fontSize = 21.sp, lineHeight = 22.sp), color = if (done) pm.outlineDeep else SdInk, textAlign = TextAlign.Center)
+                if (!done) Text(left.toString(), style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp, lineHeight = 10.sp), color = SdInk.copy(alpha = .55f))
+            }
         }
     }
 }

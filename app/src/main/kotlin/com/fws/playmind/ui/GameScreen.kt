@@ -2,6 +2,11 @@ package com.fws.playmind.ui
 
 import android.app.Activity
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -78,13 +83,36 @@ private fun seatInfo(vm: SessionViewModel, seat: Int): String? {
     }
 }
 
+/** Định dạng thời gian còn lại: m:ss, hoặc h:mm:ss khi từ 1 giờ trở lên (cờ vây: tối đa 1 ngày mỗi nước). */
+internal fun fmtClock(sec: Int): String = if (sec >= 3600) "%d:%02d:%02d".format(sec / 3600, sec / 60 % 60, sec % 60) else "%d:%02d".format(sec / 60, sec % 60)
+
+/** Đồng hồ nước đi: chip nhỏ, chuyển đỏ và nhấp nháy nhẹ khi còn ≤ 10 giây. */
 @Composable
-private fun PlayerBar(info: GameInfo, seat: Int, name: String, label: String, active: Boolean, status: String?, extra: String?, showCheck: Boolean) {
+internal fun TurnClock(seconds: Int, modifier: Modifier = Modifier) {
+    val urgent = seconds <= 10
+    val pulse = if (urgent) {
+        val t = rememberInfiniteTransition(label = "clock")
+        t.animateFloat(1f, .45f, infiniteRepeatable(tween(480), RepeatMode.Reverse), label = "pulse").value
+    } else 1f
+    val shape = RoundedCornerShape(50)
+    val c = if (urgent) pm.danger else pm.ink
+    Row(
+        modifier.clip(shape).background(if (urgent) pm.danger.copy(alpha = .10f) else pm.surface.copy(alpha = .9f))
+            .border(1.dp, if (urgent) pm.danger.copy(alpha = .55f * pulse + .2f) else pm.outline, shape).padding(horizontal = 9.dp, vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp),
+    ) {
+        Icon(Ic.Hourglass, null, Modifier.size(13.dp), tint = if (urgent) pm.danger.copy(alpha = pulse) else pm.gold)
+        Text(fmtClock(seconds), style = MaterialTheme.typography.labelLarge, color = c)
+    }
+}
+
+@Composable
+private fun PlayerBar(info: GameInfo, seat: Int, name: String, label: String, active: Boolean, status: String?, extra: String?, showCheck: Boolean, clock: Int? = null) {
     val shape = RoundedCornerShape(20.dp)
     Row(
         Modifier.fillMaxWidth().padding(horizontal = 18.dp, vertical = 6.dp).lift(shape, 6.dp).clip(shape)
-            .background(if (active) Brush.linearGradient(listOf(pm.goldSoft, pm.surface)) else Brush.linearGradient(listOf(pm.surface, pm.surface)))
-            .border(if (active) 1.5.dp else 1.dp, if (active) pm.goldBright else pm.outline, shape)
+            .background(if (active) Brush.linearGradient(listOf(pm.goldSoft, pm.surface)) else cardBrush())
+            .border(if (active) 1.5.dp else 1.dp, if (active) Brush.verticalGradient(listOf(pm.goldHi, pm.goldBright)) else hairline(), shape)
             .padding(horizontal = 12.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -97,6 +125,7 @@ private fun PlayerBar(info: GameInfo, seat: Int, name: String, label: String, ac
             Text(label, style = MaterialTheme.typography.labelMedium, color = pm.inkSoft)
         }
         if (extra != null) Text(extra, Modifier.padding(end = 10.dp), style = MaterialTheme.typography.labelLarge, color = pm.inkSoft)
+        if (clock != null) TurnClock(clock, Modifier.padding(end = 8.dp))
         if (showCheck) Text(stringResource(R.string.check), Modifier.clip(RoundedCornerShape(50)).background(pm.danger).padding(horizontal = 10.dp, vertical = 4.dp),
             style = MaterialTheme.typography.labelMedium, color = Color.White)
         else if (status != null) Text(status, style = MaterialTheme.typography.labelMedium, color = if (active) pm.gold else pm.inkSoft)
@@ -152,6 +181,7 @@ fun GameScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onExit: (
             info, topSeat, seatName(vm, info, topSeat), sideLabel(info, topSeat), oppTurn,
             if (oppTurn && vm.botThinking) stringResource(R.string.thinking) else if (oppTurn) stringResource(R.string.their_turn) else null,
             seatInfo(vm, topSeat), inCheck && oppTurn,
+            clock = if (oppTurn && (local || !vm.oppIsMachine)) vm.turnSecondsLeft else null,
         )
         Box(Modifier.weight(1f).fillMaxWidth().padding(horizontal = 12.dp, vertical = 4.dp), contentAlignment = Alignment.Center) {
             when (info.id) {
@@ -165,13 +195,17 @@ fun GameScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onExit: (
         }
         if (multi) {
             val who = seatName(vm, info, g.turn)
-            Text(
-                if (over) "" else if (vm.botThinking) stringResource(R.string.thinking) else if (local || g.turn != vm.mySide) stringResource(R.string.turn_of, who) else stringResource(R.string.your_turn),
-                Modifier.fillMaxWidth().padding(vertical = 4.dp), style = MaterialTheme.typography.labelLarge, color = pm.gold, textAlign = TextAlign.Center,
-            )
+            Row(Modifier.fillMaxWidth().padding(vertical = 4.dp), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    if (over) "" else if (vm.botThinking) stringResource(R.string.thinking) else if (local || g.turn != vm.mySide) stringResource(R.string.turn_of, who) else stringResource(R.string.your_turn),
+                    style = MaterialTheme.typography.labelLarge, color = pm.gold, textAlign = TextAlign.Center,
+                )
+                if (!over && (local || g.turn == vm.mySide)) { Spacer(Modifier.width(10.dp)); TurnClock(vm.turnSecondsLeft) }
+            }
         } else PlayerBar(
             info, bottomSeat, seatName(vm, info, bottomSeat), sideLabel(info, bottomSeat), myTurn,
             if (myTurn) stringResource(R.string.your_turn) else null, seatInfo(vm, bottomSeat), inCheck && myTurn,
+            clock = if (myTurn) vm.turnSecondsLeft else null,
         )
         Spacer(Modifier.height(10.dp))
     }
@@ -195,6 +229,7 @@ private fun reasonText(info: GameInfo, r: EndReason): String = stringResource(wh
     EndReason.FULL -> R.string.reason_full
     EndReason.RESIGN -> R.string.reason_resign
     EndReason.LEAVE -> R.string.reason_leave
+    EndReason.TIMEOUT -> R.string.reason_timeout
     EndReason.TERRITORY -> R.string.reason_territory
     EndReason.NONE -> if (info.id == "quoridor") R.string.reason_goal else R.string.empty
 })
@@ -213,7 +248,7 @@ private fun ResultDialog(app: PlayMindApp, vm: SessionViewModel, info: GameInfo,
         else -> stringResource(R.string.result_lose)
     }
     val reward = vm.reward
-    val exit = { app.ads.onMatchFinished(activity); onExit() }
+    val exit = onExit
     val tone = if (win || (local && winnerSeat >= 0)) pm.goldBright else if (draw) pm.royal else pm.inkSoft
     Dialog(onDismissRequest = {}) {
         val frame = RoundedCornerShape(28.dp)

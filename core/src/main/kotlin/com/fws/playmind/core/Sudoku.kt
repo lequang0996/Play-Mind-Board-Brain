@@ -12,6 +12,10 @@ internal class SudokuSolver {
     private var found = 0
     private var limit = 1
     private var keep: IntArray? = null
+    private var nodes = 0
+    private var nodeLimit = Int.MAX_VALUE
+    /** true nếu lần [count] gần nhất phải dừng vì vượt giới hạn số nút (kết quả không chắc chắn). */
+    var aborted = false; private set
 
     private fun boxOf(i: Int) = (i / 27) * 3 + (i % 9) / 3
 
@@ -29,14 +33,16 @@ internal class SudokuSolver {
     }
 
     /** Đếm nghiệm (dừng khi đạt [max]); nếu [out] khác null thì lưu nghiệm đầu tiên vào đó. [rnd] khác null: thử chữ số theo thứ tự ngẫu nhiên. */
-    fun count(grid: IntArray, max: Int, out: IntArray? = null, rnd: Random? = null): Int {
+    fun count(grid: IntArray, max: Int, out: IntArray? = null, rnd: Random? = null, maxNodes: Int = Int.MAX_VALUE): Int {
+        aborted = false
         if (!load(grid)) return 0
-        found = 0; limit = max; keep = out
+        found = 0; limit = max; keep = out; nodes = 0; nodeLimit = maxNodes
         search(rnd)
         return found
     }
 
     private fun search(rnd: Random?) {
+        if (++nodes > nodeLimit) { aborted = true; return }
         var best = -1; var bestMask = 0; var bestCnt = 10
         for (i in 0 until 81) {
             if (g[i] != 0) continue
@@ -60,7 +66,7 @@ internal class SudokuSolver {
             g[best] = d; rows[r] = rows[r] or bit; cols[c] = cols[c] or bit; boxes[b] = boxes[b] or bit
             search(rnd)
             g[best] = 0; rows[r] = rows[r] and bit.inv(); cols[c] = cols[c] and bit.inv(); boxes[b] = boxes[b] and bit.inv()
-            if (found >= limit) return
+            if (found >= limit || aborted) return
         }
     }
 }
@@ -107,6 +113,22 @@ object SudokuGenerator {
             }
             if (ok || attempt >= 60) return puzzle to solution
         }
+    }
+
+    /**
+     * Đề "mỗi khối 3x3 chỉ gợi ý đúng 1 số": cả bàn chỉ có 9 ô cho sẵn, rút từ một lời giải hoàn chỉnh nên luôn giải được.
+     * Với 9 gợi ý, đề có rất nhiều lời giải: mọi cách điền đúng luật đều được chấp nhận. Trả về cặp (đề, một lời giải mẫu).
+     */
+    fun generateOnePerBox(rnd: Random = Random): Pair<IntArray, IntArray> {
+        val solution = IntArray(81)
+        SudokuSolver().count(IntArray(81), 1, solution, rnd)
+        val puzzle = IntArray(81)
+        for (b in 0 until 9) {
+            val k = rnd.nextInt(9)
+            val i = ((b / 3) * 3 + k / 3) * 9 + (b % 3) * 3 + k % 3
+            puzzle[i] = solution[i]
+        }
+        return puzzle to solution
     }
 
     /** true nếu chỉ dùng "ô duy nhất" (naked/hidden single) là giải xong. */
@@ -160,13 +182,23 @@ enum class SudokuPlace { IGNORED, OK, MISTAKE }
 
 /**
  * Một ván Sudoku: ô cho sẵn, ô người chơi điền, ghi chú nháp (bitmask bit0 = số 1 ... bit8 = số 9), đếm lỗi, gợi ý, hoàn tác.
- * Điền sai vẫn hiện (màu đỏ) để người chơi tự xóa; mỗi lần điền sai được đếm vào [mistakes] để hiện ở kết quả, nhưng không bao giờ làm thua ván.
+ *
+ * Đề mặc định chỉ gợi ý 1 số trong mỗi khối 3x3 (9 số cả bàn) nên có nhiều lời giải: một số bị coi là SAI khi nó trùng
+ * với số khác trong cùng hàng/cột/khối, hoặc khi điền nó khiến bàn không còn cách nào hoàn thành. Thắng khi điền đủ 81 ô
+ * mà không có ô sai. Điền sai vẫn hiện (màu đỏ) để người chơi tự xóa và được đếm vào [mistakes], nhưng không làm thua ván.
  */
 class SudokuGame(val level: SudokuLevel, puzzle: IntArray, val solution: IntArray) {
     companion object {
         const val MAX_HINTS = 3
+        private const val SOLVE_NODES = 200_000
 
+        /** Đề chuẩn của app: mỗi khối 3x3 chỉ có 1 số cho sẵn (cả bàn 9 số). */
         fun create(level: SudokuLevel, rnd: Random = Random): SudokuGame {
+            val (p, s) = SudokuGenerator.generateOnePerBox(rnd)
+            return SudokuGame(level, p, s)
+        }
+        /** Đề cổ điển có đúng một lời giải theo [level] (giữ lại cho kiểm thử / chế độ khác). */
+        fun createClassic(level: SudokuLevel, rnd: Random = Random): SudokuGame {
             val (p, s) = SudokuGenerator.generate(level, rnd)
             return SudokuGame(level, p, s)
         }
@@ -178,38 +210,70 @@ class SudokuGame(val level: SudokuLevel, puzzle: IntArray, val solution: IntArra
             out.remove(i)
             return out.toIntArray()
         }
+        private val PEERS = Array(81) { peerCells(it) }
     }
 
     val givens: IntArray = puzzle.copyOf()
     val cells: IntArray = puzzle.copyOf()
     val notes = IntArray(81)
+    /** Ô điền không trùng luật nhưng khiến bàn không thể hoàn thành ("ngõ cụt"). */
+    private val dead = BooleanArray(81)
     var mistakes = 0; private set
     var hintsUsed = 0; private set
     var status = SudokuStatus.PLAYING; private set
+    private val solver = SudokuSolver()
 
-    private class Snap(val cells: IntArray, val notes: IntArray)
+    private class Snap(val cells: IntArray, val notes: IntArray, val dead: BooleanArray)
     private val undoStack = ArrayList<Snap>()
     val canUndo: Boolean get() = undoStack.isNotEmpty() && status == SudokuStatus.PLAYING
     val hintsLeft: Int get() = MAX_HINTS - hintsUsed
 
     fun isGiven(i: Int) = givens[i] != 0
-    fun isWrong(i: Int) = cells[i] != 0 && cells[i] != solution[i]
+    private fun conflicts(i: Int): Boolean {
+        val d = cells[i]; if (d == 0) return false
+        for (p in PEERS[i]) if (cells[p] == d) return true
+        return false
+    }
+    /** Ô [i] đang sai: trùng số trong hàng/cột/khối hoặc khiến bàn không thể hoàn thành. Ô cho sẵn không bao giờ sai. */
+    fun isWrong(i: Int) = cells[i] != 0 && !isGiven(i) && (dead[i] || conflicts(i))
     /** Số lần chữ số [d] đã được điền ĐÚNG trên bàn (kể cả ô cho sẵn). */
-    fun correctCount(d: Int): Int { var n = 0; for (i in 0 until 81) if (cells[i] == d && solution[i] == d) n++; return n }
+    fun correctCount(d: Int): Int { var n = 0; for (i in 0 until 81) if (cells[i] == d && !isWrong(i)) n++; return n }
+
+    /** Bàn chỉ gồm các ô hợp lệ (ô "ngõ cụt" bị bỏ qua, trừ [keepDead]) — dùng để kiểm tra còn hoàn thành được không. */
+    private fun cleanGrid(keepDead: Int = -1): IntArray {
+        val g = IntArray(81)
+        for (i in 0 until 81) {
+            val v = cells[i]; if (v == 0) continue
+            if (!isGiven(i) && (conflicts(i) || (dead[i] && i != keepDead))) continue
+            g[i] = v
+        }
+        return g
+    }
+
+    /** Còn ít nhất một cách hoàn thành không (nếu bộ giải phải dừng sớm thì coi như còn). */
+    private fun solvable(grid: IntArray): Boolean = solver.count(grid, 1, null, null, SOLVE_NODES) > 0 || solver.aborted
+
+    /** Sau mỗi thay đổi: bỏ cờ "ngõ cụt" của những ô nay đã hợp lệ trở lại (do người chơi xóa ô khác). */
+    private fun refreshDead() {
+        for (i in 0 until 81) if (dead[i]) {
+            if (cells[i] == 0 || isGiven(i)) { dead[i] = false; continue }
+            if (!conflicts(i) && solvable(cleanGrid(i))) dead[i] = false
+        }
+    }
 
     private fun push() {
-        undoStack.add(Snap(cells.copyOf(), notes.copyOf()))
+        undoStack.add(Snap(cells.copyOf(), notes.copyOf(), dead.copyOf()))
         if (undoStack.size > 300) undoStack.removeAt(0)
     }
 
     private fun clearNotesAround(i: Int, d: Int) {
         val bit = 1 shl (d - 1)
-        for (p in peerCells(i)) notes[p] = notes[p] and bit.inv()
+        for (p in PEERS[i]) notes[p] = notes[p] and bit.inv()
     }
 
     private fun checkWin() {
         if (status != SudokuStatus.PLAYING) return
-        for (i in 0 until 81) if (cells[i] != solution[i]) return
+        for (i in 0 until 81) if (cells[i] == 0 || isWrong(i)) return
         status = SudokuStatus.WON
     }
 
@@ -217,8 +281,11 @@ class SudokuGame(val level: SudokuLevel, puzzle: IntArray, val solution: IntArra
     fun place(i: Int, d: Int): SudokuPlace {
         if (status != SudokuStatus.PLAYING || i !in 0..80 || d !in 1..9 || isGiven(i) || cells[i] == d) return SudokuPlace.IGNORED
         push()
-        cells[i] = d; notes[i] = 0
-        if (d == solution[i]) {
+        cells[i] = d; notes[i] = 0; dead[i] = false
+        refreshDead()
+        var ok = !conflicts(i)
+        if (ok && !solvable(cleanGrid())) { dead[i] = true; ok = false }
+        if (ok) {
             clearNotesAround(i, d)
             checkWin()
             return SudokuPlace.OK
@@ -238,40 +305,45 @@ class SudokuGame(val level: SudokuLevel, puzzle: IntArray, val solution: IntArra
     fun erase(i: Int): Boolean {
         if (status != SudokuStatus.PLAYING || i !in 0..80 || isGiven(i) || (cells[i] == 0 && notes[i] == 0)) return false
         push()
-        cells[i] = 0; notes[i] = 0
+        cells[i] = 0; notes[i] = 0; dead[i] = false
+        refreshDead()
         return true
     }
 
     fun undo(): Boolean {
         if (!canUndo) return false
         val s = undoStack.removeAt(undoStack.size - 1)
-        System.arraycopy(s.cells, 0, cells, 0, 81); System.arraycopy(s.notes, 0, notes, 0, 81)
+        System.arraycopy(s.cells, 0, cells, 0, 81); System.arraycopy(s.notes, 0, notes, 0, 81); System.arraycopy(s.dead, 0, dead, 0, 81)
         return true
     }
 
-    /** Điền đúng một ô: ưu tiên ô đang chọn [preferred] nếu nó chưa đúng, nếu không thì ô trống đầu tiên. Trả về ô đã điền hoặc -1. */
+    /** Điền đúng một ô theo một lời giải khớp các ô hợp lệ hiện có: ưu tiên ô đang chọn [preferred], nếu không thì ô trống/sai đầu tiên. */
     fun hint(preferred: Int = -1): Int {
         if (status != SudokuStatus.PLAYING || hintsUsed >= MAX_HINTS) return -1
+        val sol = IntArray(81)
+        if (solver.count(cleanGrid(), 1, sol, null, SOLVE_NODES) == 0 || solver.aborted) return -1
         var target = -1
-        if (preferred in 0..80 && !isGiven(preferred) && cells[preferred] != solution[preferred]) target = preferred
-        if (target < 0) target = (0 until 81).firstOrNull { cells[it] != solution[it] } ?: return -1
+        if (preferred in 0..80 && !isGiven(preferred) && (cells[preferred] == 0 || isWrong(preferred))) target = preferred
+        if (target < 0) target = (0 until 81).firstOrNull { cells[it] == 0 || isWrong(it) } ?: return -1
         push()
-        cells[target] = solution[target]; notes[target] = 0
-        clearNotesAround(target, solution[target])
+        val wrong = (0 until 81).filter { isWrong(it) }
+        for (i in wrong) { cells[i] = 0; dead[i] = false }      // xóa các ô sai để khớp lời giải vừa tìm
+        cells[target] = sol[target]; notes[target] = 0
+        clearNotesAround(target, sol[target])
         hintsUsed++
         checkWin()
         return target
     }
 
-    /** Đầu hàng / thoát giữa ván. */
+    /** Đầu hàng / thoát giữa ván / hết thời gian. */
     fun giveUp() { if (status == SudokuStatus.PLAYING) status = SudokuStatus.LOST }
 
     /** Các ô đang xung đột luật với ô [i] (cùng số ở hàng/cột/khối) - dùng để tô sáng. */
     fun conflictsWith(i: Int): List<Int> {
         val d = cells[i]; if (d == 0) return emptyList()
-        return peerCells(i).filter { cells[it] == d }
+        return PEERS[i].filter { cells[it] == d }
     }
 
-    /** Tiến độ 0..1 theo số ô đã điền đúng. */
-    fun progress(): Float { var n = 0; for (i in 0 until 81) if (cells[i] == solution[i]) n++; return n / 81f }
+    /** Tiến độ 0..1 theo số ô đã điền hợp lệ. */
+    fun progress(): Float { var n = 0; for (i in 0 until 81) if (cells[i] != 0 && !isWrong(i)) n++; return n / 81f }
 }

@@ -47,7 +47,25 @@ jobs:
             echo "::warning::Chưa có secret KEYSTORE_BASE64 -> build release KHÔNG ký."
           fi
 
-      # 3) Build release (AAB + APK, R8 bật)
+      # 3) Kiểm tra ID quảng cáo: bản release phải dùng ID thật, không phải ID thử nghiệm của Google
+      - name: Check AdMob IDs
+        env:
+          ADMOB_APP_ID: ${{ vars.ADMOB_APP_ID || secrets.ADMOB_APP_ID }}
+          ADMOB_BANNER: ${{ vars.ADMOB_BANNER || secrets.ADMOB_BANNER }}
+          ADMOB_APP_OPEN: ${{ vars.ADMOB_APP_OPEN || secrets.ADMOB_APP_OPEN }}
+        run: |
+          bad=""
+          for n in ADMOB_APP_ID ADMOB_BANNER ADMOB_APP_OPEN; do
+            v="${!n}"
+            if [ -z "$v" ]; then echo "::error::$n chưa được đặt (Settings > Secrets and variables > Actions > Variables)"; bad=1
+            elif [[ "$v" == ca-app-pub-3940256099942544* ]]; then echo "::error::$n đang là ID THỬ NGHIỆM của Google"; bad=1
+            else echo "$n: OK (${v:0:16}…)"; fi
+          done
+          [[ "$ADMOB_APP_ID" == *"~"* || -z "$ADMOB_APP_ID" ]] || { echo "::error::ADMOB_APP_ID phải có dạng ca-app-pub-xxx~yyy (dấu ~), không phải ID đơn vị quảng cáo (dấu /)"; bad=1; }
+          for n in ADMOB_BANNER ADMOB_APP_OPEN; do v="${!n}"; [[ -z "$v" || "$v" == *"/"* ]] || { echo "::error::$n phải có dạng ca-app-pub-xxx/yyy (dấu /)"; bad=1; }; done
+          [ -z "$bad" ] || exit 1
+
+      # 4) Build release (AAB + APK, R8 bật)
       - name: Build release (AAB + APK, R8 bật)
         run: gradle :app:bundleRelease :app:assembleRelease --no-daemon
         env:
@@ -56,15 +74,15 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          # ID AdMob thật (nếu không đặt sẽ dùng ID TEST của Google)
-          ADMOB_APP_ID: ${{ vars.ADMOB_APP_ID }}
-          ADMOB_BANNER: ${{ vars.ADMOB_BANNER }}
-          ADMOB_INTERSTITIAL: ${{ vars.ADMOB_INTERSTITIAL }}
-          ADMOB_APP_OPEN: ${{ vars.ADMOB_APP_OPEN }}
-          ADMOB_REWARDED: ${{ vars.ADMOB_REWARDED }}
+          # ID AdMob thật: đọc từ tab Variables, nếu trống thì lấy từ tab Secrets.
+          # App chỉ dùng banner + quảng cáo mở app. Thiếu ID thật -> build release DỪNG (không xuất bản "Test Ad").
+          ADMOB_APP_ID: ${{ vars.ADMOB_APP_ID || secrets.ADMOB_APP_ID }}
+          ADMOB_BANNER: ${{ vars.ADMOB_BANNER || secrets.ADMOB_BANNER }}
+          ADMOB_APP_OPEN: ${{ vars.ADMOB_APP_OPEN || secrets.ADMOB_APP_OPEN }}
+          REQUIRE_REAL_ADS: "true"
           PRIVACY_URL: ${{ vars.PRIVACY_URL }}
 
-      # 4) Chỉ xuất đúng 2 file: APK release và AAB release
+      # 5) Chỉ xuất đúng 2 file: APK release và AAB release
       - uses: actions/upload-artifact@v4
         with:
           name: playmind-release-apk

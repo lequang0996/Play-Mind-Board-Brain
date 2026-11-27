@@ -56,7 +56,7 @@ import com.fws.playmind.net.NearbyTransport
 fun TopBar(title: String, onBack: () -> Unit, trailing: @Composable () -> Unit = {}) {
     Row(Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
         PmIconButton(Ic.Back, stringResource(R.string.back), onBack)
-        Text(title, Modifier.weight(1f).padding(horizontal = 12.dp), style = MaterialTheme.typography.titleLarge, color = pm.ink, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        Text(title, Modifier.weight(1f).padding(horizontal = 14.dp), style = MaterialTheme.typography.headlineSmall, color = pm.ink, maxLines = 1, overflow = TextOverflow.Ellipsis)
         trailing()
     }
 }
@@ -76,7 +76,7 @@ private fun optionLabels(info: GameInfo): List<String> = when {
 private fun ModeCard(icon: ImageVector, title: String, subtitle: String?, modifier: Modifier = Modifier, content: @Composable () -> Unit) {
     val shape = RoundedCornerShape(24.dp)
     Column(
-        modifier.fillMaxWidth().lift(shape, 8.dp).clip(shape).background(pm.surface).border(1.dp, pm.outline, shape).padding(16.dp),
+        modifier.fillMaxWidth().lift(shape, 10.dp).clip(shape).background(cardBrush()).border(1.dp, hairline(), shape).padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {

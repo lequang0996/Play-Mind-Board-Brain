@@ -7,9 +7,13 @@ plugins {
 }
 
 // ID AdMob: mặc định là ID TEST của Google. Khi phát hành thật, truyền qua gradle.properties
-// hoặc biến môi trường (xem README / docs): ADMOB_APP_ID, ADMOB_BANNER, ADMOB_INTERSTITIAL, ADMOB_REWARDED
+// hoặc biến môi trường (xem README / docs): ADMOB_APP_ID, ADMOB_BANNER, ADMOB_APP_OPEN.
+// App chỉ dùng 2 loại quảng cáo: banner và quảng cáo mở app.
 fun cfg(name: String, fallback: String): String =
-    (findProperty(name) as String?) ?: System.getenv(name)?.takeIf { it.isNotBlank() } ?: fallback
+    (findProperty(name) as String?)?.trim()?.takeIf { it.isNotBlank() } ?: System.getenv(name)?.trim()?.takeIf { it.isNotBlank() } ?: fallback
+
+/** ID quảng cáo thử nghiệm của Google đều thuộc tài khoản này. */
+val ADMOB_TEST_PUBLISHER = "ca-app-pub-3940256099942544"
 
 android {
     namespace = "com.fws.playmind"
@@ -23,9 +27,7 @@ android {
         versionName = "1.0.0"
         manifestPlaceholders["admobAppId"] = cfg("ADMOB_APP_ID", "ca-app-pub-3940256099942544~3347511713")
         buildConfigField("String", "ADMOB_BANNER", "\"${cfg("ADMOB_BANNER", "ca-app-pub-3940256099942544/9214589741")}\"")
-        buildConfigField("String", "ADMOB_INTERSTITIAL", "\"${cfg("ADMOB_INTERSTITIAL", "ca-app-pub-3940256099942544/1033173712")}\"")
         buildConfigField("String", "ADMOB_APP_OPEN", "\"${cfg("ADMOB_APP_OPEN", "ca-app-pub-3940256099942544/9257395921")}\"")
-        buildConfigField("String", "ADMOB_REWARDED", "\"${cfg("ADMOB_REWARDED", "ca-app-pub-3940256099942544/5224354917")}\"")
         buildConfigField("String", "PRIVACY_URL", "\"${cfg("PRIVACY_URL", "https://lequang0996.github.io/fwsandroid/play-mind/")}\"")
         ndk { abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64") }
     }
@@ -72,6 +74,20 @@ android {
     lint { abortOnError = false }
 
     testOptions { unitTests { isIncludeAndroidResources = true } }
+}
+
+// Bản release: cảnh báo rõ ràng nếu còn dùng ID quảng cáo thử nghiệm (app sẽ hiện "Test Ad").
+// Đặt REQUIRE_REAL_ADS=true (CI làm sẵn) để biến cảnh báo thành lỗi build.
+gradle.taskGraph.whenReady {
+    if (allTasks.any { it.path.startsWith(":app:") && it.name.contains("Release") }) {
+        val test = listOf("ADMOB_APP_ID", "ADMOB_BANNER", "ADMOB_APP_OPEN").filter { cfg(it, ADMOB_TEST_PUBLISHER).startsWith(ADMOB_TEST_PUBLISHER) }
+        if (test.isNotEmpty()) {
+            val msg = "Bản release đang dùng ID quảng cáo THỬ NGHIỆM cho: ${test.joinToString()} -> app sẽ hiện quảng cáo \"Test Ad\". " +
+                "Đặt các biến này (GitHub: Settings > Secrets and variables > Actions > Variables hoặc Secrets)."
+            if ((System.getenv("REQUIRE_REAL_ADS") ?: findProperty("REQUIRE_REAL_ADS") as String?) == "true") throw GradleException(msg)
+            logger.warn("WARNING: $msg")
+        }
+    }
 }
 
 kotlin { compilerOptions { jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17) } }

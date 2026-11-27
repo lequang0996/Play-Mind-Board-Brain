@@ -29,7 +29,7 @@ base64 -w0 release.jks     # macOS: base64 -i release.jks
 Thêm vào *Settings → Secrets and variables → Actions → Secrets*: `KEYSTORE_BASE64`, `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`. **Không commit file .jks.** Nên bật *Play App Signing* khi tạo app trên Play Console.
 
 ### ID AdMob thật
-Mặc định dùng **ID thử nghiệm của Google** (an toàn khi phát triển). Trước khi phát hành, thêm *Variables*: `ADMOB_APP_ID`, `ADMOB_BANNER`, `ADMOB_APP_OPEN`, `ADMOB_INTERSTITIAL`, `ADMOB_REWARDED` (tab **Variables**, không phải Secrets). Không bấm vào quảng cáo thật của chính mình.
+Mặc định dùng **ID thử nghiệm của Google** (an toàn khi phát triển). Trước khi phát hành, thêm `ADMOB_APP_ID` (dạng `ca-app-pub-xxx~yyy`), `ADMOB_BANNER` và `ADMOB_APP_OPEN` (dạng `ca-app-pub-xxx/yyy`) vào tab **Variables** (hoặc **Secrets**). App chỉ dùng banner + quảng cáo mở app. Workflow `Build` sẽ **dừng** nếu thiếu ID thật hoặc còn ID thử nghiệm, nên bản release không bao giờ hiện "Test Ad". Không bấm vào quảng cáo thật của chính mình.
 
 ## 2. GitHub Pages (hosting privacy policy)
 *Settings → Pages → Build and deployment → Deploy from a branch → `main` / `/docs`*.

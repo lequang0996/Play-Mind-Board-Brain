@@ -123,7 +123,7 @@ fun main() {
     for (lv in SudokuLevel.values()) {
         var unique = true; var valid = true
         for (i in 0 until 6) {
-            val sg = SudokuGame.create(lv, kotlin.random.Random(100L * lv.ordinal + i))
+            val sg = SudokuGame.createClassic(lv, kotlin.random.Random(100L * lv.ordinal + i))
             if (SudokuSolver().count(sg.givens, 2) != 1) unique = false
             for (k in 0 until 81) if (sg.givens[k] != 0 && sg.givens[k] != sg.solution[k]) valid = false
             for (r in 0 until 9) if ((0 until 9).map { sg.solution[r * 9 + it] }.toSet().size != 9) valid = false
@@ -131,15 +131,38 @@ fun main() {
         expect("sudoku $lv: de co dung 1 nghiem va loi giai hop le", unique && valid)
     }
     expect("sudoku EASY/MEDIUM giai duoc bang o duy nhat", listOf(SudokuLevel.EASY, SudokuLevel.MEDIUM).all { lv ->
-        (0 until 5).all { SudokuGenerator.solvableBySingles(SudokuGame.create(lv, kotlin.random.Random(900L + it)).givens) } })
+        (0 until 5).all { SudokuGenerator.solvableBySingles(SudokuGame.createClassic(lv, kotlin.random.Random(900L + it)).givens) } })
+    // Đề chuẩn: mỗi khối 3x3 đúng 1 số cho sẵn
+    expect("sudoku: moi khoi 3x3 chi goi y 1 so (ca ban 9 so)", (0 until 20).all { seed ->
+        val g = SudokuGame.create(SudokuLevel.MEDIUM, kotlin.random.Random(500L + seed))
+        g.givens.count { it != 0 } == 9 && (0 until 9).all { b ->
+            (0 until 9).count { k -> g.givens[((b / 3) * 3 + k / 3) * 9 + (b % 3) * 3 + k % 3] != 0 } == 1 } &&
+            (0 until 81).all { g.givens[it] == 0 || g.givens[it] == g.solution[it] }
+    })
     val sd = SudokuGame.create(SudokuLevel.MEDIUM, kotlin.random.Random(3))
     val se = (0 until 81).first { sd.givens[it] == 0 }
-    val sw = (1..9).first { it != sd.solution[se] }
+    // số trùng với một số cho sẵn cùng hàng/cột/khối => chắc chắn sai
+    val sw = SudokuGame.peerCells(se).map { sd.givens[it] }.first { it != 0 }
     expect("sudoku: dien sai tinh 1 loi va hien do", sd.place(se, sw) == SudokuPlace.MISTAKE && sd.mistakes == 1 && sd.isWrong(se))
     expect("sudoku: hoan tac", sd.undo() && sd.cells[se] == 0)
     expect("sudoku: dien dung va thang khi du 81 o", run { for (i in 0 until 81) if (sd.cells[i] != sd.solution[i]) sd.place(i, sd.solution[i]); sd.status == SudokuStatus.WON })
     val sl = SudokuGame.create(SudokuLevel.EASY, kotlin.random.Random(4))
-    for (e in (0 until 81).filter { sl.givens[it] == 0 }.take(3)) sl.place(e, (1..9).first { it != sl.solution[e] })
+    for (e in (0 until 81).filter { sl.givens[it] == 0 && SudokuGame.peerCells(it).any { p -> sl.givens[p] != 0 } }.take(3))
+        sl.place(e, SudokuGame.peerCells(e).map { sl.givens[it] }.first { it != 0 })
+    // một lời giải khác lời giải mẫu vẫn được chấp nhận: hoán đổi hai chữ số không xuất hiện trong ô cho sẵn
+    val alt = SudokuGame.create(SudokuLevel.MEDIUM, kotlin.random.Random(8))
+    val freeDigits = (1..9).filter { d -> alt.givens.none { it == d } }
+    val altOk = freeDigits.size < 2 || run {
+        val a = freeDigits[0]; val b = freeDigits[1]
+        for (i in 0 until 81) if (!alt.isGiven(i)) alt.place(i, when (alt.solution[i]) { a -> b; b -> a; else -> alt.solution[i] })
+        alt.status == SudokuStatus.WON && alt.mistakes == 0
+    }
+    expect("sudoku: chap nhan moi loi giai dung luat", altOk)
+    // gợi ý điền nốt ô cuối cùng và thắng ván
+    val dz = SudokuGame.create(SudokuLevel.MEDIUM, kotlin.random.Random(9))
+    val lastFree = (0 until 81).last { !dz.isGiven(it) }
+    for (i in 0 until 81) if (!dz.isGiven(i) && i != lastFree) dz.place(i, dz.solution[i])
+    expect("sudoku: o hien tai hop le khi dien theo loi giai", (0 until 81).none { dz.isWrong(it) } && dz.hint() >= 0 && dz.status == SudokuStatus.WON)
     expect("sudoku: sai nhieu loi van khong thua, chi dem loi", sl.status == SudokuStatus.PLAYING && sl.mistakes == 3)
 
     // ── Wall Go ──

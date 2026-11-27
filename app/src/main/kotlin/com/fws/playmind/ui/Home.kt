@@ -250,8 +250,9 @@ private fun Vault(diamonds: Int, streak: Int, canCheckIn: Boolean, onCheckIn: ()
 @Composable
 private fun ShopTeaser(onShop: () -> Unit) {
     val shape = RoundedCornerShape(18.dp)
+    val src = rememberPress()
     Row(
-        Modifier.fillMaxWidth().lift(shape, 6.dp).clip(shape).background(pm.surface).border(1.dp, pm.outline, shape).clickable(onClick = onShop).padding(horizontal = 14.dp, vertical = 12.dp),
+        Modifier.bounce(src, .98f).fillMaxWidth().lift(shape, 6.dp).clip(shape).background(cardBrush()).border(1.dp, hairline(), shape).tap(src, onClick = onShop).padding(horizontal = 14.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Box(Modifier.size(34.dp).clip(CircleShape).background(pm.goldSoft), contentAlignment = Alignment.Center) {
@@ -278,11 +279,13 @@ private fun CountdownChip(remaining: Int) {
 private fun FeaturedCard(t: Topic, game: GameInfo?, remaining: Int, onOpen: (GameInfo) -> Unit) {
     val shape = RoundedCornerShape(28.dp)
     val tc = t.color
+    val src = rememberPress()
     Box(
-        Modifier.fillMaxWidth().height(214.dp).lift(shape, 12.dp, tc.onLight(.5f)).clip(shape)
+        Modifier.bounce(src, .985f).fillMaxWidth().height(214.dp).lift(shape, 12.dp, tc.onLight(.5f)).clip(shape)
             .background(Brush.linearGradient(listOf(tc.copy(alpha = .34f), pm.surface, pm.surface), Offset(0f, 0f), Offset(900f, 900f)))
-            .border(1.dp, tc.copy(alpha = .45f), shape)
-            .then(if (game != null) Modifier.clickable { onOpen(game) } else Modifier),
+            .background(Brush.radialGradient(listOf(Color.White.copy(alpha = .55f), Color.Transparent), center = Offset(820f, 120f), radius = 420f))
+            .border(1.dp, Brush.verticalGradient(listOf(Color.White, tc.copy(alpha = .5f))), shape)
+            .then(if (game != null) Modifier.tap(src) { onOpen(game) } else Modifier),
     ) {
         if (game != null) GameArt(game.id, Modifier.align(Alignment.CenterEnd).padding(end = 4.dp, top = 22.dp).size(168.dp))
         Column(Modifier.fillMaxSize().padding(18.dp), verticalArrangement = Arrangement.SpaceBetween) {
@@ -351,8 +354,9 @@ internal fun gameTag(g: GameInfo): String? {
 private fun GameTile(app: PlayMindApp, g: GameInfo, t: Topic, onOpen: (GameInfo) -> Unit) {
     val shape = RoundedCornerShape(22.dp)
     val free = app.wallet.freeLeft(g.id)
+    val src = rememberPress()
     Column(
-        Modifier.width(166.dp).lift(shape, 8.dp).clip(shape).background(pm.surface).border(1.dp, pm.outline, shape).clickable { onOpen(g) },
+        Modifier.bounce(src).width(166.dp).lift(shape, 10.dp).clip(shape).background(cardBrush()).border(1.dp, hairline(), shape).tap(src) { onOpen(g) },
     ) {
         Box(
             Modifier.fillMaxWidth().height(116.dp).background(Brush.linearGradient(listOf(t.color.copy(alpha = .26f), pm.surfaceHigh), Offset(0f, 0f), Offset(500f, 400f))),

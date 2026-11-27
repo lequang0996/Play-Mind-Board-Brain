@@ -1,6 +1,7 @@
 package com.fws.playmind
 
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -22,6 +23,8 @@ class MainActivity : AppCompatActivity() {
             statusBarStyle = SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT),
             navigationBarStyle = SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT),
         )
+        // Màn hình luôn sáng khi đang mở app (tự tắt khi app vào nền)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         val app = application as PlayMindApp
         update = UpdateManager(this)
         app.ads.gatherConsent(this)   // UMP trước, chỉ yêu cầu quảng cáo khi được phép

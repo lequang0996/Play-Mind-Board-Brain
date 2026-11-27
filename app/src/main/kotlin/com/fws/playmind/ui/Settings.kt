@@ -82,8 +82,9 @@ fun LanguageList(selected: String, onSelect: (String) -> Unit) {
 @Composable
 private fun SettingsRow(icon: androidx.compose.ui.graphics.vector.ImageVector, text: String, onClick: () -> Unit) {
     val shape = RoundedCornerShape(16.dp)
+    val src = rememberPress()
     Row(
-        Modifier.fillMaxWidth().clip(shape).background(pm.surface).border(1.dp, pm.outline, shape).clickable(onClick = onClick).padding(horizontal = 16.dp, vertical = 14.dp),
+        Modifier.bounce(src, .98f).fillMaxWidth().lift(shape, 4.dp).clip(shape).background(cardBrush()).border(1.dp, hairline(), shape).tap(src, onClick = onClick).padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Icon(icon, null, Modifier.size(20.dp), tint = pm.gold)

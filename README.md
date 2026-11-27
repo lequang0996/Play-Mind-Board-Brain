@@ -57,7 +57,7 @@ DESIGNED WITH CARE
 • In-app updates: new versions download quietly while you play.
 
 ADS AND PRIVACY
-The app contains ads shown by Google AdMob. Interstitial ads appear only between games, and you can earn a diamond by choosing to watch a rewarded ad. Where required, you can manage your ad consent at any time in Settings. The privacy policy is available in the app and on this store page.
+The app contains ads shown by Google AdMob. Only a banner on the home screen and an app-open ad are shown; there are no interstitial or rewarded ads. Where required, you can manage your ad consent at any time in Settings. The privacy policy is available in the app and on this store page.
 
 Questions or ideas? Write to 17eathday@gmail.com. We add new games over time. Thank you for playing!
 FWs
