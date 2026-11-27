@@ -2,7 +2,7 @@ package com.fws.playmind.core.bench
 
 /**
  * Điểm vào của bộ đo bot (chạy trong CI bởi .github/workflows/bot-bench.yml, hoặc tại máy):
- *   [-Dkhóa=giá trị ...] gauge  chess <stockfish> <elo> <games> <ourMs> <sfMs> <seed> [threads]   đấu Stockfish (BOT_GUIDE mục 3.5)
+ *   [-Dkhóa=giá trị ...] gauge  chess|xiangqi <engine> <elo> <games> <ourMs> <engMs> <seed> [threads] [evalFile]   đấu Stockfish / Pikafish (mục 3.5)
  *   [-Dkhóa=giá trị ...] ladder <game> <A> <B> <pairs> <svMs> <seed> [players]                đấu hai cấp (mục 3.4)
  *   [-Dkhóa=giá trị ...] ab     <game> <A> <B> <games> <ms> <seed> [nodes]                     so hai biến thể engine (mục 2.6)
  *   texel datagen|tune ...   tinh chỉnh Texel (Texel.kt)

@@ -20,7 +20,7 @@ import kotlin.random.Random
 /** Tham số bot Quoridor (để thử A/B: "ww80+lmr4"). */
 object QP {
     val NAMES = arrayOf("ww", "tempo", "walls", "rootw", "dag", "lmr", "hist", "race")
-    val DEF = intArrayOf(75, 30, 10, 14, 1, 0, 1, 3000)
+    val DEF = intArrayOf(75, 30, 10, 14, 1, 0, 0, 3000)
     const val WW = 0; const val TEMPO = 1; const val WALLS = 2; const val ROOTW = 3; const val DAG = 4; const val LMR = 5
     const val HIST = 6; const val RACE = 7
     fun parse(spec: String): IntArray {
