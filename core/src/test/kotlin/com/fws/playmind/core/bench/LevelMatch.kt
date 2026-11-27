@@ -50,10 +50,14 @@ private fun create(game: String, players: Int): BoardGame = when (game) {
 internal fun benchOpening(game: String, players: Int, seed: Int): BoardGame {
     val g = create(game, players)
     val r = Random(seed * 7919 + 13)
-    val k = when (game) { "chess", "xiangqi" -> 2 + r.nextInt(3); "caro" -> 0; else -> 2 }
-    repeat(k) {
-        val ms = g.legalMoves().let { all -> if (game == "quoridor") all.filter { it < 128 }.toIntArray() else all }
-        if (ms.isNotEmpty() && g.result == Outcome.ONGOING) g.play(ms[r.nextInt(ms.size)])
+    // Quoridor: 4 nước đi quân rồi mỗi bên một tường ngẫu nhiên (chỉ đi quân thì có khoảng 9 thế mở đầu, bot giới hạn nút
+    // chơi lại y hệt nên các ván trùng nhau và sai số thật rất lớn; BOT_GUIDE mục 3.1)
+    val k = when (game) { "chess", "xiangqi" -> 2 + r.nextInt(3); "caro" -> 0; "quoridor" -> 6; else -> 2 }
+    repeat(k) { ply ->
+        val ms = g.legalMoves().let { all -> if (game == "quoridor") all.filter { if (ply < 4) it < 128 else it >= 128 }.toIntArray() else all }
+        // chỉ nhận nước không kết thúc ván (ví dụ đi quân về chỗ cũ tạo lại thế ban đầu = thua do lặp thế)
+        val ok = ms.filter { m -> g.copyGame().let { c -> c.play(m) && c.result == Outcome.ONGOING } }
+        if (ok.isNotEmpty() && g.result == Outcome.ONGOING) g.play(ok[r.nextInt(ok.size)])
     }
     if (game == "caro") while (g.plies < 3) g.play(GomokuGame.pack(r.nextInt(5) - 2, r.nextInt(5) - 2))
     return g

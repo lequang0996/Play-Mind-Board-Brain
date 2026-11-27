@@ -80,11 +80,12 @@ object BotLevels {
         n(2_500, 0.04, 15), n(8_000), n(25_000), top(),
     )
 
-    // Wall Go (mục 10.3), alpha-beta. Điểm: 100 = một ô lãnh thổ. Nút của Wall Go rất nặng (đánh giá mọi nước con),
-    // nên các cấp trên bị nén sát Siêu việt; đây là điểm yếu đã biết (mục 13 của guide).
+    // Wall Go (mục 10.3), alpha-beta. Điểm: 100 = một ô lãnh thổ. Một nút rất nặng (đánh giá mọi nước con), Siêu việt
+    // chỉ duyệt vài nghìn nút mỗi nước, nên các cấp dùng độ sâu (không đổi theo máy). Đo 11/2026 (200 ván mỗi cặp, máy phát triển):
+    // SV-TĐ 83%, TĐ-CT 83%, CT-Giỏi 79%, Giỏi-Khá 86%, Khá-TB 90%, TB-Dễ 96%: cả 6 cặp trong khoảng đạt (mục 1.3).
     val wallgo = listOf(
-        d(1, 0.75, 300), d(1, 0.20, 60), d(2, 0.08, 30),
-        d(3, 0.0, 0), n(5_000), n(10_000), top(),
+        d(1, 1.0, 700), d(1, 0.9, 400), d(1, 0.7, 200),
+        d(1), d(2), d(3), top(),
     )
 
     // Cờ vây (mục 8.3 / 8.3a). extra = số lượt mô phỏng. Dùng cho MCTS dự phòng khi không chạy được KataGo;
