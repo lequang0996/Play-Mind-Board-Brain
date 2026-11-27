@@ -14,7 +14,6 @@ import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.appopen.AppOpenAd
-import com.google.android.gms.ads.appopen.AppOpenAdLoadCallback
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.android.gms.ads.rewarded.RewardedAd
@@ -72,7 +71,7 @@ class AdsManager(private val app: Application, private val prefs: Prefs, private
 
     private fun loadAppOpen() {
         if (plan().noBanner) return            // gói tháng/năm đều bỏ quảng cáo mở app
-        AppOpenAd.load(app, BuildConfig.ADMOB_APP_OPEN, AdRequest.Builder().build(), object : AppOpenAdLoadCallback() {
+        AppOpenAd.load(app, BuildConfig.ADMOB_APP_OPEN, AdRequest.Builder().build(), object : AppOpenAd.AppOpenAdLoadCallback() {
             override fun onAdLoaded(ad: AppOpenAd) { appOpen = ad; appOpenLoadedAt = System.currentTimeMillis() }
             override fun onAdFailedToLoad(e: LoadAdError) { appOpen = null }
         })
