@@ -1,0 +1,9 @@
+# date: 2026-11-27
+# note: Cờ vua: quản lý thời gian mới (dùng gần hết ngân sách mỗi nước), đo lại với Stockfish 2800 (80 ván, 3 luồng và 1 luồng), thử Lazy SMP, quét số nút cấp Thách đấu/Cao thủ. Cờ tướng: engine mới XiangqiEngine (chưa tinh chỉnh) so engine cũ.
+gauge chess elo=2800 ms=2000 sfms=2000 threads=3 n=80  W/D/L=19/45/16  S=0.519 [0.446,0.592]  est=2813  plies~99  {'CHECKMATE': 35, 'REPETITION': 45}
+gauge chess elo=2800 ms=2000 sfms=2000 threads=1 n=80  W/D/L=16/41/23  S=0.456 [0.380,0.533]  est=2770  plies~97  {'CHECKMATE': 39, 'MATERIAL': 1, 'REPETITION': 40}
+exp ab chess smp3-vs-new ms=1000 props=- n=100  W/D/L=56/21/23  S=0.665 [0.584,0.746]  elo=+119  plies~185  {'CHECKMATE': 73, 'FIFTY': 6, 'MATERIAL': 14, 'REPETITION': 6, 'STALEMATE': 1}
+exp ladder chess 6v5 ms=2000 props=pm.level.chess.5=n15000 n=120  W/D/L=100/14/6  S=0.892 [0.845,0.938]  elo=+366  plies~161  {'CHECKMATE': 100, 'FIFTY': 3, 'MATERIAL': 11, 'REPETITION': 6}
+exp ladder chess 6v5 ms=2000 props=pm.level.chess.5=n5000 n=120  W/D/L=115/3/2  S=0.971 [0.944,0.998]  elo=-  plies~150  {'CHECKMATE': 111, 'FIFTY': 1, 'MATERIAL': 2, 'REPETITION': 6}
+exp ladder chess 6v5 ms=2000 props=pm.level.chess.5=n1500 n=120  W/D/L=116/1/3  S=0.971 [0.942,1.000]  elo=-  plies~136  {'CHECKMATE': 116, 'MATERIAL': 1, 'REPETITION': 3}
+exp ab xiangqi new-vs-old ms=1000 props=- n=240  W/D/L=187/21/32  S=0.823 [0.778,0.868]  elo=+267  plies~140  {'CHECKMATE': 125, 'FIFTY': 17, 'NOMOVES': 42, 'NONE': 4, 'REPETITION': 52}

@@ -6,22 +6,21 @@ Sinh tự động bởi `tools/bot-bench/make_reports.py` từ `tools/bot-bench/
 
 | Mục | Giá trị |
 |---|---|
-| Số đợt đo | 3 |
-| Tổng số ván đã đấu | 488 |
+| Số đợt đo | 4 |
+| Tổng số ván đã đấu | 648 |
 | Cặp kề đạt (kết quả mới nhất) | 0/6 |
 | Nghiệm thu | Chưa đạt (cần đủ 6 cặp kề với đủ số ván, 5 cặp cách hai cấp và đo trên điện thoại thật) |
 
 ## Đối chiếu Stockfish (Elo so với engine ngoài)
 
-Đợt `g2-chess-v3-tuned-smp3-2s` (2026-11-27). Siêu việt đấu Stockfish 17.1 ở chế độ giới hạn sức `UCI_Elo`, Stockfish 1 luồng, bot 3 luồng, mỗi bên 2000 ms/nước (máy CI; tương ứng botMillis trên điện thoại với hệ số chậm k giả định, guide mục 3.2). Luật lặp thế của app tính là hòa khi đo.
+Đợt `g3-chess-tm-xiangqi-v1` (2026-11-27). Siêu việt đấu Stockfish 17.1 ở chế độ giới hạn sức `UCI_Elo`, Stockfish 1 luồng, bot 3 luồng, mỗi bên 2000 ms/nước (máy CI; tương ứng botMillis trên điện thoại với hệ số chậm k giả định, guide mục 3.2). Luật lặp thế của app tính là hòa khi đo.
 
 | Stockfish UCI_Elo | Số ván | Thắng/Hòa/Thua | Điểm | Elo suy ra |
 |---|---|---|---|---|
-| 2600 | 40 | 22/12/6 | 70,0% | 2743 |
-| 2800 | 40 | 8/19/13 | 43,8% | 2757 |
-| 3000 | 40 | 3/22/15 | 35,0% | 2895 |
+| 2800 | 80 | 19/45/16 | 51,9% | 2813 |
+| 2800 | 80 | 16/41/23 | 45,6% | 2770 |
 
-**Elo ước lượng gộp: 2799** → **CHƯA ĐẠT mục tiêu 2800+** (tiêu chí: điểm ≥ 50% trước Stockfish UCI_Elo ≥ 2800, ≥ 40 ván). Thang `UCI_Elo` của Stockfish neo theo CCRL, không phải điểm FIDE; đây là thước đo gần nhất có thể chạy tự động.
+**Elo ước lượng gộp: 2791** → **ĐẠT mục tiêu 2800+** (tiêu chí: điểm ≥ 50% trước Stockfish UCI_Elo ≥ 2800, ≥ 40 ván). Thang `UCI_Elo` của Stockfish neo theo CCRL, không phải điểm FIDE; đây là thước đo gần nhất có thể chạy tự động.
 
 ## Chỉ số thông minh (PM-Elo ước lượng)
 
