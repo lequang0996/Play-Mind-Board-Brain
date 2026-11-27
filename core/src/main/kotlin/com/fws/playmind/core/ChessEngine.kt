@@ -1150,7 +1150,8 @@ class ChessEngine(private val tt: ChessTT) {
     fun search(lim: SearchLimit, allowed: IntArray?, delta: Int): RootResult {
         val start = System.nanoTime()
         deadline = if (lim.timeMs > 0) start + lim.timeMs * 1_000_000 else Long.MAX_VALUE
-        val soft = if (lim.timeMs > 0) lim.timeMs * 1_000_000 * 0.5 else Double.MAX_VALUE
+        // Ngân sách mỗi nước là cố định (không dồn sang nước sau) nên dùng gần hết; chỉ dừng sớm khi nước tốt nhất đã rất ổn định.
+        val soft = if (lim.timeMs > 0) lim.timeMs * 1_000_000.0 else Double.MAX_VALUE
         val nl = if (lim.nodes > 0) lim.nodes else Long.MAX_VALUE
         val maxDepth = if (lim.depth > 0) min(lim.depth, MAXPLY - 10) else MAXPLY - 10
         abort = false; nodes = 0
@@ -1221,7 +1222,7 @@ class ChessEngine(private val tt: ChessTT) {
             sortRoot(root, rs)
             if ((bestScore > MATE - 200 || bestScore < -MATE + 200) && depth >= 8) break
             val elapsed = (System.nanoTime() - start).toDouble()
-            val factor = when { stable >= 6 -> 0.45; stable >= 3 -> 0.7; stable == 0 -> 1.4; else -> 1.0 }
+            val factor = when { stable >= 8 -> 0.5; stable >= 4 -> 0.75; else -> 0.92 }
             if (elapsed > soft * factor) break
         }
         lastDepth = completed; lastNodes = nodes

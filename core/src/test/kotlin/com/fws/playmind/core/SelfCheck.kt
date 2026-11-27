@@ -57,6 +57,20 @@ fun main() {
     // ── Cờ tướng ──
     val x = XiangqiGame()
     expect("xiangqi perft start 1-3", (1..3).map { x.perft(it) } == listOf(44L, 1920L, 79666L))
+    // engine XiangqiEngine phải sinh nước giống hệt luật trong XiangqiGame (thế đầu + 60 thế đánh ngẫu nhiên)
+    val xe = XiangqiEngine(12)
+    var xeOk = xe.perft(3) == 79666L
+    val xr = kotlin.random.Random(7)
+    val xStart = IntArray(90) { XiangqiGame().pieceAt(it) }
+    repeat(60) {
+        val xg = XiangqiGame()
+        repeat(xr.nextInt(100)) { val ms = xg.legalMoves(); if (ms.isNotEmpty()) xg.play(ms[xr.nextInt(ms.size)]) }
+        if (xg.result == Outcome.ONGOING) {
+            xe.load(xStart, true, xg.history)
+            if (xe.legalMoves().sorted() != xg.legalMoves().sorted() || xe.perft(2) != xg.perft(2)) xeOk = false
+        }
+    }
+    expect("xiangqi engine sinh nuoc khop luat (perft + 60 the ngau nhien)", xeOk)
     val pin = XiangqiGame()
     pin.setPosition(mapOf(4 to 1, 85 to -1, 40 to 5, 8 to 5), true)
     expect("xiangqi tuong doi mat: xe bi ghim chi di tren cot", pin.legalMoves().filter { XiangqiGame.fromSq(it) == 40 }.all { XiangqiGame.toSq(it) % 9 == 4 })

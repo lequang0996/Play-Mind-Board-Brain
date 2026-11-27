@@ -45,7 +45,16 @@ def main():
         f = sum(a["first"]) / max(1, len(a["first"])); sc2 = sum(a["second"]) / max(1, len(a["second"]))
         reasons = "{" + ", ".join(f"'{k}': {v}" for k, v in sorted(a["reasons"].items())) + "}"
         plies = sum(a["plies"]) // max(1, len(a["plies"]))
-        if pos[0] == "ladder":
+        props = kv.get("props", "")
+        elo_ab = f"{400 * math.log10(s / (1 - s)):+.0f}" if 0.03 < s < 0.97 else "-"
+        if pos[0] == "ab" or (pos[0] == "ladder" and props):
+            # thử nghiệm: không theo định dạng nghiệm thu nên make_reports.py bỏ qua
+            what = f"{pos[2]}-vs-{pos[3]}" if pos[0] == "ab" else f"{pos[2]}v{pos[3]}"
+            extra = f" nodes={kv['nodes']}" if kv.get("nodes", "0") != "0" else ""
+            out.append(f"exp {pos[0]} {pos[1]} {what} ms={kv['ms']}{extra} props={props or '-'} n={n}  W/D/L={w}/{d}/{l}  "
+                       f"S={s:.3f} [{lo:.3f},{hi:.3f}]  elo={elo_ab}  plies~{plies}  {reasons}")
+            md.append(f"| {pos[0]} {pos[1]}: {what} {props} | {n} | {w}/{d}/{l} | {s:.3f} | Elo {elo_ab} |")
+        elif pos[0] == "ladder":
             elo = f"{400 * math.log10(s / (1 - s)):.0f}" if 0.2 <= s <= 0.8 else "-"
             out.append(f"{pos[1]} A={pos[2]} B={pos[3]} ms={kv['ms']} n={n}  W/D/L={w}/{d}/{l}  S={s:.3f} [{lo:.3f},{hi:.3f}]  elo={elo}  "
                        f"first={f:.2f} second={sc2:.2f}  plies~{plies}  {reasons}  ci")

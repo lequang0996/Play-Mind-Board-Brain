@@ -2,9 +2,15 @@
 # GitHub tự ghi kết quả vào tools/bot-bench/results/<tag>.txt và docs/bot-results/ rồi commit vào main.
 #   gauge  <game> elo=<Stockfish UCI_Elo> games=<số ván> ms=<ms/nước của bot> sfms=<ms/nước của Stockfish> shards=<số máy> [threads=<luồng của bot>]
 #   ladder <game> <cấp A> <cấp B> pairs=<số cặp ván> ms=<ms/nước của Siêu việt> shards=<số máy> [players=2]
+#   ab     <game> <A> <B> games=<số ván> ms=<ms/nước> shards=<số máy> [nodes=<giới hạn nút>]   (A, B: new | smpN | ref | old)
+#   Mọi dòng thêm được props=k1=v1;k2=v2 (thuộc tính hệ thống, ví dụ pm.level.chess.5=n15000 để thử cấu hình cấp).
 # Cấp: 0 Dễ, 1 Trung bình, 2 Khá, 3 Giỏi, 4 Cao thủ, 5 Thách đấu, 6 Siêu việt.
-tag=g2-chess-v3-tuned-smp3-2s
-note=Engine cờ vua mới đã tinh chỉnh Texel (978k thế), Lazy SMP 3 luồng, đấu Stockfish 17.1 UCI_Elo 1 luồng, mỗi bên 2000 ms/nước, máy CI 4 vCPU. Lặp thế = hòa.
-gauge chess elo=2600 games=40 ms=2000 sfms=2000 shards=4 threads=3
-gauge chess elo=2800 games=40 ms=2000 sfms=2000 shards=4 threads=3
-gauge chess elo=3000 games=40 ms=2000 sfms=2000 shards=4 threads=3
+tag=g3-chess-tm-xiangqi-v1
+note=Cờ vua: quản lý thời gian mới (dùng gần hết ngân sách mỗi nước), đo lại với Stockfish 2800 (80 ván, 3 luồng và 1 luồng), thử Lazy SMP, quét số nút cấp Thách đấu/Cao thủ. Cờ tướng: engine mới XiangqiEngine (chưa tinh chỉnh) so engine cũ.
+gauge chess elo=2800 games=80 ms=2000 sfms=2000 shards=8 threads=3
+gauge chess elo=2800 games=80 ms=2000 sfms=2000 shards=4 threads=1
+ab chess smp3 new games=100 ms=1000 shards=5
+ladder chess 6 5 pairs=60 ms=2000 shards=4 props=pm.level.chess.5=n15000
+ladder chess 6 5 pairs=60 ms=2000 shards=4 props=pm.level.chess.5=n5000
+ladder chess 6 5 pairs=60 ms=2000 shards=4 props=pm.level.chess.5=n1500
+ab xiangqi new old games=240 ms=1000 shards=5
