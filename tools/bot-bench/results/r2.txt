@@ -1,0 +1,22 @@
+# date: 2026-11-27
+# note: Đợt 2, cấu hình đã chỉnh sau đợt 1 (Siêu việt nghĩ lâu hơn). Siêu việt chạy botMillis ÷ 4 trên PC (k = 4 giả định).
+quoridor A=1 B=0 ms=1750 n=100  W/D/L=100/0/0  S=1.000 [1.000,1.000]  elo=-  first=1.00 second=1.00  plies~58  {'REPETITION': 17, 'NONE': 83}  13s
+quoridor A=2 B=1 ms=1750 n=100  W/D/L=62/0/38  S=0.620 [0.524,0.716]  elo=85  first=0.54 second=0.70  plies~71  {'NONE': 100}  12s
+quoridor A=3 B=2 ms=1750 n=100  W/D/L=73/0/27  S=0.730 [0.643,0.817]  elo=173  first=0.70 second=0.76  plies~71  {'NONE': 100}  19s
+quoridor A=4 B=3 ms=1750 n=100  W/D/L=66/0/34  S=0.660 [0.567,0.753]  elo=115  first=0.70 second=0.62  plies~72  {'NONE': 100}  41s
+quoridor A=5 B=4 ms=1750 n=100  W/D/L=73/0/27  S=0.730 [0.643,0.817]  elo=173  first=0.80 second=0.66  plies~71  {'NONE': 100}  105s
+quoridor A=6 B=5 ms=1750 n=100  W/D/L=72/0/28  S=0.720 [0.632,0.808]  elo=164  first=0.78 second=0.66  plies~74  {'NONE': 100}  504s
+caro A=1 B=0 ms=1500 n=100  W/D/L=90/0/10  S=0.900 [0.841,0.959]  elo=-  first=0.98 second=0.82  plies~18  {'FIVE': 100}  1s
+caro A=2 B=1 ms=1500 n=100  W/D/L=82/0/18  S=0.820 [0.744,0.896]  elo=-  first=0.90 second=0.74  plies~36  {'FIVE': 100}  3s
+caro A=3 B=2 ms=1500 n=100  W/D/L=79/0/21  S=0.790 [0.710,0.870]  elo=230  first=0.90 second=0.68  plies~40  {'FIVE': 100}  13s
+caro A=4 B=3 ms=1500 n=100  W/D/L=59/0/41  S=0.590 [0.493,0.687]  elo=63  first=0.68 second=0.50  plies~42  {'FIVE': 100}  41s
+caro A=5 B=4 ms=1500 n=100  W/D/L=62/0/38  S=0.620 [0.524,0.716]  elo=85  first=0.76 second=0.48  plies~42  {'FIVE': 100}  92s
+caro A=6 B=5 ms=1500 n=100  W/D/L=58/0/42  S=0.580 [0.483,0.677]  elo=56  first=0.78 second=0.38  plies~42  {'FIVE': 100}  184s
+wallgo A=1 B=0 ms=1750 n=100  W/D/L=90/0/10  S=0.900 [0.841,0.959]  elo=-  first=0.92 second=0.88  plies~52  {'TERRITORY': 100}  5s
+wallgo A=2 B=1 ms=1750 n=100  W/D/L=79/2/19  S=0.800 [0.722,0.878]  elo=241  first=0.79 second=0.81  plies~54  {'TERRITORY': 100}  18s
+wallgo A=3 B=2 ms=1750 n=100  W/D/L=87/0/13  S=0.870 [0.804,0.936]  elo=-  first=0.86 second=0.88  plies~51  {'TERRITORY': 100}  36s
+wallgo A=4 B=3 ms=1750 n=100  W/D/L=74/0/26  S=0.740 [0.654,0.826]  elo=182  first=0.66 second=0.82  plies~51  {'TERRITORY': 100}  203s
+wallgo A=5 B=4 ms=1750 n=100  W/D/L=66/1/33  S=0.665 [0.573,0.757]  elo=119  first=0.59 second=0.74  plies~50  {'TERRITORY': 100}  500s
+wallgo A=6 B=5 ms=1750 n=100  W/D/L=46/0/54  S=0.460 [0.362,0.558]  elo=-28  first=0.42 second=0.50  plies~49  {'TERRITORY': 100}  481s
+xiangqi A=1 B=0 ms=2000 n=100  W/D/L=100/0/0  S=1.000 [1.000,1.000]  elo=-  first=1.00 second=1.00  plies~73  {'REPETITION': 33, 'CHECKMATE': 64, 'NOMOVES': 3}  8s
+xiangqi A=2 B=1 ms=2000 n=100  W/D/L=93/1/6  S=0.935 [0.887,0.983]  elo=-  first=0.95 second=0.92  plies~100  {'CHECKMATE': 64, 'REPETITION': 27, 'NOMOVES': 8, 'FIFTY': 1}  15s

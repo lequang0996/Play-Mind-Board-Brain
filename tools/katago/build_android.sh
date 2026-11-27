@@ -37,9 +37,25 @@ tar xzf kg.tgz; tar xzf eigen.tgz
 KG="$WORK/KataGo-$KG_VER/cpp"
 # Android không có libatomic riêng (đã nằm trong runtime của NDK): bỏ dòng link "atomic".
 sed -i 's/target_link_libraries(katago "atomic")/if(NOT ANDROID)\n      target_link_libraries(katago "atomic")\n    endif()/' "$KG/CMakeLists.txt"
-# sha2.cpp cần BYTE_ORDER; trên Android <sys/types.h> không định nghĩa, nên thêm <endian.h> và dự phòng bằng macro của clang.
-grep -q '^#include <sys/types.h>' "$KG/core/sha2.cpp" || { echo "::error::sha2.cpp đã đổi, cần sửa bản vá"; exit 1; }
-sed -i 's|^#include <sys/types.h>|#include <sys/types.h>\n#include <endian.h>\n#ifndef BYTE_ORDER\n#define LITTLE_ENDIAN 1234\n#define BIG_ENDIAN 4321\n#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__\n#define BYTE_ORDER BIG_ENDIAN\n#else\n#define BYTE_ORDER LITTLE_ENDIAN\n#endif\n#endif|' "$KG/core/sha2.cpp"
+# Một số file cần BYTE_ORDER; trên Android không header nào tự định nghĩa nó, nên chèn <endian.h> + dự phòng bằng macro của clang
+# vào đầu từng file. Nếu bản KataGo mới thêm file dùng BYTE_ORDER thì script báo lỗi để cập nhật danh sách.
+ENDIAN_FILES="core/sha2.cpp dataio/numpywrite.cpp neuralnet/desc.cpp"
+FOUND="$(cd "$KG" && grep -rl 'BYTE_ORDER' --include='*.cpp' --include='*.h' . | sed 's|^\./||' | sort | xargs)"
+WANT="$(printf '%s\n' $ENDIAN_FILES | sort | xargs)"
+[ "$FOUND" = "$WANT" ] || { echo "::error::Danh sách file dùng BYTE_ORDER đã đổi: $FOUND"; exit 1; }
+ENDIAN_HDR='#include <endian.h>
+#ifndef BYTE_ORDER
+#define LITTLE_ENDIAN 1234
+#define BIG_ENDIAN 4321
+#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+#define BYTE_ORDER BIG_ENDIAN
+#else
+#define BYTE_ORDER LITTLE_ENDIAN
+#endif
+#endif'
+for f in $ENDIAN_FILES; do
+  { printf '%s\n' "$ENDIAN_HDR"; cat "$KG/$f"; } > "$KG/$f.tmp" && mv "$KG/$f.tmp" "$KG/$f"
+done
 
 SYSROOT="$NDK/toolchains/llvm/prebuilt/linux-x86_64/sysroot"
 for ABI in $ABIS; do

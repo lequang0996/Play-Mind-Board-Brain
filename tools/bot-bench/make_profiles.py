@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
-"""Sinh hồ sơ game (BOT_GUIDE mục 12.2) vào docs/games/<id>.md từ bảng dưới và tệp kết quả đo results.txt.
-
-results.txt: mỗi dòng là một dòng in ra của bench.py, ví dụ
-  chess A=1 B=0 ms=2000 n=100  W/D/L=...  S=0.930 [0.880,0.980] ...
+"""Sinh hồ sơ game (BOT_GUIDE mục 12.2) vào docs/games/<id>.md từ bảng dưới và các đợt đo trong results/*.txt
+(xem make_reports.py; đợt sau ghi đè kết quả đợt trước của cùng cặp).
 """
-import os, re, sys
+import glob, os, re, sys
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 OUT = os.path.join(ROOT, "docs", "games")
-RES = os.path.join(os.path.dirname(__file__), "results.txt")
+RES = os.path.join(os.path.dirname(__file__), "results")
 os.makedirs(OUT, exist_ok=True)
 
 NAMES = ["Dễ", "Trung bình", "Khá", "Giỏi", "Cao thủ", "Thách đấu", "Siêu việt"]
@@ -49,8 +47,7 @@ G = {
 
 def load_results():
     res = {}
-    if not os.path.exists(RES): return res
-    for line in open(RES, encoding="utf-8"):
+    for line in (l for p in sorted(glob.glob(os.path.join(RES, "*.txt"))) for l in open(p, encoding="utf-8")):
         m = re.match(r"(\w+) A=(\d) B=(\d) ms=(\d+) n=(\d+)\s+W/D/L=(\d+)/(\d+)/(\d+)\s+S=([\d.]+) \[([-\d.]+),([-\d.]+)\].*first=([\d.]+) second=([\d.]+)", line)
         if m:
             g, a, b = m.group(1), int(m.group(2)), int(m.group(3))
@@ -79,7 +76,7 @@ def describe(gid, kind, args):
 
 res = load_results(); cfg = configs()
 for gid, g in G.items():
-    lines = [f"# Hồ sơ game: {g['name']}", "", "Theo mẫu BOT_GUIDE mục 12.2. Sinh bởi `tools/bot-bench/make_profiles.py`; số liệu đo nằm ở `tools/bot-bench/results.txt`.", "",
+    lines = [f"# Hồ sơ game: {g['name']}", "", "Theo mẫu BOT_GUIDE mục 12.2. Sinh bởi `tools/bot-bench/make_profiles.py`; số liệu đo nằm ở `tools/bot-bench/results/`, báo cáo chi tiết ở [docs/bot-results](../bot-results/README.md).", "",
              "| Mục | Nội dung |", "|---|---|",
              f"| Luật chốt | {g['rules']} |", f"| Kiểm thử luật | {g['test']} |",
              f"| botMillis (Siêu việt) | {g['ms']} ms trên điện thoại (Catalog.kt) |",
