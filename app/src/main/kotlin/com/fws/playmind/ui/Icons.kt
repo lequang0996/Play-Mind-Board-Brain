@@ -20,8 +20,7 @@ object Ic {
      */
     internal fun expandArcs(d: String): String {
         val out = StringBuilder(); var i = 0; var cmd = ' '
-        fun skip() { while (i < d.length && (d[i] == ' ' || d[i] == ',' || d[i] == '
-')) i++ }
+        fun skip() { while (i < d.length && (d[i] == ' ' || d[i] == ',')) i++ }
         fun num(): String {
             skip(); val st = i
             if (i < d.length && (d[i] == '-' || d[i] == '+')) i++
