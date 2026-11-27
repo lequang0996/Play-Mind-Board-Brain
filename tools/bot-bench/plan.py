@@ -12,7 +12,7 @@ Dòng ladder có props là thử nghiệm: kết quả ghi riêng, không vào b
 Mỗi shard là một máy CI (4 vCPU) chạy vài tiến trình song song (gauge: 2 khi threads=1, 1 khi bot dùng nhiều luồng;
 ladder và ab: 3, hoặc 1 nếu ab có người chơi smpN).
 """
-import json, os, sys
+import re, json, os, sys
 
 def parse(path):
     meta, jobs = {}, []
@@ -25,6 +25,10 @@ def parse(path):
         elif "=" in line:
             k, v = line.split("=", 1); meta[k.strip()] = v.strip()
     return meta, jobs
+
+def safe(label):
+    """Tên artifact không được chứa các ký tự " : < > | * ? \\ / và xuống dòng: thay bằng _."""
+    return re.sub(r'[":<>|*?\\/\r\n]', "_", label)
 
 def matrix(path):
     meta, jobs = parse(path)
@@ -39,21 +43,22 @@ def matrix(path):
             per += per % 2
             for s in range(shards):
                 eng = "SF" if game == "chess" else "PF"; net = "" if game == "chess" else " PFNET"
-                cmds = [pre + f"gauge {game} {eng} {kv['elo']} {per} {kv['ms']} {kv.get('sfms', kv['ms'])} {1000 * j + 100 * s + 10 * k + 7} {threads}{net}" for k in range(streams)]
-                inc.append(dict(job=j, shard=s, label=f"{j}-gauge-{game}-{kv['elo']}-{s}", cmds="|".join(cmds)))
+                lim = f"n{kv['nodes']}" if "nodes" in kv else kv['elo']
+                cmds = [pre + f"gauge {game} {eng} {lim} {per} {kv['ms']} {kv.get('sfms', kv['ms'])} {1000 * j + 100 * s + 10 * k + 7} {threads}{net}" for k in range(streams)]
+                inc.append(dict(job=j, shard=s, label=safe(f"{j}-gauge-{game}-{lim}-{s}"), cmds="|".join(cmds)))
         elif kind == "ab":
             a, b = pos[2], pos[3]; games = int(kv["games"])
             streams = 1 if (a.startswith("smp") or b.startswith("smp")) else 3
             per = max(2, -(-games // (shards * streams))); per += per % 2
             for s in range(shards):
                 cmds = [pre + f"ab {game} {a} {b} {per} {kv['ms']} {100000 * j + 1000 * (s * streams + k)} {kv.get('nodes', '0')}" for k in range(streams)]
-                inc.append(dict(job=j, shard=s, label=f"{j}-ab-{game}-{a}v{b}-{s}", cmds="|".join(cmds)))
+                inc.append(dict(job=j, shard=s, label=safe(f"{j}-ab-{game}-{a}v{b}-{s}"), cmds="|".join(cmds)))
         else:
             a, b = pos[2], pos[3]; streams = 3; pairs = int(kv["pairs"]); players = kv.get("players", "2")
             per = max(1, -(-pairs // (shards * streams)))
             for s in range(shards):
                 cmds = [pre + f"ladder {game} {a} {b} {per} {kv['ms']} {100000 * j + 1000 * (s * streams + k) + 1} {players}" for k in range(streams)]
-                inc.append(dict(job=j, shard=s, label=f"{j}-ladder-{game}-{a}v{b}-{s}", cmds="|".join(cmds)))
+                inc.append(dict(job=j, shard=s, label=safe(f"{j}-ladder-{game}-{a}v{b}-{s}"), cmds="|".join(cmds)))
     return meta, inc
 
 if __name__ == "__main__":

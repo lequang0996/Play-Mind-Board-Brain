@@ -23,8 +23,12 @@ def main():
         lines = open(p, encoding="utf-8").read().splitlines()
         if not lines or not lines[0].startswith("# job="): continue
         j = int(re.match(r"# job=(\d+)", lines[0]).group(1))
-        a = acc.setdefault(j, dict(w=0, d=0, l=0, first=[], second=[], plies=[], reasons={}, cpu=lines[0]))
+        a = acc.setdefault(j, dict(w=0, d=0, l=0, first=[], second=[], plies=[], reasons={}, cpu=lines[0], err=[], eng=""))
         for ln in lines[1:]:
+            if ln.startswith("#! "):
+                if len(a["err"]) < 15: a["err"].append(ln[3:].strip()[:200])
+                continue
+            if ln.startswith("# engine "): a["eng"] = ln[2:].strip(); continue
             t = ln.split()
             if not t: continue
             if t[0] in ("R", "G"):
@@ -38,6 +42,8 @@ def main():
     md = [f"### Kết quả đo `{meta['tag']}`", "", "| Phép đo | Ván | Thắng/Hòa/Thua | Điểm | Ghi chú |", "|---|---|---|---|---|"]
     for j, (pos, kv) in enumerate(jobs):
         a = acc.get(j)
+        if a and a["err"]:
+            out.append(f"# lỗi {' '.join(pos)}: " + " / ".join(a["err"]))
         if not a or a["w"] + a["d"] + a["l"] == 0:
             md.append(f"| {' '.join(pos)} | 0 | | | không có kết quả |"); continue
         w, d, l = a["w"], a["d"], a["l"]; n = w + d + l
@@ -59,6 +65,10 @@ def main():
             out.append(f"{pos[1]} A={pos[2]} B={pos[3]} ms={kv['ms']} n={n}  W/D/L={w}/{d}/{l}  S={s:.3f} [{lo:.3f},{hi:.3f}]  elo={elo}  "
                        f"first={f:.2f} second={sc2:.2f}  plies~{plies}  {reasons}  ci")
             md.append(f"| {pos[1]}: cấp {pos[2]} vs cấp {pos[3]} | {n} | {w}/{d}/{l} | {s:.3f} | |")
+        elif "nodes" in kv:
+            eng = a["eng"] or "engine"
+            out.append(f"exp gauge {pos[1]} nodes={kv['nodes']} ms={kv['ms']} threads={kv.get('threads', '1')} n={n}  W/D/L={w}/{d}/{l}  S={s:.3f} [{lo:.3f},{hi:.3f}]  elo={elo_ab}  plies~{plies}  {reasons}  ({eng})")
+            md.append(f"| {pos[1]} vs {eng} | {n} | {w}/{d}/{l} | {s:.3f} | Elo tương đối {elo_ab} |")
         else:
             elo = int(kv["elo"])
             est = f"{elo + 400 * math.log10(s / (1 - s)):.0f}" if 0.03 < s < 0.97 else (">" if s >= 0.97 else "<") + str(elo)

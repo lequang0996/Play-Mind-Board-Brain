@@ -32,7 +32,9 @@ internal val OPENINGS = listOf(
  * Engine UCI ngoài chạy ở chế độ giới hạn sức (Stockfish cho cờ vua, Pikafish cho cờ tướng). Dừng hẳn nếu engine không có
  * UCI_Elo hoặc [elo] nằm ngoài khoảng engine hỗ trợ (để không đo nhầm ở sức tối đa).
  */
-class UciEngine(path: String, elo: Int, evalFile: String? = null) {
+/** [limit]: "2800" = giới hạn UCI_Elo; "n20000" = giới hạn số nút mỗi nước (engine không có UCI_Elo, ví dụ Pikafish). */
+class UciEngine(path: String, limit: String, evalFile: String? = null) {
+    private val nodes = if (limit.startsWith("n")) limit.drop(1).toLong() else 0L
     private val p = ProcessBuilder(path).redirectErrorStream(true).start()
     private val w: BufferedWriter = p.outputStream.bufferedWriter()
     private val r: BufferedReader = p.inputStream.bufferedReader()
@@ -46,13 +48,17 @@ class UciEngine(path: String, elo: Int, evalFile: String? = null) {
             if (l.startsWith("option name UCI_Elo ")) eloOpt = l
             if (l.startsWith("uciok")) break
         }
-        requireNotNull(eloOpt) { "$name không có tùy chọn UCI_Elo" }
-        val mn = Regex("min ([0-9]+)").find(eloOpt)!!.groupValues[1].toInt(); val mx = Regex("max ([0-9]+)").find(eloOpt)!!.groupValues[1].toInt()
-        require(elo in mn..mx) { "$name: UCI_Elo $elo ngoài khoảng $mn..$mx" }
-        System.err.println("# engine $name, UCI_Elo $mn..$mx"); println("# engine $name UCI_Elo=$elo range=$mn..$mx")
         if (evalFile != null) send("setoption name EvalFile value $evalFile")
         send("setoption name Threads value 1"); send("setoption name Hash value 64")
-        send("setoption name UCI_LimitStrength value true"); send("setoption name UCI_Elo value $elo")
+        if (nodes > 0) println("# engine $name nodes=$nodes")
+        else {
+            val elo = limit.toInt()
+            requireNotNull(eloOpt) { "$name không có tùy chọn UCI_Elo (dùng giới hạn số nút: nodes=...)" }
+            val mn = Regex("min ([0-9]+)").find(eloOpt)!!.groupValues[1].toInt(); val mx = Regex("max ([0-9]+)").find(eloOpt)!!.groupValues[1].toInt()
+            require(elo in mn..mx) { "$name: UCI_Elo $elo ngoài khoảng $mn..$mx" }
+            println("# engine $name UCI_Elo=$elo range=$mn..$mx")
+            send("setoption name UCI_LimitStrength value true"); send("setoption name UCI_Elo value $elo")
+        }
         send("isready"); wait("readyok")
     }
     fun send(s: String) { w.write(s); w.newLine(); w.flush() }
@@ -60,7 +66,7 @@ class UciEngine(path: String, elo: Int, evalFile: String? = null) {
     fun newGame() { send("ucinewgame"); send("isready"); wait("readyok") }
     fun best(moves: List<String>, ms: Int): String {
         send("position startpos" + if (moves.isEmpty()) "" else " moves " + moves.joinToString(" "))
-        send("go movetime $ms"); return wait("bestmove").split(" ")[1]
+        send(if (nodes > 0) "go nodes $nodes" else "go movetime $ms"); return wait("bestmove").split(" ")[1]
     }
     fun close() { runCatching { send("quit") }; p.destroy() }
 }
@@ -86,13 +92,13 @@ private fun xqUci(m: Int): String {
 private fun xqParse(s: String): Int = XiangqiGame.mk((s[1] - '0') * 9 + (s[0] - 'a'), (s[3] - '0') * 9 + (s[2] - 'a'))
 
 fun gaugeMain(args: List<String>) {
-    require(args.size >= 7 && args[0] in listOf("chess", "xiangqi")) { "args: chess|xiangqi <engine> <elo> <games> <ourMs> <sfMs> <seed> [threads] [evalFile]" }
+    require(args.size >= 7 && args[0] in listOf("chess", "xiangqi")) { "args: chess|xiangqi <engine> <elo|nN> <games> <ourMs> <sfMs> <seed> [threads] [evalFile]" }
     val game = args[0]
-    val sfPath = args[1]; val elo = args[2].toInt(); val games = args[3].toInt()
+    val sfPath = args[1]; val limit = args[2]; val games = args[3].toInt()
     val ourMs = args[4].toLong(); val sfMs = args[5].toInt(); val seed = args[6].toInt()
     val threads = args.getOrNull(7)?.toInt() ?: 1
     ChessGame.threads = threads; XiangqiGame.threads = threads
-    val sf = UciEngine(sfPath, elo, args.getOrNull(8))
+    val sf = UciEngine(sfPath, limit, args.getOrNull(8))
     var w = 0; var d = 0; var l = 0
     for (i in 0 until games) {
         val ourWhite = i % 2 == 0

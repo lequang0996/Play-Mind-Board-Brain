@@ -78,12 +78,18 @@ jobs:
             i=$((i+1))
           done
           wait
-          mkdir -p part
+          mkdir -p part; bad=0
           for f in out-*.txt; do
-            grep -q '^TOTAL' "$f" || { echo "::error::lỗi chạy đo"; cat "$f"; exit 1; }
-            { echo "# job=${{ matrix.job }} shard=${{ matrix.shard }} cpu=$(nproc) $(grep -m1 'model name' /proc/cpuinfo | cut -d: -f2)"; grep -E '^(R|G|TOTAL) ' "$f"; } > "part/${{ matrix.label }}-$f"
+            { echo "# job=${{ matrix.job }} shard=${{ matrix.shard }} cpu=$(nproc) $(grep -m1 'model name' /proc/cpuinfo | cut -d: -f2)"; grep -E '^(R|G|TOTAL|# engine) ' "$f"; } > "part/${{ matrix.label }}-$f"
+            if ! grep -q '^TOTAL' "$f"; then
+              # lỗi: ghi 15 dòng cuối vào phần kết quả (collect.py chép vào tệp kết quả để đọc được mà không cần đăng nhập)
+              echo "::error::lỗi chạy đo"; cat "$f"; bad=1
+              tail -n 15 "$f" | sed 's/^/#! /' >> "part/${{ matrix.label }}-$f"
+            fi
           done
+          exit $bad
       - uses: actions/upload-artifact@v4
+        if: always()
         with: { name: "part-${{ matrix.label }}", path: part/ }
 
   collect:

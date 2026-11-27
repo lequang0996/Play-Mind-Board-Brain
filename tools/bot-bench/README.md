@@ -19,7 +19,7 @@ Chỉ một đợt chạy và một đợt chờ tại một thời điểm (nh�
 | Dòng | Ý nghĩa |
 |---|---|
 | `gauge chess elo=2800 games=80 ms=2000 sfms=2000 shards=4 threads=3` | Siêu việt đấu Stockfish giới hạn `UCI_Elo` (thang CCRL, không phải FIDE). Stockfish được biên dịch trên máy CI. |
-| `gauge xiangqi elo=2000 games=20 ms=2000 sfms=2000 shards=2 threads=3` | Siêu việt cờ tướng đấu Pikafish (tải bản phát hành mới nhất trên máy CI). |
+| `gauge xiangqi nodes=200000 games=20 ms=2000 shards=2 threads=3` | Siêu việt cờ tướng đấu Pikafish giới hạn số nút mỗi nước (Pikafish không có `UCI_Elo`; tải bản phát hành mới nhất trên máy CI). Kết quả là dòng thử nghiệm `exp gauge`. |
 | `ladder chess 6 5 pairs=100 ms=2000 shards=5 [players=2]` | Hai cấp đấu nhau theo cặp ván đổi màu (cấp 0 Dễ ... 6 Siêu việt); `ms` là thời gian mỗi nước của Siêu việt. |
 | `ab chess new@qd240 new games=1000 ms=200 shards=6 [nodes=N]` | So hai biến thể engine Siêu việt (thử một thay đổi, mục 2.6). |
 

@@ -292,7 +292,7 @@ class ChessTT(bits: Int) {
  */
 object SP {
     val NAMES = arrayOf("rfpm", "rfpi", "razb", "razd", "nmpdiv", "sing", "sde", "futb", "futd", "hp", "seeq", "seec", "lmrh", "asp", "qd", "corr")
-    val DEF = intArrayOf(80, 60, 220, 180, 200, 16, 24, 120, 100, 3500, 30, 100, 7000, 18, 180, 40)
+    val DEF = intArrayOf(80, 60, 220, 180, 200, 16, 24, 120, 130, 2500, 30, 100, 7000, 12, 240, 40)
     const val RFP_M = 0; const val RFP_I = 1; const val RAZ_B = 2; const val RAZ_D = 3; const val NMP_DIV = 4; const val SING = 5
     const val SDE = 6; const val FUT_B = 7; const val FUT_D = 8; const val HP = 9; const val SEEQ = 10; const val SEEC = 11
     const val LMRH = 12; const val ASP = 13; const val QD = 14; const val CORR = 15
