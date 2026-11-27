@@ -1,29 +1,19 @@
 package com.fws.playmind.core
 
 import kotlin.math.abs
-import kotlin.math.ln
 import kotlin.random.Random
 
 /**
  * Cờ vua. Ô = rank*8 + file, a1 = 0, h8 = 63. Quân trắng dương, đen âm.
  * Mã hóa nước đi: from | to<<6 | promo<<12 | flag<<16.
  *
- * Engine v2 (cấp cao thủ): PVS + bảng băm Zobrist, cắt tỉa null-move / reverse-futility / futility / LMP,
- * LMR, SEE, tìm kiếm tĩnh, aspiration window, đánh giá tapered (vật chất, PST, cơ động, cấu trúc tốt,
- * tốt thông, an toàn vua, tàn cuộc) và sách khai cuộc nhỏ. Xem docs/BOT_GUIDE.md.
+ * Lớp này giữ luật cờ (đã kiểm bằng perft) và sách khai cuộc nhỏ; việc tìm kiếm do [ChessEngine] (bitboard) đảm nhận.
+ * Xem docs/BOT_GUIDE.md.
  */
 class ChessGame : BoardGame, LeveledEngine {
     companion object {
         const val P = 1; const val N = 2; const val B = 3; const val R = 4; const val Q = 5; const val K = 6
         private const val F_EP = 1; private const val F_CASTLE = 2; private const val F_DOUBLE = 4
-        private const val MATE = 30000
-        private const val INF = 32000
-        private const val MAXD = 60
-        private const val MAXPLY = 100
-        private val VAL = intArrayOf(0, 100, 320, 330, 500, 900, 0)
-        private val SEE_VAL = intArrayOf(0, 100, 320, 330, 500, 900, 20000)
-        private val MG_VAL = intArrayOf(0, 82, 337, 365, 477, 1025, 0)
-        private val EG_VAL = intArrayOf(0, 94, 281, 297, 512, 936, 0)
         private val KN = intArrayOf(1, 2, 2, 1, 2, -1, 1, -2, -1, 2, -2, 1, -2, -1, -1, -2)
         private val KG = intArrayOf(1, 0, -1, 0, 0, 1, 0, -1, 1, 1, 1, -1, -1, 1, -1, -1)
         private val CMASK = IntArray(64) { 15 }.also {
@@ -44,38 +34,13 @@ class ChessGame : BoardGame, LeveledEngine {
         private val Z_EP = LongArray(8) { zr.nextLong() }
         private fun zp(p: Int, sq: Int) = Z_PIECE[p + 6][sq]
 
-        // ── Bảng băm dùng chung (chỉ một luồng tìm kiếm tại một thời điểm, có khóa) ──
-        private const val TT_BITS = 19
-        private const val TT_SIZE = 1 shl TT_BITS
-        private val ttKey = LongArray(TT_SIZE)
-        private val ttMove = IntArray(TT_SIZE)
-        private val ttScore = IntArray(TT_SIZE)
-        private val ttInfo = IntArray(TT_SIZE)   // depth<<2 | flag (0 chính xác, 1 cận dưới, 2 cận trên)
         private val lock = Any()
 
         @Volatile var lastDepth = 0; private set
         @Volatile var lastNodes = 0L; private set
-
-        private val PST = arrayOf(
-            IntArray(64),
-            intArrayOf(0,0,0,0,0,0,0,0, 50,50,50,50,50,50,50,50, 10,10,20,30,30,20,10,10, 5,5,10,25,25,10,5,5,
-                0,0,0,20,20,0,0,0, 5,-5,-10,0,0,-10,-5,5, 5,10,10,-20,-20,10,10,5, 0,0,0,0,0,0,0,0),
-            intArrayOf(-50,-40,-30,-30,-30,-30,-40,-50, -40,-20,0,0,0,0,-20,-40, -30,0,10,15,15,10,0,-30, -30,5,15,20,20,15,5,-30,
-                -30,0,15,20,20,15,0,-30, -30,5,10,15,15,10,5,-30, -40,-20,0,5,5,0,-20,-40, -50,-40,-30,-30,-30,-30,-40,-50),
-            intArrayOf(-20,-10,-10,-10,-10,-10,-10,-20, -10,0,0,0,0,0,0,-10, -10,0,5,10,10,5,0,-10, -10,5,5,10,10,5,5,-10,
-                -10,0,10,10,10,10,0,-10, -10,10,10,10,10,10,10,-10, -10,5,0,0,0,0,5,-10, -20,-10,-10,-10,-10,-10,-10,-20),
-            intArrayOf(0,0,0,0,0,0,0,0, 5,10,10,10,10,10,10,5, -5,0,0,0,0,0,0,-5, -5,0,0,0,0,0,0,-5,
-                -5,0,0,0,0,0,0,-5, -5,0,0,0,0,0,0,-5, -5,0,0,0,0,0,0,-5, 0,0,0,5,5,0,0,0),
-            intArrayOf(-20,-10,-10,-5,-5,-10,-10,-20, -10,0,0,0,0,0,0,-10, -10,0,5,5,5,5,0,-10, -5,0,5,5,5,5,0,-5,
-                0,0,5,5,5,5,0,-5, -10,5,5,5,5,5,0,-10, -10,0,5,0,0,0,0,-10, -20,-10,-10,-5,-5,-10,-10,-20),
-            intArrayOf(-30,-40,-40,-50,-50,-40,-40,-30, -30,-40,-40,-50,-50,-40,-40,-30, -30,-40,-40,-50,-50,-40,-40,-30, -30,-40,-40,-50,-50,-40,-40,-30,
-                -20,-30,-30,-40,-40,-30,-30,-20, -10,-20,-20,-20,-20,-20,-20,-10, 20,20,0,0,0,0,20,20, 20,30,10,0,0,10,30,20)
-        )
-        private val KING_END = intArrayOf(-50,-40,-30,-20,-20,-30,-40,-50, -30,-20,-10,0,0,-10,-20,-30, -30,-10,20,30,30,20,-10,-30, -30,-10,30,40,40,30,-10,-30,
-            -30,-10,30,40,40,30,-10,-30, -30,-10,20,30,30,20,-10,-30, -30,-30,0,0,0,0,-30,-30, -50,-30,-30,-30,-30,-30,-30,-50)
-        private val PAWN_EG_RANK = intArrayOf(0, 0, 4, 12, 26, 48, 85, 0)
-        private val PASSED = intArrayOf(0, 5, 10, 20, 38, 65, 105, 0)
-        private val LMR = Array(64) { d -> IntArray(64) { m -> if (d < 3 || m < 2) 0 else (0.7 + ln(d.toDouble()) * ln(m.toDouble()) / 2.3).toInt() } }
+        /** Engine tìm kiếm dùng chung (bảng băm giữ giữa các nước); chỉ một luồng dùng tại một thời điểm (khóa [lock]). */
+        private val engine by lazy { ChessEngine(20) }
+        const val START_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
         // ── Sách khai cuộc nhỏ (UCI). Mỗi nước được kiểm tra lại bằng luật cờ khi dùng. ──
         private val BOOK: List<List<String>> = listOf(
@@ -128,7 +93,10 @@ class ChessGame : BoardGame, LeveledEngine {
         setFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
     }
 
+    private var startFen = START_FEN
+
     fun setFen(fen: String) {
+        startFen = fen
         board.fill(0); hist.clear(); keys.clear(); sp = 0; result = Outcome.ONGOING; reason = EndReason.NONE
         val parts = fen.trim().split(" ")
         var rank = 7; var file = 0
@@ -444,7 +412,7 @@ class ChessGame : BoardGame, LeveledEngine {
         System.arraycopy(board, 0, g.board, 0, 64)
         g.side = side; g.castling = castling; g.ep = ep; g.half = half; g.wk = wk; g.bk = bk; g.hash = hash
         g.hist.clear(); g.hist.addAll(hist); g.keys.clear(); g.keys.addAll(keys)
-        g.result = result; g.reason = reason; g.sp = 0
+        g.result = result; g.reason = reason; g.sp = 0; g.startFen = startFen
         return g
     }
 
@@ -462,240 +430,18 @@ class ChessGame : BoardGame, LeveledEngine {
         return total
     }
 
-    // ───────────────────────── Đánh giá ─────────────────────────
-    private val pawnMin = Array(2) { IntArray(8) }   // [0] trắng, [1] đen: hạng thấp/cao nhất của tốt trên mỗi cột
-    private val pawnMax = Array(2) { IntArray(8) }
-    private val pawnCnt = Array(2) { IntArray(8) }
-    private val zoneStamp = Array(2) { IntArray(64) }
-    private var stamp = 0
-    private val attW = IntArray(2); private val hits = IntArray(2); private val cntAtt = IntArray(2)
-
-    private fun evaluate(): Int {
-        var mg = 0; var eg = 0; var phase = 0
-        for (c in 0..1) for (f in 0..7) { pawnMin[c][f] = 8; pawnMax[c][f] = -1; pawnCnt[c][f] = 0 }
-        var wbishops = 0; var bbishops = 0
-        var wmat = 0; var bmat = 0; var pawns = 0
-        for (sq in 0 until 64) {
-            val p = board[sq]; if (p == 0) continue
-            val t = abs(p)
-            if (t == P) {
-                val c = if (p > 0) 0 else 1; val f = sq and 7; val r = sq shr 3
-                if (r < pawnMin[c][f]) pawnMin[c][f] = r
-                if (r > pawnMax[c][f]) pawnMax[c][f] = r
-                pawnCnt[c][f]++; pawns++
-            } else if (t != K) {
-                if (p > 0) wmat += VAL[t] else bmat += VAL[t]
-                if (t == B) { if (p > 0) wbishops++ else bbishops++ }
-            }
-        }
-        // vùng nguy hiểm quanh vua mỗi bên
-        stamp++
-        for (c in 0..1) {
-            val ksq = if (c == 0) wk else bk; val kf = ksq and 7; val kr = ksq shr 3
-            val fwd = if (c == 0) 1 else -1
-            for (df in -1..1) for (dr in -1..2) {
-                val nf = kf + df; val nr = kr + dr * fwd
-                if (nf in 0..7 && nr in 0..7) zoneStamp[c][nr * 8 + nf] = stamp
-            }
-            attW[c] = 0; hits[c] = 0; cntAtt[c] = 0
-        }
-
-        for (sq in 0 until 64) {
-            val p = board[sq]; if (p == 0) continue
-            val t = abs(p); val white = p > 0; val c = if (white) 0 else 1
-            val f = sq and 7; val r = sq shr 3
-            val idx = if (white) (7 - r) * 8 + f else sq
-            var m = 0; var e = 0
-            when (t) {
-                P -> {
-                    m = MG_VAL[P] + PST[P][idx]
-                    val rr = if (white) r else 7 - r
-                    e = EG_VAL[P] + PAWN_EG_RANK[rr]
-                    var passed = true
-                    for (g in maxOf(0, f - 1)..minOf(7, f + 1)) {
-                        if (white) { if (pawnMax[1][g] > r) { passed = false; break } }
-                        else { if (pawnMin[0][g] < r) { passed = false; break } }
-                    }
-                    if (passed) { m += PASSED[rr] / 2; e += PASSED[rr] }
-                    val own = pawnCnt[c]
-                    if ((f == 0 || own[f - 1] == 0) && (f == 7 || own[f + 1] == 0)) { m -= 10; e -= 14 }
-                    if (own[f] > 1) { m -= 8; e -= 12 }
-                }
-                N, B, R, Q -> {
-                    phase += if (t == N || t == B) 1 else if (t == R) 2 else 4
-                    m = MG_VAL[t] + PST[t][idx]; e = EG_VAL[t] + PST[t][idx]
-                    var mob = 0
-                    var anyZone = false
-                    val ez = zoneStamp[1 - c]
-                    if (t == N) {
-                        var i = 0
-                        while (i < 16) {
-                            val nf = f + KN[i]; val nr = r + KN[i + 1]; i += 2
-                            if (nf in 0..7 && nr in 0..7) {
-                                val to = nr * 8 + nf; val tp = board[to]
-                                if (tp == 0 || (tp > 0) != white) mob++
-                                if (ez[to] == stamp) { hits[1 - c]++; anyZone = true }
-                            }
-                        }
-                        m += 4 * (mob - 4); e += 4 * (mob - 4)
-                    } else {
-                        var i = 0
-                        while (i < 16) {
-                            val df = KG[i]; val dr = KG[i + 1]; i += 2
-                            val diag = df != 0 && dr != 0
-                            if (t == B && !diag) continue
-                            if (t == R && diag) continue
-                            var nf = f + df; var nr = r + dr
-                            while (nf in 0..7 && nr in 0..7) {
-                                val to = nr * 8 + nf; val tp = board[to]
-                                if (ez[to] == stamp) { hits[1 - c]++; anyZone = true }
-                                if (tp == 0) mob++ else { if ((tp > 0) != white) mob++; break }
-                                nf += df; nr += dr
-                            }
-                        }
-                        when (t) {
-                            B -> { m += 5 * (mob - 6); e += 5 * (mob - 6) }
-                            R -> { m += 2 * (mob - 6); e += 4 * (mob - 6) }
-                            else -> { m += (mob - 12); e += 2 * (mob - 12) }
-                        }
-                    }
-                    if (anyZone) { cntAtt[1 - c]++; attW[1 - c] += if (t == Q) 5 else if (t == R) 3 else 2 }
-                    if (t == R) {
-                        val own = pawnCnt[c][f]; val opp = pawnCnt[1 - c][f]
-                        if (own == 0) { if (opp == 0) { m += 22; e += 14 } else { m += 11; e += 8 } }
-                        if (if (white) r == 6 else r == 1) { m += 10; e += 20 }
-                    }
-                }
-                else -> {
-                    m = PST[K][idx]; e = KING_END[idx]
-                    val dir = if (white) 1 else -1
-                    var shield = 0
-                    for (df in -1..1) {
-                        val nf = f + df; if (nf !in 0..7) continue
-                        val r1 = r + dir; val r2 = r + 2 * dir
-                        if (r1 in 0..7 && board[r1 * 8 + nf] == (if (white) P else -P)) shield += 10
-                        else if (r2 in 0..7 && board[r2 * 8 + nf] == (if (white) P else -P)) shield += 5
-                        else if (pawnCnt[c][nf] == 0) shield -= 14
-                    }
-                    if ((white && r <= 1) || (!white && r >= 6)) m += shield
-                }
-            }
-            if (white) { mg += m; eg += e } else { mg -= m; eg -= e }
-        }
-        if (wbishops >= 2) { mg += 30; eg += 50 }
-        if (bbishops >= 2) { mg -= 30; eg -= 50 }
-        for (c in 0..1) {
-            if (cntAtt[c] >= 2) {
-                val danger = attW[c] * hits[c]
-                val pen = minOf(500, danger * danger / 6)
-                if (c == 0) mg -= pen else mg += pen
-            }
-        }
-        val ph = minOf(24, phase)
-        var score = (mg * ph + eg * (24 - ph)) / 24
-        val diff = wmat - bmat
-        if (ph <= 12 && abs(diff) >= 300) {   // tàn cuộc: dồn vua đối phương ra mép
-            val win = if (diff > 0) 0 else 1
-            val loserK = if (win == 0) bk else wk; val winK = if (win == 0) wk else bk
-            val lf = loserK and 7; val lr = loserK shr 3
-            val cd = maxOf(3 - lf, lf - 4) + maxOf(3 - lr, lr - 4)
-            val kd = abs((winK and 7) - lf) + abs((winK shr 3) - lr)
-            val bonus = 6 * cd + 3 * (14 - kd)
-            score += if (win == 0) bonus else -bonus
-        }
-        if (pawns == 0 && abs(diff) < 400 && ph <= 8) score /= 3
-        score += if (side > 0) 12 else -12
-        return if (side > 0) score else -score
+    /** Tìm kiếm bằng [ChessEngine] trên thế hiện tại (gọi trong khóa [lock]). */
+    private fun think(lim: SearchLimit, allowed: IntArray?, delta: Int): RootResult {
+        engine.load(startFen, hist)
+        val r = engine.search(lim, allowed, delta)
+        lastDepth = r.depth; lastNodes = r.nodes
+        return r
     }
-
-    // ───────────────────────── SEE ─────────────────────────
-    private val seeGain = IntArray(40)
-    private val seeSq = IntArray(40)
-    private val seePc = IntArray(40)
-
-    private fun leastAttacker(to: Int, color: Int): Int {
-        val f = to and 7; val r = to shr 3
-        val pr = r - color
-        if (pr in 0..7) {
-            if (f > 0 && board[pr * 8 + f - 1] == color * P) return pr * 8 + f - 1
-            if (f < 7 && board[pr * 8 + f + 1] == color * P) return pr * 8 + f + 1
-        }
-        var i = 0
-        while (i < 16) {
-            val nf = f + KN[i]; val nr = r + KN[i + 1]; i += 2
-            if (nf in 0..7 && nr in 0..7 && board[nr * 8 + nf] == color * N) return nr * 8 + nf
-        }
-        var bq = -1; var rk = -1; var qn = -1; var kg = -1
-        i = 0
-        while (i < 16) {
-            val df = KG[i]; val dr = KG[i + 1]; i += 2
-            val diag = df != 0 && dr != 0
-            var nf = f + df; var nr = r + dr
-            var first = true
-            while (nf in 0..7 && nr in 0..7) {
-                val sq = nr * 8 + nf; val p = board[sq]
-                if (p != 0) {
-                    if (p * color > 0) {
-                        val t = abs(p)
-                        if (t == Q) { if (qn < 0) qn = sq }
-                        else if (diag && t == B) { if (bq < 0) bq = sq }
-                        else if (!diag && t == R) { if (rk < 0) rk = sq }
-                        else if (t == K && first) { if (kg < 0) kg = sq }
-                    }
-                    break
-                }
-                first = false
-                nf += df; nr += dr
-            }
-        }
-        if (bq >= 0) return bq
-        if (rk >= 0) return rk
-        if (qn >= 0) return qn
-        return kg
-    }
-
-    /** SEE của một nước ăn quân: giá trị thu được sau chuỗi trao đổi tốt nhất (âm nếu thiệt). */
-    private fun see(m: Int): Int {
-        val from = m and 63; val to = (m shr 6) and 63
-        val attacker = board[from]
-        val target = if ((m shr 16 and F_EP) != 0) P else abs(board[to])
-        var d = 0
-        seeGain[0] = SEE_VAL[target]
-        var color = if (attacker > 0) -1 else 1
-        var cur = SEE_VAL[abs(attacker)]
-        var removed = 0
-        seeSq[removed] = from; seePc[removed] = attacker; removed++; board[from] = 0
-        while (true) {
-            d++
-            val a = leastAttacker(to, color)
-            if (a < 0) break
-            seeGain[d] = cur - seeGain[d - 1]
-            if (maxOf(-seeGain[d - 1], seeGain[d]) < 0) break
-            cur = SEE_VAL[abs(board[a])]
-            seeSq[removed] = a; seePc[removed] = board[a]; removed++; board[a] = 0
-            color = -color
-            if (d >= 30) break
-        }
-        while (--d > 0) seeGain[d - 1] = -maxOf(-seeGain[d - 1], seeGain[d])
-        while (removed > 0) { removed--; board[seeSq[removed]] = seePc[removed] }
-        return seeGain[0]
-    }
-
-    // ───────────────────────── Tìm kiếm ─────────────────────────
-    private var deadline = 0L
-    private var rootSide = 1
-    private var nodes = 0L
-    private var abort = false
-    private val killers = Array(MAXPLY) { IntArray(2) }
-    private val hh = Array(2) { Array(64) { IntArray(64) } }
-    private val bufs = Array(MAXPLY) { IntArray(256) }
-    private val scores = Array(MAXPLY) { IntArray(256) }
-    private val quiets = Array(MAXPLY) { IntArray(64) }
 
     override fun bestMove(timeMs: Long): Int {
         val book = bookMove()
         if (book >= 0) return book
-        return synchronized(lock) { copyGame().searchRoot(timeMs) }
+        return synchronized(lock) { think(SearchLimit(timeMs = timeMs), null, 0).best }
     }
 
     private fun uci(m: Int): String {
@@ -731,282 +477,6 @@ class ChessGame : BoardGame, LeveledEngine {
         return false
     }
 
-    private fun hasPieces(color: Int): Boolean {
-        for (p in board) if (p * color > 0 && abs(p) in N..Q) return true
-        return false
-    }
-
-    private fun scoreMoves(ply: Int, n: Int, ttm: Int) {
-        val mv = bufs[ply]; val sc = scores[ply]
-        val sd = if (side > 0) 0 else 1
-        for (i in 0 until n) {
-            val m = mv[i]; val to = (m shr 6) and 63; val from = m and 63
-            val cap = board[to]; val pr = (m shr 12) and 7
-            val s: Int
-            if (m == ttm) s = 2_000_000
-            else if (cap != 0 || (m shr 16 and F_EP) != 0) {
-                val vic = if (cap != 0) abs(cap) else P
-                val att = abs(board[from])
-                s = if (VAL[vic] + 30 >= VAL[att] || see(m) >= 0) 1_000_000 + VAL[vic] * 16 - att else 100_000 + VAL[vic] * 16 - att
-            } else if (pr != 0) s = if (pr == Q) 990_000 else 50_000 + pr
-            else if (killers[ply][0] == m) s = 900_000
-            else if (killers[ply][1] == m) s = 890_000
-            else s = hh[sd][from][to]
-            sc[i] = s
-        }
-    }
-
-    private fun pick(ply: Int, n: Int, i: Int) {
-        val mv = bufs[ply]; val sc = scores[ply]
-        var best = i
-        for (j in i + 1 until n) if (sc[j] > sc[best]) best = j
-        if (best != i) {
-            val tm = mv[i]; mv[i] = mv[best]; mv[best] = tm
-            val ts = sc[i]; sc[i] = sc[best]; sc[best] = ts
-        }
-    }
-
-    /** Điểm hòa nhìn từ bên đang đi: hơi âm cho bên của bot (contempt) để không chấp nhận hòa khi thế ngang. */
-    private fun drawScore() = if (side == rootSide) -15 else 15
-
-    private fun scoreToTT(s: Int, ply: Int) = if (s > MATE - 300) s + ply else if (s < -MATE + 300) s - ply else s
-    private fun scoreFromTT(s: Int, ply: Int) = if (s > MATE - 300) s - ply else if (s < -MATE + 300) s + ply else s
-
-    private fun quiesce(alphaIn: Int, beta: Int, ply: Int): Int {
-        var alpha = alphaIn
-        if ((++nodes and 255L) == 0L && (nodes >= nodeLimit || System.nanoTime() > deadline)) abort = true
-        if (abort) return 0
-        val us = side
-        val inChk = isAttacked(kingSquare(us), -us)
-        var stand = -INF
-        if (!inChk) {
-            stand = evaluate()
-            if (ply >= MAXPLY - 2) return stand
-            if (stand >= beta) return stand
-            if (stand > alpha) alpha = stand
-        } else if (ply >= MAXPLY - 2) return evaluate()
-        val n = gen(bufs[ply], !inChk)
-        scoreMoves(ply, n, 0)
-        var legal = 0
-        for (i in 0 until n) {
-            pick(ply, n, i)
-            val m = bufs[ply][i]
-            val cap = board[(m shr 6) and 63]
-            if (!inChk && ((m shr 12) and 7) == 0) {
-                if (scores[ply][i] < 1_000_000) continue                                           // SEE < 0
-                if (stand + VAL[if (cap != 0) abs(cap) else P] + 200 < alpha) continue             // delta
-            }
-            make(m)
-            if (isAttacked(kingSquare(us), -us)) { unmake(); continue }
-            legal++
-            val sc = -quiesce(-beta, -alpha, ply + 1)
-            unmake()
-            if (abort) return 0
-            if (sc >= beta) return sc
-            if (sc > alpha) alpha = sc
-        }
-        if (inChk && legal == 0) return -(MATE - ply)
-        return alpha
-    }
-
-    private fun search(depthIn: Int, alphaIn: Int, betaIn: Int, ply: Int, nullOk: Boolean): Int {
-        var alpha = alphaIn; var beta = betaIn; var depth = depthIn
-        if ((++nodes and 255L) == 0L && (nodes >= nodeLimit || System.nanoTime() > deadline)) abort = true
-        if (abort) return 0
-        val pv = beta - alpha > 1
-        if (ply > 0) {
-            if (repeated()) return MATE - ply                 // bên vừa đi lặp lại thế cũ -> thua
-            if (half >= 100) return drawScore()
-            alpha = maxOf(alpha, -MATE + ply); beta = minOf(beta, MATE - ply - 1)
-            if (alpha >= beta) return alpha
-        }
-        val us = side
-        val inChk = isAttacked(kingSquare(us), -us)
-        if (inChk && ply < MAXPLY - 10) depth++
-        if (depth <= 0 || ply >= MAXPLY - 4) return quiesce(alpha, beta, ply)
-
-        val slot = (hash and (TT_SIZE - 1).toLong()).toInt()
-        var ttm = 0
-        if (ttKey[slot] == hash) {
-            ttm = ttMove[slot]
-            val td = ttInfo[slot] shr 2; val fl = ttInfo[slot] and 3
-            if (td >= depth && !pv && ply > 0) {
-                val s = scoreFromTT(ttScore[slot], ply)
-                if (fl == 0 || (fl == 1 && s >= beta) || (fl == 2 && s <= alpha)) return s
-            }
-        }
-        val staticEval = if (inChk) -INF else evaluate()
-        if (!pv && !inChk) {
-            if (depth <= 6 && staticEval - 90 * depth >= beta && staticEval < MATE - 300) return staticEval   // reverse futility
-            if (nullOk && depth >= 3 && staticEval >= beta && hasPieces(us)) {                                // null move
-                val r = 2 + depth / 4 + minOf(2, (staticEval - beta) / 200)
-                makeNull()
-                val s = -search(depth - 1 - r, -beta, -beta + 1, ply + 1, false)
-                unmakeNull()
-                if (abort) return 0
-                if (s >= beta) return if (s > MATE - 300) beta else s
-            }
-        }
-        if (ttm == 0 && depth >= 5 && pv) depth--
-
-        val n = gen(bufs[ply], false)
-        scoreMoves(ply, n, ttm)
-        val sd = if (us > 0) 0 else 1
-        var legal = 0; var quietCount = 0
-        var best = -INF; var bestMove = 0
-        val origAlpha = alpha
-        for (i in 0 until n) {
-            pick(ply, n, i)
-            val m = bufs[ply][i]
-            val to = (m shr 6) and 63; val from = m and 63
-            val cap = board[to]; val promo = (m shr 12) and 7
-            val quiet = cap == 0 && promo == 0 && (m shr 16 and F_EP) == 0
-            make(m)
-            if (isAttacked(kingSquare(us), -us)) { unmake(); continue }
-            legal++
-            val gives = isAttacked(kingSquare(-us), us)
-            if (quiet && !inChk && !gives && legal > 1 && best > -MATE + 300) {
-                if (depth <= 3 && staticEval + 110 * depth + 40 <= alpha) { unmake(); continue }   // futility
-                if (depth <= 4 && legal > 6 + depth * depth) { unmake(); continue }                // late move pruning
-            }
-            if (!quiet && !inChk && !gives && depth <= 3 && legal > 1 && cap != 0 && promo == 0 && scores[ply][i] < 1_000_000 && best > -MATE + 300) {
-                unmake(); continue
-            }
-            if (quiet && quietCount < 63) quiets[ply][quietCount++] = m
-            var s: Int
-            val nd = depth - 1
-            if (legal == 1) s = -search(nd, -beta, -alpha, ply + 1, true)
-            else {
-                var red = 0
-                if (depth >= 3 && quiet && !inChk && !gives) {
-                    red = LMR[minOf(depth, 63)][minOf(legal, 63)]
-                    if (pv) red--
-                    if (killers[ply][0] == m || killers[ply][1] == m) red--
-                    red -= hh[sd][from][to] / 6000
-                    if (red < 0) red = 0
-                    if (red > nd - 1) red = maxOf(0, nd - 1)
-                }
-                s = -search(nd - red, -alpha - 1, -alpha, ply + 1, true)
-                if (s > alpha && red > 0) s = -search(nd, -alpha - 1, -alpha, ply + 1, true)
-                if (s > alpha && s < beta) s = -search(nd, -beta, -alpha, ply + 1, true)
-            }
-            unmake()
-            if (abort) return 0
-            if (s > best) {
-                best = s; bestMove = m
-                if (s > alpha) {
-                    alpha = s
-                    if (alpha >= beta) {
-                        if (quiet) {
-                            if (killers[ply][0] != m) { killers[ply][1] = killers[ply][0]; killers[ply][0] = m }
-                            val bonus = depth * depth
-                            hh[sd][from][to] = minOf(30000, hh[sd][from][to] + bonus)
-                            for (q in 0 until quietCount - 1) {
-                                val qm = quiets[ply][q]; val qf = qm and 63; val qt = (qm shr 6) and 63
-                                hh[sd][qf][qt] = maxOf(0, hh[sd][qf][qt] - bonus / 2)
-                            }
-                        }
-                        break
-                    }
-                }
-            }
-        }
-        if (legal == 0) return if (inChk) -(MATE - ply) else 0
-        val flag = if (best >= beta) 1 else if (best > origAlpha) 0 else 2
-        if (ttKey[slot] != hash || (ttInfo[slot] shr 2) <= depth + 1 || flag == 0) {
-            ttKey[slot] = hash; ttMove[slot] = bestMove; ttScore[slot] = scoreToTT(best, ply); ttInfo[slot] = (depth shl 2) or flag
-        }
-        return best
-    }
-
-    private var nodeLimit = Long.MAX_VALUE
-
-    private fun searchRoot(timeMs: Long): Int = searchRoot(SearchLimit(timeMs = timeMs), null, 0).best
-
-    /**
-     * Tìm kiếm có giới hạn (thời gian / số nút / độ sâu, mục 4.2 của BOT_GUIDE) trên các nước gốc [allowed] (null = mọi nước).
-     * [delta] > 0: trả thêm các nước có điểm không kém nước tốt nhất quá [delta] (để chọn nhiễu), kiểm bằng tìm kiếm cửa sổ hẹp.
-     */
-    private fun searchRoot(lim: SearchLimit, allowed: IntArray?, delta: Int): RootResult {
-        val start = System.nanoTime()
-        deadline = if (lim.timeMs > 0) start + lim.timeMs * 1_000_000 else Long.MAX_VALUE
-        val soft = if (lim.timeMs > 0) start + (lim.timeMs * 1_000_000 * 0.55).toLong() else Long.MAX_VALUE
-        val nl = if (lim.nodes > 0) lim.nodes else Long.MAX_VALUE
-        val maxDepth = if (lim.depth > 0) lim.depth else MAXD
-        abort = false; nodes = 0; rootSide = side
-        var root = legalList()
-        if (allowed != null) { val f = root.filter { it in allowed }.toIntArray(); if (f.isNotEmpty()) root = f }
-        if (root.isEmpty()) return RootResult(-1, 0, 0, 0)
-        if (root.size == 1) return RootResult(root[0], 0, 0, 0)
-        var best = root[0]
-        var prevScore = 0
-        for (i in 0 until MAXPLY) { killers[i][0] = 0; killers[i][1] = 0 }
-        val us = side
-        val rsc = IntArray(root.size)
-        var completed = 0
-        for (depth in 1..maxDepth) {
-            nodeLimit = if (depth == 1) Long.MAX_VALUE else nl     // độ sâu 1 luôn chạy xong
-            var delta = if (depth >= 5) 28 else INF
-            var alpha = if (depth >= 5) maxOf(-INF, prevScore - delta) else -INF
-            var beta = if (depth >= 5) minOf(INF, prevScore + delta) else INF
-            var iterBest = -1; var iterScore = -INF
-            while (true) {
-                for (i in root.indices) {
-                    val m = root[i]; val cap = board[(m shr 6) and 63]
-                    rsc[i] = (if (m == best) 1_000_000 else 0) + (if (cap != 0) VAL[abs(cap)] * 10 - VAL[abs(board[m and 63])] else 0) + (if (promoOf(m) != 0) 800 else 0)
-                }
-                val idx = root.indices.sortedByDescending { rsc[it] }
-                val sorted = IntArray(root.size) { root[idx[it]] }
-                var a = alpha
-                iterBest = -1; iterScore = -INF
-                for ((k, m) in sorted.withIndex()) {
-                    make(m)
-                    var sc: Int
-                    if (k == 0) sc = -search(depth - 1, -beta, -a, 1, true)
-                    else {
-                        sc = -search(depth - 1, -a - 1, -a, 1, true)
-                        if (sc > a && sc < beta && !abort) sc = -search(depth - 1, -beta, -a, 1, true)
-                    }
-                    unmake()
-                    if (abort) break
-                    if (sc > iterScore) { iterScore = sc; iterBest = m }
-                    if (sc > a) a = sc
-                    if (a >= beta) break
-                }
-                if (abort) break
-                if (iterScore <= alpha && alpha > -INF) { alpha = maxOf(-INF, alpha - delta * 3); delta *= 3; continue }
-                if (iterScore >= beta && beta < INF) { beta = minOf(INF, beta + delta * 3); delta *= 3; continue }
-                for (i in root.indices) root[i] = sorted[i]
-                break
-            }
-            if (abort) {
-                if (iterBest >= 0 && iterScore > prevScore - 40 && completed > 0) best = iterBest
-                break
-            }
-            best = iterBest; prevScore = iterScore; completed = depth
-            lastDepth = depth
-            if ((iterScore > MATE - 200 || iterScore < -MATE + 200) && depth >= 6) break
-            if (System.nanoTime() > soft) break
-        }
-        lastNodes = nodes
-        check(us == side)
-        var near = IntArray(0)
-        if (delta > 0 && completed > 0) {
-            abort = false; nodeLimit = Long.MAX_VALUE; deadline = Long.MAX_VALUE
-            val thr = prevScore - delta
-            val out = ArrayList<Int>()
-            for (mv in root) {
-                if (mv == best) continue
-                make(mv)
-                val sc = -search(completed - 1, -thr, -thr + 1, 1, true)
-                unmake()
-                if (sc >= thr) out.add(mv)
-            }
-            near = out.toIntArray()
-        }
-        return RootResult(best, prevScore, completed, nodes, near)
-    }
-
     /** Bên đang đi bị chiếu hết / hết nước. */
     private fun matedNow(): Boolean = legalList().isEmpty() && inCheck()
 
@@ -1029,7 +499,7 @@ class ChessGame : BoardGame, LeveledEngine {
         val cfg = BotLevels.config(id, level, timeMs)
         return synchronized(lock) {
             val work = copyGame()
-            Bot.pick(work, cfg, rnd, { work.fastWin() }, { work.fastLosesNext(it) }) { l, allowed, delta -> work.searchRoot(l, allowed, delta) }
+            Bot.pick(work, cfg, rnd, { work.fastWin() }, { work.fastLosesNext(it) }) { l, allowed, delta -> think(l, allowed, delta) }
         }
     }
 }
