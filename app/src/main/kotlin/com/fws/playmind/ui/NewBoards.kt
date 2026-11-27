@@ -290,7 +290,7 @@ private fun hoshi(n: Int): List<Int> = when (n) {
     else -> listOf(3, 9, 15).let { l -> l.flatMap { y -> l.map { x -> y * 19 + x } } }
 }
 
-/** Bàn cờ vây: chạm một giao điểm để đặt thử (quân mờ), bấm "Đặt quân" để xác nhận; có nút bỏ lượt. */
+/** Bàn cờ vây 19x19: chạm một giao điểm để đặt thử (quân mờ), bấm "Đặt quân" để xác nhận. */
 @Composable
 fun GoBoardView(vm: SessionViewModel, modifier: Modifier = Modifier) {
     val g = vm.game as? GoGame ?: return
@@ -345,7 +345,8 @@ fun GoBoardView(vm: SessionViewModel, modifier: Modifier = Modifier) {
                 }
             }
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                OutlineButton(stringResource(R.string.go_pass), { if (g.lastWasPass) confirmPass = true else vm.playMove(GoGame.PASS) }, Modifier.weight(1f), Ic.Skip, enabled = act)
+                // Không còn nút "Bỏ lượt" thường trực. Chỉ khi đối thủ vừa bỏ lượt mới hiện "Kết thúc ván" để hai bên tính điểm.
+                if (g.lastWasPass && act) OutlineButton(stringResource(R.string.go_end_game), { confirmPass = true }, Modifier.weight(1f), Ic.Flag)
                 GoldButton(stringResource(R.string.go_place), { if (ok) vm.playMove(preview) }, Modifier.weight(1f), enabled = ok)
             }
             if (g.lastWasPass && act) Text(stringResource(R.string.go_opp_passed), style = MaterialTheme.typography.labelMedium, color = pm.gold, textAlign = TextAlign.Center)
@@ -353,7 +354,7 @@ fun GoBoardView(vm: SessionViewModel, modifier: Modifier = Modifier) {
     }
     if (confirmPass) PmDialog(
         stringResource(R.string.go_end_title), stringResource(R.string.go_end_text),
-        stringResource(R.string.go_pass), { confirmPass = false; vm.playMove(GoGame.PASS) }, stringResource(R.string.cancel), { confirmPass = false },
+        stringResource(R.string.go_end_game), { confirmPass = false; vm.playMove(GoGame.PASS) }, stringResource(R.string.cancel), { confirmPass = false },
         tone = DialogTone.WARN,
     )
 }

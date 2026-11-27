@@ -56,6 +56,8 @@ sealed interface Screen {
     data object Play : Screen
     data object Settings : Screen
     data object Shop : Screen
+    /** Danh sách đầy đủ game của một chủ đề, xếp từ dễ chơi / ván ngắn đến khó chơi / ván dài. */
+    data class TopicList(val topic: com.fws.playmind.catalog.Topic) : Screen
     data class Guide(val gameId: String?) : Screen
 }
 
@@ -93,7 +95,9 @@ fun AppRoot(app: PlayMindApp, vm: SessionViewModel, update: UpdateManager) {
                 app, update.downloaded, { update.complete() },
                 onOpenGame = { vm.open(it); push(Screen.Lobby(it.id)) },
                 onSettings = { push(Screen.Settings) }, onGuide = { push(Screen.Guide(null)) }, onShop = { push(Screen.Shop) },
+                onTopic = { push(Screen.TopicList(it)) },
             )
+            is Screen.TopicList -> TopicScreen(app, s.topic, { pop() }) { vm.open(it); push(Screen.Lobby(it.id)) }
             is Screen.Lobby -> LobbyScreen(app, vm, Catalog.byId(s.gameId), { pop() }, { push(Screen.Room) }, { push(Screen.Guide(s.gameId)) })
             Screen.Room -> RoomScreen(vm) { exitSession() }
             Screen.Play -> vm.info?.let { if (it.kind == GameKind.SOLO) SudokuScreen(app, vm, it) { exitSession() } else GameScreen(app, vm, it) { exitSession() } }
@@ -136,7 +140,7 @@ fun AppRoot(app: PlayMindApp, vm: SessionViewModel, update: UpdateManager) {
 }
 
 /**
- * Khung nền chung: nền mực xanh đen chuyển sắc rất nhẹ kèm hai vầng sáng mờ (vàng đồng ở góc trên, tím ở góc dưới),
+ * Khung nền chung: nền ngọc trai chuyển sắc rất nhẹ kèm hai vầng sáng mờ (vàng champagne ở góc trên, tím nhạt ở góc dưới),
  * giới hạn bề rộng 640dp cho máy tính bảng, tránh thanh hệ thống.
  */
 @Composable
@@ -147,8 +151,8 @@ fun AppFrame(content: @Composable () -> Unit) {
             .background(Brush.verticalGradient(listOf(p.bg, p.bgDeep)))
             .drawBehind {
                 val r = size.maxDimension * .75f
-                drawCircle(Brush.radialGradient(0f to p.goldBright.copy(alpha = .10f), 1f to Color.Transparent, center = Offset(0f, 0f), radius = r), r, Offset(0f, 0f))
-                drawCircle(Brush.radialGradient(0f to Color(0xFF6C5CFF).copy(alpha = .12f), 1f to Color.Transparent, center = Offset(size.width, size.height), radius = r), r, Offset(size.width, size.height))
+                drawCircle(Brush.radialGradient(0f to p.goldBright.copy(alpha = .20f), 1f to Color.Transparent, center = Offset(0f, 0f), radius = r), r, Offset(0f, 0f))
+                drawCircle(Brush.radialGradient(0f to Color(0xFF6C5CFF).copy(alpha = .10f), 1f to Color.Transparent, center = Offset(size.width, size.height), radius = r), r, Offset(size.width, size.height))
             },
         contentAlignment = Alignment.TopCenter,
     ) {

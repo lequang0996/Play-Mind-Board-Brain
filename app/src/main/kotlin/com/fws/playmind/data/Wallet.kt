@@ -26,7 +26,7 @@ data class WalletState(
 
 /** Gói người dùng: NONE = miễn phí, MONTHLY = 1$/tháng, YEARLY = 10$/năm. */
 enum class Plan(val freePerDay: Int, val noBanner: Boolean, val noInterstitial: Boolean) {
-    NONE(2, false, false), MONTHLY(3, true, false), YEARLY(Int.MAX_VALUE, true, true)
+    NONE(1, false, false), MONTHLY(3, true, true), YEARLY(Int.MAX_VALUE, true, true)
 }
 
 enum class StartCost { FREE, PAID, INSUFFICIENT }
@@ -42,8 +42,8 @@ sealed interface CheckIn {
 
 /**
  * Luật kim cương:
- *  - Điểm danh mỗi ngày +1. Có > 10 kim cương và chuỗi điểm danh > 7 ngày (tính cả hôm nay) thì +2.
- *  - Mỗi game 2 lượt chơi miễn phí/ngày (gói tháng: 3, gói năm: không giới hạn). Hết lượt: mỗi ván tốn 1 kim cương.
+ *  - Điểm danh mỗi ngày +1. Điểm danh liên tục 30 ngày thì mỗi lần tiếp theo +2 (gói tháng/năm: +4).
+ *  - Mỗi game 1 lượt chơi miễn phí/ngày (gói tháng: 3, gói năm: không giới hạn). Hết lượt: mỗi ván tốn 1 kim cương.
  *  - Thắng +1. Thắng liên tiếp 5 ván trong một game +2, 10 ván +3 (rồi tính lại từ 0).
  *  - Thua / hòa / thoát giữa ván / mất kết nối: chuỗi thắng về 0.
  * Không có mức trần kim cương.
@@ -187,7 +187,8 @@ class WalletRepo(private val ctx: Context) {
         val st = _state.value; val day = today()
         if (st.lastCheckInDay == day) return CheckIn.Already
         val streak = if (st.lastCheckInDay == day - 1) st.streakDays + 1 else 1
-        val reward = if (st.diamonds > 10 && streak > 7) 2 else 1
+        // Điểm danh +1; sau 30 ngày liên tục, mỗi lần tiếp theo +2 (gói tháng/năm: +4)
+        val reward = if (streak > 30) (if (currentPlan() != Plan.NONE) 4 else 2) else 1
         commit(st.copy(diamonds = st.diamonds + reward, streakDays = streak, lastCheckInDay = day))
         return CheckIn.Done(reward, streak)
     }

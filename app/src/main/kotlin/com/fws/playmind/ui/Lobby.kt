@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
@@ -29,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.fws.playmind.PlayMindApp
 import com.fws.playmind.R
+import com.fws.playmind.catalog.Catalog
 import com.fws.playmind.catalog.GameInfo
 import com.fws.playmind.catalog.GameKind
 import com.fws.playmind.catalog.OptionKind
@@ -58,20 +61,36 @@ fun TopBar(title: String, onBack: () -> Unit, trailing: @Composable () -> Unit =
     }
 }
 
-/** Nhãn của các tùy chọn trước ván (số người / cỡ bàn / mức độ Sudoku). */
+/** Nhãn của tùy chọn trước ván: chỉ còn số người chơi (Wall Go, Quoridor). Cờ vây luôn 19x19, Sudoku chỉ có một chế độ chuẩn. */
 @Composable
 private fun optionLabels(info: GameInfo): List<String> = when {
-    info.kind == GameKind.SOLO -> listOf(R.string.level_easy, R.string.level_medium, R.string.level_hard, R.string.level_expert).map { stringResource(it) }
     info.optionKind == OptionKind.PLAYERS -> info.options.map { stringResource(R.string.n_players, it) }
-    info.optionKind == OptionKind.BOARD -> info.options.map { "$it×$it" }
     else -> emptyList()
 }
 
+/**
+ * Một khối chế độ chơi: biểu tượng tròn, tiêu đề + mô tả ngắn, rồi các nút hành động bên dưới.
+ * Dùng chung cho "Chơi với máy" và hai kiểu "Chơi với bạn bè" để mọi game có cùng một ngôn ngữ giao diện.
+ */
 @Composable
-private fun optionTitle(info: GameInfo): String = when {
-    info.kind == GameKind.SOLO -> stringResource(R.string.level)
-    info.optionKind == OptionKind.PLAYERS -> stringResource(R.string.players)
-    else -> stringResource(R.string.board_size)
+private fun ModeCard(icon: ImageVector, title: String, subtitle: String?, modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+    val shape = RoundedCornerShape(24.dp)
+    Column(
+        modifier.fillMaxWidth().lift(shape, 8.dp).clip(shape).background(pm.surface).border(1.dp, pm.outline, shape).padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp),
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Box(
+                Modifier.size(42.dp).clip(CircleShape).background(Brush.linearGradient(listOf(pm.goldSoft, pm.surface))).border(1.dp, pm.goldBright.copy(alpha = .6f), CircleShape),
+                contentAlignment = Alignment.Center,
+            ) { Icon(icon, null, Modifier.size(21.dp), tint = pm.gold) }
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                Text(title, style = MaterialTheme.typography.titleMedium, color = pm.ink)
+                if (subtitle != null) Text(subtitle, style = MaterialTheme.typography.bodySmall, color = pm.inkSoft)
+            }
+        }
+        content()
+    }
 }
 
 @Composable
@@ -85,9 +104,10 @@ fun LobbyScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onBack: 
         if (res.values.all { it }) pending?.invoke() else vm.notice = Notice.PERMISSION
         pending = null
     }
+    var askNearby by remember { mutableStateOf(false) }
     fun withNearby(action: () -> Unit) {
         if (perms.all { ContextCompat.checkSelfPermission(ctx, it) == PackageManager.PERMISSION_GRANTED }) action()
-        else { pending = action; launcher.launch(perms) }
+        else { pending = action; askNearby = true }
     }
     val solo = info.kind == GameKind.SOLO
     val hasOptions = info.options.isNotEmpty()
@@ -97,13 +117,13 @@ fun LobbyScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onBack: 
 
     Column(Modifier.fillMaxSize()) {
         TopBar(stringResource(info.name), onBack) { PmIconButton(Ic.Book, stringResource(R.string.view_guide), onGuide) }
-        Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 18.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 18.dp, vertical = 6.dp), verticalArrangement = Arrangement.spacedBy(18.dp)) {
             // ── Thẻ giới thiệu game ──
-            val heroShape = RoundedCornerShape(26.dp)
+            val heroShape = RoundedCornerShape(28.dp)
             Row(
-                Modifier.fillMaxWidth().clip(heroShape)
-                    .background(Brush.linearGradient(listOf(info.topic.color.copy(alpha = .38f), pm.surface, pm.bgDeep), Offset(0f, 0f), Offset(1000f, 700f)))
-                    .border(1.dp, info.topic.color.copy(alpha = .5f), heroShape).padding(20.dp),
+                Modifier.fillMaxWidth().lift(heroShape, 12.dp, info.topic.color.onLight(.5f)).clip(heroShape)
+                    .background(Brush.linearGradient(listOf(info.topic.color.copy(alpha = .34f), pm.surface, pm.surface), Offset(0f, 0f), Offset(900f, 800f)))
+                    .border(1.dp, info.topic.color.copy(alpha = .45f), heroShape).padding(20.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -113,7 +133,7 @@ fun LobbyScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onBack: 
                     Text(
                         stringResource(R.string.view_guide),
                         Modifier.clip(RoundedCornerShape(6.dp)).clickable(onClick = onGuide).padding(vertical = 2.dp),
-                        style = MaterialTheme.typography.labelLarge, color = pm.goldHi, textDecoration = TextDecoration.Underline,
+                        style = MaterialTheme.typography.labelLarge, color = pm.gold, textDecoration = TextDecoration.Underline,
                     )
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                         if (free > 0) {
@@ -128,68 +148,43 @@ fun LobbyScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onBack: 
                 GameArt(info.id, Modifier.size(118.dp))
             }
 
-            // ── Tùy chọn (số người / cỡ bàn / mức độ) ──
+            // ── Số người chơi (chỉ Wall Go và Quoridor) ──
             if (hasOptions) {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    SectionTitle(optionTitle(info))
+                    SectionTitle(stringResource(R.string.players))
                     OptionChips(optionLabels(info), optIndex, { vm.selectOption(info.options[it]) })
                 }
             }
 
             // ── Chơi với máy / bắt đầu ──
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                SectionTitle(stringResource(if (solo) R.string.solo_play else R.string.vs_computer))
-                SurfaceCard(Modifier.fillMaxWidth()) {
-                    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                        if (!solo && info.optionKind == OptionKind.PLAYERS && vm.option > 2)
-                            Text(stringResource(R.string.vs_computers_note, vm.option - 1), style = MaterialTheme.typography.bodySmall, color = pm.inkSoft)
-                        GoldButton(
-                            stringResource(R.string.start),
-                            { if (solo) vm.startSudoku(vm.option) else vm.startVsComputer() },
-                            Modifier.fillMaxWidth(), if (solo) Ic.Play else Ic.Computer,
-                        )
-                    }
-                }
+            ModeCard(
+                if (solo) Ic.Play else Ic.Computer,
+                stringResource(if (solo) R.string.solo_play else R.string.vs_computer),
+                if (!solo && info.optionKind == OptionKind.PLAYERS && vm.option > 2) stringResource(R.string.vs_computers_note, vm.option - 1) else null,
+            ) {
+                GoldButton(
+                    stringResource(R.string.start),
+                    { if (solo) vm.startSudoku(Catalog.SUDOKU_LEVEL) else vm.startVsComputer() },
+                    Modifier.fillMaxWidth(), if (solo) Ic.Play else Ic.Computer,
+                )
             }
 
-            // ── Chơi chung một máy ──
-            if (info.localPlay) {
-                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    SectionTitle(stringResource(R.string.play_local))
-                    SurfaceCard(Modifier.fillMaxWidth()) {
-                        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                            Text(stringResource(R.string.play_local_desc), style = MaterialTheme.typography.bodySmall, color = pm.inkSoft)
-                            OutlineButton(stringResource(R.string.start), { vm.startLocal() }, Modifier.fillMaxWidth(), Ic.Users)
+            // ── Chơi với bạn bè: gần nhau (Bluetooth / Wi-Fi) và qua internet ──
+            if (!solo) {
+                if (!onlineOk) {
+                    ModeCard(Ic.Users, stringResource(R.string.play_friends), stringResource(R.string.online_two_only)) {}
+                } else {
+                    SectionTitle(stringResource(R.string.play_friends))
+                    ModeCard(Ic.Radar, stringResource(R.string.nearby), stringResource(R.string.nearby_card_desc)) {
+                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            OutlineButton(stringResource(R.string.create_room), { withNearby { if (vm.hostRoom(true)) onRoom() } }, Modifier.weight(1f))
+                            OutlineButton(stringResource(R.string.join_room), { withNearby { if (vm.joinNearby()) onRoom() } }, Modifier.weight(1f))
                         }
                     }
-                }
-            }
-
-            // ── Chơi với bạn bè (online / gần nhau) ──
-            if (!solo) {
-                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    SectionTitle(stringResource(R.string.play_friends))
-                    SurfaceCard(Modifier.fillMaxWidth()) {
-                        if (!onlineOk) {
-                            Text(stringResource(R.string.online_two_only), style = MaterialTheme.typography.bodyMedium, color = pm.inkSoft)
-                        } else Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                Icon(Ic.Radar, null, Modifier.size(20.dp), tint = pm.gold)
-                                Text(stringResource(R.string.nearby), style = MaterialTheme.typography.titleMedium, color = pm.ink)
-                            }
-                            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                                OutlineButton(stringResource(R.string.create_room), { withNearby { if (vm.hostRoom(true)) onRoom() } }, Modifier.weight(1f))
-                                OutlineButton(stringResource(R.string.join_room), { withNearby { if (vm.joinNearby()) onRoom() } }, Modifier.weight(1f))
-                            }
-                            Spacer(Modifier.height(2.dp))
-                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                Icon(Ic.Wifi, null, Modifier.size(20.dp), tint = pm.gold)
-                                Text(stringResource(R.string.internet), style = MaterialTheme.typography.titleMedium, color = pm.ink)
-                            }
-                            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                                OutlineButton(stringResource(R.string.create_room), { if (vm.hostRoom(false)) onRoom() }, Modifier.weight(1f))
-                                OutlineButton(stringResource(R.string.join_room), { if (vm.joinNet()) onRoom() }, Modifier.weight(1f))
-                            }
+                    ModeCard(Ic.Wifi, stringResource(R.string.internet), stringResource(R.string.internet_card_desc)) {
+                        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            OutlineButton(stringResource(R.string.create_room), { if (vm.hostRoom(false)) onRoom() }, Modifier.weight(1f))
+                            OutlineButton(stringResource(R.string.join_room), { if (vm.joinNet()) onRoom() }, Modifier.weight(1f))
                         }
                     }
                 }
@@ -197,4 +192,12 @@ fun LobbyScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onBack: 
             Spacer(Modifier.width(1.dp).height(24.dp))
         }
     }
+
+    // Giải thích vì sao cần quyền "thiết bị ở gần" trước khi hệ thống hỏi (chỉ để tìm bạn qua Bluetooth/Wi-Fi, không thu thập vị trí)
+    if (askNearby) PmDialog(
+        stringResource(R.string.nearby_why_title), stringResource(R.string.nearby_why_text),
+        stringResource(R.string.continue_label), { askNearby = false; launcher.launch(perms) },
+        stringResource(R.string.cancel), { askNearby = false; pending = null },
+        tone = DialogTone.INFO, icon = Ic.Radar,
+    )
 }

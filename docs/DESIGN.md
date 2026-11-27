@@ -1,19 +1,18 @@
-# Thiết kế giao diện "Midnight Lacquer"
+# Thiết kế giao diện "Pearl & Champagne"
 
-App chỉ có giao diện tối: nền xanh mực gần đen như mặt sơn mài, các mặt phẳng nổi bằng sắc xanh tím nhạt, viền mảnh 1 dp, màu vàng đồng chỉ dùng cho hành động chính và kim cương (cùng tông với biểu tượng app). Mỗi chủ đề có một màu nhận diện làm vầng sáng cho thẻ game.
+App chỉ có giao diện sáng: nền ngọc trai xanh nhạt, thẻ trắng nổi bằng bóng đổ mềm tông xanh mực (`Modifier.lift`), viền mảnh 1 dp, chữ xanh navy đậm. Vàng champagne chỉ dùng cho hành động chính và kim cương (cùng tông với biểu tượng app). Hai điểm nhấn tối sang trọng: két kim cương ở trang chủ và thẻ gói năm ở cửa hàng (bộ màu `deep`). Mỗi chủ đề có một màu nhận diện làm vầng sáng cho thẻ game; khi dùng làm chữ thì làm đậm bằng `Color.onLight()`.
 
-## Mã màu (`ui/Theme.kt`, bảng `PmDark`)
+## Mã màu (`ui/Theme.kt`, bảng `PmLight`)
 
 | Vai trò | Giá trị |
 |---|---|
-| Nền / nền sâu | `#0B0E1A` / `#070914` |
-| Mặt thẻ / mặt nổi | `#141935` / `#1C2347` |
-| Viền | `#2A3157` |
-| Chữ chính / chữ phụ | `#F3EFE6` / `#A3A8C4` |
-| Vàng (nút, kim cương) | `#E2B857`, sáng `#F7E3A1`, đậm `#A9812A` |
-| Thành công / cảnh báo | `#3DDC97` / `#FF6B6B` |
-| Chủ đề: Trí tuệ, Tính toán, Giải đố, Ghi nhớ | `#8B7BFF`, `#3FB6E8`, `#2DD4A0`, `#FF6B8B` |
-| Bốn bên của Wall Go / Quoridor | đỏ `#E5483D`, xanh dương `#3C7DF0`, xanh lá `#2FB36A`, vàng `#F2C230` |
+| Nền / nền sâu | `#F4F5FA` / `#E7EAF4` |
+| Mặt thẻ / mặt nổi | `#FFFFFF` / `#F6F7FC` |
+| Viền | `#E2E5F0` |
+| Chữ chính / chữ phụ | `#141A33` / `#5E6684` |
+| Vàng chữ (đủ tương phản) / vàng mảng màu / sáng / đậm | `#8F6210` / `#D4A237` / `#F3DC95` / `#A97C1F` |
+| Thẻ nhấn tối (deep, deepHigh, onDeep) | `#121733`, `#222A5A`, `#F6F1E4` |
+| Thành công / cảnh báo | `#139A66` / `#D93C3C` |
 
 ## Phông chữ (đặt trong `res/font`)
 

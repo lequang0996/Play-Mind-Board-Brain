@@ -4,14 +4,14 @@
 
 | | Miễn phí | Gói tháng (1 USD/tháng) | Gói năm (10 USD/năm) |
 |---|---|---|---|
-| Lượt chơi miễn phí / game / ngày | 2 | 3 | không giới hạn |
+| Lượt chơi miễn phí / game / ngày | 1 | 3 | không giới hạn |
 | Quảng cáo biểu ngữ | có | **không** | **không** |
 | Quảng cáo mở app | có | **không** | **không** |
-| Quảng cáo xen kẽ giữa các ván | có | có | **không** |
+| Quảng cáo xen kẽ giữa các ván | có | **không** | **không** |
 | Quảng cáo thưởng (xem để nhận 1 kim cương) | tự nguyện | tự nguyện | tự nguyện |
 
 Hết lượt miễn phí: mỗi ván tốn 1 kim cương (không áp dụng cho gói năm). Thắng +1 kim cương, điểm danh +1, chuỗi thắng và thưởng gắn bó như cũ (xem trong app: Trợ giúp).
-Chơi chung một máy (Wall Go, Quoridor, cờ vây) không tốn lượt và không nhận thưởng để không thể "cày" kim cương bằng cách tự đấu với chính mình.
+Điểm danh +1 mỗi ngày; điểm danh liên tục 30 ngày thì mỗi lần tiếp theo +2 (gói tháng/năm: +4). Đã bỏ chế độ chơi chung một máy.
 
 Gói kim cương (mua một lần, tiêu thụ được): **1 USD = 5 kim cương**, **5 USD = 30 kim cương**.
 

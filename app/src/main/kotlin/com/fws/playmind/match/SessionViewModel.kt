@@ -175,15 +175,6 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         return beginMatch()
     }
 
-    /** Chơi chung một máy (2-4 người luân phiên trên cùng điện thoại): không tốn lượt, không có thưởng. */
-    fun startLocal(): Boolean {
-        val inf = info ?: return false
-        if (!inf.localPlay) return false
-        teardown()
-        mode = Mode.LOCAL; opp = Opp.NONE; mySide = 0
-        return beginMatch()
-    }
-
     // ───────────────────────── Sudoku (một người) ─────────────────────────
     fun startSudoku(levelIndex: Int): Boolean {
         val inf = info ?: return false

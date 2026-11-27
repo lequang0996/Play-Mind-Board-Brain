@@ -82,7 +82,7 @@ private fun seatInfo(vm: SessionViewModel, seat: Int): String? {
 private fun PlayerBar(info: GameInfo, seat: Int, name: String, label: String, active: Boolean, status: String?, extra: String?, showCheck: Boolean) {
     val shape = RoundedCornerShape(20.dp)
     Row(
-        Modifier.fillMaxWidth().padding(horizontal = 18.dp, vertical = 6.dp).clip(shape)
+        Modifier.fillMaxWidth().padding(horizontal = 18.dp, vertical = 6.dp).lift(shape, 6.dp).clip(shape)
             .background(if (active) Brush.linearGradient(listOf(pm.goldSoft, pm.surface)) else Brush.linearGradient(listOf(pm.surface, pm.surface)))
             .border(if (active) 1.5.dp else 1.dp, if (active) pm.goldBright else pm.outline, shape)
             .padding(horizontal = 12.dp, vertical = 8.dp),
@@ -112,7 +112,7 @@ private fun SeatStrip(vm: SessionViewModel, info: GameInfo, turn: Int, over: Boo
             val active = !over && turn == seat
             val shape = RoundedCornerShape(16.dp)
             Column(
-                Modifier.weight(1f).clip(shape).background(if (active) pm.goldSoft else pm.surface)
+                Modifier.weight(1f).lift(shape, 6.dp).clip(shape).background(if (active) pm.goldSoft else pm.surface)
                     .border(if (active) 1.5.dp else 1.dp, if (active) pm.goldBright else pm.outline, shape).padding(horizontal = 6.dp, vertical = 8.dp),
                 horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {

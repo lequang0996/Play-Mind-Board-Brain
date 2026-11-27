@@ -140,7 +140,7 @@ fun main() {
     expect("sudoku: dien dung va thang khi du 81 o", run { for (i in 0 until 81) if (sd.cells[i] != sd.solution[i]) sd.place(i, sd.solution[i]); sd.status == SudokuStatus.WON })
     val sl = SudokuGame.create(SudokuLevel.EASY, kotlin.random.Random(4))
     for (e in (0 until 81).filter { sl.givens[it] == 0 }.take(3)) sl.place(e, (1..9).first { it != sl.solution[e] })
-    expect("sudoku: du 3 loi la thua", sl.status == SudokuStatus.LOST)
+    expect("sudoku: sai nhieu loi van khong thua, chi dem loi", sl.status == SudokuStatus.PLAYING && sl.mistakes == 3)
 
     // ── Wall Go ──
     expect("wallgo: thu tu dat quan 2/3/4 nguoi", (2..4).all { p -> val o = WallGoGame.setupOrder(p); (0 until p).all { q -> o.count { it == q } == WallGoGame.stonesPerPlayer(p) } })

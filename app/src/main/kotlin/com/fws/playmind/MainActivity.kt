@@ -17,10 +17,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Chỉ có giao diện tối: thanh trạng thái/điều hướng trong suốt, biểu tượng hệ thống màu sáng
+        // Chỉ có giao diện sáng: thanh trạng thái/điều hướng trong suốt, biểu tượng hệ thống màu tối
         enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
-            navigationBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
+            statusBarStyle = SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT),
         )
         val app = application as PlayMindApp
         update = UpdateManager(this)

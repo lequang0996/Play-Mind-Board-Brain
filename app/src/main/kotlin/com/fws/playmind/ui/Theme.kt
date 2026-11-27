@@ -3,7 +3,7 @@ package com.fws.playmind.ui
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
-import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -16,34 +16,38 @@ import androidx.compose.ui.unit.sp
 import com.fws.playmind.R
 
 /**
- * Bảng màu "Midnight Lacquer": nền xanh mực gần đen như mặt sơn mài, các mặt phẳng nổi lên bằng sắc xanh tím nhạt,
- * đường viền mảnh, và vàng đồng chỉ dùng cho hành động chính + kim cương (cùng tông với icon app).
- * App chỉ có giao diện tối. Tên trường giữ nguyên từ bản cũ để các màn hình khác dùng chung:
- * ink = màu chữ chính (sáng), inkSoft = chữ phụ, surface = mặt thẻ, navy = màu chữ đặt TRÊN nền vàng.
+ * Bảng màu "Pearl & Champagne" (giao diện sáng): nền ngọc trai xanh nhạt, thẻ trắng nổi bằng bóng đổ mềm,
+ * chữ xanh navy đậm, vàng champagne dùng cho hành động chính + kim cương (cùng tông với icon app).
+ * Một vài thẻ nhấn (két kim cương, gói năm) dùng bộ màu "deep" xanh navy đậm để tạo điểm nhấn sang trọng.
+ * Tên trường giữ nguyên từ bản cũ để các màn hình khác dùng chung:
+ * ink = màu chữ chính (đậm), inkSoft = chữ phụ, surface = mặt thẻ, navy = màu chữ đặt TRÊN nền vàng.
  */
 data class Pm(
     val bg: Color, val bgDeep: Color, val surface: Color, val surfaceHigh: Color,
     val ink: Color, val inkSoft: Color,
-    /** Vàng dùng cho chữ/biểu tượng nhấn trên nền tối. */
+    /** Vàng dùng cho chữ/biểu tượng nhấn trên nền sáng (đủ tương phản). */
     val gold: Color,
     /** Vàng sáng cho mảng màu, đường viền, hiệu ứng. */
     val goldBright: Color, val goldHi: Color, val goldLo: Color, val goldSoft: Color, val outline: Color,
     val navy: Color, val navy2: Color, val royal: Color,
     val danger: Color, val good: Color,
+    /** Bộ màu tối dành cho thẻ nhấn: nền, nền nổi, chữ chính, chữ phụ trên nền tối. */
+    val deep: Color, val deepHigh: Color, val onDeep: Color, val onDeepSoft: Color,
 )
 
-val PmDark = Pm(
-    bg = Color(0xFF0B0E1A), bgDeep = Color(0xFF070914), surface = Color(0xFF141935), surfaceHigh = Color(0xFF1C2347),
-    ink = Color(0xFFF3EFE6), inkSoft = Color(0xFFA3A8C4),
-    gold = Color(0xFFE2B857), goldBright = Color(0xFFE2B857), goldHi = Color(0xFFF7E3A1), goldLo = Color(0xFFA9812A),
-    goldSoft = Color(0xFF2A2742), outline = Color(0xFF2A3157),
-    navy = Color(0xFF0B0E1A), navy2 = Color(0xFF1B2350), royal = Color(0xFF6C8CFF),
-    danger = Color(0xFFFF6B6B), good = Color(0xFF3DDC97),
+val PmLight = Pm(
+    bg = Color(0xFFF4F5FA), bgDeep = Color(0xFFE7EAF4), surface = Color(0xFFFFFFFF), surfaceHigh = Color(0xFFF6F7FC),
+    ink = Color(0xFF141A33), inkSoft = Color(0xFF5E6684),
+    gold = Color(0xFF8F6210), goldBright = Color(0xFFD4A237), goldHi = Color(0xFFF3DC95), goldLo = Color(0xFFA97C1F),
+    goldSoft = Color(0xFFFBF2D9), outline = Color(0xFFE2E5F0),
+    navy = Color(0xFF1A1630), navy2 = Color(0xFF1B2350), royal = Color(0xFF3F5BEF),
+    danger = Color(0xFFD93C3C), good = Color(0xFF139A66),
+    deep = Color(0xFF121733), deepHigh = Color(0xFF222A5A), onDeep = Color(0xFFF6F1E4), onDeepSoft = Color(0xFFB7BCD8),
 )
 
-val LocalPm = staticCompositionLocalOf { PmDark }
+val LocalPm = staticCompositionLocalOf { PmLight }
 
-private fun scheme(p: Pm): ColorScheme = darkColorScheme(
+private fun scheme(p: Pm): ColorScheme = lightColorScheme(
     primary = p.gold, onPrimary = p.navy, secondary = p.inkSoft, background = p.bg, onBackground = p.ink,
     surface = p.surface, onSurface = p.ink, surfaceVariant = p.surfaceHigh, onSurfaceVariant = p.inkSoft, outline = p.outline, error = p.danger,
 )
@@ -81,8 +85,8 @@ private val pmTypography = Typography(
 
 @Composable
 fun PlayMindTheme(content: @Composable () -> Unit) {
-    CompositionLocalProvider(LocalPm provides PmDark) {
-        MaterialTheme(colorScheme = scheme(PmDark), typography = pmTypography, content = content)
+    CompositionLocalProvider(LocalPm provides PmLight) {
+        MaterialTheme(colorScheme = scheme(PmLight), typography = pmTypography, content = content)
     }
 }
 

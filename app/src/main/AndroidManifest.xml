@@ -17,7 +17,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:minSdkVersion="29" android:maxSdkVersion="31" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" android:minSdkVersion="31" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" android:minSdkVersion="31" />
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:minSdkVersion="31" />
+    <!-- neverForLocation: app chỉ dùng Bluetooth để tìm bạn chơi ở gần, không suy ra vị trí người dùng (nên không cần bật Định vị trên Android 12+ trở lên cho Bluetooth) -->
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:minSdkVersion="31" android:usesPermissionFlags="neverForLocation" tools:targetApi="s" />
     <uses-permission android:name="android.permission.NEARBY_WIFI_DEVICES" android:usesPermissionFlags="neverForLocation" android:minSdkVersion="32" />
 
     <uses-feature android:name="android.hardware.bluetooth" android:required="false" />

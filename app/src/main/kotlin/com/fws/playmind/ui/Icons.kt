@@ -75,4 +75,6 @@ object Ic {
     val Brick = build("brick", false, "M3.5 7h17v10h-17zM3.5 12h17M9 7v5M15 12v5")
     val Heart = build("heart", true, "M12 20s-7.5-4.6-7.5-10A4.2 4.2 0 0112 7.2 4.2 4.2 0 0119.5 10c0 5.4-7.5 10-7.5 10z")
     val Crosshair = build("crosshair", false, "M12 4v16M4 12h16")
+    val Menu = build("menu", false, "M4 7h16M4 12h16M4 17h16")
+    val Apps = build("apps", false, "M4 4h6.5v6.5H4zM13.5 4H20v6.5h-6.5zM4 13.5h6.5V20H4zM13.5 13.5H20V20h-6.5z")
 }

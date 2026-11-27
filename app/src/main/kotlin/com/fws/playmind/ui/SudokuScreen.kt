@@ -62,11 +62,11 @@ import com.fws.playmind.match.SessionViewModel
 private val SdInk = Color(0xFF2A2218)        // số cho sẵn: khắc đậm
 private val SdMine = Color(0xFF1F4FB8)       // số người chơi điền: xanh mực
 private val SdWrong = Color(0xFFD12E2E)      // số sai: đỏ
-private val SdNote = Color(0xFF7A5C34)       // ghi chú nháp
+private val SdNote = Color(0xFFD32F2F)       // ghi chú nháp: màu đỏ để khác với số đã điền
 
 private fun fmtTime(sec: Int) = "%d:%02d".format(sec / 60, sec % 60)
 
-/** Màn hình chơi Sudoku: bàn gỗ sồi như bộ cờ gỗ thật (ô cho sẵn đen, số điền xanh, số sai đỏ), bàn phím số, ghi chú, hoàn tác, gợi ý. */
+/** Màn hình chơi Sudoku: bàn gỗ sồi như bộ cờ gỗ thật (ô cho sẵn đen, số điền xanh, số sai đỏ, ghi chú đỏ), bàn phím số, xóa và ghi chú. */
 @Composable
 fun SudokuScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onExit: () -> Unit) {
     val activity = LocalContext.current as Activity
@@ -77,10 +77,9 @@ fun SudokuScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onExit:
     var confirmLeave by remember { mutableStateOf(false) }
     val over = vm.phase == Phase.OVER
     BackHandler { if (over) onExit() else confirmLeave = true }
-    val levelNames = listOf(R.string.level_easy, R.string.level_medium, R.string.level_hard, R.string.level_expert)
 
     Column(Modifier.fillMaxSize()) {
-        TopBar(stringResource(info.name) + " · " + stringResource(levelNames[vm.option.coerceIn(0, 3)]), { if (over) onExit() else confirmLeave = true })
+        TopBar(stringResource(info.name), { if (over) onExit() else confirmLeave = true })
         if (g == null) {
             Box(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -89,26 +88,25 @@ fun SudokuScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onExit:
                 }
             }
         } else {
-            // thanh trạng thái: lỗi, thời gian, gợi ý còn lại
-            Row(Modifier.fillMaxWidth().padding(horizontal = 18.dp, vertical = 4.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                Row(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(4.dp), verticalAlignment = Alignment.CenterVertically) {
-                    repeat(SudokuGame.MAX_MISTAKES) { i -> Icon(Ic.Heart, null, Modifier.size(20.dp), tint = if (i < SudokuGame.MAX_MISTAKES - g.mistakes) pm.danger else pm.outline) }
-                }
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Icon(Ic.Hourglass, null, Modifier.size(16.dp), tint = pm.inkSoft)
+            // thanh trạng thái: chỉ còn đồng hồ
+            Row(Modifier.fillMaxWidth().padding(horizontal = 18.dp, vertical = 4.dp), horizontalArrangement = Arrangement.Center) {
+                val chip = RoundedCornerShape(50)
+                Row(
+                    Modifier.lift(chip, 6.dp).clip(chip).background(pm.surface).border(1.dp, pm.outline, chip).padding(horizontal = 14.dp, vertical = 7.dp),
+                    verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    Icon(Ic.Hourglass, null, Modifier.size(16.dp), tint = pm.gold)
                     Text(fmtTime(vm.sudokuSeconds), style = MaterialTheme.typography.titleMedium, color = pm.ink)
                 }
             }
             BoxWithConstraints(Modifier.weight(1f).fillMaxWidth().padding(horizontal = 12.dp), contentAlignment = Alignment.Center) {
-                val boardSide = if (maxWidth < maxHeight - 150.dp) maxWidth else maxHeight - 150.dp
+                val boardSide = if (maxWidth < maxHeight - 140.dp) maxWidth else maxHeight - 140.dp
                 Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     SudokuBoard(g, sel, vm.sudokuTick, boardSide) { sel = it }
                     SudokuTools(
-                        notes = notes, hintsLeft = g.hintsLeft, canUndo = g.canUndo,
-                        onUndo = { vm.sudokuEdit { it.undo() } },
+                        notes = notes,
                         onErase = { if (sel >= 0) vm.sudokuEdit { it.erase(sel) } },
                         onNotes = { notes = !notes },
-                        onHint = { vm.sudokuEdit { it.hint(sel) } },
                     )
                     SudokuPad(g) { d ->
                         if (sel >= 0 && !over) vm.sudokuEdit { if (notes) it.toggleNote(sel, d) else it.place(sel, d) }
@@ -201,28 +199,25 @@ private fun SudokuBoard(g: SudokuGame, sel: Int, tick: Int, side: androidx.compo
 }
 
 @Composable
-private fun ToolButton(icon: ImageVector, label: String, onClick: () -> Unit, modifier: Modifier = Modifier, active: Boolean = false, badge: String? = null, enabled: Boolean = true) {
-    val shape = RoundedCornerShape(14.dp)
-    Column(
-        modifier.clip(shape).background(if (active) pm.goldSoft else pm.surface).border(1.dp, if (active) pm.goldBright else pm.outline, shape)
-            .clickable(enabled = enabled, onClick = onClick).padding(vertical = 8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(2.dp),
+private fun ToolButton(icon: ImageVector, label: String, onClick: () -> Unit, modifier: Modifier = Modifier, active: Boolean = false, enabled: Boolean = true) {
+    val shape = RoundedCornerShape(16.dp)
+    Row(
+        modifier.height(50.dp).lift(shape, 6.dp).clip(shape).background(if (active) pm.goldSoft else pm.surface)
+            .border(1.dp, if (active) pm.goldBright else pm.outline, shape)
+            .clickable(enabled = enabled, onClick = onClick).padding(horizontal = 12.dp),
+        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center,
     ) {
-        Box {
-            Icon(icon, label, Modifier.size(22.dp), tint = if (!enabled) pm.outline else if (active) pm.goldHi else pm.ink)
-            if (badge != null) Text(badge, Modifier.align(Alignment.TopEnd).padding(start = 22.dp), style = MaterialTheme.typography.labelSmall, color = pm.gold)
-        }
-        Text(label, style = MaterialTheme.typography.labelSmall, color = if (enabled) pm.inkSoft else pm.outline)
+        Icon(icon, label, Modifier.size(20.dp), tint = if (!enabled) pm.outline else if (active) pm.gold else pm.ink)
+        Spacer(Modifier.width(8.dp))
+        Text(label, style = MaterialTheme.typography.labelLarge, color = if (!enabled) pm.outline else if (active) pm.gold else pm.ink)
     }
 }
 
 @Composable
-private fun SudokuTools(notes: Boolean, hintsLeft: Int, canUndo: Boolean, onUndo: () -> Unit, onErase: () -> Unit, onNotes: () -> Unit, onHint: () -> Unit) {
-    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        ToolButton(Ic.Undo, stringResource(R.string.sd_undo), onUndo, Modifier.weight(1f), enabled = canUndo)
+private fun SudokuTools(notes: Boolean, onErase: () -> Unit, onNotes: () -> Unit) {
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
         ToolButton(Ic.Eraser, stringResource(R.string.sd_erase), onErase, Modifier.weight(1f))
         ToolButton(Ic.Pencil, stringResource(R.string.sd_notes), onNotes, Modifier.weight(1f), active = notes)
-        ToolButton(Ic.Bulb, stringResource(R.string.sd_hint), onHint, Modifier.weight(1f), badge = hintsLeft.toString(), enabled = hintsLeft > 0)
     }
 }
 

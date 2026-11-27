@@ -160,11 +160,10 @@ enum class SudokuPlace { IGNORED, OK, MISTAKE }
 
 /**
  * Một ván Sudoku: ô cho sẵn, ô người chơi điền, ghi chú nháp (bitmask bit0 = số 1 ... bit8 = số 9), đếm lỗi, gợi ý, hoàn tác.
- * Điền sai vẫn hiện (màu đỏ) để người chơi tự xóa, nhưng mỗi lần điền sai tính 1 lỗi; đủ [MAX_MISTAKES] lỗi là thua.
+ * Điền sai vẫn hiện (màu đỏ) để người chơi tự xóa; mỗi lần điền sai được đếm vào [mistakes] để hiện ở kết quả, nhưng không bao giờ làm thua ván.
  */
 class SudokuGame(val level: SudokuLevel, puzzle: IntArray, val solution: IntArray) {
     companion object {
-        const val MAX_MISTAKES = 3
         const val MAX_HINTS = 3
 
         fun create(level: SudokuLevel, rnd: Random = Random): SudokuGame {
@@ -225,7 +224,6 @@ class SudokuGame(val level: SudokuLevel, puzzle: IntArray, val solution: IntArra
             return SudokuPlace.OK
         }
         mistakes++
-        if (mistakes >= MAX_MISTAKES) status = SudokuStatus.LOST
         return SudokuPlace.MISTAKE
     }
 

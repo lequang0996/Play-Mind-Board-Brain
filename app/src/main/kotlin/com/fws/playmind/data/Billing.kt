@@ -28,8 +28,8 @@ sealed interface BillingEvent {
 
 /**
  * Google Play Billing (PBL 8).
- *  - Đăng ký: [SUB_MONTHLY] 1$/tháng (bỏ banner + quảng cáo mở app, 3 lượt miễn phí/game/ngày),
- *             [SUB_YEARLY] 10$/năm (bỏ mọi quảng cáo xen kẽ, không giới hạn lượt chơi).
+ *  - Đăng ký: [SUB_MONTHLY] 1$/tháng (không còn quảng cáo nào, 3 lượt miễn phí/game/ngày),
+ *             [SUB_YEARLY] 10$/năm (không còn quảng cáo nào, không giới hạn lượt chơi).
  *  - Mua một lần (tiêu thụ được): [GEMS_5] 1$ = 5 kim cương, [GEMS_30] 5$ = 30 kim cương.
  * Các mã sản phẩm phải được tạo đúng tên này trong Play Console (xem docs/MONETIZATION.md).
  * Không có máy chủ nên việc xác minh giao dịch chỉ dựa vào Google Play trên máy; muốn chống gian lận triệt để cần xác minh

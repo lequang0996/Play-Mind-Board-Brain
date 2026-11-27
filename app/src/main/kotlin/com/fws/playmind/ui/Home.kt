@@ -1,5 +1,8 @@
 package com.fws.playmind.ui
 
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,6 +26,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -42,6 +48,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -63,6 +70,9 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import kotlinx.coroutines.delay
+
+/** Trang nhà phát triển trên Google Play (mục \"Ứng dụng khác\" trong menu trang chủ). */
+const val DEVELOPER_URL = "https://play.google.com/store/apps/developer?id=FWs+Studio"
 
 /** Game nổi bật đổi mỗi 2 phút. */
 const val FEATURED_SECONDS = 120L
@@ -95,7 +105,10 @@ fun BannerAd(modifier: Modifier = Modifier) {
 fun HomeScreen(
     app: PlayMindApp, updateReady: Boolean, onRestart: () -> Unit,
     onOpenGame: (GameInfo) -> Unit, onSettings: () -> Unit, onGuide: () -> Unit, onShop: () -> Unit,
+    onTopic: (Topic) -> Unit = {},
 ) {
+    val ctx = LocalContext.current
+    var menuOpen by remember { mutableStateOf(false) }
     val wallet by app.wallet.state.collectAsState()
     var nowMs by remember { mutableLongStateOf(System.currentTimeMillis()) }
     LaunchedEffect(Unit) { while (true) { delay(1000); nowMs = System.currentTimeMillis() } }
@@ -107,12 +120,12 @@ fun HomeScreen(
 
     Column(Modifier.fillMaxSize()) {
         Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 18.dp)) {
-            // Thanh trên: logo + tên, ba nút chức năng
+            // Thanh trên: logo + tên, một nút menu thả xuống (icon + chữ)
             Row(Modifier.fillMaxWidth().padding(top = 10.dp), verticalAlignment = Alignment.CenterVertically) {
                 val logoShape = RoundedCornerShape(14.dp)
                 Image(
                     painterResource(R.drawable.logo_badge), null,
-                    Modifier.size(46.dp).clip(logoShape).border(1.dp, pm.goldBright.copy(alpha = .7f), logoShape),
+                    Modifier.size(46.dp).lift(logoShape, 6.dp).clip(logoShape).border(1.dp, pm.goldBright.copy(alpha = .8f), logoShape),
                     contentScale = ContentScale.Crop,
                 )
                 Spacer(Modifier.width(12.dp))
@@ -120,11 +133,19 @@ fun HomeScreen(
                     Text("Play Mind", style = MaterialTheme.typography.headlineMedium, color = pm.ink)
                     Text("Board & Brain", style = MaterialTheme.typography.labelMedium, color = pm.gold)
                 }
-                PmIconButton(Ic.Bag, stringResource(R.string.shop), onShop)
-                Spacer(Modifier.width(8.dp))
-                PmIconButton(Ic.Book, stringResource(R.string.guide), onGuide)
-                Spacer(Modifier.width(8.dp))
-                PmIconButton(Ic.Sliders, stringResource(R.string.settings), onSettings)
+                Box {
+                    PmIconButton(Ic.Menu, stringResource(R.string.menu), { menuOpen = true })
+                    DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
+                        HomeMenuItem(Ic.Bag, stringResource(R.string.shop)) { menuOpen = false; onShop() }
+                        HomeMenuItem(Ic.Book, stringResource(R.string.guide)) { menuOpen = false; onGuide() }
+                        HomeMenuItem(Ic.Sliders, stringResource(R.string.settings)) { menuOpen = false; onSettings() }
+                        HorizontalDivider(Modifier.padding(vertical = 4.dp), color = pm.outline)
+                        HomeMenuItem(Ic.Apps, stringResource(R.string.other_apps)) {
+                            menuOpen = false
+                            try { ctx.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(DEVELOPER_URL))) } catch (e: ActivityNotFoundException) { }
+                        }
+                    }
+                }
             }
             Gap(16)
             Vault(wallet.diamonds, wallet.streakDays, canCheckIn) {
@@ -160,7 +181,7 @@ fun HomeScreen(
             }
             Gap(22)
             for (t in Topic.entries) {
-                TopicSection(app, t, onOpenGame)
+                TopicSection(app, t, onOpenGame, onTopic)
                 Gap(20)
             }
             Gap(8)
@@ -174,7 +195,7 @@ fun HomeScreen(
             stringResource(R.string.ok), { checkIn = null }, tone = DialogTone.GEM,
             body = {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text("+${d.reward}", style = MaterialTheme.typography.displaySmall, color = pm.goldHi)
+                    Text("+${d.reward}", style = MaterialTheme.typography.displaySmall, color = pm.gold)
                     GemMark(34.dp)
                 }
                 Text(pluralStringResource(R.plurals.streak_days, d.streak, d.streak), style = MaterialTheme.typography.bodyMedium, color = pm.inkSoft)
@@ -183,47 +204,59 @@ fun HomeScreen(
     }
 }
 
-/** Két kim cương: số dư lớn, chuỗi điểm danh 7 ngày và nút điểm danh. */
+@Composable
+private fun HomeMenuItem(icon: androidx.compose.ui.graphics.vector.ImageVector, text: String, onClick: () -> Unit) {
+    DropdownMenuItem(
+        text = { Text(text, style = MaterialTheme.typography.titleSmall, color = pm.ink) },
+        leadingIcon = { Icon(icon, null, Modifier.size(20.dp), tint = pm.gold) },
+        onClick = onClick,
+    )
+}
+
+/** Két kim cương: thẻ navy đậm với viền vàng mảnh; số dư lớn, chuỗi điểm danh 7 ngày và nút điểm danh. */
 @Composable
 private fun Vault(diamonds: Int, streak: Int, canCheckIn: Boolean, onCheckIn: () -> Unit) {
-    val shape = RoundedCornerShape(24.dp)
+    val shape = RoundedCornerShape(26.dp)
     Row(
-        Modifier.fillMaxWidth().clip(shape)
-            .background(Brush.linearGradient(listOf(pm.surfaceHigh, pm.surface), Offset(0f, 0f), Offset(900f, 400f)))
-            .border(1.dp, pm.goldBright.copy(alpha = .35f), shape).padding(18.dp),
+        Modifier.fillMaxWidth().lift(shape, 14.dp, pm.deep).clip(shape)
+            .background(Brush.linearGradient(listOf(pm.deepHigh, pm.deep), Offset(0f, 0f), Offset(900f, 500f)))
+            .background(Brush.radialGradient(listOf(pm.goldBright.copy(alpha = .22f), Color.Transparent), center = Offset(60f, 0f), radius = 520f))
+            .border(1.dp, pm.goldBright.copy(alpha = .55f), shape).padding(18.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 GemMark(30.dp)
-                Text(diamonds.toString(), style = MaterialTheme.typography.displaySmall, color = pm.ink)
+                Text(diamonds.toString(), style = MaterialTheme.typography.displaySmall, color = pm.onDeep)
             }
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-                Icon(Ic.Flame, null, Modifier.size(15.dp), tint = if (streak > 0) pm.goldBright else pm.inkSoft)
+                Icon(Ic.Flame, null, Modifier.size(15.dp), tint = if (streak > 0) pm.goldBright else pm.onDeepSoft)
                 val filled = if (streak == 0) 0 else ((streak - 1) % 7) + 1
-                repeat(7) { i -> Box(Modifier.size(8.dp).clip(CircleShape).background(if (i < filled) pm.goldBright else pm.outline)) }
+                repeat(7) { i -> Box(Modifier.size(8.dp).clip(CircleShape).background(if (i < filled) pm.goldBright else pm.onDeepSoft.copy(alpha = .3f))) }
             }
-            Text(pluralStringResource(R.plurals.streak_days, streak, streak), style = MaterialTheme.typography.labelMedium, color = pm.inkSoft)
+            Text(pluralStringResource(R.plurals.streak_days, streak, streak), style = MaterialTheme.typography.labelMedium, color = pm.onDeepSoft)
         }
         if (canCheckIn) GoldButton(stringResource(R.string.check_in), onCheckIn, icon = Ic.Calendar)
         else Row(
-            Modifier.clip(RoundedCornerShape(14.dp)).background(pm.good.copy(alpha = .12f)).border(1.dp, pm.good.copy(alpha = .4f), RoundedCornerShape(14.dp)).padding(horizontal = 14.dp, vertical = 12.dp),
+            Modifier.clip(RoundedCornerShape(14.dp)).background(Color(0xFF3DDC97).copy(alpha = .14f)).border(1.dp, Color(0xFF3DDC97).copy(alpha = .5f), RoundedCornerShape(14.dp)).padding(horizontal = 14.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Icon(Ic.Check, null, Modifier.size(18.dp), tint = pm.good)
-            Text(stringResource(R.string.checked_in), style = MaterialTheme.typography.labelLarge, color = pm.good)
+            Icon(Ic.Check, null, Modifier.size(18.dp), tint = Color(0xFF3DDC97))
+            Text(stringResource(R.string.checked_in), style = MaterialTheme.typography.labelLarge, color = Color(0xFF3DDC97))
         }
     }
 }
 
 @Composable
 private fun ShopTeaser(onShop: () -> Unit) {
-    val shape = RoundedCornerShape(16.dp)
+    val shape = RoundedCornerShape(18.dp)
     Row(
-        Modifier.fillMaxWidth().clip(shape).background(pm.surface).border(1.dp, pm.outline, shape).clickable(onClick = onShop).padding(horizontal = 14.dp, vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp),
+        Modifier.fillMaxWidth().lift(shape, 6.dp).clip(shape).background(pm.surface).border(1.dp, pm.outline, shape).clickable(onClick = onShop).padding(horizontal = 14.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Icon(Ic.Bag, null, Modifier.size(20.dp), tint = pm.gold)
+        Box(Modifier.size(34.dp).clip(CircleShape).background(pm.goldSoft), contentAlignment = Alignment.Center) {
+            Icon(Ic.Bag, null, Modifier.size(18.dp), tint = pm.gold)
+        }
         Text(stringResource(R.string.shop_teaser), Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium, color = pm.ink, maxLines = 2, overflow = TextOverflow.Ellipsis)
         Icon(Ic.Chevron, null, Modifier.size(18.dp), tint = pm.inkSoft)
     }
@@ -233,7 +266,7 @@ private fun ShopTeaser(onShop: () -> Unit) {
 private fun CountdownChip(remaining: Int) {
     val shape = RoundedCornerShape(50)
     Row(
-        Modifier.clip(shape).background(Color.Black.copy(alpha = .28f)).border(1.dp, pm.outline, shape).padding(horizontal = 10.dp, vertical = 5.dp),
+        Modifier.clip(shape).background(pm.surface.copy(alpha = .85f)).border(1.dp, pm.outline, shape).padding(horizontal = 10.dp, vertical = 5.dp),
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp),
     ) {
         Icon(Ic.Hourglass, null, Modifier.size(13.dp), tint = pm.inkSoft)
@@ -243,12 +276,12 @@ private fun CountdownChip(remaining: Int) {
 
 @Composable
 private fun FeaturedCard(t: Topic, game: GameInfo?, remaining: Int, onOpen: (GameInfo) -> Unit) {
-    val shape = RoundedCornerShape(26.dp)
+    val shape = RoundedCornerShape(28.dp)
     val tc = t.color
     Box(
-        Modifier.fillMaxWidth().height(214.dp).clip(shape)
-            .background(Brush.linearGradient(listOf(tc.copy(alpha = .40f), pm.surface, pm.bgDeep), Offset(0f, 0f), Offset(1000f, 800f)))
-            .border(1.dp, tc.copy(alpha = .5f), shape)
+        Modifier.fillMaxWidth().height(214.dp).lift(shape, 12.dp, tc.onLight(.5f)).clip(shape)
+            .background(Brush.linearGradient(listOf(tc.copy(alpha = .34f), pm.surface, pm.surface), Offset(0f, 0f), Offset(900f, 900f)))
+            .border(1.dp, tc.copy(alpha = .45f), shape)
             .then(if (game != null) Modifier.clickable { onOpen(game) } else Modifier),
     ) {
         if (game != null) GameArt(game.id, Modifier.align(Alignment.CenterEnd).padding(end = 4.dp, top = 22.dp).size(168.dp))
@@ -277,20 +310,27 @@ private fun FeaturedCard(t: Topic, game: GameInfo?, remaining: Int, onOpen: (Gam
 }
 
 @Composable
-private fun TopicSection(app: PlayMindApp, t: Topic, onOpen: (GameInfo) -> Unit) {
+private fun TopicSection(app: PlayMindApp, t: Topic, onOpen: (GameInfo) -> Unit, onTopic: (Topic) -> Unit) {
     val games = Catalog.byTopic(t)
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             Box(Modifier.size(34.dp).clip(CircleShape).background(t.color.copy(alpha = .16f)).border(1.dp, t.color.copy(alpha = .5f), CircleShape), contentAlignment = Alignment.Center) {
-                Icon(t.icon(), null, Modifier.size(18.dp), tint = t.color)
+                Icon(t.icon(), null, Modifier.size(18.dp), tint = t.tint())
             }
             SectionTitle(stringResource(t.title), Modifier.weight(1f))
-            if (games.isNotEmpty()) Text(games.size.toString(), style = MaterialTheme.typography.labelLarge, color = pm.inkSoft)
+            // "Xem thêm (n)": mở danh sách đầy đủ của chủ đề, xếp từ dễ chơi / ván ngắn đến khó / ván dài
+            if (games.size > 1) Row(
+                Modifier.clip(RoundedCornerShape(50)).clickable { onTopic(t) }.padding(start = 10.dp, top = 6.dp, bottom = 6.dp, end = 4.dp),
+                verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(2.dp),
+            ) {
+                Text(stringResource(R.string.see_more_n, games.size), style = MaterialTheme.typography.labelLarge, color = pm.gold)
+                Icon(Ic.Chevron, null, Modifier.size(16.dp), tint = pm.gold)
+            }
         }
         if (games.isEmpty()) {
             SurfaceCard(Modifier.fillMaxWidth()) { Text(stringResource(R.string.coming_soon_desc), style = MaterialTheme.typography.bodyMedium, color = pm.inkSoft) }
         } else {
-            Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            Row(Modifier.horizontalScroll(rememberScrollState()).padding(bottom = 10.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 for (g in games) GameTile(app, g, t, onOpen)
             }
         }
@@ -298,12 +338,11 @@ private fun TopicSection(app: PlayMindApp, t: Topic, onOpen: (GameInfo) -> Unit)
 }
 
 @Composable
-private fun gameTag(g: GameInfo): String? {
+internal fun gameTag(g: GameInfo): String? {
     val o = g.options
     return when {
         g.kind == GameKind.SOLO -> stringResource(R.string.tag_solo)
         g.optionKind == OptionKind.PLAYERS -> stringResource(R.string.tag_players, o.min(), o.max())
-        g.optionKind == OptionKind.BOARD -> "${o.min()}×${o.min()} – ${o.max()}×${o.max()}"
         else -> null
     }
 }
@@ -313,10 +352,10 @@ private fun GameTile(app: PlayMindApp, g: GameInfo, t: Topic, onOpen: (GameInfo)
     val shape = RoundedCornerShape(22.dp)
     val free = app.wallet.freeLeft(g.id)
     Column(
-        Modifier.width(166.dp).clip(shape).background(pm.surface).border(1.dp, pm.outline, shape).clickable { onOpen(g) },
+        Modifier.width(166.dp).lift(shape, 8.dp).clip(shape).background(pm.surface).border(1.dp, pm.outline, shape).clickable { onOpen(g) },
     ) {
         Box(
-            Modifier.fillMaxWidth().height(116.dp).background(Brush.linearGradient(listOf(t.color.copy(alpha = .30f), pm.surfaceHigh), Offset(0f, 0f), Offset(500f, 400f))),
+            Modifier.fillMaxWidth().height(116.dp).background(Brush.linearGradient(listOf(t.color.copy(alpha = .26f), pm.surfaceHigh), Offset(0f, 0f), Offset(500f, 400f))),
             contentAlignment = Alignment.Center,
         ) { GameArt(g.id, Modifier.size(104.dp)) }
         Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {

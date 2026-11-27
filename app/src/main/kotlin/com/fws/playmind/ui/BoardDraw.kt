@@ -123,54 +123,43 @@ fun DrawScope.drawXiangqiBoard(tm: TextMeasurer, flip: Boolean) {
     val s = w / (8f + 2 * XQ_MARGIN)
     val m = XQ_MARGIN * s
     val fr = s * .30f                       // độ dày khung gỗ
-    val rr = CornerRadius(s * .28f)
-    // khung gỗ đỏ thẫm
-    drawRoundRect(Brush.linearGradient(0f to Color(0xFF8A2C39), .5f to Color(0xFF5A1620), 1f to Color(0xFF3E0E16), start = Offset.Zero, end = Offset(w, h)), Offset.Zero, size, rr)
-    drawRoundRect(Color.White.copy(alpha = .16f), Offset(s * .015f, s * .015f), Size(w - s * .03f, h - s * .03f), rr, style = Stroke(s * .03f))
-    // mặt lá vàng
+    val rr = CornerRadius(s * .22f)
+    // khung gỗ nâu ấm, có vệt sáng ở mép trên
+    drawRoundRect(Brush.linearGradient(0f to Color(0xFFC08448), .5f to Color(0xFF9A6234), 1f to Color(0xFF734321), start = Offset.Zero, end = Offset(w, h)), Offset.Zero, size, rr)
+    drawRoundRect(Color.White.copy(alpha = .22f), Offset(s * .015f, s * .015f), Size(w - s * .03f, h - s * .03f), rr, style = Stroke(s * .03f))
+    // mặt bàn gỗ sáng
     val px = fr; val py = fr; val pw = w - 2 * fr; val ph = h - 2 * fr
-    val prr = CornerRadius(s * .12f)
-    drawRoundRect(Brush.linearGradient(0f to Color(0xFFF8E4A0), .35f to Color(0xFFE2B95C), .65f to Color(0xFFF1D27E), 1f to Color(0xFFCFA040), start = Offset(px, py), end = Offset(px + pw, py + ph)), Offset(px, py), Size(pw, ph), prr)
-    // bản đồ khắc chìm: vài đường đồng mức và dòng sông
-    val ink = Color(0xFF6B4A12)
-    for (k in 0 until 9) {
-        val p = Path()
-        val y0 = py + ph * (.08f + .105f * k) + (hash01(k, 3) - .5f) * s * .5f
-        p.moveTo(px, y0)
+    val prr = CornerRadius(s * .08f)
+    drawRoundRect(Brush.linearGradient(0f to Color(0xFFF3D49E), .45f to Color(0xFFE6BC7E), 1f to Color(0xFFDDAC6A), start = Offset(px, py), end = Offset(px + pw, py + ph)), Offset(px, py), Size(pw, ph), prr)
+    // vân gỗ: nhiều đường ngang mảnh hơi lượn sóng
+    val grain = Color(0xFF8A5A24)
+    for (k in 0 until 46) {
+        val y0 = py + ph * (k + hash01(k, 21) * .8f) / 46f
+        val p = Path(); p.moveTo(px, y0)
         var x = px
         while (x < px + pw) {
-            val nx = x + s * (1.1f + hash01(k, (x / s).toInt()) * .9f)
-            val ny = y0 + (hash01(k, (nx / s).toInt() + 40) - .5f) * s * 1.6f
-            p.quadraticTo((x + nx) / 2f, (y0 + ny) / 2f + (hash01(k, (x / s).toInt() + 7) - .5f) * s * .8f, min(nx, px + pw), ny)
+            val nx = min(x + s * (1.6f + hash01(k, (x / s).toInt() + 5) * 1.4f), px + pw)
+            p.quadraticTo((x + nx) / 2f, y0 + (hash01(k, (x / s).toInt() + 9) - .5f) * s * .22f, nx, y0 + (hash01(k, (nx / s).toInt() + 13) - .5f) * s * .1f)
             x = nx
         }
-        drawPath(p, ink.copy(alpha = .22f), style = Stroke(s * .022f, cap = StrokeCap.Round))
+        drawPath(p, grain.copy(alpha = .05f + hash01(k, 30) * .10f), style = Stroke(s * (.012f + hash01(k, 31) * .02f), cap = StrokeCap.Round))
     }
-    // hạt lá vàng
-    for (i in 0 until 520) {
+    // vài mắt gỗ và hạt nhỏ
+    for (i in 0 until 5) {
+        val kx = px + pw * (.12f + hash01(i, 41) * .76f); val ky = py + ph * (.10f + hash01(i, 42) * .80f)
+        drawOval(grain.copy(alpha = .10f), Offset(kx - s * .22f, ky - s * .07f), Size(s * .44f, s * .14f), style = Stroke(s * .014f))
+    }
+    for (i in 0 until 260) {
         val x = px + hash01(i, 11) * pw; val y = py + hash01(i, 12) * ph
-        val rad = s * (.008f + hash01(i, 13) * .02f)
-        val c = if (hash01(i, 14) > .5f) Color.White.copy(alpha = .10f + hash01(i, 15) * .18f) else Color(0xFF8C6414).copy(alpha = .06f + hash01(i, 15) * .12f)
-        drawCircle(c, rad, Offset(x, y))
+        drawCircle(grain.copy(alpha = .04f + hash01(i, 15) * .07f), s * (.006f + hash01(i, 13) * .012f), Offset(x, y))
     }
-    // vầng sáng kim loại
-    drawRoundRect(Brush.radialGradient(0f to Color.White.copy(alpha = .30f), 1f to Color.Transparent, center = Offset(px + pw * .28f, py + ph * .22f), radius = pw * .8f), Offset(px, py), Size(pw, ph), prr)
-    // hoa văn mây ở 4 góc
-    val o = s * .40f
-    for (cx in 0..1) for (cy in 0..1) {
-        val x = if (cx == 0) px + o else px + pw - o; val y = if (cy == 0) py + o else py + ph - o
-        val sx = if (cx == 0) 1f else -1f; val sy = if (cy == 0) 1f else -1f
-        drawPath(xqSpiral(x + sx * s * .06f, y + sy * s * .06f, s * .27f, 2.1f, sx, sy, 0f), ink.copy(alpha = .55f), style = Stroke(s * .028f, cap = StrokeCap.Round))
-        drawPath(xqSpiral(x + sx * s * .46f, y + sy * s * .02f, s * .14f, 1.8f, sx, sy, 2.2f), ink.copy(alpha = .40f), style = Stroke(s * .022f, cap = StrokeCap.Round))
-        drawPath(xqSpiral(x + sx * s * .02f, y + sy * s * .46f, s * .14f, 1.8f, sx, sy, -1.0f), ink.copy(alpha = .40f), style = Stroke(s * .022f, cap = StrokeCap.Round))
-    }
-    drawRoundRect(Lux.goldLo.copy(alpha = .75f), Offset(px + s * .07f, py + s * .07f), Size(pw - s * .14f, ph - s * .14f), CornerRadius(s * .08f), style = Stroke(s * .018f))
-    // lưới
-    val line = Color(0xFF241705)
-    val lw = max(s * .03f, 1.2f)
+    // ánh sáng mềm từ góc trên trái
+    drawRoundRect(Brush.radialGradient(0f to Color.White.copy(alpha = .20f), 1f to Color.Transparent, center = Offset(px + pw * .25f, py + ph * .2f), radius = pw * .85f), Offset(px, py), Size(pw, ph), prr)
+    // lưới: nét mảnh màu nâu đậm như bàn cờ gỗ thật
+    val line = Color(0xFF5B3A1B)
+    val lw = max(s * .022f, 1.1f)
     fun P(f: Int, r: Int) = Offset(m + f * s, m + r * s)
-    // viền ngoài đậm hơn
-    drawRect(line, P(0, 0), Size(8 * s, 9 * s), style = Stroke(lw * 1.9f))
+    drawRect(line, P(0, 0), Size(8 * s, 9 * s), style = Stroke(lw * 1.8f))
     for (r in 1..8) drawLine(line, P(0, r), P(8, r), lw)
     for (f in 1..7) { drawLine(line, P(f, 0), P(f, 4), lw); drawLine(line, P(f, 5), P(f, 9), lw) }
     for (r0 in intArrayOf(0, 7)) { drawLine(line, P(3, r0), P(5, r0 + 2), lw); drawLine(line, P(5, r0), P(3, r0 + 2), lw) }
@@ -188,8 +177,9 @@ fun DrawScope.drawXiangqiBoard(tm: TextMeasurer, flip: Boolean) {
     }
     for (f in intArrayOf(1, 7)) { tick(f, 2); tick(f, 7) }
     for (f in intArrayOf(0, 2, 4, 6, 8)) { tick(f, 3); tick(f, 6) }
-    // sông
-    val rs = TextStyle(color = Color(0xFF6B4A12).copy(alpha = .75f), fontSize = (s * .52f).toSp(), fontWeight = FontWeight.Bold, fontFamily = FontFamily.Serif, letterSpacing = (s * .06f).toSp())
+    // sông: chữ khắc nâu sẫm (kèm bóng sáng nhẹ để có cảm giác khắc chìm)
+    val rs = TextStyle(color = Color(0xFF4A2D12).copy(alpha = .88f), fontSize = (s * .56f).toSp(), fontWeight = FontWeight.Bold, fontFamily = FontFamily.Serif, letterSpacing = (s * .06f).toSp(),
+        shadow = Shadow(Color.White.copy(alpha = .35f), Offset(s * .012f, s * .02f), s * .02f))
     val l = if (flip) "漢界" else "楚河"; val r = if (flip) "楚河" else "漢界"
     val ml = tm.measure(l, rs); val mr = tm.measure(r, rs)
     val ry = m + 4.5f * s - ml.size.height / 2f
@@ -199,17 +189,26 @@ fun DrawScope.drawXiangqiBoard(tm: TextMeasurer, flip: Boolean) {
 private val RED_CHARS = arrayOf("", "帥", "仕", "相", "傌", "俥", "炮", "兵")
 private val BLK_CHARS = arrayOf("", "將", "士", "象", "馬", "車", "砲", "卒")
 
-/** Quân cờ tướng: đĩa kính trong suốt, chữ khắc đỏ (Đỏ) hoặc đen (Đen). [rad] = bán kính ngoài. */
+/** Quân cờ tướng: đĩa gỗ tròn có cạnh dày, vòng khắc và chữ đỏ (Đỏ) hoặc đen (Đen). [rad] = bán kính ngoài. */
 fun DrawScope.drawXiangqiPiece(c: Offset, rad: Float, red: Boolean, type: Int, tm: TextMeasurer) {
-    val sc = rad / 46f
-    drawOval(Color.Black.copy(alpha = .20f), Offset(c.x - rad * .9f, c.y + rad * .62f), Size(rad * 1.84f, rad * .5f))
-    withTransform({ translate(c.x - 50f * sc, c.y - 50f * sc); scale(sc, sc, pivot = Offset.Zero) }) {
-        drawLayers(if (red) XiangqiArt.red else XiangqiArt.black)
+    val edge = rad * .10f                    // độ dày của cạnh đĩa
+    drawOval(Color.Black.copy(alpha = .26f), Offset(c.x - rad * .95f, c.y + rad * .62f), Size(rad * 1.9f, rad * .5f))
+    // cạnh đĩa (phần gỗ sẫm bên dưới), rồi mặt đĩa
+    drawCircle(Color(0xFF9C6B34), rad, c + Offset(0f, edge))
+    drawCircle(Brush.radialGradient(0f to Color(0xFFF9E6BF), .65f to Color(0xFFE8C48A), 1f to Color(0xFFD2A062), center = c - Offset(rad * .28f, rad * .30f), radius = rad * 1.5f), rad, c)
+    drawCircle(Color(0xFFA77438).copy(alpha = .75f), rad, c, style = Stroke(rad * .05f))
+    // vòng khắc bên trong theo màu của bên đi
+    val inkRing = if (red) Color(0xFFC0182B) else Color(0xFF1B140D)
+    drawCircle(inkRing.copy(alpha = .55f), rad * .80f, c, style = Stroke(rad * .035f))
+    // vân gỗ mờ trên mặt đĩa
+    for (k in 0 until 4) {
+        val yy = c.y - rad * .6f + rad * .4f * k
+        drawLine(Color(0xFF8A5A24).copy(alpha = .06f), Offset(c.x - rad * .7f, yy), Offset(c.x + rad * .7f, yy + rad * .06f), rad * .03f)
     }
     val ch = (if (red) RED_CHARS else BLK_CHARS)[type]
-    val ink = if (red) Color(0xFFB3122B) else Color(0xFF0C0C12)
-    val r = tm.measure(ch, TextStyle(color = ink, fontSize = (rad * 1.12f).toSp(), fontWeight = FontWeight.Bold, fontFamily = FontFamily.Serif,
-        shadow = Shadow(Color.White.copy(alpha = .55f), Offset(rad * .02f, rad * .05f), rad * .03f)))
+    val ink = if (red) Color(0xFFC0182B) else Color(0xFF15110D)
+    val r = tm.measure(ch, TextStyle(color = ink, fontSize = (rad * 1.08f).toSp(), fontWeight = FontWeight.Bold, fontFamily = FontFamily.Serif,
+        shadow = Shadow(Color.White.copy(alpha = .45f), Offset(rad * .02f, rad * .04f), rad * .03f)))
     drawText(r, topLeft = c - Offset(r.size.width / 2f, r.size.height / 2f + rad * .02f))
 }
 
