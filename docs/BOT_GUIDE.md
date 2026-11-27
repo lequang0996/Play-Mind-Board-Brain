@@ -53,7 +53,7 @@ Cột "Ý định thiết kế" mô tả cảm giác khi chơi, lấy theo vị 
 | Thách đấu | ~ 2500 | −300 |
 | Siêu việt | ~ 2800 | 0 |
 
-**Đây là thang quy ước, không phải điểm FIDE hay Chess.com.** Các con số cho biết bot cấp này mạnh hơn bot cấp kia bao nhiêu, không khẳng định bot ngang người chơi nào. Con số tuyệt đối chỉ có nghĩa khi đối chiếu với engine ngoài (mục 3.5, tùy chọn).
+**Đây là thang quy ước, không phải điểm FIDE hay Chess.com.** Các mốc được chọn gần với mốc danh hiệu quen thuộc của cờ vua (2300, 2500...) cho dễ hình dung, nhưng không đo bằng người chơi có điểm FIDE nên không đổi qua lại với điểm FIDE được. Các con số cho biết bot cấp này mạnh hơn bot cấp kia bao nhiêu, không khẳng định bot ngang người chơi nào. Con số tuyệt đối chỉ có nghĩa khi đối chiếu với engine ngoài (mục 3.5, tùy chọn).
 
 **Lưu ý về neo.** Thang này neo ở Siêu việt (2800), mà Siêu việt là bot mạnh nhất *làm được*, không phải bot được chọn để ngang một mức người chơi cụ thể. Nếu Siêu việt thực tế mạnh hơn hoặc yếu hơn mức 2800 quy ước (nhất là cờ vây, Quoridor, Wall Go), cả sáu cấp dưới dịch theo, và cột "Ý định thiết kế" ở mục 1.1 không còn đúng nguyên văn. Vì vậy cột đó chỉ dùng để hình dung cảm giác khi chơi. Khi đối chiếu engine ngoài (mục 3.5) cho thấy lệch nhiều, sửa mô tả cho khớp số đo, không dùng mô tả để ép bot.
 
@@ -82,7 +82,7 @@ Ngoài ra có **kiểm tra khoảng cách tối thiểu** giữa các cấp các
 | Thách đấu vs Giỏi | 400 | 90,9% | 76,0% | **≥ 70%** |
 | Siêu việt vs Cao thủ | 500 | 94,7% | 84,9% | **≥ 80%** |
 
-Ngưỡng tối thiểu = điểm kỳ vọng ứng với khoảng Elo mục tiêu trừ 250 (làm tròn xuống), nên nếu cả 6 cặp kề đạt thì 5 cặp này đạt. Vì vậy bước này chủ yếu bắt lỗi cấu hình (tráo dòng, nhầm giới hạn) và đảo cấp, không thay cho kiểm 6 cặp kề.
+Ngưỡng tối thiểu = điểm kỳ vọng ứng với khoảng Elo mục tiêu trừ 250 (làm tròn xuống). **Nếu Elo cộng dồn được** thì cả 6 cặp kề đạt kéo theo 5 cặp này đạt. Bot thường gần như vậy nhưng không bảo đảm: có bot thắng đều cấp kề dưới mà lại kém hiệu quả trước cấp cách hai bậc (bất bắc cầu, ví dụ một cấp có điểm yếu riêng mà chỉ cấp xa mới khai thác được). Vì vậy bước này bắt ba loại lỗi mà 6 cặp kề không thấy: bất bắc cầu, đảo cấp và lỗi cấu hình (tráo dòng, nhầm giới hạn). Nó không thay cho kiểm 6 cặp kề.
 
 ---
 
@@ -119,7 +119,9 @@ Game nhiều hòa (cờ vua, cờ tướng) có độ phân tán nhỏ hơn nên
 
 Quy ước số ván của tài liệu này: **100 ván cho một vòng chỉnh, 200 ván cho một lần xác nhận, 400 ván cho cặp Trung bình vs Dễ.**
 
-Cách chọn `n` cho một cặp: gọi `h` là nửa độ rộng khoảng đạt (tính theo điểm, ví dụ 0,025) và `S` là điểm kỳ vọng; cần `1,96 × √(S(1−S)/n) ≤ 0,8 × h`, tức `n ≥ (1,96 / (0,8·h))² × S(1−S)`. Cặp Trung bình vs Dễ (`h` = 0,025, `S` ≈ 0,96) ra khoảng 370, làm tròn 400; các cặp kề còn lại ra dưới 200. Với 200 ván cặp Trung bình vs Dễ, bot chỉnh đúng mục tiêu vẫn trượt khoảng 9% chỉ vì may rủi; với 400 ván còn khoảng 2%.
+Cách chọn `n` cho một cặp: gọi `h` là nửa độ rộng khoảng đạt (tính theo điểm, ví dụ 0,025) và `S` là điểm kỳ vọng; cần `1,96 × √(S(1−S)/n) ≤ 0,8 × h`, tức `n ≥ (1,96 / (0,8·h))² × S(1−S)`. Cặp Trung bình vs Dễ (`h` = 0,025, `S` ≈ 0,96) ra khoảng 370, làm tròn 400; các cặp kề còn lại ra dưới 200. Với 200 ván cặp Trung bình vs Dễ, điểm đo của bot chỉnh đúng mục tiêu (96%) vẫn rơi ra ngoài khoảng đạt khoảng 9% số lần chỉ vì may rủi; với 400 ván còn khoảng 2%.
+
+Các xác suất trên là cho **quy tắc quyết theo điểm đo** mà mục 3.4 dùng. Tài liệu cố ý không dùng quy tắc "cả khoảng tin cậy 95% phải nằm trọn trong khoảng đạt": với quy tắc đó, bot chỉnh đúng 96% đấu 400 ván chỉ đạt ngay khoảng 35% số lần, phần còn lại phải chạy thêm ván mãi. Với quy tắc của mục 3.4 (tối đa một đợt chạy thêm), tỉ lệ đạt của bot đó là khoảng 99,9% (mô phỏng 20.000 lần).
 
 ### 2.3. Mã tính tỉ lệ điểm và kiểm khoảng đạt
 
@@ -145,18 +147,31 @@ def match_stats(w, d, l):
     s, lo, hi = score_ci(w, d, l)
     return s, elo_from_score(s), elo_from_score(lo), elo_from_score(hi)
 
-def pair_verdict(w, d, l, lo, hi):
-    """'đạt' nếu khoảng tin cậy 95% của S nằm trọn trong [lo, hi];
-    'không đạt' nếu không giao với [lo, hi]; còn lại 'cần thêm ván' (mục 3.4)."""
-    _, ci_lo, ci_hi = score_ci(w, d, l)
-    if lo <= ci_lo and ci_hi <= hi:
+def pair_verdict(w, d, l, lo, hi, merged=False):
+    """Quy tắc cặp kề (mục 3.4), tối đa hai lần xem kết quả.
+    S trong [lo, hi] -> 'đạt'. Khoảng tin cậy 95% không giao [lo, hi] -> 'không đạt'.
+    Còn lại: lần đầu -> 'cần thêm ván' (chạy thêm đúng một đợt rồi gọi lại với merged=True);
+    đã gộp -> 'không đạt'."""
+    s, ci_lo, ci_hi = score_ci(w, d, l)
+    if lo <= s <= hi:
         return "đạt"
-    if ci_hi < lo or ci_lo > hi:
+    if ci_hi < lo or ci_lo > hi or merged:
+        return "không đạt"
+    return "cần thêm ván"
+
+def min_gap_verdict(w, d, l, floor, merged=False):
+    """Quy tắc cặp cách hai cấp (mục 3.4): điểm của cấp cao phải >= floor."""
+    s, _, ci_hi = score_ci(w, d, l)
+    if s >= floor:
+        return "đạt"
+    if ci_hi < floor or merged:
         return "không đạt"
     return "cần thêm ván"
 
 # Ví dụ: Cao thủ vs Giỏi, 200 ván: 120 thắng, 30 hòa, 50 thua; khoảng đạt 64% đến 88%
-print(pair_verdict(120, 30, 50, 0.64, 0.88))   # S = 0,675, khoảng tin cậy ≈ 0,62 đến 0,73 → "cần thêm ván"
+print(pair_verdict(120, 30, 50, 0.64, 0.88))   # S = 0,675 nằm trong khoảng → "đạt"
+# Ví dụ: 200 ván, 115 thắng, 20 hòa, 65 thua: S = 0,625 < 0,64 nhưng khoảng tin cậy ≈ 0,56 đến 0,69 còn chạm → "cần thêm ván"
+print(pair_verdict(115, 20, 65, 0.64, 0.88))
 ```
 
 ### 2.4. Vòng tròn giữa nhiều bot
@@ -225,14 +240,20 @@ Máy chủ thường nhanh hơn điện thoại vài lần (phải đo trên thi
 2. Hệ số `k = v_pc / v_phone`.
 3. Khi đo trên máy chủ, đặt thời gian bot Siêu việt = `botMillis ÷ k`.
 
-Hai quy tắc đi kèm để 7 bot giữ đúng cấp trên mọi điện thoại:
+Hai quy tắc đi kèm:
 
-* Bot **Siêu việt** dùng thời gian (`botMillis`), nên điện thoại chậm thì nó yếu đi. Đo ở thời gian đã chuẩn hóa theo `k`.
-* Các bot **Dễ đến Thách đấu** nên giới hạn theo **độ sâu, số nút hoặc số lượt mô phỏng**, không theo thời gian (mục 4.2). Nhờ vậy sức mạnh của chúng không đổi giữa các máy, và không bị lệch cấp khi điện thoại nhanh hay chậm.
+* Các bot **Dễ đến Thách đấu** nên giới hạn theo **độ sâu, số nút hoặc số lượt mô phỏng**, không theo thời gian (mục 4.2). Nhờ vậy sức mạnh của sáu bot này không đổi giữa các máy.
+* Bot **Siêu việt** dùng thời gian (`botMillis`), nên sức của nó đổi theo máy: điện thoại chậm thì yếu đi, điện thoại nhanh thì mạnh lên. Đo ở thời gian đã chuẩn hóa theo `k` của **máy tham chiếu** (chiếc điện thoại dùng để đo `v_phone` ở bước 1).
+
+Hệ quả: chỉ cặp Siêu việt vs Thách đấu đổi theo máy, năm cặp kề còn lại thì không. Khoảng đạt của cặp này chỉ được bảo đảm trên máy tham chiếu. Trên máy nhanh hơn, Siêu việt bỏ xa Thách đấu và có thể vượt trần 93%; điều này được chấp nhận vì Siêu việt là toàn lực (mục 1.1). Trên máy chậm hơn, khoảng cách co lại; giới hạn ở đoạn dưới.
 
 Mỗi lần nâng cấp chip hoặc đổi thuật toán nặng hơn, đo lại `k`.
 
-**Máy thấp nhất được hỗ trợ.** Từ Thách đấu trở xuống giới hạn theo nút nên không đổi giữa các máy, còn Siêu việt giới hạn theo thời gian nên số nút nó đạt được đổi theo máy. Trên máy chậm, khoảng cách tài nguyên giữa Siêu việt và Thách đấu có thể co lại nhiều so với tỉ lệ đã chỉnh ở mục 4.3, thậm chí đảo cấp. Đo `k` và nút/giây cả trên máy mạnh lẫn máy thấp nhất định hỗ trợ; nếu ở máy thấp nhất Siêu việt không còn đạt ít nhất khoảng gấp đôi số nút của Thách đấu thì nâng cấu hình máy tối thiểu hoặc giảm giới hạn nút của các cấp dưới. Giới hạn nút của mọi cấp dưới phải thỏa `node_limit ≤ 0,5 × botMillis × nps_min` (`nps_min`: nút/giây đo bền trên máy thấp nhất), và để giữ tỉ lệ ở mục 4.3 với Siêu việt thì `node_limit ≤ (nút Siêu việt đạt được trên máy đó) ÷ tỉ lệ`. **Không** thêm trần thời gian cho bot giới hạn nút, vì như vậy sức mạnh của nó lại phụ thuộc máy. Chạm trần thời gian của hệ thống là lỗi test: đếm tỉ lệ chạm trần, phải dưới 1%.
+**Máy thấp nhất được hỗ trợ.** Từ Thách đấu trở xuống giới hạn theo nút nên không đổi giữa các máy, còn Siêu việt giới hạn theo thời gian nên số nút nó đạt được đổi theo máy. Trên máy chậm, khoảng cách tài nguyên giữa Siêu việt và Thách đấu có thể co lại nhiều so với tỉ lệ đã chỉnh ở mục 4.3, thậm chí đảo cấp. Đo `k` và nút/giây cả trên máy mạnh lẫn máy thấp nhất định hỗ trợ. Ở máy thấp nhất, số nút Siêu việt đạt được phải gấp ít nhất `2^(200 / g)` lần nút của Thách đấu (≈ 10 lần với `g` = 60, ≈ 4 lần với `g` = 100): đó là tỉ lệ ứng với biên dưới 200 Elo (76%) của cặp Siêu việt vs Thách đấu. Gấp đôi số nút chỉ cho khoảng `g` Elo (60 đến 100), không đủ. Không đạt thì nâng cấu hình máy tối thiểu hoặc giảm giới hạn nút của các cấp dưới (cả thang dịch xuống theo).
+
+Giới hạn nút của mọi cấp dưới phải thỏa `node_limit ≤ 0,5 × (botMillis / 1000) × nps_min` (`botMillis` tính bằng mili giây; `nps_min`: nút mỗi giây đo bền trên máy thấp nhất), để bot nghĩ xong trong khoảng nửa `botMillis` ngay cả trên máy chậm nhất.
+
+**Không** thêm trần thời gian làm giới hạn sức mạnh cho bot giới hạn nút, vì như vậy sức mạnh của nó lại phụ thuộc máy. Ứng dụng vẫn có một **trần an toàn chống treo** bằng `botMillis` (cũng là mốc `p99` ở mục 11.1): nếu chạm trần này, bot trả nước tốt nhất đã có. Trần an toàn không phải công cụ giảm sức, nên chạm nó là lỗi test: đếm tỉ lệ chạm trần trên máy thấp nhất, phải dưới 1%.
 
 ### 3.3. Công cụ
 
@@ -250,9 +271,13 @@ Vì phần lớn trận là bot nội bộ đấu nhau, một khung riêng cho p
 Làm theo thứ tự, ghi kết quả vào báo cáo (mục 11.2):
 
 1. **Sáu cặp kề nhau:** Trung bình vs Dễ, Khá vs Trung bình, Giỏi vs Khá, Cao thủ vs Giỏi, Thách đấu vs Cao thủ, Siêu việt vs Thách đấu. Mỗi cặp **≥ 200 ván** (cặp ván đổi màu), riêng Trung bình vs Dễ **≥ 400 ván**. Đạt khi tỉ lệ điểm của bot cấp cao nằm trong khoảng đạt ở mục 1.3.
-2. **Năm cặp cách hai cấp** (kiểm tra khoảng cách tối thiểu): Khá vs Dễ, Giỏi vs Trung bình, Cao thủ vs Khá, Thách đấu vs Giỏi, Siêu việt vs Cao thủ. Mỗi cặp **≥ 100 ván**, điểm của bot cấp cao phải đạt ngưỡng tối thiểu ở bảng mục 1.3 (≥ 97%, ≥ 94%, ≥ 88%, ≥ 70%, ≥ 80%). Ngưỡng này luôn đạt nếu 6 cặp kề đều đạt, nên bước này bắt lỗi cấu hình và đảo cấp.
+2. **Năm cặp cách hai cấp** (kiểm tra khoảng cách tối thiểu): Khá vs Dễ, Giỏi vs Trung bình, Cao thủ vs Khá, Thách đấu vs Giỏi, Siêu việt vs Cao thủ. Mỗi cặp **≥ 100 ván**, điểm của bot cấp cao phải đạt ngưỡng tối thiểu ở bảng mục 1.3 (≥ 97%, ≥ 94%, ≥ 88%, ≥ 70%, ≥ 80%). Nếu Elo cộng dồn được thì ngưỡng này đạt khi 6 cặp kề đạt; bước này bắt bất bắc cầu, đảo cấp và lỗi cấu hình (mục 1.3). Quyết định bằng `min_gap_verdict` (mục 2.3): điểm dưới ngưỡng nhưng cận trên khoảng tin cậy còn chạm ngưỡng thì chạy thêm 100 ván rồi quyết theo điểm gộp. Bước chạy thêm này cần thiết vì ngưỡng nằm gần trường hợp xấu nhất; ví dụ Khá vs Dễ ở mức xấu nhất 98,3% vẫn có khoảng 15% khả năng ra dưới 97% sau 100 ván chỉ vì may rủi.
    * **Ba cặp smoke 20 ván** bắt lỗi tráo dòng cấu hình: Siêu việt vs Dễ, Siêu việt vs Khá, Thách đấu vs Dễ. Bot cấp cao phải đạt điểm ≥ 90%.
-3. **Quyết định theo khoảng tin cậy 95% của điểm** (`pair_verdict`, mục 2.3): nằm trọn trong khoảng đạt → đạt; không giao khoảng đạt → không đạt; còn lại → chạy thêm 200 ván rồi gộp. Ván chạy thêm dùng thế mở đầu và seed **chưa dùng** (ví dụ ván 201 đến 400 dùng thế 101 đến 200 và seed 201 đến 400); chạy lại cùng thế và seed chỉ cho ra ván trùng.
+3. **Quyết định cặp kề theo điểm đo, tối đa hai lần xem** (`pair_verdict`, mục 2.3):
+   * Điểm `S` nằm trong khoảng đạt → **đạt**.
+   * Khoảng tin cậy 95% không giao khoảng đạt → **không đạt** (quay lại chỉnh, mục 4.3).
+   * Còn lại (điểm ngoài khoảng nhưng khoảng tin cậy còn chạm) → chạy thêm **đúng một đợt** bằng số ván ban đầu, gộp, rồi quyết theo điểm gộp: trong khoảng → đạt, ngoài → không đạt. Không chạy đợt thứ ba: xem kết quả nhiều lần rồi dừng khi "vừa lọt khoảng" làm tăng tỉ lệ đạt nhầm, và bot nằm sát biên có thể chạy mãi không ra kết luận.
+   * Ván chạy thêm dùng thế mở đầu và seed **chưa dùng** (ví dụ ván 201 đến 400 dùng thế 101 đến 200 và seed 201 đến 400); chạy lại cùng thế và seed chỉ cho ra ván trùng. Vì có tối đa một đợt thêm, bộ thế mở đầu cần đủ cho gấp đôi số ván ban đầu.
 4. **Bảng Elo tổng hợp:** đưa kết quả 11 cặp ở bước 1 và 2 vào Ordo hoặc BayesElo (mục 2.4) để báo cáo; chỉ chạy thêm các cặp còn lại khi cần bảng chắc hơn.
 5. **Chất lượng nước đi từng cấp:** đo tự động mức hao hụt điểm trung bình (ACPL) hoặc tỉ lệ nước sai nặng của mỗi cấp trên một bộ thế cố định; chỉ số này phải **đơn điệu theo cấp**. Chạy bước này trước khi tốn ván đấu để bắt lỗi thang sớm. Sau đó vẫn xem tay vài ván mỗi cấp để chắc bot không đi nước vô lý (nhất là Dễ và Trung bình).
 
@@ -343,7 +368,7 @@ Làm lần lượt: Thách đấu (so với Siêu việt), Cao thủ (so với T
    * **Dưới biên thấp:** cấp dưới quá mạnh. Giảm tài nguyên (ví dụ nút ×0,6, hoặc bớt 1 độ sâu) hoặc tăng nhiễu.
    * **Trên biên cao:** cấp dưới quá yếu. Tăng tài nguyên (nút ×1,6, hoặc thêm 1 độ sâu) hoặc giảm nhiễu.
    * **Trong khoảng:** chuyển sang bước 4.
-4. **Xác nhận 200 ván** (400 ván cho cặp Trung bình vs Dễ) và ghi cấu hình cuối cùng vào hồ sơ game (mục 12.2). Sau đó **không đổi** nữa, trừ khi Siêu việt đổi.
+4. **Xác nhận 200 ván** (400 ván cho cặp Trung bình vs Dễ), kết luận theo quy tắc mục 3.4 bước 3, và ghi cấu hình cuối cùng vào hồ sơ game (mục 12.2). Sau đó **không đổi** nữa, trừ khi Siêu việt đổi.
 5. Làm cấp kế tiếp phía dưới.
 
 Mẹo để tiết kiệm thời gian:
@@ -551,21 +576,24 @@ Chỉ số cần theo dõi: số lượt mô phỏng/giây và RAM đỉnh trên
 
 ### 8.3. Cấu hình 7 bot (khởi điểm để thử, phải đo lại)
 
-*Bảng dưới là cho MCTS tự làm (dự phòng). Khi dùng KataGo làm engine nền, xem mục 8.3a.*
+*Bảng dưới là cho MCTS tự làm, chỉ dùng để thử nghiệm và làm mốc so sánh trong lúc chưa có engine nền. Theo quyết định ở đầu mục này (MCTS thuần không đủ mạnh ở 19×19, không phát hành thang nén), cấu hình này **không được phát hành** trừ khi nó đạt đủ mục 11.1. Cấu hình dự kiến phát hành là mục 8.3a (KataGo).*
 
-Cờ vây giảm sức bằng số lượt mô phỏng và độ ngẫu nhiên khi chọn nước đi. Số lượt dưới đây chỉ là điểm bắt đầu cho bàn 19×19:
+Cờ vây giảm sức bằng số lượt mô phỏng và độ ngẫu nhiên khi chọn nước đi. Các cấp trên tính **từ Siêu việt xuống** theo công thức mục 4.3 (`g ≈ 100`); các cấp dưới là điểm bắt đầu cho bàn 19×19:
 
 | Cấp | Số lượt mô phỏng | Nhiễu |
 |---|---|---|
 | Dễ | Rất thấp (1 đến 10) | Cao |
 | Trung bình | Thấp (~10 đến 50) | Vừa |
 | Khá | ~50 đến 200 | Thấp |
-| Giỏi | ~200 đến 1000 | Rất thấp |
-| Cao thủ | ≈ 1/4 lượt của Thách đấu (`g ≈ 100`, mục 4.3) | Không |
-| Thách đấu | ≈ 1/8 lượt của Siêu việt (`g ≈ 100`, mục 4.3) | Không |
+| Giỏi | ≈ 1/4 lượt của Cao thủ (cách 200 Elo) | Rất thấp |
+| Cao thủ | ≈ 1/4 lượt của Thách đấu (cách 200 Elo) | Không |
+| Thách đấu | ≈ 1/8 lượt của Siêu việt (cách 300 Elo) | Không |
 | Siêu việt | Toàn lực, thời gian `botMillis` (mạng chính sách/giá trị: theo quyết định ở đầu mục này) | Không |
 
-Kiểm tra nhanh: số lượt phải tăng ít nhất ×2 giữa hai cấp kề. Nếu Cao thủ tính ra không lớn hơn mức trên của Giỏi (~1000 lượt) thì Siêu việt chưa đủ mạnh (xem ý thứ ba ở đầu mục này).
+Kiểm tra nhanh:
+
+* Giỏi = Siêu việt ÷ 128. Nếu con số này không lớn hơn Khá ít nhất 16 lần (khoảng cách 400 Elo ứng với `2^(400/100)`), thì phần thiếu phải bù bằng nhiễu ở Khá; nếu thiếu nhiều, Siêu việt chưa đủ mạnh (ý thứ ba ở đầu mục này).
+* Ba cấp dưới ở bảng chỉ tăng khoảng ×4 đến ×5 lượt mỗi bậc, tức khoảng 200 đến 230 Elo, thấp hơn nhiều so với khoảng cách mục tiêu 550 / 350 Elo (Trung bình vs Dễ, Khá vs Trung bình). Nếu chỉ dùng lượt thì cần khoảng ×45 và ×11; vì vậy Dễ và Trung bình được làm yếu chủ yếu bằng **nhiễu**, trong giới hạn "không vô lý" (mục 4.2), và con số lượt chỉ chốt sau vòng chỉnh mục 4.3.
 
 ### 8.3a. Cấu hình khi dùng KataGo làm engine nền (giả thuyết khởi điểm, chưa đo)
 
@@ -597,7 +625,7 @@ Quoridor **không có engine chuẩn được công nhận rộng rãi**, nên 7
 
 | Cổng | Cách kiểm | Mốc |
 |---|---|---|
-| Luật | Bàn 9×9, mỗi bên 10 tường: thế đầu có **131 nước hợp lệ** (3 nước quân + 128 vị trí tường) · không được đặt tường chặn kín mọi đường (kiểm bằng BFS) · luật nhảy qua quân đối phương | Khớp tuyệt đối |
+| Luật | Bàn 9×9. Chế độ 2 người, mỗi bên 10 tường: thế đầu có **131 nước hợp lệ** (3 nước quân + 128 vị trí tường). Chế độ 4 người: mỗi bên 5 tường, kiểm thứ tự lượt và đích của từng bên · không được đặt tường chặn kín mọi đường (kiểm bằng BFS) · luật nhảy qua quân đối phương | Khớp tuyệt đối |
 | Chiến thuật | Thế "bẫy" mà bên kia nếu đặt tường sai sẽ bị chặn kín; thế chạy đua với độ dài đường đi chênh nhau 1 | Siêu việt chọn đúng nước |
 | Ổn định | 1000 ván tự đấu (trộn các cấp) | 0 treo, 0 quá giờ |
 | Lợi thế đi trước | Cặp ván đổi bên | Mục 2.5 |
@@ -608,15 +636,17 @@ Hàm đánh giá khởi điểm: hiệu số độ dài đường ngắn nhất 
 
 ### 9.3. Cấu hình 7 bot (khởi điểm để thử, phải đo lại)
 
-| Cấp | Alpha-beta | Hoặc MCTS | Nhiễu |
+| Cấp | Alpha-beta | Hoặc MCTS (`g ≈ 100`) | Nhiễu |
 |---|---|---|---|
 | Dễ | Độ sâu 1 | ~50 lượt | Cao |
 | Trung bình | Độ sâu 2 | ~200 lượt | Vừa |
 | Khá | Độ sâu 3 | ~1000 lượt | Thấp |
-| Giỏi | Độ sâu 4 | ~3000 lượt | Rất thấp |
-| Cao thủ | Theo mục 4.3: cách Thách đấu 200 Elo | Theo mục 4.3: cách Thách đấu 200 Elo | Không |
-| Thách đấu | Theo mục 4.3: cách Siêu việt 300 Elo | Theo mục 4.3: cách Siêu việt 300 Elo | Không |
+| Giỏi | Độ sâu 4 | ≈ 1/4 lượt của Cao thủ (cách 200 Elo) | Rất thấp |
+| Cao thủ | Theo mục 4.3: cách Thách đấu 200 Elo | ≈ 1/4 lượt của Thách đấu | Không |
+| Thách đấu | Theo mục 4.3: cách Siêu việt 300 Elo | ≈ 1/8 lượt của Siêu việt | Không |
 | Siêu việt | Toàn lực, thời gian `botMillis` | Toàn lực | Không |
+
+Lưu ý cho cột MCTS: Dễ, Trung bình, Khá chỉ cách nhau ×4 đến ×5 lượt, tức khoảng 200 đến 230 Elo mỗi bậc, trong khi khoảng cách mục tiêu là 550 và 350 Elo; Khá lên Giỏi cần thêm 400 Elo, tức khoảng ×16 lượt. Chỉ dùng lượt thì phải ×45, ×11, ×16, không khả thi trên điện thoại. Vì vậy các cấp thấp phải bù chủ yếu bằng **nhiễu** (mục 4.2), và mọi con số chỉ chốt sau vòng chỉnh mục 4.3. Cột alpha-beta cũng vậy: mỗi bậc độ sâu chưa chắc cho đủ 550 / 350 / 400 Elo, phải đo.
 
 ---
 
@@ -652,12 +682,13 @@ Một game được coi là **xong** khi mọi mục dưới đây đều đạt
 - [ ] Mọi cổng chiến thuật của game (mục 5 đến 10) qua với bot Siêu việt. Mốc chốt từ lần đo đầu chỉ khóa hồi quy, nên phải kèm **sàn tuyệt đối** do bạn đặt trước trong hồ sơ game (mốc đầu tệ mà đem chốt thì khóa luôn cái tệ).
 - [ ] Bộ thế "không được sai" (thế có nước thắng ngay hoặc nước cứu thua trong một nước; **≥ 30 thế mỗi game**, mỗi thế có đáp án đúng không mơ hồ; cờ vây theo phạm vi ở mục 8.2) qua **100% với cả 7 cấp**.
 - [ ] 1000 ván tự đấu trộn các cấp: 0 treo, 0 quá giờ, 0 nước sai luật.
+- [ ] Game có chế độ 3 đến 4 người: hai kiểm tra ổn định và thứ tự cấp ở mục 12.1 đạt cho mỗi số người hỗ trợ.
 - [ ] Mọi ván đều kết thúc: luật lặp thế hoặc số nước tối đa kèm kết quả khi chạm trần (hòa hoặc theo điểm) được ghi trong hồ sơ game; báo cáo tỉ lệ ván chạm trần và ảnh hưởng lên điểm.
 - [ ] Tỉ lệ chạm trần thời gian của các cấp giới hạn theo nút dưới 1% trên máy thấp nhất hỗ trợ (mục 3.2).
 - [ ] Hệ số chậm điện thoại `k` đã đo (mục 3.2); Siêu việt được đo ở thời gian đã chuẩn hóa.
 - [ ] **7 cấu hình đã chốt**, ghi trong hồ sơ game và trong một bảng cấu hình duy nhất trong mã (mục 4.4).
-- [ ] **6 cặp kề nhau** (mục 1.3): mỗi cặp ≥ 200 ván (Trung bình vs Dễ: ≥ 400), kết luận `đạt` theo khoảng tin cậy (mục 3.4).
-- [ ] **5 cặp cách hai cấp** (mục 3.4): mỗi cặp ≥ 100 ván, điểm của cấp cao đạt ngưỡng tối thiểu ở mục 1.3; 3 cặp smoke 20 ván đạt.
+- [ ] **6 cặp kề nhau** (mục 1.3): mỗi cặp ≥ 200 ván (Trung bình vs Dễ: ≥ 400), kết luận `đạt` theo quy tắc mục 3.4 (`pair_verdict`).
+- [ ] **5 cặp cách hai cấp** (mục 3.4): mỗi cặp ≥ 100 ván, kết luận `đạt` theo `min_gap_verdict`; 3 cặp smoke 20 ván đạt.
 - [ ] Đã xem tay vài ván mỗi cấp: không có nước vô lý (nhất là Dễ và Trung bình).
 - [ ] Game có lợi thế đi trước: tỉ lệ điểm khi đi trước và đi sau được ghi riêng cho từng cặp.
 - [ ] Trên điện thoại thật: Siêu việt có thời gian phản hồi ở phân vị 99 (`p99`) ≤ 1,10 × `botMillis`; các cấp còn lại có `p99` ≤ `botMillis`; RAM đỉnh không vượt giới hạn của dự án; sau 20 ván liên tiếp số nút/giây không giảm quá 20% (nóng máy).
@@ -711,10 +742,13 @@ Trước khi viết bot cho một game mới, điền **hồ sơ game** (mục 1
 
 ### 12.1. Game nào áp dụng được
 
-Tài liệu áp dụng cho game **hai người chơi, thông tin đầy đủ**, vì khi đó 7 bot đấu với nhau được và Elo có ý nghĩa. Các trường hợp khác:
+Tài liệu áp dụng cho game **thông tin đầy đủ có chế độ hai người chơi**, vì khi đó 7 bot đấu với nhau được và Elo có ý nghĩa. Các trường hợp khác:
 
 * **Game có may rủi hoặc thông tin ẩn:** vẫn đấu bot với bot được, nhưng phương sai lớn, nên **nhân 3 đến 5 lần số ván** ở mọi bước đo.
 * **Game đã giải hoặc gần giải** (ví dụ Connect 4): bot Siêu việt chơi hoàn hảo. Các cấp dưới vẫn xếp theo khoảng đạt ở mục 1.3 như bình thường, chỉ cần bảo đảm các cấp thấp được giảm sức bằng nhiễu có kiểm soát, vì giới hạn độ sâu một mình không đủ làm yếu bot ở game nhỏ.
+* **Chế độ 3 đến 4 người** (Quoridor 4 người, Wall Go 3 đến 4 người): Elo và khoảng đạt ở mục 1.3 là cho hai người, không áp dụng trực tiếp. Bảy cấp được chỉnh và nghiệm thu ở **chế độ 2 người**; chế độ nhiều người dùng lại đúng 7 cấu hình đó (chỉ khác `botMillis` nếu hồ sơ game ghi), không chỉnh riêng. Chế độ nhiều người chỉ cần thêm hai kiểm tra:
+  * **Ổn định:** 1000 ván tự đấu ở mỗi số người hỗ trợ, trộn các cấp: 0 treo, 0 quá giờ, 0 nước sai luật.
+  * **Thứ tự cấp:** mỗi số người, ≥ 100 ván gồm một bot cấp cao và các bot còn lại cùng một cấp thấp hơn, đổi vị trí ngồi luân phiên. Cấp cao phải thắng nhiều hơn rõ rệt tỉ lệ ngẫu nhiên `1/n` (`n` là số người), kiểm cho các cặp kề. Đây là kiểm tra thứ tự, không phải đo khoảng cách.
 * **Game một người chơi** (đố, ghép hình, Sudoku...) **không thuộc phạm vi tài liệu này**: không có đối thủ nên không cần bot 7 cấp.
 
 ### 12.2. Mẫu hồ sơ game
