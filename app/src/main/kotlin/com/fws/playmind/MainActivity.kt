@@ -17,10 +17,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Chỉ có giao diện sáng: thanh trạng thái/điều hướng trong suốt, biểu tượng hệ thống màu tối
+        // Chỉ có giao diện tối: thanh trạng thái/điều hướng trong suốt, biểu tượng hệ thống màu sáng
         enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT),
-            navigationBarStyle = SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT),
+            statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
         )
         val app = application as PlayMindApp
         update = UpdateManager(this)
@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() { super.onResume(); update.onResume() }
+    override fun onStart() { super.onStart(); (application as PlayMindApp).ads.showAppOpenIfReady(this) }
+    override fun onResume() { super.onResume(); update.onResume(); (application as PlayMindApp).billing.refresh() }
     override fun onDestroy() { update.stop(); super.onDestroy() }
 }

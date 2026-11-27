@@ -48,9 +48,9 @@ class ScreenshotActivity : AppCompatActivity() {
                     when (scene) {
                         "lobby" -> LobbyScreen(app, vm, Catalog.byId("chess"), {}, {}, {})
                         "chess", "xiangqi", "caro" -> GameScreen(app, vm, vm.info!!) {}
-                        "settings" -> SettingsScreen(app, {}, {})
+                        "settings" -> SettingsScreen(app, {}, {}, {})
                         "guide" -> GuideScreen({}, null)
-                        else -> HomeScreen(app, false, {}, {}, {}, {})
+                        else -> HomeScreen(app, false, {}, {}, {}, {}, {})
                     }
                 }
             }

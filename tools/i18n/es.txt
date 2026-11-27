@@ -1,5 +1,3 @@
-about|Acerca de
-about_text|Play Mind es una colección de juegos de tablero y de ingenio. Los anuncios los muestra Google AdMob. Los diamantes son virtuales y no tienen valor en dinero.
 accept_rematch|Aceptar revancha
 ad_unavailable|No hay ningún anuncio disponible ahora. Inténtalo más tarde.
 back|Atrás
@@ -31,14 +29,13 @@ game_xiangqi|Xiangqi (ajedrez chino)
 game_xiangqi_desc|Generales, cañones y un río que cruzar.
 guide|Guía
 guide_app_title|Cómo usar Play Mind
-guide_app|• Inicio: elige una tarjeta de tema o cualquier juego de debajo. Pulsa Ver más para listar todos los juegos de un tema.\n• Diamantes: marca asistencia una vez al día para +1 diamante. Cada juego te da 1 partida gratis al día; después cada partida cuesta 1 diamante. Ganar da +1 diamante.\n• Rachas: 5 victorias seguidas en un juego dan +2 diamantes y 10 seguidas dan +3.\n• Bonus de fidelidad: con más de 10 diamantes y una racha de asistencia superior a 7 días, la asistencia diaria da +2.\n• Juega contra el ordenador (siempre mueves primero), con un amigo cercano (sin internet) o en línea intercambiando un código de sala o un QR.\n• Salas: si nadie entra en tu sala, se añade un rival automáticamente. Los rivales de las salas pueden estar controlados por el ordenador.\n• Cambia el idioma y el apodo en Ajustes.
+guide_app|• Inicio: elige la tarjeta destacada (cambia cada 2 minutos) o cualquier juego de las filas de abajo.\n• Diamantes: haz check-in una vez al día para +1 diamante. Cada juego te da 2 partidas gratis al día (3 con el plan mensual, ilimitadas con el anual); después cada partida cuesta 1 diamante. Ganar da +1 diamante.\n• Rachas: 5 victorias seguidas en un juego dan +2 diamantes, 10 seguidas dan +3.\n• Bonus de fidelidad: con más de 10 diamantes y una racha de check-in superior a 7 días, tu check-in diario da +2.\n• Modos: juega contra la máquina (empiezas tú), con un amigo cerca sin internet, o en línea intercambiando un código de sala o QR. Algunos juegos admiten 3-4 jugadores o un solo dispositivo.\n• Salas: si nadie entra en tu sala, se añade un rival automáticamente. Los rivales de las salas pueden ser controlados por la máquina.\n• Tienda: quita anuncios, consigue más partidas gratis o compra diamantes.\n• Cambia el idioma y el apodo en Ajustes.
 guide_chess|Objetivo: dar jaque mate al rey rival.\n• Los peones avanzan y capturan en diagonal. Los caballos saltan en L. Los alfiles se deslizan en diagonal, las torres en línea recta, la dama de ambas formas y el rey avanza una casilla.\n• Jugadas especiales: enroque, captura al paso y coronación en la última fila.\n• Toca una pieza y luego una casilla resaltada. Hay tablas por rey ahogado, repetición, la regla de los 50 movimientos o material insuficiente.
 guide_xiangqi|Objetivo: dar jaque mate al general rival. Empiezan las rojas.\n• El general y los consejeros permanecen en el palacio. Los dos generales nunca pueden quedar frente a frente en una columna libre.\n• Los elefantes se mueven dos puntos en diagonal, no cruzan el río y pueden ser bloqueados en el punto medio.\n• Los caballos se mueven en L pero los bloquea una pieza adyacente. Los carros avanzan en línea recta.\n• Los cañones avanzan en línea recta y capturan saltando exactamente una pieza. Los soldados avanzan y, tras cruzar el río, también van de lado.\n• Quien no tiene movimientos legales pierde. En esta app, repetir una posición tres veces es tablas.
 guide_caro|Objetivo: alinear cinco o más marcas tuyas en horizontal, vertical o diagonal. Empieza X (oscura).\n• El tablero no tiene bordes: arrastra con un dedo para moverte y pellizca para hacer zoom.\n• Si ambos extremos de tu línea están bloqueados por marcas rivales, no cuenta.\n• Toca una casilla vacía para colocar tu marca. ¡Bloquea los tres y cuatro abiertos de tu rival!
 how_to_play|Cómo jugar
 how_to_use|Guía de uso
 internet|Por internet
-internet_note|El juego por internet usa un servidor STUN gratuito. Algunas redes bloquean las conexiones directas. Si falla, prueba el juego cercano o juega contra el ordenador.
 invite|Invitar a un amigo
 join_net_hint|Pide al anfitrión su código de invitación y pégalo o escanéalo.
 join_room|Unirse a sala
@@ -92,8 +89,6 @@ rewards_paused|Recompensas en pausa: este dispositivo no superó una comprobaci�
 room|Sala
 scan_qr|Escanear QR
 searching_rooms|Buscando salas cercanas…
-see_less|Ver menos
-see_more|Ver más
 settings|Ajustes
 share|Compartir
 show_reply|Mostrar mi código de respuesta
@@ -126,3 +121,95 @@ caro_recenter|Centrar
 caro_zoom_in|Acercar
 caro_zoom_out|Alejar
 caro_hint|Arrastra para mover · pellizca para zoom
+best_value|Mejor valor
+bill_failed|No se pudo completar la compra. Inténtalo de nuevo más tarde.
+bill_ok_gems|Se añadieron %d diamantes a tu cuenta.
+bill_ok_plan|Tu plan ya está activo. ¡Gracias por tu apoyo!
+bill_ok_title|Compra completada
+bill_pending|Tu pago está pendiente. Recibirás la recompensa en cuanto se confirme.
+board_size|Tamaño del tablero
+cost_one_gem|1 diamante
+free_left_n|Hoy te quedan %d partidas gratis
+free_n|%d gratis
+free_unlimited|Partidas gratis ilimitadas
+game_go|Go
+game_go_desc|El antiguo juego de territorio. Rodea más tablero que tu rival.
+game_quoridor|Quoridor
+game_quoridor_desc|Corre al lado opuesto y levanta muros para frenar a tus rivales.
+game_sudoku|Sudoku
+game_sudoku_desc|Rellena la cuadrícula: cada fila, columna y bloque lleva del 1 al 9.
+game_wallgo|Wall Go
+game_wallgo_desc|Mueve, construye muros y acota más territorio que tus rivales.
+gems_word|diamantes
+go_end_text|Ambos jugadores han pasado: la partida termina y se puntúa ahora.
+go_end_title|¿Terminar la partida?
+go_opp_passed|Tu rival ha pasado. Si tú también pasas, la partida termina.
+go_pass|Pasar
+go_place|Colocar piedra
+go_score|Negro %1$d – Blanco %2$d (+%3$s de komi)
+guide_go|Objetivo: controlar más tablero que tu rival. Las negras juegan primero.\n• Captura: un grupo de piedras sin puntos vacíos adyacentes (sin libertades) se retira.\n• Prohibido: no puedes jugar si tu grupo queda sin libertades (salvo que captures) ni repetir una posición anterior.\n• Pasar: cuando no quede nada útil, pasa. Dos pases seguidos terminan la partida.\n• Puntuación: por área: tus piedras más las zonas vacías que solo tú rodeas. Las blancas reciben 7,5 de komi. Las piedras muertas no se retiran solas: captúralas antes de pasar.\n• Toca una intersección para ver la piedra y pulsa Colocar piedra.
+guide_quoridor|Objetivo: ser el primero en llegar al lado opuesto del tablero.\n• Mover: avanza una casilla arriba, abajo, izquierda o derecha. Si hay un peón rival al lado, sáltalo, o muévete en diagonal si detrás hay un muro o el borde.\n• Muros: en vez de mover puedes colocar un muro de dos casillas. No pueden solaparse ni cruzarse, y nunca puedes cerrar todos los caminos a una meta.\n• Muros: 10 por jugador con 2 jugadores, 5 con 4 jugadores.\n• Construir: elige Muro, toca cerca del cruce donde va para verlo (verde = permitido) y pulsa Colocar muro.
+guide_sudoku|Objetivo: rellena todas las casillas para que cada fila, columna y bloque 3×3 contenga del 1 al 9 una sola vez.\n• Introducir: toca una casilla y luego un número. Los números erróneos salen en rojo y cuentan como fallo; tres fallos terminan la partida.\n• Notas: activa el lápiz para anotar números candidatos pequeños.\n• Pistas: rellenan una casilla por ti, hasta 3 por partida.\n• Deshacer y Borrar corrigen despistes. Cada puzle tiene una única solución.
+guide_wallgo|Objetivo: terminar con más territorio que tus rivales.\n• Preparación: por turnos, coloca tus piedras en casillas vacías (4 cada uno con 2 jugadores, 3 con 3 jugadores, 2 con 4 jugadores).\n• Tu turno: elige una de tus piedras y muévela 0, 1 o 2 casillas arriba, abajo, izquierda o derecha. No puede atravesar muros ni otras piedras.\n• Muro: tras mover, DEBES colocar un muro en un lado libre de la casilla donde te quedas.\n• Territorio: cuando cada zona cercada tenga piedras de un solo jugador, la partida termina. Puntúas las casillas de las zonas que solo contienen tus piedras.\n• Empates: gana la zona única más grande; si no, hay empate. Quien no pueda mover pierde el turno.
+leave_confirm_local|¿Salir de esta partida? Las partidas en un solo dispositivo no se registran.
+level|Dificultad
+level_easy|Fácil
+level_expert|Experto
+level_hard|Difícil
+level_medium|Medio
+local_no_reward|Las partidas en un solo dispositivo no dan diamantes ni gastan partidas.
+manage_sub|Gestionar suscripción
+n_players|%d jugadores
+online_two_only|Las salas en línea y cercanas admiten 2 jugadores. Elige 2 jugadores arriba, o juega contra la máquina o en un solo dispositivo.
+per_month|/ mes
+per_year|/ año
+perk_free3|3 partidas gratis por juego al día
+perk_no_ads|Sin anuncios
+perk_no_appopen|Sin anuncios al abrir la app
+perk_no_banner|Sin anuncios de banner
+perk_unlimited|Partidas ilimitadas, sin gastar diamantes
+plan_active|Activo
+plan_monthly|Plus (mensual)
+plan_yearly|Pro (anual)
+play_local|Jugar en un dispositivo
+play_local_desc|Juega por turnos en este teléfono. No se gastan ni se ganan diamantes.
+player_n|Jugador %d
+players|Jugadores
+qd_mode_move|Mover
+qd_mode_wall_h|Muro horiz.
+qd_mode_wall_v|Muro vert.
+qd_place_wall|Colocar muro
+reason_goal|Llegó a la línea de meta.
+reason_territory|El territorio decidió la partida.
+restore_purchases|Restaurar compras
+sd_erase|Borrar
+sd_generating|Preparando tu puzle…
+sd_hint|Pista
+sd_lost|Fin de la partida
+sd_lost_text|Tres fallos terminaron este puzle.
+sd_notes|Notas
+sd_undo|Deshacer
+sd_won|¡Resuelto!
+sd_won_text|Tiempo %1$s · %2$d fallos
+shop|Tienda
+shop_gems|Diamantes
+shop_plans|Planes
+shop_teaser|Quita anuncios y consigue más partidas gratis
+side_blue|Azul
+side_green|Verde
+side_yellow|Amarillo
+solo_play|Un jugador
+st_captured|Capturas %d
+st_cells|%d casillas
+st_walls|%d muros
+store_unavailable|No disponible
+subscribe|Suscribirse
+tag_players|%1$d–%2$d jugadores
+tag_solo|Solitario
+turn_of|Turno de %s
+vs_computers_note|Juegas contra %d máquinas.
+wg_hint_dest|Toca una casilla brillante para mover (toca tu ficha otra vez para quedarte).
+wg_hint_pick|Toca una de tus fichas.
+wg_hint_place|Coloca tu ficha (%1$d de %2$d).
+wg_hint_wall|Ahora toca el lado donde va el muro.
+winner_is|¡Gana %s!

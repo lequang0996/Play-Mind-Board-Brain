@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Không sao lưu dữ liệu ví/kim cương để tránh khôi phục bản cũ hoặc nhân bản sang máy khác -->
+<!-- Chỉ sao lưu một file nhỏ: số lượt chơi miễn phí đã dùng trong ngày (để cài lại app không được thêm lượt).
+     Ví kim cương, khóa Keystore và mọi thứ khác KHÔNG được sao lưu. -->
 <full-backup-content>
-    <exclude domain="file" path="." />
-    <exclude domain="sharedpref" path="." />
-    <exclude domain="database" path="." />
+    <include domain="sharedpref" path="pm_marks.xml" />
 </full-backup-content>

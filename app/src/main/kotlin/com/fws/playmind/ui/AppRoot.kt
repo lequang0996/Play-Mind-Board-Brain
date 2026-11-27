@@ -42,6 +42,9 @@ import com.fws.playmind.PlayMindApp
 import com.fws.playmind.R
 import com.fws.playmind.ads.UpdateManager
 import com.fws.playmind.catalog.Catalog
+import com.fws.playmind.catalog.GameKind
+import androidx.compose.runtime.collectAsState
+import androidx.compose.material3.CircularProgressIndicator
 import com.fws.playmind.match.Notice
 import com.fws.playmind.match.Phase
 import com.fws.playmind.match.SessionViewModel
@@ -52,6 +55,7 @@ sealed interface Screen {
     data object Room : Screen
     data object Play : Screen
     data object Settings : Screen
+    data object Shop : Screen
     data class Guide(val gameId: String?) : Screen
 }
 
@@ -80,17 +84,21 @@ fun AppRoot(app: PlayMindApp, vm: SessionViewModel, update: UpdateManager) {
         if (top is Screen.Room) exitSession() else pop()
     }
 
+    val walletReady by app.wallet.ready.collectAsState()
     AppFrame {
-        when (val s = top) {
+        if (!walletReady) {
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator(color = pm.gold) }
+        } else when (val s = top) {
             Screen.Home -> HomeScreen(
                 app, update.downloaded, { update.complete() },
                 onOpenGame = { vm.open(it); push(Screen.Lobby(it.id)) },
-                onSettings = { push(Screen.Settings) }, onGuide = { push(Screen.Guide(null)) },
+                onSettings = { push(Screen.Settings) }, onGuide = { push(Screen.Guide(null)) }, onShop = { push(Screen.Shop) },
             )
             is Screen.Lobby -> LobbyScreen(app, vm, Catalog.byId(s.gameId), { pop() }, { push(Screen.Room) }, { push(Screen.Guide(s.gameId)) })
             Screen.Room -> RoomScreen(vm) { exitSession() }
-            Screen.Play -> vm.info?.let { GameScreen(app, vm, it) { exitSession() } }
-            Screen.Settings -> SettingsScreen(app, { pop() }, { push(Screen.Guide(null)) })
+            Screen.Play -> vm.info?.let { if (it.kind == GameKind.SOLO) SudokuScreen(app, vm, it) { exitSession() } else GameScreen(app, vm, it) { exitSession() } }
+            Screen.Settings -> SettingsScreen(app, { pop() }, { push(Screen.Guide(null)) }, { push(Screen.Shop) })
+            Screen.Shop -> ShopScreen(app) { pop() }
             is Screen.Guide -> GuideScreen({ pop() }, s.gameId)
         }
     }
@@ -120,15 +128,15 @@ fun AppRoot(app: PlayMindApp, vm: SessionViewModel, update: UpdateManager) {
                     vm.notice = Notice.NONE
                     app.ads.showRewarded(activity, { app.wallet.addDiamonds(1) }, { noEarn = true })
                 },
-                stringResource(R.string.close), { vm.notice = Notice.NONE },
+                stringResource(R.string.close), { vm.notice = Notice.NONE }, tone = DialogTone.GEM,
             )
-        } else SimpleDialog(stringResource(R.string.notice_title), stringResource(msg), stringResource(R.string.ok), { vm.notice = Notice.NONE })
+        } else SimpleDialog(stringResource(R.string.notice_title), stringResource(msg), stringResource(R.string.ok), { vm.notice = Notice.NONE }, tone = DialogTone.WARN)
     }
     if (noEarn) SimpleDialog(stringResource(R.string.notice_title), stringResource(R.string.ad_unavailable), stringResource(R.string.ok), { noEarn = false })
 }
 
 /**
- * Khung nền chung: nền ngà chuyển sắc nhẹ kèm hai vầng sáng vàng/xanh hoàng gia (cùng tông icon),
+ * Khung nền chung: nền mực xanh đen chuyển sắc rất nhẹ kèm hai vầng sáng mờ (vàng đồng ở góc trên, tím ở góc dưới),
  * giới hạn bề rộng 640dp cho máy tính bảng, tránh thanh hệ thống.
  */
 @Composable
@@ -138,9 +146,9 @@ fun AppFrame(content: @Composable () -> Unit) {
         Modifier.fillMaxSize()
             .background(Brush.verticalGradient(listOf(p.bg, p.bgDeep)))
             .drawBehind {
-                val r = size.maxDimension * .7f
-                drawCircle(Brush.radialGradient(0f to p.goldHi.copy(alpha = .38f), 1f to Color.Transparent, center = Offset(0f, 0f), radius = r), r, Offset(0f, 0f))
-                drawCircle(Brush.radialGradient(0f to p.royal.copy(alpha = .10f), 1f to Color.Transparent, center = Offset(size.width, size.height), radius = r), r, Offset(size.width, size.height))
+                val r = size.maxDimension * .75f
+                drawCircle(Brush.radialGradient(0f to p.goldBright.copy(alpha = .10f), 1f to Color.Transparent, center = Offset(0f, 0f), radius = r), r, Offset(0f, 0f))
+                drawCircle(Brush.radialGradient(0f to Color(0xFF6C5CFF).copy(alpha = .12f), 1f to Color.Transparent, center = Offset(size.width, size.height), radius = r), r, Offset(size.width, size.height))
             },
         contentAlignment = Alignment.TopCenter,
     ) {
@@ -152,16 +160,12 @@ fun AppFrame(content: @Composable () -> Unit) {
 private fun FirstRunLanguage(onPick: (String) -> Unit) {
     Dialog(onDismissRequest = {}) {
         Column(
-            Modifier.clip(RoundedCornerShape(28.dp)).background(pm.surface).border(1.dp, pm.goldBright.copy(alpha = .6f), RoundedCornerShape(28.dp)).padding(24.dp),
+            Modifier.clip(RoundedCornerShape(28.dp)).background(pm.surface).border(1.dp, pm.outline, RoundedCornerShape(28.dp)).padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Icon(Ic.Globe, null, Modifier.size(32.dp), tint = pm.gold)
-            Text("Choose your language", style = MaterialTheme.typography.titleLarge, color = pm.ink)
-            Text(
-                "选择语言 · Elige idioma · Escolha o idioma · Выберите язык · 言語を選択 · 언어 선택 · Chọn ngôn ngữ",
-                style = MaterialTheme.typography.labelMedium, color = pm.inkSoft,
-            )
-            Box(Modifier.heightIn(max = 420.dp).verticalScroll(rememberScrollState())) { LanguageList(Langs.current(), onPick) }
+            Icon(Ic.Globe, null, Modifier.size(30.dp), tint = pm.gold)
+            Text("Choose your language", style = MaterialTheme.typography.headlineSmall, color = pm.ink)
+            Box(Modifier.heightIn(max = 460.dp).verticalScroll(rememberScrollState())) { LanguageList(Langs.current(), onPick) }
         }
     }
 }

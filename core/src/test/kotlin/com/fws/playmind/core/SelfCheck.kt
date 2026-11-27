@@ -119,6 +119,110 @@ fun main() {
     while (n < 30 && ai.result == Outcome.ONGOING) { val m = ai.bestMove(60); if (!ai.play(m)) legalAll = false; n++ }
     expect("caro vo han: bot tu choi toi 30 nuoc deu hop le", legalAll && ai.plies >= 9)
 
+    // ── Sudoku ──
+    for (lv in SudokuLevel.values()) {
+        var unique = true; var valid = true
+        for (i in 0 until 6) {
+            val sg = SudokuGame.create(lv, kotlin.random.Random(100L * lv.ordinal + i))
+            if (SudokuSolver().count(sg.givens, 2) != 1) unique = false
+            for (k in 0 until 81) if (sg.givens[k] != 0 && sg.givens[k] != sg.solution[k]) valid = false
+            for (r in 0 until 9) if ((0 until 9).map { sg.solution[r * 9 + it] }.toSet().size != 9) valid = false
+        }
+        expect("sudoku $lv: de co dung 1 nghiem va loi giai hop le", unique && valid)
+    }
+    expect("sudoku EASY/MEDIUM giai duoc bang o duy nhat", listOf(SudokuLevel.EASY, SudokuLevel.MEDIUM).all { lv ->
+        (0 until 5).all { SudokuGenerator.solvableBySingles(SudokuGame.create(lv, kotlin.random.Random(900L + it)).givens) } })
+    val sd = SudokuGame.create(SudokuLevel.MEDIUM, kotlin.random.Random(3))
+    val se = (0 until 81).first { sd.givens[it] == 0 }
+    val sw = (1..9).first { it != sd.solution[se] }
+    expect("sudoku: dien sai tinh 1 loi va hien do", sd.place(se, sw) == SudokuPlace.MISTAKE && sd.mistakes == 1 && sd.isWrong(se))
+    expect("sudoku: hoan tac", sd.undo() && sd.cells[se] == 0)
+    expect("sudoku: dien dung va thang khi du 81 o", run { for (i in 0 until 81) if (sd.cells[i] != sd.solution[i]) sd.place(i, sd.solution[i]); sd.status == SudokuStatus.WON })
+    val sl = SudokuGame.create(SudokuLevel.EASY, kotlin.random.Random(4))
+    for (e in (0 until 81).filter { sl.givens[it] == 0 }.take(3)) sl.place(e, (1..9).first { it != sl.solution[e] })
+    expect("sudoku: du 3 loi la thua", sl.status == SudokuStatus.LOST)
+
+    // ── Wall Go ──
+    expect("wallgo: thu tu dat quan 2/3/4 nguoi", (2..4).all { p -> val o = WallGoGame.setupOrder(p); (0 until p).all { q -> o.count { it == q } == WallGoGame.stonesPerPlayer(p) } })
+    val wgw = WallGoGame(2)
+    expect("wallgo: tu choi nuoc di bat hop le", !wgw.play(49) && !wgw.play(-1) && !wgw.play(WallGoGame.mvMove(0, 1, 0)) && wgw.play(24) && !wgw.play(24))
+    var wgOk = true; var wgFinished = true; var wgReplay = true
+    val wgRnd = kotlin.random.Random(11)
+    for (players in 2..4) {
+        val wg = WallGoGame(players)
+        var guard = 0
+        while (wg.result == Outcome.ONGOING && guard++ < 500) {
+            val legal = wg.legalMoves()
+            if (legal.isEmpty()) { wgOk = false; break }
+            val mv = if (guard % 3 == 0) wg.bestMove(300) else legal[wgRnd.nextInt(legal.size)]
+            if (mv !in legal || !wg.play(mv)) { wgOk = false; break }
+        }
+        if (wg.result == Outcome.ONGOING) wgFinished = false
+        val rp = WallGoGame(players); for (m in wg.history) rp.play(m)
+        if (rp.result != wg.result || rp.winner != wg.winner || movesHash(rp.history) != movesHash(wg.history)) wgReplay = false
+    }
+    expect("wallgo: 2/3/4 nguoi luon con nuoc hop le va bot di hop le", wgOk)
+    expect("wallgo: van dau luon ket thuc theo luat lanh tho", wgFinished)
+    expect("wallgo: phat lai lich su cho ket qua giong het (dong bo online)", wgReplay)
+    var aiWins = 0
+    for (gi in 0 until 6) {
+        val wg = WallGoGame(2); val seat = gi % 2; var guard = 0
+        while (wg.result == Outcome.ONGOING && guard++ < 500) {
+            val lg = wg.legalMoves(); wg.play(if (wg.turn == seat) wg.bestMove(500) else lg[wgRnd.nextInt(lg.size)])
+        }
+        if (wg.winner == seat) aiWins++
+    }
+    expect("wallgo: bot thang >= 5/6 van truoc nguoi choi ngau nhien ($aiWins/6)", aiWins >= 5)
+
+    // ── Quoridor ──
+    val qd0 = QuoridorGame(2)
+    expect("quoridor: nuoc di quan ban dau", qd0.pawnMoves(0).toSet() == setOf(67, 75, 77))
+    expect("quoridor: tuong cat cheo/chong bi tu choi", qd0.play(QuoridorGame.mvWall(true, 0, 0)) && !qd0.play(QuoridorGame.mvWall(false, 0, 0)) && !qd0.play(QuoridorGame.mvWall(true, 0, 1)))
+    var qOk = true; var qFin = true; var qReplay = true
+    val qRnd = kotlin.random.Random(31)
+    for (players in intArrayOf(2, 4)) {
+        val q = QuoridorGame(players); var guard = 0
+        while (q.result == Outcome.ONGOING && guard++ < 400) {
+            val legal = q.legalMoves(); if (legal.isEmpty()) { qOk = false; break }
+            val mv = if (guard % 4 == 0) q.bestMove(200) else legal[qRnd.nextInt(legal.size)]
+            if (mv !in legal || !q.play(mv)) { qOk = false; break }
+        }
+        if (q.result == Outcome.ONGOING) qFin = false
+        val rp = QuoridorGame(players); for (m in q.history) rp.play(m)
+        if (rp.result != q.result || movesHash(rp.history) != movesHash(q.history)) qReplay = false
+    }
+    expect("quoridor: 2/4 nguoi luon con nuoc hop le, bot di hop le", qOk)
+    expect("quoridor: van dau luon ket thuc (thang hoac hoa do gioi han nuoc)", qFin)
+    expect("quoridor: phat lai lich su cho ket qua giong het", qReplay)
+    var qAi = 0
+    for (gi in 0 until 4) {
+        val q = QuoridorGame(2); val seat = gi % 2; var guard = 0
+        while (q.result == Outcome.ONGOING && guard++ < 300) { val lg = q.legalMoves(); q.play(if (q.turn == seat) q.bestMove(300) else lg[qRnd.nextInt(lg.size)]) }
+        if (q.winner == seat) qAi++
+    }
+    expect("quoridor: bot thang >= 3/4 van truoc nguoi choi ngau nhien ($qAi/4)", qAi >= 3)
+
+    // ── Co vay ──
+    fun gx(x: Int, y: Int) = y * 9 + x
+    expect("go: bat quan (quan trang o goc het khi den vay du hai phia)", run { val t = GoGame(9); t.play(gx(1, 0)); t.play(gx(0, 0)); t.play(gx(0, 1)); t.stoneAt(gx(0, 0)) == 0 })
+    val gs = GoGame(9); gs.play(gx(1, 0)); gs.play(gx(4, 4)); gs.play(gx(0, 1))
+    expect("go: cam tu sat", !gs.isLegal(gx(0, 0)))
+    val gScore = GoGame(9); gScore.play(gx(4, 4)); gScore.play(GoGame.PASS); gScore.play(GoGame.PASS)
+    expect("go: hai lan bo luot ket thuc van va tinh dien tich (81-0, den thang)", gScore.result == Outcome.WIN_FIRST && gScore.finalBlack == 81)
+    var goOk = true
+    val goRnd = kotlin.random.Random(41)
+    for (size in intArrayOf(9, 13)) {
+        val gg = GoGame(size); var guard = 0
+        while (gg.result == Outcome.ONGOING && guard++ < 160) {
+            val legal = gg.legalMoves().filter { it != GoGame.PASS }
+            val mv = if (legal.isEmpty() || guard > 120) GoGame.PASS else if (guard % 40 == 0) gg.bestMove(100) else legal[goRnd.nextInt(legal.size)]
+            if (!gg.play(mv)) { goOk = false; break }
+        }
+        val rp = GoGame(size); for (m in gg.history) if (!rp.play(m)) goOk = false
+        if (movesHash(rp.history) != movesHash(gg.history) || rp.result != gg.result) goOk = false
+    }
+    expect("go: 9x9 va 13x13 choi ngau nhien + bot hop le, phat lai giong het (co superko)", goOk)
+
     println(if (failures == 0) "ALL CHECKS PASSED" else "$failures CHECK(S) FAILED")
     if (failures > 0) exitProcess(1)
 }

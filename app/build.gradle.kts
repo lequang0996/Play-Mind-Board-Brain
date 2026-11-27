@@ -24,6 +24,7 @@ android {
         manifestPlaceholders["admobAppId"] = cfg("ADMOB_APP_ID", "ca-app-pub-3940256099942544~3347511713")
         buildConfigField("String", "ADMOB_BANNER", "\"${cfg("ADMOB_BANNER", "ca-app-pub-3940256099942544/9214589741")}\"")
         buildConfigField("String", "ADMOB_INTERSTITIAL", "\"${cfg("ADMOB_INTERSTITIAL", "ca-app-pub-3940256099942544/1033173712")}\"")
+        buildConfigField("String", "ADMOB_APP_OPEN", "\"${cfg("ADMOB_APP_OPEN", "ca-app-pub-3940256099942544/9257395921")}\"")
         buildConfigField("String", "ADMOB_REWARDED", "\"${cfg("ADMOB_REWARDED", "ca-app-pub-3940256099942544/5224354917")}\"")
         buildConfigField("String", "PRIVACY_URL", "\"${cfg("PRIVACY_URL", "https://lequang0996.github.io/fwsandroid/play-mind/")}\"")
         ndk { abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64") }
@@ -47,7 +48,8 @@ android {
             isShrinkResources = true      // loại bỏ tài nguyên không dùng
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfigs.findByName("release")?.let { signingConfig = it }
-			ndk { debugSymbolLevel = "SYMBOL_TABLE" }
+            // Đưa biểu tượng gỡ lỗi của thư viện native (WebRTC, AdMob...) vào chính file .aab để Play Console hết cảnh báo
+            ndk { debugSymbolLevel = "FULL" }
         }
         debug {
             applicationIdSuffix = ".debug"
@@ -95,4 +97,6 @@ dependencies {
     implementation(libs.stream.webrtc)
     implementation(libs.play.services.code.scanner)
     implementation(libs.zxing.core)
+    implementation(libs.play.billing)
+    implementation(libs.play.services.blockstore)
 }

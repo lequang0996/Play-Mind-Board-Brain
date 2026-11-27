@@ -200,3 +200,32 @@ Các chủ đề còn lại thường là game *một người chơi* hoặc đu
 | Bot chấp nhận hòa khi đang hơn | Điểm hòa = 0 nhưng đánh giá hơi âm; hoặc phát hiện lặp thế quá rộng |
 | Bot mạnh lên rồi tụt sau một thay đổi | Không có kiểm thử A/B; hãy luôn giữ bản cũ để đấu |
 | Kết quả không lặp lại | Bảng băm dùng chung giữa các ván; xóa hoặc đừng so sánh kết quả giữa các lần chạy |
+
+## 11. Game bổ sung: Wall Go, Quoridor, Cờ vây, Sudoku (số đo thực tế)
+
+Đo trên máy chủ 1 CPU (điện thoại chậm hơn 2–3 lần, nhưng cờ vây song song hóa tới 4 luồng). Mẫu nhỏ nên chỉ mang tính hướng dẫn.
+
+| Game | Đối thủ đo | Kết quả |
+|---|---|---|
+| Wall Go (2 người) | Bản tìm 1 nước (tham lam) | bản chiều sâu 2 thắng **20 – 4** (24 ván) |
+| Wall Go (2, 3, 4 người) | Người chơi ngẫu nhiên | bot thắng 6/6 ở mỗi chế độ |
+| Quoridor (2 người) | Người chơi ngẫu nhiên | bot thắng 8/8 |
+| Quoridor (4 người) | Người chơi ngẫu nhiên | bot thắng 8/8 |
+| Quoridor (2 người), chọn trọng số đánh giá | A/B: (tường 14, tempo 0) → (40, 30) | bản mới thắng 13 – 7 (20 ván) |
+| Quoridor (2 người), chọn trọng số đánh giá | A/B: (40, 30) → (75, 30) | bản mới thắng 13 – 5 (18 ván); **chốt (75, 30)** |
+| Cờ vây 9x9 | Người chơi ngẫu nhiên | thắng 4–6/6 tùy cấu hình (không đáng tin, xem bài học 1) |
+| Cờ vây 9x9 | **GNU Go 3.8 cấp 1** (bot 3 s/nước, chấm diện tích sau khi gỡ quân chết theo GNU Go) | **thua** các ván đã đo (chênh 21,5 và 68,5 điểm) |
+
+**Đọc kết quả cho đúng:**
+
+* **Wall Go và Quoridor** chưa có engine chuẩn để đối chiếu (không có bộ đo công khai như Stockfish), nên chỉ có số đo so với bản cũ của chính nó và so với người chơi ngẫu nhiên. Bot hai người là tìm kiếm alpha-beta (Quoridor: độ sâu tới 12 trong vài trăm ms, gọt tường theo đường đi ngắn nhất của đối thủ; Wall Go: độ sâu 2 với đánh giá "lãnh thổ chắc chắn + vùng tranh chấp tới trước"). **Bot 3-4 người chỉ tìm 1 nước** vì không có cách chọn đối thủ hợp lý cho tìm kiếm sâu; chưa phải mức cao thủ.
+* **Cờ vây: bot hiện YẾU, chưa phải cao thủ.** MCTS-RAVE ngẫu nhiên đạt khoảng 3.000 mô phỏng/giây trên 9x9 (1 luồng); với ngân sách 3–5 giây đó chỉ cỡ vài nghìn tới vài chục nghìn mô phỏng, thấp hơn GNU Go cấp 1. **Không được ghi "cao thủ" cho cờ vây trong mô tả cửa hàng.** Muốn lên mức cao thủ phải làm một trong các việc sau: (a) nhúng mạng nơ-ron (KataGo qua ONNX/TFLite, vài chục MB và cần xin phép giấy phép tương ứng), (b) viết lại playout với bảng mẫu 3x3 + học thông số bằng hàng chục nghìn ván tự đấu, (c) dùng máy chủ chạy engine.
+* **Sudoku** không có bot; mọi đề sinh ra đều được kiểm tra có đúng một nghiệm (bộ giải đếm tối đa 2 nghiệm); đề Dễ/Trung bình luôn giải được chỉ bằng "ô duy nhất", đề Rất khó thì không giải được chỉ bằng "ô duy nhất". Sinh đề tốn dưới 50 ms.
+
+### Bài học thêm từ các lần đo này
+
+1. **Đối thủ ngẫu nhiên không phải thước đo sức mạnh.** Bot cờ vây "thắng 6/6 người chơi ngẫu nhiên" nhưng thua GNU Go cấp 1 với chênh lệch lớn. Luôn đối chiếu với một engine chuẩn (cờ vây: `sudo apt-get install gnugo`, giao thức GTP; nhớ `/usr/games/gnugo`).
+2. **`final_score` của GNU Go chỉ là ước lượng khi ván chưa kết thúc** (bàn trống cũng báo "B+16.5"). Hãy lấy `final_status_list dead`, tự gỡ quân chết rồi tự tính điểm diện tích.
+3. **Đừng để hai tiến trình đo cùng chạy trên máy 1 CPU:** thời gian suy nghĩ của bot bị cắt một nửa và kết quả sai lệch.
+4. **Neo mẫu khi `pkill -f`** (xem bài học 8 ở trên): lần chạy này đã tự giết phiên làm việc một lần vì quên neo.
+5. **Quỹ đạo thời gian của tìm kiếm:** khi hết giờ giữa chừng khi đánh giá một nước ở gốc, phải *bỏ* giá trị dở dang (nó lạc quan hơn thực tế) và dùng kết quả của lần lặp trước.

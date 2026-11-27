@@ -60,4 +60,19 @@ object Ic {
     val Crown = build("crown", false, "M4 18.5L3 8.5l5 4 4-7 4 7 5-4-1 10zM4.5 21.5h15")
     val Calculator = build("calculator", false, "M6.5 3.5h11v17h-11zM9 7.5h6M9 12v.01M12 12v.01M15 12v.01M9 16v.01M12 16v.01M15 16v.01")
     val Cards = build("cards", false, "M3.5 8h10v12.5h-10zM9.5 4.5h10.5v12.5")
+
+    // Biểu tượng bổ sung cho giao diện mới
+    val Book = build("book", false, "M4 5.5A1.5 1.5 0 015.5 4H12v16H5.5A1.5 1.5 0 014 18.5zM20 5.5A1.5 1.5 0 0018.5 4H12v16h6.5a1.5 1.5 0 001.5-1.5z")
+    val Bag = build("bag", false, "M5 8h14l-1 12H6zM9 8V6.5a3 3 0 016 0V8")
+    val Undo = build("undo", false, "M9 14L4 9l5-5M4 9h10a6 6 0 010 12h-3")
+    val Eraser = build("eraser", false, "M7 20h12M5.5 15.5l9-9a2 2 0 013 0l1.5 1.5a2 2 0 010 3l-7 7H8.5z")
+    val Pencil = build("pencil", false, "M4 20l1-4L16.5 4.5a2 2 0 013 3L8 19zM14 7l3 3")
+    val Bulb = build("bulb", false, "M9 18h6M10 21h4M12 3a6 6 0 00-3.5 10.9c.7.6 1 1.3 1 2.1h5c0-.8.3-1.5 1-2.1A6 6 0 0012 3z")
+    val Users = build("users", false, circle(9f, 8f, 3f), "M3 20c.6-3.4 3-5 6-5s5.4 1.6 6 5M16 5.5a3 3 0 010 5.5M18 15.2c1.8.7 2.8 2.2 3 4.8")
+    val Trophy = build("trophy", false, "M8 4h8v5a4 4 0 01-8 0zM8 6H5v1.5A3 3 0 008 10.5M16 6h3v1.5a3 3 0 01-3 3M12 13v4M8.5 20h7M10 17h4")
+    val Warn = build("warn", false, "M12 3.5l9.5 16.5h-19zM12 10v4.5M12 17.2v.01")
+    val Skip = build("skip", false, "M6 5v14l9-7zM18 5v14")
+    val Brick = build("brick", false, "M3.5 7h17v10h-17zM3.5 12h17M9 7v5M15 12v5")
+    val Heart = build("heart", true, "M12 20s-7.5-4.6-7.5-10A4.2 4.2 0 0112 7.2 4.2 4.2 0 0119.5 10c0 5.4-7.5 10-7.5 10z")
+    val Crosshair = build("crosshair", false, "M12 4v16M4 12h16")
 }

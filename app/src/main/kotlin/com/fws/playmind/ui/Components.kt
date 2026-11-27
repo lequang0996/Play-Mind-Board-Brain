@@ -7,7 +7,9 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,16 +18,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -34,9 +33,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.fws.playmind.catalog.Topic
 import kotlin.math.min
 
@@ -50,7 +51,7 @@ fun Topic.icon(): ImageVector = when (this) {
 @Composable
 fun Topic.tint(): Color = color
 
-/** Gradient vàng kim: sáng - vàng - đậm, chạy chéo theo kích thước của chính thành phần dùng nó. */
+/** Gradient vàng đồng: sáng - vàng - đậm, chạy chéo theo kích thước của chính thành phần dùng nó. */
 @Composable
 fun goldBrush(): Brush = Brush.linearGradient(listOf(pm.goldHi, pm.goldBright, pm.goldLo))
 
@@ -72,83 +73,89 @@ fun GemMark(size: Dp = 18.dp) {
     }
 }
 
+/** Chip số dư kim cương: viên ngọc + con số, viền vàng mảnh. */
 @Composable
-fun DiamondChip(count: Int, modifier: Modifier = Modifier, onDark: Boolean = false) {
+fun DiamondChip(count: Int, modifier: Modifier = Modifier, onDark: Boolean = true) {
     val shape = RoundedCornerShape(50)
     Row(
-        modifier.clip(shape)
-            .background(if (onDark) Color.White.copy(alpha = .10f) else pm.goldSoft)
-            .border(1.dp, if (onDark) pm.goldBright.copy(alpha = .55f) else pm.goldBright.copy(alpha = .55f), shape)
-            .padding(horizontal = 14.dp, vertical = 8.dp),
+        modifier.clip(shape).background(pm.surfaceHigh).border(1.dp, pm.goldBright.copy(alpha = .5f), shape)
+            .padding(start = 10.dp, end = 14.dp, top = 7.dp, bottom = 7.dp),
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         GemMark(20.dp)
-        Text(count.toString(), style = MaterialTheme.typography.titleLarge, color = if (onDark) Color.White else pm.ink)
+        Text(count.toString(), style = MaterialTheme.typography.titleLarge, color = pm.ink)
     }
+}
+
+/** Viên thuốc nhỏ: nhãn ngắn (miễn phí, 1 kim cương, mức độ...). */
+@Composable
+fun Pill(text: String, modifier: Modifier = Modifier, color: Color = pm.goldBright, filled: Boolean = false) {
+    val shape = RoundedCornerShape(50)
+    Text(
+        text, modifier.clip(shape).background(if (filled) color.copy(alpha = .16f) else Color.Transparent)
+            .border(1.dp, color.copy(alpha = .55f), shape).padding(horizontal = 10.dp, vertical = 4.dp),
+        style = MaterialTheme.typography.labelMedium, color = color,
+    )
 }
 
 @Composable
 fun PmIconButton(icon: ImageVector, desc: String, onClick: () -> Unit, modifier: Modifier = Modifier, tint: Color = pm.ink) {
     Box(
-        modifier.size(44.dp).clip(CircleShape).clickable(role = Role.Button, onClickLabel = desc, onClick = onClick),
+        modifier.size(44.dp).clip(CircleShape).background(pm.surface).border(1.dp, pm.outline, CircleShape)
+            .clickable(role = Role.Button, onClickLabel = desc, onClick = onClick),
         contentAlignment = Alignment.Center,
-    ) { Icon(icon, desc, Modifier.size(22.dp), tint = tint) }
+    ) { Icon(icon, desc, Modifier.size(21.dp), tint = tint) }
 }
 
-/** Nút tròn nổi (dùng trên bàn cờ caro): nền ngà, viền vàng mảnh, đổ bóng nhẹ. */
+/** Nút tròn nổi (dùng trên bàn cờ): nền tối trong mờ, viền vàng mảnh. */
 @Composable
 fun FloatingRoundButton(icon: ImageVector, desc: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Box(
-        modifier.size(44.dp)
-            .shadow(6.dp, CircleShape, ambientColor = pm.goldLo.copy(alpha = .25f), spotColor = pm.goldLo.copy(alpha = .4f))
-            .clip(CircleShape).background(pm.surface).border(1.dp, pm.goldBright.copy(alpha = .6f), CircleShape)
+        modifier.size(46.dp).clip(CircleShape).background(pm.surface.copy(alpha = .92f)).border(1.dp, pm.goldBright.copy(alpha = .6f), CircleShape)
             .clickable(role = Role.Button, onClickLabel = desc, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) { Icon(icon, desc, Modifier.size(22.dp), tint = pm.ink) }
 }
 
-/** Nút chính: vàng kim có vệt sáng phía trên, viền sáng và bóng vàng. */
+/** Nút chính: vàng đồng, chữ tối, vệt sáng mảnh phía trên. */
 @Composable
 fun GoldButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier, icon: ImageVector? = null, enabled: Boolean = true) {
-    val shape = RoundedCornerShape(18.dp)
+    val shape = RoundedCornerShape(16.dp)
     val ink = if (enabled) pm.navy else pm.inkSoft
     Row(
-        modifier.height(54.dp)
-            .shadow(if (enabled) 8.dp else 0.dp, shape, ambientColor = pm.goldLo.copy(alpha = .35f), spotColor = pm.goldLo.copy(alpha = .55f))
-            .clip(shape)
-            .background(if (enabled) goldBrush() else Brush.linearGradient(listOf(pm.outline, pm.outline)))
-            .background(Brush.verticalGradient(listOf(Color.White.copy(alpha = if (enabled) .40f else 0f), Color.Transparent, Color.Black.copy(alpha = if (enabled) .06f else 0f))))
-            .border(1.dp, Color.White.copy(alpha = if (enabled) .6f else 0f), shape)
+        modifier.height(54.dp).clip(shape)
+            .background(if (enabled) goldBrush() else Brush.linearGradient(listOf(pm.surfaceHigh, pm.surfaceHigh)))
+            .background(Brush.verticalGradient(listOf(Color.White.copy(alpha = if (enabled) .30f else 0f), Color.Transparent)))
+            .border(1.dp, if (enabled) pm.goldHi.copy(alpha = .8f) else pm.outline, shape)
             .clickable(enabled = enabled, role = Role.Button, onClick = onClick).padding(horizontal = 22.dp),
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center,
     ) {
         if (icon != null) { Icon(icon, null, Modifier.size(20.dp), tint = ink); Spacer(Modifier.width(8.dp)) }
-        Text(text, style = MaterialTheme.typography.labelLarge.copy(fontSize = 15.sp, letterSpacing = 0.4.sp), color = ink)
+        Text(text, style = MaterialTheme.typography.labelLarge.copy(fontSize = 15.sp), color = ink, textAlign = TextAlign.Center)
     }
 }
 
-/** Nút phụ: nền trắng, viền vàng mảnh. */
+/** Nút phụ: nền nổi nhẹ, viền mảnh. */
 @Composable
 fun OutlineButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier, icon: ImageVector? = null, enabled: Boolean = true) {
     val shape = RoundedCornerShape(16.dp)
     Row(
-        modifier.height(50.dp).clip(shape).background(pm.surface)
-            .border(1.2.dp, if (enabled) pm.goldBright.copy(alpha = .75f) else pm.outline, shape)
+        modifier.height(50.dp).clip(shape).background(pm.surfaceHigh)
+            .border(1.dp, if (enabled) pm.goldBright.copy(alpha = .5f) else pm.outline, shape)
             .clickable(enabled = enabled, role = Role.Button, onClick = onClick).padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center,
     ) {
         if (icon != null) { Icon(icon, null, Modifier.size(18.dp), tint = if (enabled) pm.gold else pm.inkSoft); Spacer(Modifier.width(8.dp)) }
-        Text(text, style = MaterialTheme.typography.labelLarge, color = if (enabled) pm.ink else pm.inkSoft)
+        Text(text, style = MaterialTheme.typography.labelLarge, color = if (enabled) pm.ink else pm.inkSoft, textAlign = TextAlign.Center)
     }
 }
 
+/** Mặt thẻ chung: nền nổi nhẹ so với nền app, viền mảnh, bo 22dp. */
 @Composable
 fun SurfaceCard(modifier: Modifier = Modifier, onClick: (() -> Unit)? = null, content: @Composable () -> Unit) {
-    val shape = RoundedCornerShape(24.dp)
+    val shape = RoundedCornerShape(22.dp)
     Box(
-        modifier
-            .shadow(5.dp, shape, ambientColor = pm.goldLo.copy(alpha = .10f), spotColor = pm.goldLo.copy(alpha = .22f))
-            .clip(shape).background(pm.surface).border(BorderStroke(1.dp, pm.outline), shape)
+        modifier.clip(shape).background(pm.surface).border(BorderStroke(1.dp, pm.outline), shape)
             .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier).padding(16.dp),
     ) { content() }
 }
@@ -158,44 +165,90 @@ fun SectionTitle(text: String, modifier: Modifier = Modifier) {
     Text(text, modifier, style = MaterialTheme.typography.titleLarge, color = pm.ink)
 }
 
-/** Dòng chữ nhỏ viết hoa, giãn chữ, màu vàng - dùng làm tiêu đề phụ sang trọng. */
+/** Tiêu đề phụ nhỏ (chữ thường, màu vàng). */
 @Composable
 fun Eyebrow(text: String, modifier: Modifier = Modifier, color: Color = pm.gold) {
-    Text(text.uppercase(), modifier, style = MaterialTheme.typography.labelMedium.copy(letterSpacing = 2.2.sp, fontWeight = FontWeight.Bold, fontSize = 11.sp), color = color)
+    Text(text, modifier, style = MaterialTheme.typography.labelMedium, color = color)
 }
 
-/** Đường phân cách hoa văn: vạch vàng mờ dần hai phía và viên kim cương nhỏ ở giữa. */
+/** Đường phân cách mảnh. */
 @Composable
 fun OrnamentDivider(modifier: Modifier = Modifier) {
-    val gold = pm.goldBright
-    Canvas(modifier.fillMaxWidth().height(14.dp)) {
-        val cy = size.height / 2f; val cx = size.width / 2f; val gap = 16.dp.toPx()
-        val lw = 1.dp.toPx()
-        drawLine(Brush.horizontalGradient(listOf(Color.Transparent, gold.copy(alpha = .8f)), 0f, cx - gap), Offset(0f, cy), Offset(cx - gap, cy), lw)
-        drawLine(Brush.horizontalGradient(listOf(gold.copy(alpha = .8f), Color.Transparent), cx + gap, size.width), Offset(cx + gap, cy), Offset(size.width, cy), lw)
-        val d = 4.5.dp.toPx()
-        val p = Path().apply { moveTo(cx, cy - d); lineTo(cx + d, cy); lineTo(cx, cy + d); lineTo(cx - d, cy); close() }
-        drawPath(p, Brush.linearGradient(listOf(Color(0xFFF6DE8E), Color(0xFFB98A24)), Offset(cx - d, cy - d), Offset(cx + d, cy + d)))
-        drawCircle(gold, 1.6.dp.toPx(), Offset(cx - gap + 3.dp.toPx(), cy))
-        drawCircle(gold, 1.6.dp.toPx(), Offset(cx + gap - 3.dp.toPx(), cy))
+    Box(modifier.fillMaxWidth().height(1.dp).background(Brush.horizontalGradient(listOf(Color.Transparent, pm.outline, Color.Transparent))))
+}
+
+/** Hàng chọn tùy chọn dạng viên thuốc (số người chơi, cỡ bàn, mức độ). */
+@Composable
+fun OptionChips(labels: List<String>, selected: Int, onSelect: (Int) -> Unit, modifier: Modifier = Modifier) {
+    Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        labels.forEachIndexed { i, text ->
+            val on = i == selected
+            val shape = RoundedCornerShape(14.dp)
+            Box(
+                Modifier.weight(1f).height(46.dp).clip(shape)
+                    .background(if (on) pm.goldSoft else pm.surfaceHigh)
+                    .border(1.2.dp, if (on) pm.goldBright else pm.outline, shape)
+                    .clickable(role = Role.RadioButton) { onSelect(i) },
+                contentAlignment = Alignment.Center,
+            ) { Text(text, style = MaterialTheme.typography.labelLarge, color = if (on) pm.goldHi else pm.inkSoft, textAlign = TextAlign.Center) }
+        }
     }
 }
 
+/** Sắc thái của hộp thoại: quyết định biểu tượng và màu của huy hiệu phía trên. */
+enum class DialogTone { INFO, SUCCESS, WARN, DANGER, GEM }
+
+/**
+ * Hộp thoại thương hiệu thay cho AlertDialog: thẻ tối bo tròn, huy hiệu tròn phát sáng nhẹ ở trên,
+ * tiêu đề + nội dung căn giữa, nút bấm xếp ngang (có nút phụ) hoặc một nút rộng. [body] cho phép chèn nội dung riêng.
+ */
 @Composable
-fun SimpleDialog(title: String, text: String, confirm: String, onConfirm: () -> Unit, dismiss: String? = null, onDismiss: () -> Unit = onConfirm) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        shape = RoundedCornerShape(28.dp), tonalElevation = 0.dp,
-        containerColor = pm.surface, titleContentColor = pm.ink, textContentColor = pm.inkSoft,
-        title = { Text(title, style = MaterialTheme.typography.titleLarge) },
-        text = { Text(text, style = MaterialTheme.typography.bodyMedium) },
-        confirmButton = { TextButton(onConfirm) { Text(confirm, color = pm.gold, fontWeight = FontWeight.Bold) } },
-        dismissButton = if (dismiss != null) { { TextButton(onDismiss) { Text(dismiss, color = pm.inkSoft) } } } else null,
-    )
+fun PmDialog(
+    title: String, text: String, confirm: String, onConfirm: () -> Unit,
+    dismiss: String? = null, onDismiss: () -> Unit = onConfirm,
+    tone: DialogTone = DialogTone.INFO, icon: ImageVector? = null,
+    body: (@Composable () -> Unit)? = null,
+) {
+    val accent = when (tone) { DialogTone.INFO -> pm.royal; DialogTone.SUCCESS -> pm.good; DialogTone.WARN -> pm.goldBright; DialogTone.DANGER -> pm.danger; DialogTone.GEM -> pm.goldBright }
+    val glyph = icon ?: when (tone) { DialogTone.INFO -> Ic.Info; DialogTone.SUCCESS -> Ic.Check; DialogTone.WARN -> Ic.Warn; DialogTone.DANGER -> Ic.Flag; DialogTone.GEM -> Ic.Gem }
+    Dialog(onDismissRequest = onDismiss) {
+        val shape = RoundedCornerShape(28.dp)
+        Column(
+            Modifier.fillMaxWidth().clip(shape).background(pm.surface).border(1.dp, pm.outline, shape)
+                .background(Brush.verticalGradient(listOf(accent.copy(alpha = .12f), Color.Transparent), endY = 380f))
+                .padding(horizontal = 22.dp, vertical = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            Box(
+                Modifier.size(60.dp).clip(CircleShape).background(Brush.radialGradient(listOf(accent.copy(alpha = .32f), accent.copy(alpha = .08f))))
+                    .border(1.dp, accent.copy(alpha = .6f), CircleShape),
+                contentAlignment = Alignment.Center,
+            ) { Icon(glyph, null, Modifier.size(28.dp), tint = accent) }
+            Text(title, style = MaterialTheme.typography.headlineSmall, color = pm.ink, textAlign = TextAlign.Center)
+            if (text.isNotEmpty()) Text(text, style = MaterialTheme.typography.bodyMedium, color = pm.inkSoft, textAlign = TextAlign.Center)
+            if (body != null) body()
+            Spacer(Modifier.height(4.dp))
+            if (dismiss != null) {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    OutlineButton(dismiss, onDismiss, Modifier.weight(1f))
+                    GoldButton(confirm, onConfirm, Modifier.weight(1f))
+                }
+            } else GoldButton(confirm, onConfirm, Modifier.fillMaxWidth())
+        }
+    }
+}
+
+/** Giữ chữ ký cũ cho mọi nơi đang gọi SimpleDialog: nay hiển thị bằng [PmDialog]. */
+@Composable
+fun SimpleDialog(title: String, text: String, confirm: String, onConfirm: () -> Unit, dismiss: String? = null, onDismiss: () -> Unit = onConfirm, tone: DialogTone = DialogTone.INFO) {
+    PmDialog(title, text, confirm, onConfirm, dismiss, onDismiss, tone)
 }
 
 @Composable
 fun Gap(h: Int) = Spacer(Modifier.fillMaxWidth().height(h.dp))
+
+@Composable
+fun RowScope.Grow() = Spacer(Modifier.weight(1f))
 
 /** Quân đại diện một bên (thanh người chơi, hộp thoại...). */
 @Composable
@@ -204,7 +257,7 @@ fun SideBadge(gameId: String, side: Int, modifier: Modifier = Modifier.size(34.d
     Canvas(modifier) { drawSideBadge(gameId, side, tm, size.width) }
 }
 
-/** Tranh minh hoạ một game: vài quân cờ đặc trưng xếp cạnh nhau (thẻ nổi bật, ô game, phòng chờ). */
+/** Tranh minh hoạ một game: vài quân cờ đặc trưng (thẻ nổi bật, ô game, phòng chờ). */
 @Composable
 fun GameArt(gameId: String, modifier: Modifier = Modifier) {
     val tm = rememberTextMeasurer()
@@ -220,6 +273,10 @@ fun GameArt(gameId: String, modifier: Modifier = Modifier) {
                 drawXiangqiPiece(Offset(ox + s * .66f, oy + s * .62f), s * .30f, false, 1, tm)
                 drawXiangqiPiece(Offset(ox + s * .38f, oy + s * .38f), s * .32f, true, 1, tm)
             }
+            "go" -> drawGoArt(ox, oy, s)
+            "wallgo" -> drawWallGoArt(ox, oy, s)
+            "quoridor" -> drawQuoridorArt(ox, oy, s)
+            "sudoku" -> drawSudokuArt(tm, ox, oy, s)
             else -> {
                 drawCaroPiece(Offset(ox + s * .66f, oy + s * .64f), s * .62f, false)
                 drawCaroPiece(Offset(ox + s * .36f, oy + s * .36f), s * .66f, true)

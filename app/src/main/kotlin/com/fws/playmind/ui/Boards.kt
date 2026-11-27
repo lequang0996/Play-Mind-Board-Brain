@@ -110,7 +110,7 @@ fun ChessBoardView(vm: SessionViewModel, modifier: Modifier = Modifier) {
                         sel = -1
                     } else {
                         val p = g.board[sq]
-                        sel = if (p != 0 && (p > 0) == (vm.mySide == 0) && legal.any { ChessGame.fromSq(it) == sq }) sq else -1
+                        sel = if (p != 0 && (p > 0) == (vm.actingSide == 0) && legal.any { ChessGame.fromSq(it) == sq }) sq else -1
                     }
                 }
             },
@@ -151,7 +151,7 @@ fun ChessBoardView(vm: SessionViewModel, modifier: Modifier = Modifier) {
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                     for (pr in intArrayOf(ChessGame.Q, ChessGame.R, ChessGame.B, ChessGame.N)) {
                         val mv = list.firstOrNull { ChessGame.promoOf(it) == pr } ?: continue
-                        PieceChoice(pr, vm.mySide == 0) { promo = null; vm.playMove(mv) }
+                        PieceChoice(pr, vm.actingSide == 0) { promo = null; vm.playMove(mv) }
                     }
                 }
             },
@@ -184,7 +184,7 @@ fun XiangqiBoardView(vm: SessionViewModel, modifier: Modifier = Modifier) {
                     if (sel >= 0 && sq in targets) { vm.playMove(XiangqiGame.mk(sel, sq)); sel = -1 }
                     else {
                         val p = g.board[sq]
-                        sel = if (p != 0 && (p > 0) == (vm.mySide == 0) && legal.any { XiangqiGame.fromSq(it) == sq }) sq else -1
+                        sel = if (p != 0 && (p > 0) == (vm.actingSide == 0) && legal.any { XiangqiGame.fromSq(it) == sq }) sq else -1
                     }
                 }
             },

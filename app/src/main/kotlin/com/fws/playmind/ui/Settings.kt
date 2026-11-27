@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
@@ -32,27 +34,45 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.fws.playmind.BuildConfig
 import com.fws.playmind.PlayMindApp
 import com.fws.playmind.R
 import com.fws.playmind.catalog.Catalog
 
+/** Danh sách chọn ngôn ngữ: cờ + tên gốc, kèm tên ngôn ngữ đó theo ngôn ngữ giao diện hiện tại, vd. "English (Tiếng Anh)". */
 @Composable
 fun LanguageList(selected: String, onSelect: (String) -> Unit) {
+    val ui = LocalConfiguration.current.locales[0]
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Langs.all.forEach { (tag, name) ->
+        Langs.all.forEach { (tag, native) ->
             val on = tag == selected
             val shape = RoundedCornerShape(16.dp)
+            val translated = Langs.localizedName(tag, ui)
             Row(
                 Modifier.fillMaxWidth().clip(shape)
-                    .background(if (on) pm.goldSoft else pm.surface).border(if (on) 1.5.dp else 1.dp, if (on) pm.goldBright else pm.outline, shape)
-                    .clickable { onSelect(tag) }.padding(horizontal = 16.dp, vertical = 14.dp),
-                verticalAlignment = Alignment.CenterVertically,
+                    .background(if (on) pm.goldSoft else pm.surfaceHigh).border(if (on) 1.5.dp else 1.dp, if (on) pm.goldBright else pm.outline, shape)
+                    .clickable { onSelect(tag) }.padding(horizontal = 14.dp, vertical = 11.dp),
+                verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                Text(name, Modifier.weight(1f), style = MaterialTheme.typography.titleMedium, color = pm.ink)
+                Box(Modifier.size(38.dp).clip(CircleShape).background(pm.bg).border(1.dp, pm.outline, CircleShape), contentAlignment = Alignment.Center) {
+                    Text(Langs.flag(tag), fontSize = 20.sp)
+                }
+                Text(
+                    buildAnnotatedString {
+                        withStyle(SpanStyle(color = pm.ink, fontWeight = FontWeight.Bold)) { append(native) }
+                        if (!translated.equals(native, ignoreCase = true)) withStyle(SpanStyle(color = pm.inkSoft, fontWeight = FontWeight.Medium, fontSize = 13.sp)) { append("  ($translated)") }
+                    },
+                    Modifier.weight(1f), style = MaterialTheme.typography.titleMedium,
+                )
                 if (on) Icon(Ic.Check, null, Modifier.size(20.dp), tint = pm.gold)
             }
         }
@@ -60,7 +80,20 @@ fun LanguageList(selected: String, onSelect: (String) -> Unit) {
 }
 
 @Composable
-fun SettingsScreen(app: PlayMindApp, onBack: () -> Unit, onGuide: () -> Unit) {
+private fun SettingsRow(icon: androidx.compose.ui.graphics.vector.ImageVector, text: String, onClick: () -> Unit) {
+    val shape = RoundedCornerShape(16.dp)
+    Row(
+        Modifier.fillMaxWidth().clip(shape).background(pm.surface).border(1.dp, pm.outline, shape).clickable(onClick = onClick).padding(horizontal = 16.dp, vertical = 14.dp),
+        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Icon(icon, null, Modifier.size(20.dp), tint = pm.gold)
+        Text(text, Modifier.weight(1f), style = MaterialTheme.typography.titleSmall, color = pm.ink)
+        Icon(Ic.Chevron, null, Modifier.size(18.dp), tint = pm.inkSoft)
+    }
+}
+
+@Composable
+fun SettingsScreen(app: PlayMindApp, onBack: () -> Unit, onGuide: () -> Unit, onShop: () -> Unit) {
     val ctx = LocalContext.current
     val activity = ctx as Activity
     var lang by remember { mutableStateOf(Langs.current()) }
@@ -68,31 +101,57 @@ fun SettingsScreen(app: PlayMindApp, onBack: () -> Unit, onGuide: () -> Unit) {
 
     Column(Modifier.fillMaxSize()) {
         TopBar(stringResource(R.string.settings), onBack)
-        Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 18.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+        Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 18.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             SectionTitle(stringResource(R.string.language))
             LanguageList(lang) { lang = it; Langs.apply(it) }
 
+            Spacer(Modifier.height(6.dp))
             SectionTitle(stringResource(R.string.nickname))
             OutlinedTextField(
                 nick, { nick = it.take(16); app.prefs.updateNickname(nick) }, Modifier.fillMaxWidth(), singleLine = true,
                 shape = RoundedCornerShape(16.dp),
-                colors = OutlinedTextFieldDefaults.colors(focusedContainerColor = pm.surface, unfocusedContainerColor = pm.surface, focusedBorderColor = pm.goldBright, unfocusedBorderColor = pm.outline, focusedTextColor = pm.ink, unfocusedTextColor = pm.ink, cursorColor = pm.gold),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = pm.surface, unfocusedContainerColor = pm.surface, focusedBorderColor = pm.goldBright, unfocusedBorderColor = pm.outline,
+                    focusedTextColor = pm.ink, unfocusedTextColor = pm.ink, cursorColor = pm.gold,
+                ),
             )
 
-            SectionTitle(stringResource(R.string.about))
-            SurfaceCard(Modifier.fillMaxWidth()) {
-                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text(stringResource(R.string.about_text), style = MaterialTheme.typography.bodyMedium, color = pm.inkSoft)
-                    Text("v${BuildConfig.VERSION_NAME}  ·  FWs  ·  17eathday@gmail.com", style = MaterialTheme.typography.labelMedium, color = pm.inkSoft)
-                }
-            }
-            OutlineButton(stringResource(R.string.how_to_use), onGuide, Modifier.fillMaxWidth(), Ic.Help)
-            OutlineButton(stringResource(R.string.privacy_policy), {
-                ctx.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.PRIVACY_URL)))
-            }, Modifier.fillMaxWidth(), Ic.Shield)
-            if (app.ads.privacyOptionsRequired(activity))
-                OutlineButton(stringResource(R.string.privacy_options), { app.ads.showPrivacyOptions(activity) }, Modifier.fillMaxWidth(), Ic.Info)
+            Spacer(Modifier.height(6.dp))
+            SettingsRow(Ic.Bag, stringResource(R.string.shop), onShop)
+            SettingsRow(Ic.Book, stringResource(R.string.how_to_use), onGuide)
+            SettingsRow(Ic.Shield, stringResource(R.string.privacy_policy)) { ctx.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.PRIVACY_URL))) }
+            if (app.ads.privacyOptionsRequired(activity)) SettingsRow(Ic.Info, stringResource(R.string.privacy_options)) { app.ads.showPrivacyOptions(activity) }
             Spacer(Modifier.height(20.dp))
+        }
+    }
+}
+
+/**
+ * Hiển thị văn bản hướng dẫn dạng "dòng mở đầu + các dòng bắt đầu bằng •": mỗi gạch đầu dòng thành một hàng có chấm vàng,
+ * phần trước dấu ":" (nếu ngắn) được in đậm làm nhãn.
+ */
+@Composable
+fun GuideBody(text: String) {
+    val lines = text.lines().map { it.trim() }.filter { it.isNotEmpty() }
+    Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        for (line in lines) {
+            if (line.startsWith("•")) {
+                val body = line.removePrefix("•").trim()
+                val colon = body.indexOf(':')
+                val hasLabel = colon in 1..30
+                Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Box(Modifier.padding(top = 8.dp).size(6.dp).clip(CircleShape).background(pm.goldBright))
+                    Text(
+                        buildAnnotatedString {
+                            if (hasLabel) {
+                                withStyle(SpanStyle(color = pm.ink, fontWeight = FontWeight.ExtraBold)) { append(body.substring(0, colon + 1)) }
+                                withStyle(SpanStyle(color = pm.inkSoft)) { append(body.substring(colon + 1)) }
+                            } else withStyle(SpanStyle(color = pm.inkSoft)) { append(body) }
+                        },
+                        Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium,
+                    )
+                }
+            } else Text(line, style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.SemiBold), color = pm.ink)
         }
     }
 }
@@ -103,23 +162,30 @@ fun GuideScreen(onBack: () -> Unit, focusGame: String?) {
         TopBar(stringResource(R.string.how_to_use), onBack)
         Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 18.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
             if (focusGame == null) {
-                // Từ trang chủ / cài đặt: chỉ hướng dẫn dùng app
+                // Từ trang chủ / cài đặt: hướng dẫn dùng app
                 SurfaceCard(Modifier.fillMaxWidth()) {
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text(stringResource(R.string.guide_app_title), style = MaterialTheme.typography.titleLarge, color = pm.ink)
-                        Text(stringResource(R.string.guide_app), style = MaterialTheme.typography.bodyMedium, color = pm.inkSoft)
+                    Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                            Box(Modifier.size(40.dp).clip(CircleShape).background(pm.goldSoft).border(1.dp, pm.goldBright.copy(alpha = .6f), CircleShape), contentAlignment = Alignment.Center) {
+                                Icon(Ic.Book, null, Modifier.size(20.dp), tint = pm.gold)
+                            }
+                            Text(stringResource(R.string.guide_app_title), style = MaterialTheme.typography.headlineSmall, color = pm.ink)
+                        }
+                        GuideBody(stringResource(R.string.guide_app))
                     }
                 }
             } else {
-                // Từ màn hình game: chỉ luật chơi của riêng game đó
+                // Từ màn hình game: luật chơi của riêng game đó
                 val g = Catalog.byId(focusGame)
                 SurfaceCard(Modifier.fillMaxWidth()) {
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            SideBadge(g.id, 0, Modifier.size(30.dp)); Spacer(Modifier.width(10.dp))
-                            Text(stringResource(g.name), style = MaterialTheme.typography.titleLarge, color = pm.ink)
+                    Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                            Box(Modifier.size(56.dp).clip(RoundedCornerShape(16.dp)).background(g.topic.color.copy(alpha = .18f)), contentAlignment = Alignment.Center) {
+                                GameArt(g.id, Modifier.size(52.dp))
+                            }
+                            Text(stringResource(g.name), style = MaterialTheme.typography.headlineSmall, color = pm.ink)
                         }
-                        Text(stringResource(g.guide), style = MaterialTheme.typography.bodyMedium, color = pm.inkSoft)
+                        GuideBody(stringResource(g.guide))
                     }
                 }
             }

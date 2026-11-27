@@ -27,7 +27,7 @@ interface Transport {
 object Proto {
     fun hello(gameId: String, name: String, hostSide: Int) = "H|$gameId|$name|$hostSide"
     fun join(name: String) = "J|$name"
-    fun start(hostSide: Int) = "S|$hostSide"
+    fun start(hostSide: Int, option: Int = 0) = "S|$hostSide|$option"
     fun move(index: Int, move: Int) = "M|$index|$move"
     fun end(result: Int, hash: Int) = "E|$result|$hash"
     const val RESIGN = "R"

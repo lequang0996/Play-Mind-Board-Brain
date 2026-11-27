@@ -60,6 +60,7 @@ jobs:
           ADMOB_APP_ID: ${{ vars.ADMOB_APP_ID }}
           ADMOB_BANNER: ${{ vars.ADMOB_BANNER }}
           ADMOB_INTERSTITIAL: ${{ vars.ADMOB_INTERSTITIAL }}
+          ADMOB_APP_OPEN: ${{ vars.ADMOB_APP_OPEN }}
           ADMOB_REWARDED: ${{ vars.ADMOB_REWARDED }}
           PRIVACY_URL: ${{ vars.PRIVACY_URL }}
 

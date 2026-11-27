@@ -53,12 +53,19 @@ Mặc định dùng **ID thử nghiệm của Google** (an toàn khi phát tri�
 
 1. Tạo luật + AI trong `core/` (implement `BoardGame`) và thêm kiểm thử vào `SelfCheck.kt`.
 2. Thêm một dòng `GameInfo(...)` vào `Catalog.games` (chọn `Topic`) và các chuỗi `game_*`, `guide_*` trong `tools/i18n/*.txt`, rồi chạy `python3 tools/i18n/generate.py`.
-3. Thêm bàn cờ vào `ui/Boards.kt` và nhánh `when (info.id)` trong `GameScreen`.
+3. Thêm bàn cờ vào `ui/Boards.kt` hoặc `ui/NewBoards.kt` và nhánh `when (info.id)` trong `GameScreen`; thêm tranh minh hoạ trong `GameArt` (`ui/Components.kt`, `ui/NewArt.kt`).
+4. Game có tùy chọn trước ván: đặt `optionKind` (`PLAYERS` = số người chơi, `BOARD` = cỡ bàn) và `options` trong `GameInfo`; hàm `create` nhận tùy chọn đó. `localPlay = true` bật thêm chế độ chơi chung một máy.
+5. Game một người (như Sudoku): `kind = GameKind.SOLO`, trạng thái nằm trong `SessionViewModel` (xem `startSudoku`/`sudokuEdit`) và có màn hình riêng (`SudokuScreen`).
 Các chủ đề chưa có game tự hiển thị "Sắp ra mắt".
+
+### Danh sách game hiện có
+Cờ vua, Cờ tướng, Cờ vây (9x9 / 13x13 / 19x19), Quoridor (2 hoặc 4 người), Wall Go (2-4 người), Cờ caro, Sudoku (4 mức độ). Cờ vây dùng luật diện tích Tromp-Taylor (không gỡ quân chết tự động); bot dùng MCTS-RAVE song song theo luồng. Wall Go 3 và 4 người dùng số quân mỗi người (3 và 2) là quy ước của app, không phải luật chính thức.
+
+Gói đăng ký, kim cương và quảng cáo: xem [`MONETIZATION.md`](MONETIZATION.md). Giao diện và phông chữ: [`DESIGN.md`](DESIGN.md).
 
 ## 5. Cơ chế chống gian lận (mức 1)
 * Ví kim cương/thống kê mã hóa **AES-256-GCM**, khóa nằm trong **Android Keystore**; sửa file là giải mã thất bại → ví về trạng thái ban đầu.
-* Bộ đếm phụ (`wallet.ctr`) chống khôi phục file cũ; `allowBackup=false` + `dataExtractionRules` chặn nhân bản dữ liệu.
+* Bộ đếm phụ (`wallet.ctr`) chống khôi phục file cũ. Auto Backup chỉ sao lưu một tệp nhỏ `pm_marks.xml` (số lượt miễn phí đã dùng); ví và khóa không bao giờ được sao lưu. Bản sao ví có chữ ký nằm ở Google Block Store để chống "gỡ app cài lại là có lượt miễn phí" (xem `MONETIZATION.md`).
 * Đồng hồ đáng tin (`elapsedRealtime`) phát hiện chỉnh giờ để lấy thêm điểm danh/lượt miễn phí.
 * Ván đang chơi dở khi app bị tắt được tính là thua (chuỗi thắng về 0).
 * Online: mọi nước đi được engine kiểm tra ở cả hai máy; ván thắng chỉ được thưởng khi hai máy đối chiếu cùng kết quả (băm danh sách nước đi).

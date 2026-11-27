@@ -270,8 +270,12 @@ fun DrawScope.drawCaroBoard(cell: Float, offX: Float, offY: Float) {
 fun DrawScope.drawCaroPiece(c: Offset, cell: Float, isX: Boolean) {
     val sc = cell * (if (isX) 1.0f else .94f) / 100f
     // bóng đổ mềm
-    if (isX) drawOval(Color.Black.copy(alpha = .13f), Offset(c.x - cell * .34f, c.y - cell * .22f), Size(cell * .7f, cell * .62f))
-    else drawCircle(Color.Black.copy(alpha = .12f), cell * .30f, Offset(c.x + cell * .035f, c.y + cell * .07f), style = Stroke(cell * .12f))
+    if (isX) {
+        // bóng của chữ X cũng phải là hình chữ X (trước đây là hình bầu dục nên trông như bóng của quân O)
+        val k = cell * .27f; val off = Offset(cell * .035f, cell * .07f); val sw = cell * .17f
+        drawLine(Color.Black.copy(alpha = .14f), Offset(c.x - k, c.y - k) + off, Offset(c.x + k, c.y + k) + off, sw, StrokeCap.Round)
+        drawLine(Color.Black.copy(alpha = .14f), Offset(c.x + k, c.y - k) + off, Offset(c.x - k, c.y + k) + off, sw, StrokeCap.Round)
+    } else drawCircle(Color.Black.copy(alpha = .12f), cell * .30f, Offset(c.x + cell * .035f, c.y + cell * .07f), style = Stroke(cell * .12f))
     withTransform({ translate(c.x - 50f * sc, c.y - 50f * sc); scale(sc, sc, pivot = Offset.Zero) }) {
         drawLayers(if (isX) CaroArt.x else CaroArt.o)
     }
@@ -302,6 +306,8 @@ fun DrawScope.drawSideBadge(gameId: String, side: Int, tm: TextMeasurer, s: Floa
     when (gameId) {
         "chess" -> drawChessPiece(6, side == 0, Offset.Zero, s)
         "xiangqi" -> drawXiangqiPiece(Offset(s / 2f, s / 2f), s * .46f, side == 0, 1, tm)
+        "go" -> drawStone(Offset(s / 2f, s / 2f), s * .44f, side == 0)
+        "wallgo", "quoridor" -> drawPawn(Offset(s / 2f, s * .56f), s * .27f, playerColor(side))
         else -> drawCaroPiece(Offset(s / 2f, s / 2f), s * 1.05f, side == 0)
     }
 }

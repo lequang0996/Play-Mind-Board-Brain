@@ -11,6 +11,12 @@ import androidx.lifecycle.viewModelScope
 import com.fws.playmind.PlayMindApp
 import com.fws.playmind.catalog.GameInfo
 import com.fws.playmind.core.BoardGame
+import com.fws.playmind.core.SudokuGame
+import com.fws.playmind.core.SudokuLevel
+import com.fws.playmind.core.SudokuStatus
+import com.fws.playmind.catalog.GameKind
+import com.fws.playmind.catalog.OptionKind
+import androidx.compose.runtime.mutableStateListOf
 import com.fws.playmind.core.EndReason
 import com.fws.playmind.core.Outcome
 import com.fws.playmind.core.movesHash
@@ -32,7 +38,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.random.Random
 
-enum class Mode { NONE, BOT, HOST_NEARBY, HOST_NET, JOIN_NEARBY, JOIN_NET }
+enum class Mode { NONE, BOT, LOCAL, SOLO, HOST_NEARBY, HOST_NET, JOIN_NEARBY, JOIN_NET }
 enum class Phase { IDLE, ROOM, PLAYING, OVER }
 enum class Opp { NONE, HUMAN, COMPUTER, HIDDEN_BOT }
 enum class Notice { NONE, NOT_ENOUGH, PERMISSION, CONN_LOST, OPP_LEFT, KICKED, BAD_CODE, CONN_FAILED, UNVERIFIED, HOST_LEFT }
@@ -55,6 +61,16 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
     var phase by mutableStateOf(Phase.IDLE); private set
     var game: BoardGame? = null; private set
     var tick by mutableIntStateOf(0); private set          // tăng mỗi khi bàn cờ thay đổi
+    /** Tùy chọn trước ván: số người chơi (Wall Go, Quoridor) hoặc cỡ bàn (cờ vây) hoặc mức độ (Sudoku). */
+    var option by mutableIntStateOf(0); private set
+    var seatNames by mutableStateOf<List<String>>(emptyList()); private set   // tên từng ghế khi chơi với máy 3-4 người
+    // Sudoku (game một người)
+    var sudoku by mutableStateOf<SudokuGame?>(null); private set
+    var sudokuLoading by mutableStateOf(false); private set
+    var sudokuSeconds by mutableIntStateOf(0); private set
+    var sudokuTick by mutableIntStateOf(0); private set
+    private var sudokuJob: Job? = null
+    private var sudokuClock: Job? = null
     var mySide by mutableIntStateOf(0); private set
     var opp by mutableStateOf(Opp.NONE); private set
     var oppName by mutableStateOf(""); private set
@@ -90,23 +106,37 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
     val isOnline get() = mode == Mode.HOST_NEARBY || mode == Mode.HOST_NET || mode == Mode.JOIN_NEARBY || mode == Mode.JOIN_NET
     val isHost get() = mode == Mode.HOST_NEARBY || mode == Mode.HOST_NET
     val oppSide get() = 1 - mySide
-    val myTurn get() = game?.let { it.result == Outcome.ONGOING && it.turn == mySide } ?: false
+    /** Số người chơi của ván hiện tại (2 với mọi game không có tùy chọn số người). */
+    val playerCount get() = if (info?.optionKind == OptionKind.PLAYERS) option else 2
+    /** Người dùng có được đi ngay bây giờ không (chế độ chơi chung một máy: bên nào đang đến lượt cũng được). */
+    val canAct get() = game?.let { it.result == Outcome.ONGOING && phase == Phase.PLAYING && (mode == Mode.LOCAL || it.turn == mySide) } ?: false
+    val myTurn get() = game?.let { it.result == Outcome.ONGOING && (mode == Mode.LOCAL || it.turn == mySide) } ?: false
+    /** Bên đang được người dùng điều khiển: khi chơi chung một máy thì là bên đang đến lượt. */
+    val actingSide get() = if (mode == Mode.LOCAL) (game?.turn ?: 0) else mySide
     val oppIsMachine get() = opp == Opp.COMPUTER || opp == Opp.HIDDEN_BOT
 
     // ───────────────────────── vào / thoát ─────────────────────────
     fun open(g: GameInfo) {
         teardown()
-        info = g; mode = Mode.NONE; phase = Phase.IDLE; notice = Notice.NONE; reward = null
+        info = g; mode = Mode.NONE; phase = Phase.IDLE; notice = Notice.NONE; reward = null; option = g.defaultOption
     }
+
+    fun selectOption(v: Int) { option = v }
 
     /** Thoát hoàn toàn phiên hiện tại (về lobby / trang chủ). Rời giữa ván = thua. */
     fun leave() {
         val g = game
         val inf = info
-        if (phase == Phase.PLAYING && g != null && inf != null && g.result == Outcome.ONGOING) {
-            if (isOnline) transport?.send(Proto.QUIT)
-            g.forfeit(mySide, EndReason.LEAVE)
+        val sd = sudoku
+        if (phase == Phase.PLAYING && sd != null && inf != null && sd.status == SudokuStatus.PLAYING) {
+            sd.giveUp()
             wallet.finishMatch(inf.id, MatchOutcome.LOSS, true)
+        } else if (phase == Phase.PLAYING && g != null && inf != null && g.result == Outcome.ONGOING) {
+            if (mode == Mode.LOCAL) { /* chơi chung một máy: không tính thắng/thua */ } else {
+                if (isOnline) transport?.send(Proto.QUIT)
+                g.forfeit(mySide, EndReason.LEAVE)
+                wallet.finishMatch(inf.id, MatchOutcome.LOSS, true)
+            }
         } else if (phase == Phase.ROOM && isOnline) transport?.send(Proto.QUIT)
         teardown()
         phase = Phase.IDLE; mode = Mode.NONE
@@ -118,6 +148,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         transport?.onMessage = null
         transport?.close(); transport = null
         game = null; opp = Opp.NONE; oppName = ""; botThinking = false; verifying = false
+        sudokuJob?.cancel(); sudokuClock?.cancel(); sudoku = null; sudokuLoading = false; sudokuSeconds = 0; seatNames = emptyList()
         inviteCode = ""; replyCode = ""; inviteBusy = false; inviteOpen = false; guestConnected = false
         rematchAsked = false; oppAskedRematch = false; localEnd = null; remoteEnd = null; finalized = false
         nearbyRooms.value = emptyList(); nearbyError.value = false; nearbyErrorCode.value = 0; _link.value = LinkState.IDLE
@@ -131,7 +162,59 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         teardown()
         mode = Mode.BOT; opp = Opp.COMPUTER
         mySide = 0
+        if (playerCount > 2) {
+            val used = HashSet<String>(); val names = ArrayList<String>()
+            for (seat in 0 until playerCount) {
+                if (seat == 0) { names.add(prefs.nickname); continue }
+                var n = BotNames.pick(lang()); var tries = 0
+                while (n in used && tries++ < 20) n = BotNames.pick(lang())
+                used.add(n); names.add(n)
+            }
+            seatNames = names
+        }
         return beginMatch()
+    }
+
+    /** Chơi chung một máy (2-4 người luân phiên trên cùng điện thoại): không tốn lượt, không có thưởng. */
+    fun startLocal(): Boolean {
+        val inf = info ?: return false
+        if (!inf.localPlay) return false
+        teardown()
+        mode = Mode.LOCAL; opp = Opp.NONE; mySide = 0
+        return beginMatch()
+    }
+
+    // ───────────────────────── Sudoku (một người) ─────────────────────────
+    fun startSudoku(levelIndex: Int): Boolean {
+        val inf = info ?: return false
+        if (!wallet.canStart(inf.id)) { notice = Notice.NOT_ENOUGH; return false }
+        teardown()
+        if (wallet.startMatch(inf.id) == StartCost.INSUFFICIENT) { notice = Notice.NOT_ENOUGH; return false }
+        val level = SudokuLevel.values().getOrElse(levelIndex) { SudokuLevel.EASY }
+        option = levelIndex
+        mode = Mode.SOLO; reward = null; finalized = false
+        sudokuLoading = true; sudokuSeconds = 0
+        phase = Phase.PLAYING; tick++
+        val my = ++epoch
+        sudokuJob = viewModelScope.launch {
+            val g = withContext(Dispatchers.Default) { SudokuGame.create(level) }
+            if (my != epoch) return@launch
+            sudoku = g; sudokuLoading = false; sudokuTick++
+            sudokuClock = launch { while (true) { delay(1000); if (sudoku?.status == SudokuStatus.PLAYING) sudokuSeconds++ } }
+        }
+        return true
+    }
+
+    /** Mọi thao tác trên bàn Sudoku đi qua đây để bàn được vẽ lại và kết quả được chốt. */
+    fun sudokuEdit(block: (SudokuGame) -> Unit) {
+        val g = sudoku ?: return
+        if (phase != Phase.PLAYING) return
+        block(g)
+        sudokuTick++
+        if (g.status != SudokuStatus.PLAYING) {
+            phase = Phase.OVER
+            settle(if (g.status == SudokuStatus.WON) MatchOutcome.WIN else MatchOutcome.LOSS, true)
+        }
     }
 
     // ───────────────────────── tạo phòng (chủ phòng) ─────────────────────────
@@ -201,7 +284,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         if (phase != Phase.ROOM || opp == Opp.NONE) return
         if (!wallet.canStart(inf.id)) { notice = Notice.NOT_ENOUGH; return }
         hostSide = Random.nextInt(2); mySide = hostSide
-        if (opp == Opp.HUMAN) transport?.send(Proto.start(hostSide))
+        if (opp == Opp.HUMAN) transport?.send(Proto.start(hostSide, option))
         timerJob?.cancel()
         beginMatch()
     }
@@ -293,6 +376,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
             }
             "S" -> if (!isHost && phase == Phase.ROOM || phase == Phase.OVER && !isHost) {
                 hostSide = p.getOrNull(1)?.toIntOrNull() ?: return
+                p.getOrNull(2)?.toIntOrNull()?.let { o -> if (info?.options?.contains(o) == true) option = o }
                 mySide = 1 - hostSide
                 beginMatch()
             }
@@ -326,14 +410,14 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
     // ───────────────────────── ván đấu ─────────────────────────
     private fun beginMatch(): Boolean {
         val inf = info ?: return false
-        if (wallet.startMatch(inf.id) == StartCost.INSUFFICIENT) {
+        if (mode != Mode.LOCAL && wallet.startMatch(inf.id) == StartCost.INSUFFICIENT) {
             notice = Notice.NOT_ENOUGH
             if (isOnline) { transport?.send(Proto.QUIT) }
             teardown(); phase = Phase.IDLE; mode = Mode.NONE
             return false
         }
         epoch++
-        game = inf.create(); reward = null; verifying = false; finalized = false
+        game = inf.make(option); reward = null; verifying = false; finalized = false
         localEnd = null; remoteEnd = null; rematchAsked = false; oppAskedRematch = false; botThinking = false
         phase = Phase.PLAYING; tick++
         scheduleBotIfNeeded()
@@ -342,7 +426,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
 
     fun playMove(move: Int): Boolean {
         val g = game ?: return false
-        if (phase != Phase.PLAYING || g.turn != mySide || g.result != Outcome.ONGOING) return false
+        if (!canAct) return false
         val index = g.plies
         if (!g.play(move)) return false
         if (isOnline && opp == Opp.HUMAN) transport?.send(Proto.move(index, g.lastMove))
@@ -365,7 +449,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         botJob = viewModelScope.launch {
             val snap = g.copyGame()
             val t0 = System.currentTimeMillis()
-            val mv = withContext(Dispatchers.Default) { snap.bestMove(inf.botMillis) }
+            val mv = withContext(Dispatchers.Default) { snap.bestMove(inf.botMillis(option)) }
             val wait = BotNames.humanDelay() - (System.currentTimeMillis() - t0)
             if (wait > 0) delay(wait)
             if (my != epoch || game !== g || phase != Phase.PLAYING) return@launch
@@ -378,7 +462,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         val g = game ?: return
         if (phase != Phase.PLAYING || g.result != Outcome.ONGOING) return
         if (isOnline && opp == Opp.HUMAN) transport?.send(Proto.RESIGN)
-        g.forfeit(mySide, EndReason.RESIGN)
+        g.forfeit(if (mode == Mode.LOCAL) g.turn else mySide, EndReason.RESIGN)
         afterMove()
     }
 
@@ -395,6 +479,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         val g = game ?: return; val inf = info ?: return
         botJob?.cancel(); botThinking = false
         phase = Phase.OVER
+        if (mode == Mode.LOCAL) { finalized = true; return }       // chơi chung một máy: không thưởng, không thống kê
         val out = outcomeForMe(g)
         if (isOnline && opp == Opp.HUMAN) {
             localEnd = Proto.end(g.result, movesHash(g.history))
@@ -434,6 +519,8 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
     fun rematch() {
         val inf = info ?: return
         if (phase != Phase.OVER) return
+        if (mode == Mode.LOCAL) { beginMatch(); return }
+        if (mode == Mode.SOLO) { startSudoku(option); return }
         if (!wallet.canStart(inf.id)) { notice = Notice.NOT_ENOUGH; return }
         if (isOnline && opp == Opp.HUMAN) { rematchAsked = true; transport?.send(Proto.REMATCH); maybeRematch() }
         else if (oppIsMachine) { mySide = 0; beginMatch() }
@@ -441,7 +528,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
 
     private fun maybeRematch() {
         if (phase != Phase.OVER || !rematchAsked || !oppAskedRematch) return
-        if (isHost) { hostSide = 1 - hostSide; mySide = hostSide; transport?.send(Proto.start(hostSide)); beginMatch() }
+        if (isHost) { hostSide = 1 - hostSide; mySide = hostSide; transport?.send(Proto.start(hostSide, option)); beginMatch() }
     }
 
     override fun onCleared() { teardown(); super.onCleared() }
