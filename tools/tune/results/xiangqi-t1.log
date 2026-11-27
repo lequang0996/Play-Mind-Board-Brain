@@ -1,0 +1,5 @@
+# xiangqi-t1: game=xiangqi games/proc=500 nodes=6000 iters=1500 shards=16 date=2026-11-27
+positions: 3102438, params: 711
+used: 3102438, skipped: 0, linear-model mismatches: 0
+K = 0.3503, start error = 0.093325
+iter 1000 error = 0.084125
