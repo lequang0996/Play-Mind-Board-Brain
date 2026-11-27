@@ -70,7 +70,10 @@ class WalletRepo(private val ctx: Context) {
         return if (st.plan != Plan.NONE && trustedNow() - st.planAt < 8 * 86_400_000L) st.plan else Plan.NONE
     }
 
-    /** Gói năm (10$/năm): bỏ hẳn kim cương (không tốn, không thưởng, không điểm danh) và mở khóa mọi cấp bot. */
+    /**
+     * Gói năm (10$/năm): bỏ hẳn kim cương (không tốn, không bao giờ tăng, không điểm danh), ẩn mọi gói khác và mở khóa mọi cấp bot.
+     * Số kim cương cũ được giữ nguyên và hoạt động lại khi gói năm bị hủy / hết hạn.
+     */
     fun noDiamonds(): Boolean = currentPlan() == Plan.YEARLY
 
     /** BillingManager gọi khi biết gói hiện tại. */
@@ -249,7 +252,7 @@ class WalletRepo(private val ctx: Context) {
     /** Ván bị hủy không do lỗi người chơi (vd. đối thủ thoát sớm): trả lại trạng thái, không tính thắng/thua. */
     fun cancelMatch() { val st = _state.value; if (st.pending.isNotEmpty()) commit(st.copy(pending = "")) }
 
-    fun addDiamonds(n: Int) { if (n > 0) commit(_state.value.copy(diamonds = _state.value.diamonds + n)) }
+    fun addDiamonds(n: Int) { if (n > 0 && !noDiamonds()) commit(_state.value.copy(diamonds = _state.value.diamonds + n)) }
 
     private fun bump(m: Map<String, List<Int>>, g: String, i: Int): Map<String, List<Int>> {
         val cur = (m[g] ?: listOf(0, 0, 0)).toMutableList(); cur[i] = cur[i] + 1

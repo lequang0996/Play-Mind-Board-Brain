@@ -125,7 +125,8 @@ fun ShopScreen(app: PlayMindApp, onBack: () -> Unit) {
         TopBar(stringResource(R.string.shop), onBack) { if (!noGems) DiamondChip(wallet.diamonds) }
         Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 18.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
             SectionTitle(stringResource(R.string.shop_plans))
-            PlanCard(
+            // Gói năm đang có hiệu lực: ẩn mọi gói khác (chỉ hiện lại khi gói năm bị hủy / hết hạn)
+            if (!noGems) PlanCard(
                 stringResource(R.string.plan_monthly), price(BillingManager.SUB_MONTHLY), stringResource(R.string.per_month),
                 listOf(stringResource(R.string.perk_no_ads), stringResource(R.string.perk_free3)),
                 plan == Plan.MONTHLY, false, ready(BillingManager.SUB_MONTHLY),

@@ -130,6 +130,9 @@ class BillingManager(private val app: Application, private val wallet: WalletRep
         for (id in p.products) {
             val gems = GEMS[id]
             if (gems != null) {
+                // Gói năm: kim cương không bao giờ tăng. Giao dịch kim cương (nếu có) để nguyên, không tiêu thụ;
+                // khi gói năm bị hủy, refresh() sẽ xử lý lại (Google Play tự hoàn tiền nếu quá 3 ngày chưa tiêu thụ).
+                if (wallet.noDiamonds()) continue
                 // Chỉ cộng kim cương SAU KHI tiêu thụ thành công: mỗi giao dịch chỉ tiêu thụ được một lần nên không bao giờ cộng đôi.
                 val total = gems * p.quantity.coerceAtLeast(1)
                 client.consumeAsync(ConsumeParams.newBuilder().setPurchaseToken(p.purchaseToken).build()) { r, _ ->
