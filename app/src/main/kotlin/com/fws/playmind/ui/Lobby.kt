@@ -175,13 +175,13 @@ fun LobbyScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onBack: 
                     ModeCard(Ic.Users, stringResource(R.string.play_friends), stringResource(R.string.online_two_only)) {}
                 } else {
                     SectionTitle(stringResource(R.string.play_friends))
-                    ModeCard(Ic.Radar, stringResource(R.string.nearby), stringResource(R.string.nearby_card_desc)) {
+                    ModeCard(Ic.Nearby, stringResource(R.string.nearby), stringResource(R.string.nearby_card_desc)) {
                         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                             OutlineButton(stringResource(R.string.create_room), { withNearby { if (vm.hostRoom(true)) onRoom() } }, Modifier.weight(1f))
                             OutlineButton(stringResource(R.string.join_room), { withNearby { if (vm.joinNearby()) onRoom() } }, Modifier.weight(1f))
                         }
                     }
-                    ModeCard(Ic.Wifi, stringResource(R.string.internet), stringResource(R.string.internet_card_desc)) {
+                    ModeCard(Ic.Internet, stringResource(R.string.internet), stringResource(R.string.internet_card_desc)) {
                         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                             OutlineButton(stringResource(R.string.create_room), { if (vm.hostRoom(false)) onRoom() }, Modifier.weight(1f))
                             OutlineButton(stringResource(R.string.join_room), { if (vm.joinNet()) onRoom() }, Modifier.weight(1f))

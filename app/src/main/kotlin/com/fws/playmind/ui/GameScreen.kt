@@ -34,6 +34,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -109,9 +112,21 @@ internal fun TurnClock(seconds: Int, modifier: Modifier = Modifier) {
 @Composable
 private fun PlayerBar(info: GameInfo, seat: Int, name: String, label: String, active: Boolean, status: String?, extra: String?, showCheck: Boolean, clock: Int? = null) {
     val shape = RoundedCornerShape(20.dp)
+    // thanh thời gian còn lại của lượt đi chạy dọc mép dưới thẻ (đỏ khi còn ≤ 10 giây)
+    val total = info.moveSeconds.coerceAtLeast(1)
+    val frac = if (clock != null) (clock.toFloat() / total).coerceIn(0f, 1f) else -1f
+    val barColor = if (clock != null && clock <= 10) pm.danger else pm.goldBright
+    val track = pm.outline
     Row(
         Modifier.fillMaxWidth().padding(horizontal = 18.dp, vertical = 6.dp).lift(shape, 6.dp).clip(shape)
             .background(if (active) Brush.linearGradient(listOf(pm.goldSoft, pm.surface)) else cardBrush())
+            .drawBehind {
+                if (frac >= 0f) {
+                    val h = 4.dp.toPx()
+                    drawRect(track, Offset(0f, size.height - h), Size(size.width, h))
+                    drawRect(barColor, Offset(0f, size.height - h), Size(size.width * frac, h))
+                }
+            }
             .border(if (active) 1.5.dp else 1.dp, if (active) Brush.verticalGradient(listOf(pm.goldHi, pm.goldBright)) else hairline(), shape)
             .padding(horizontal = 12.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -181,7 +196,7 @@ fun GameScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onExit: (
             info, topSeat, seatName(vm, info, topSeat), sideLabel(info, topSeat), oppTurn,
             if (oppTurn && vm.botThinking) stringResource(R.string.thinking) else if (oppTurn) stringResource(R.string.their_turn) else null,
             seatInfo(vm, topSeat), inCheck && oppTurn,
-            clock = if (oppTurn && (local || !vm.oppIsMachine)) vm.turnSecondsLeft else null,
+            clock = if (oppTurn && info.moveSeconds > 0) vm.turnSecondsLeft else null,
         )
         Box(Modifier.weight(1f).fillMaxWidth().padding(horizontal = 12.dp, vertical = 4.dp), contentAlignment = Alignment.Center) {
             when (info.id) {
@@ -200,12 +215,12 @@ fun GameScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onExit: (
                     if (over) "" else if (vm.botThinking) stringResource(R.string.thinking) else if (local || g.turn != vm.mySide) stringResource(R.string.turn_of, who) else stringResource(R.string.your_turn),
                     style = MaterialTheme.typography.labelLarge, color = pm.gold, textAlign = TextAlign.Center,
                 )
-                if (!over && (local || g.turn == vm.mySide)) { Spacer(Modifier.width(10.dp)); TurnClock(vm.turnSecondsLeft) }
+                if (!over) { Spacer(Modifier.width(10.dp)); TurnClock(vm.turnSecondsLeft) }
             }
         } else PlayerBar(
             info, bottomSeat, seatName(vm, info, bottomSeat), sideLabel(info, bottomSeat), myTurn,
             if (myTurn) stringResource(R.string.your_turn) else null, seatInfo(vm, bottomSeat), inCheck && myTurn,
-            clock = if (myTurn) vm.turnSecondsLeft else null,
+            clock = if (myTurn && info.moveSeconds > 0) vm.turnSecondsLeft else null,
         )
         Spacer(Modifier.height(10.dp))
     }
@@ -296,7 +311,7 @@ private fun ResultDialog(app: PlayMindApp, vm: SessionViewModel, info: GameInfo,
             if (vm.multi) {
                 if (vm.eliminated && g.result == Outcome.ONGOING) Text(stringResource(R.string.multi_continues), style = MaterialTheme.typography.labelMedium, color = pm.inkSoft, textAlign = TextAlign.Center)
             } else GoldButton(rematchLabel, { vm.rematch() }, Modifier.fillMaxWidth(), Ic.Refresh, enabled = canRematch)
-            OutlineButton(stringResource(R.string.back_to_lobby), exit, Modifier.fillMaxWidth())
+            OutlineButton(stringResource(R.string.back_to_lobby), exit, Modifier.fillMaxWidth(), Ic.Home)
         }
     }
 }

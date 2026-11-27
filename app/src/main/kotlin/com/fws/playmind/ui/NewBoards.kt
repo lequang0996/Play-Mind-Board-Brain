@@ -195,6 +195,12 @@ fun QuoridorBoardView(vm: SessionViewModel, modifier: Modifier = Modifier) {
     val previewOk = pr >= 0 && mode != QMode.MOVE && act && g.canPlaceWall(previewH, pr / 8, pr % 8)
     val last = g.lastMove
     val wallsLeft = if (g.turn in 0 until g.players) g.wallsOf(g.turn) else 0
+    /** Ai đã đặt từng bức tường (phát lại lịch sử ván) để tô dải màu dưới tường. */
+    val wallOwners = remember(tick) {
+        val out = HashMap<Int, Int>(); val replay = QuoridorGame(g.players)
+        for (mv in g.history) { val who = replay.turn; if (!replay.play(mv)) break; if (QuoridorGame.isWall(mv)) out[mv] = who }
+        out
+    }
 
     BoxWithConstraints(modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         val side = if (maxWidth < maxHeight - 112.dp) maxWidth else maxHeight - 112.dp
@@ -233,9 +239,10 @@ fun QuoridorBoardView(vm: SessionViewModel, modifier: Modifier = Modifier) {
                 fun dc(c: Int) = if (flip) 8 - c else c
                 fun cellTL(r: Int, c: Int) = Offset(m + dc(c) * step, m + dr(r) * step)
                 fun ctr(sq: Int): Offset { val t = cellTL(sq / 9, sq % 9); return Offset(t.x + cell / 2f, t.y + cell / 2f) }
-                drawRect(Brush.linearGradient(listOf(Color(0xFFB9703F), Color(0xFF7A3F1E)), Offset.Zero, Offset(w, w)))
-                drawRect(Color.Black.copy(alpha = .18f), style = Stroke(m * .6f))
-                // ô cờ + vạch đích của từng bên
+                // Bàn theo mẫu bộ cờ in 3D: đế xanh nhạt làm rãnh, viền và ô màu đồng, tường bạc dựng đứng
+                drawRoundRect(Brush.linearGradient(listOf(Color(0xFFC9EAF3), Color(0xFF9CCFDF)), Offset.Zero, Offset(w, w)), cornerRadius = CornerRadius(w * .05f))
+                drawRoundRect(Brush.linearGradient(listOf(Color(0xFFC27B50), Color(0xFF94522F)), Offset.Zero, Offset(w, w)), Offset(m * .12f, m * .12f), Size(w - m * .24f, w - m * .24f), CornerRadius(w * .05f), style = Stroke(m * .5f))
+                // ô đích của từng bên
                 val goalTint = Array(81) { -1 }
                 for (p in 0 until g.players) {
                     val gs = QuoridorGame.goalSide(g.players, p)
@@ -244,30 +251,45 @@ fun QuoridorBoardView(vm: SessionViewModel, modifier: Modifier = Modifier) {
                         goalTint[sq] = p
                     }
                 }
-                for (sq in 0 until 81) {
-                    val t = cellTL(sq / 9, sq % 9)
-                    drawRoundRect(Color(0xFF5E2F14).copy(alpha = .62f), t, Size(cell, cell), CornerRadius(cell * .12f))
-                    if (goalTint[sq] >= 0) drawRoundRect(playerColor(goalTint[sq]).copy(alpha = .22f), t, Size(cell, cell), CornerRadius(cell * .12f))
-                }
+                for (sq in 0 until 81) drawCopperTile(cellTL(sq / 9, sq % 9), cell, if (goalTint[sq] >= 0) playerColor(goalTint[sq]) else null, sq)
                 // nước đi gần nhất
-                if (last >= 0 && !QuoridorGame.isWall(last)) drawCircle(Lux.goldHi.copy(alpha = .9f), cell * .46f, ctr(last), style = Stroke(cell * .06f))
+                if (last >= 0 && !QuoridorGame.isWall(last)) drawCircle(Color.White.copy(alpha = .85f), cell * .46f, ctr(last), style = Stroke(cell * .055f))
                 // gợi ý ô đến
-                for (d in moves) drawCircle(Lux.goldHi.copy(alpha = .9f), cell * .13f, ctr(d))
-                // tường
-                fun drawWall(h: Boolean, r: Int, c: Int, color: Color) {
+                for (d in moves) {
+                    drawCircle(Color.Black.copy(alpha = .18f), cell * .15f, ctr(d) + Offset(0f, cell * .02f))
+                    drawCircle(Color(0xFFF6FBFF), cell * .13f, ctr(d))
+                }
+                // tường: dải màu của người đặt nằm trong rãnh + tấm bạc dựng đứng
+                fun wallRect(h: Boolean, r: Int, c: Int): Pair<Offset, Size> {
                     val rr = if (flip) 7 - r else r; val cc = if (flip) 7 - c else c
                     val x = m + cc * step; val y = m + rr * step
-                    if (h) drawRoundRect(color, Offset(x, y + cell), Size(cell * 2f + gw, gw), CornerRadius(gw / 2f))
-                    else drawRoundRect(color, Offset(x + cell, y), Size(gw, cell * 2f + gw), CornerRadius(gw / 2f))
+                    return if (h) Offset(x, y + cell) to Size(cell * 2f + gw, gw) else Offset(x + cell, y) to Size(gw, cell * 2f + gw)
+                }
+                fun drawWall(h: Boolean, r: Int, c: Int, owner: Color?, preview: Color? = null) {
+                    val (o, sz) = wallRect(h, r, c)
+                    if (preview != null) { drawRoundRect(preview, o, sz, CornerRadius(gw / 2f)); return }
+                    if (owner != null) drawRoundRect(owner, o, sz, CornerRadius(gw / 2f))
+                    // tấm tường bạc nhô lên (dịch nhẹ lên trên để có cảm giác đứng)
+                    val lift = gw * .55f
+                    val so = Offset(o.x - (if (h) 0f else gw * .12f), o.y - lift - (if (h) gw * .1f else 0f))
+                    val ss = if (h) Size(sz.width, gw * 1.15f) else Size(gw * 1.24f, sz.height)
+                    drawRoundRect(Color.Black.copy(alpha = .30f), so + Offset(gw * .25f, lift + gw * .35f), ss, CornerRadius(gw * .3f))
+                    drawRoundRect(
+                        if (h) Brush.verticalGradient(listOf(Color(0xFFFFFFFF), Color(0xFFD6DAE2), Color(0xFFA3A9B5)), so.y, so.y + ss.height)
+                        else Brush.horizontalGradient(listOf(Color(0xFFFFFFFF), Color(0xFFD6DAE2), Color(0xFFA3A9B5)), so.x, so.x + ss.width),
+                        so, ss, CornerRadius(gw * .3f),
+                    )
+                    drawRoundRect(Color.White.copy(alpha = .7f), so, ss, CornerRadius(gw * .3f), style = Stroke(gw * .08f))
                 }
                 for (r in 0..7) for (c in 0..7) {
-                    if (g.hasWallH(r, c)) { drawWall(true, r, c, Color.Black.copy(alpha = .35f)); drawWall(true, r, c, Color(0xFFE3E6F0)) }
-                    if (g.hasWallV(r, c)) { drawWall(false, r, c, Color.Black.copy(alpha = .35f)); drawWall(false, r, c, Color(0xFFE3E6F0)) }
+                    if (g.hasWallH(r, c)) drawWall(true, r, c, wallOwners[QuoridorGame.mvWall(true, r, c)]?.let { playerColor(it) })
+                    if (g.hasWallV(r, c)) drawWall(false, r, c, wallOwners[QuoridorGame.mvWall(false, r, c)]?.let { playerColor(it) })
                 }
                 // xem trước tường
-                if (pr >= 0 && mode != QMode.MOVE) drawWall(previewH, pr / 8, pr % 8, (if (previewOk) Color(0xFF3DDC97) else Color(0xFFFF6B6B)).copy(alpha = .85f))
-                // quân
-                for (p in 0 until g.players) drawPawn(Offset(ctr(g.pawnAt(p)).x, ctr(g.pawnAt(p)).y + cell * .05f), cell * .26f, playerColor(p))
+                if (pr >= 0 && mode != QMode.MOVE) drawWall(previewH, pr / 8, pr % 8, null, (if (previewOk) Color(0xFF16B37A) else Color(0xFFE5483D)).copy(alpha = .9f))
+                // quân: xếp theo hàng để quân phía dưới vẽ đè quân phía trên
+                val order = (0 until g.players).sortedBy { ctr(g.pawnAt(it)).y }
+                for (p in order) { val o = ctr(g.pawnAt(p)); drawQuoridorPawn(Offset(o.x, o.y + cell * .30f), cell * .30f, playerColor(p)) }
             }
             Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 val labels = listOf(stringResource(R.string.qd_mode_move), stringResource(R.string.qd_mode_wall_h), stringResource(R.string.qd_mode_wall_v))

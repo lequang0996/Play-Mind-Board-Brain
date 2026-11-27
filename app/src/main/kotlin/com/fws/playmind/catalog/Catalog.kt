@@ -48,7 +48,7 @@ data class GameInfo(
     val minutes: Int = 10,
     /**
      * Thời gian tối đa cho MỖI nước đi (giây). Hết giờ mà chưa đi thì người đang đến lượt bị xử thua.
-     * Với Sudoku (một người) là thời gian tối đa giữa hai lần thao tác trên bàn.
+     * Game một người (Sudoku) không giới hạn thời gian (0).
      */
     val moveSeconds: Int = 60,
     val create: ((Int) -> BoardGame)? = null,
@@ -83,7 +83,7 @@ object Catalog {
         GameInfo("caro", Topic.MIND, R.string.game_caro, R.string.game_caro_desc, R.string.guide_caro,
             R.string.stone_black, R.string.stone_white, 9, { 3500L }, order = 1, minutes = 5, moveSeconds = 45, create = { GomokuGame() }),
         GameInfo("sudoku", Topic.MATH, R.string.game_sudoku, R.string.game_sudoku_desc, R.string.guide_sudoku,
-            R.string.side_white, R.string.side_black, 0, { 0L }, kind = GameKind.SOLO, order = 1, minutes = 10, moveSeconds = 300),
+            R.string.side_white, R.string.side_black, 0, { 0L }, kind = GameKind.SOLO, order = 1, minutes = 10, moveSeconds = 0),
     )
 
     fun byId(id: String) = games.first { it.id == id }

@@ -87,19 +87,61 @@ fun DrawScope.drawWallGoArt(ox: Float, oy: Float, s: Float) {
     drawPawn(Offset(gx + cell * 2.5f, gy + cell * 2.55f), cell * .22f, PlayerColors[1])
 }
 
-/** Tranh minh hoạ Quoridor: bàn rãnh, chốt và tường dài. */
+/** Ô màu đồng của bàn Quoridor (in 3D): mặt vát sáng, vân lớp in mờ, bóng đổ xuống rãnh; [goal] tô nhẹ màu bên có đích ở hàng này. */
+fun DrawScope.drawCopperTile(tl: Offset, s: Float, goal: Color?, seed: Int = 0) {
+    val cr = CornerRadius(s * .14f)
+    drawRoundRect(Color(0xFF4F7F8F).copy(alpha = .35f), tl + Offset(s * .03f, s * .07f), Size(s, s), cr)
+    val base = if (goal != null) lerp(Color(0xFFB66C43), goal, .22f) else Color(0xFFB66C43)
+    drawRoundRect(Brush.verticalGradient(listOf(lerp(base, Color.White, .22f), base, lerp(base, Color.Black, .18f)), tl.y, tl.y + s), tl, Size(s, s), cr)
+    // vân lớp in rất mờ
+    val shift = (seed % 3) * s * .05f
+    for (i in 1..4) {
+        val y = tl.y + s * (.18f * i) + shift
+        if (y < tl.y + s * .92f) drawLine(Color.Black.copy(alpha = .06f), Offset(tl.x + s * .1f, y), Offset(tl.x + s * .9f, y), s * .02f)
+    }
+    drawRoundRect(Color.White.copy(alpha = .28f), tl, Size(s, s), cr, style = Stroke(s * .035f))
+    if (goal != null) drawRoundRect(goal.copy(alpha = .55f), tl + Offset(s * .3f, s * .44f), Size(s * .4f, s * .12f), CornerRadius(s * .06f))
+}
+
+/** Quân Quoridor kiểu nhựa bóng vân xoáy: đế tròn, cổ thon, đầu cầu có vân màu và điểm sáng. [c] = tâm đế, [r] = bán kính đầu. */
+fun DrawScope.drawQuoridorPawn(c: Offset, r: Float, color: Color) {
+    val dark = lerp(color, Color.Black, .40f); val light = lerp(color, Color.White, .55f); val alt = lerp(color, Color(0xFF7B5CFF), .35f)
+    // bóng đổ
+    drawOval(Color.Black.copy(alpha = .32f), Offset(c.x - r * 1.15f, c.y - r * .1f), Size(r * 2.3f, r * .8f))
+    // đế
+    drawOval(Brush.horizontalGradient(listOf(dark, color, light, color, dark), c.x - r * 1.05f, c.x + r * 1.05f), Offset(c.x - r * 1.05f, c.y - r * .5f), Size(r * 2.1f, r * .78f))
+    drawOval(lerp(color, Color.White, .25f), Offset(c.x - r * .8f, c.y - r * .5f), Size(r * 1.6f, r * .42f))
+    // cổ thon
+    val neck = androidx.compose.ui.graphics.Path().apply {
+        moveTo(c.x - r * .62f, c.y - r * .3f)
+        cubicTo(c.x - r * .5f, c.y - r * .9f, c.x - r * .22f, c.y - r * 1.2f, c.x - r * .26f, c.y - r * 1.55f)
+        lineTo(c.x + r * .26f, c.y - r * 1.55f)
+        cubicTo(c.x + r * .22f, c.y - r * 1.2f, c.x + r * .5f, c.y - r * .9f, c.x + r * .62f, c.y - r * .3f)
+        close()
+    }
+    drawPath(neck, Brush.horizontalGradient(listOf(dark, color, light, color, dark), c.x - r * .62f, c.x + r * .62f))
+    // đầu cầu
+    val hc = Offset(c.x, c.y - r * 2.05f)
+    drawCircle(Brush.radialGradient(listOf(light, color, dark), center = Offset(hc.x - r * .3f, hc.y - r * .35f), radius = r * 1.25f), r * .78f, hc)
+    drawCircle(Brush.sweepGradient(listOf(color, alt, light, color, dark, alt, color), hc), r * .78f, hc, alpha = .32f)
+    drawCircle(Color.White.copy(alpha = .75f), r * .17f, Offset(hc.x - r * .28f, hc.y - r * .32f))
+    drawCircle(Color.White.copy(alpha = .25f), r * .78f, hc, style = Stroke(r * .05f))
+}
+
+/** Tranh minh hoạ Quoridor: bàn ô đồng rãnh xanh, tường bạc và hai quân. */
 fun DrawScope.drawQuoridorArt(ox: Float, oy: Float, s: Float) {
     val b = s * .86f; val x0 = ox + s * .07f; val y0 = oy + s * .10f
-    drawRoundRect(Brush.linearGradient(listOf(Color(0xFFB9703F), Color(0xFF8A4A25)), Offset(x0, y0), Offset(x0 + b, y0 + b)), Offset(x0, y0), Size(b, b), CornerRadius(s * .06f))
+    drawRoundRect(Brush.linearGradient(listOf(Color(0xFFC9EAF3), Color(0xFF9CCFDF)), Offset(x0, y0), Offset(x0 + b, y0 + b)), Offset(x0, y0), Size(b, b), CornerRadius(s * .07f))
+    drawRoundRect(Color(0xFFA9653D), Offset(x0, y0), Size(b, b), CornerRadius(s * .07f), style = Stroke(s * .025f))
     val n = 4; val cell = b / (n + .5f); val gx = x0 + (b - cell * n) / 2f; val gy = y0 + (b - cell * n) / 2f
-    for (r in 0 until n) for (c in 0 until n) {
-        drawRoundRect(Color(0xFF6E3A1B).copy(alpha = .55f), Offset(gx + c * cell + cell * .07f, gy + r * cell + cell * .07f), Size(cell * .86f, cell * .86f), CornerRadius(cell * .1f))
-    }
-    val w = cell * .12f
-    drawLine(Color(0xFFD7DAE6), Offset(gx + cell * .05f, gy + cell * 1f), Offset(gx + cell * 1.95f, gy + cell * 1f), w, StrokeCap.Round)
-    drawLine(Color(0xFFD7DAE6), Offset(gx + cell * 3f, gy + cell * 1.05f), Offset(gx + cell * 3f, gy + cell * 2.95f), w, StrokeCap.Round)
-    drawPawn(Offset(gx + cell * 1.5f, gy + cell * 3.45f), cell * .26f, PlayerColors[0])
-    drawPawn(Offset(gx + cell * 2.5f, gy + cell * .5f), cell * .26f, PlayerColors[1])
+    for (r in 0 until n) for (c in 0 until n) drawCopperTile(Offset(gx + c * cell + cell * .07f, gy + r * cell + cell * .07f), cell * .86f, null, r * 4 + c)
+    val w = cell * .16f
+    drawLine(PlayerColors[0], Offset(gx + cell * .1f, gy + cell * 1f), Offset(gx + cell * 1.9f, gy + cell * 1f), w * .6f, StrokeCap.Round)
+    drawLine(Color(0xFFE9ECF2), Offset(gx + cell * .1f, gy + cell * .94f), Offset(gx + cell * 1.9f, gy + cell * .94f), w, StrokeCap.Round)
+    drawLine(PlayerColors[1], Offset(gx + cell * 3f, gy + cell * 1.1f), Offset(gx + cell * 3f, gy + cell * 2.9f), w * .6f, StrokeCap.Round)
+    drawLine(Color(0xFFE9ECF2), Offset(gx + cell * 2.96f, gy + cell * 1.1f), Offset(gx + cell * 2.96f, gy + cell * 2.9f), w, StrokeCap.Round)
+    drawQuoridorPawn(Offset(gx + cell * 1.5f, gy + cell * 3.75f), cell * .3f, PlayerColors[0])
+    drawQuoridorPawn(Offset(gx + cell * 2.5f, gy + cell * .8f), cell * .3f, PlayerColors[1])
 }
 
 /** Tranh minh hoạ cờ vây: góc bàn gỗ vàng và vài quân đá. */

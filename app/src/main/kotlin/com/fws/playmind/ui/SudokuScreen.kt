@@ -98,8 +98,6 @@ fun SudokuScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onExit:
                     Icon(Ic.Hourglass, null, Modifier.size(16.dp), tint = pm.gold)
                     Text(fmtTime(vm.sudokuSeconds), style = MaterialTheme.typography.titleMedium, color = pm.ink)
                 }
-                // sắp hết thời gian chờ thao tác (5 phút không điền gì sẽ bị xử thua): hiện đồng hồ đếm ngược
-                if (!over && vm.turnSecondsLeft in 1..60) { Spacer(Modifier.width(10.dp)); TurnClock(vm.turnSecondsLeft, Modifier.align(Alignment.CenterVertically)) }
             }
             BoxWithConstraints(Modifier.weight(1f).fillMaxWidth().padding(horizontal = 12.dp), contentAlignment = Alignment.Center) {
                 val boardSide = if (maxWidth < maxHeight - 140.dp) maxWidth else maxHeight - 140.dp

@@ -306,7 +306,8 @@ fun DrawScope.drawSideBadge(gameId: String, side: Int, tm: TextMeasurer, s: Floa
         "chess" -> drawChessPiece(6, side == 0, Offset.Zero, s)
         "xiangqi" -> drawXiangqiPiece(Offset(s / 2f, s / 2f), s * .46f, side == 0, 1, tm)
         "go" -> drawStone(Offset(s / 2f, s / 2f), s * .44f, side == 0)
-        "wallgo", "quoridor" -> drawPawn(Offset(s / 2f, s * .56f), s * .27f, playerColor(side))
+        "wallgo" -> drawPawn(Offset(s / 2f, s * .56f), s * .27f, playerColor(side))
+        "quoridor" -> drawQuoridorPawn(Offset(s / 2f, s * .86f), s * .25f, playerColor(side))
         else -> drawCaroPiece(Offset(s / 2f, s / 2f), s * 1.05f, side == 0)
     }
 }

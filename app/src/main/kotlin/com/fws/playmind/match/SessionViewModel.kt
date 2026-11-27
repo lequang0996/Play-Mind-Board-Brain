@@ -230,8 +230,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
             if (my != epoch) return@launch
             sudoku = g; sudokuLoading = false; sudokuTick++
             sudokuClock = launch { while (true) { delay(1000); if (sudoku?.status == SudokuStatus.PLAYING) sudokuSeconds++ } }
-            resetTurnClock()
-            startTurnClock()
+            // game một người: không giới hạn thời gian
         }
         return true
     }
@@ -242,7 +241,6 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         if (phase != Phase.PLAYING) return
         block(g)
         sudokuTick++
-        resetTurnClock()
         if (g.status != SudokuStatus.PLAYING) {
             phase = Phase.OVER
             settle(if (g.status == SudokuStatus.WON) MatchOutcome.WIN else MatchOutcome.LOSS, true)

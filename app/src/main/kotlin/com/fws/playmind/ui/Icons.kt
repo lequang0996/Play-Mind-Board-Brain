@@ -14,10 +14,44 @@ import androidx.compose.ui.unit.dp
 object Ic {
     private fun circle(cx: Float, cy: Float, r: Float) = "M${cx - r} ${cy}a$r $r 0 1 0 ${2 * r} 0a$r $r 0 1 0 ${-2 * r} 0"
 
+    /**
+     * Trình đọc path của Compose không hiểu cờ cung viết liền ("a2 2 0 014 0" = cờ 0, 1 rồi x=4): khi đó cả icon bị vỡ thành
+     * một chấm nhỏ. Hàm này tách cờ của lệnh cung (a/A) ra bằng khoảng trắng trước khi đọc.
+     */
+    internal fun expandArcs(d: String): String {
+        val out = StringBuilder(); var i = 0; var cmd = ' '
+        fun skip() { while (i < d.length && (d[i] == ' ' || d[i] == ',' || d[i] == '
+')) i++ }
+        fun num(): String {
+            skip(); val st = i
+            if (i < d.length && (d[i] == '-' || d[i] == '+')) i++
+            var dot = false
+            while (i < d.length) {
+                val c = d[i]
+                if (c.isDigit()) i++
+                else if (c == '.' && !dot) { dot = true; i++ }
+                else if ((c == 'e' || c == 'E') && i + 1 < d.length && (d[i + 1].isDigit() || d[i + 1] == '-')) { i += 2 }
+                else break
+            }
+            return d.substring(st, i)
+        }
+        fun flag(): String { skip(); return if (i < d.length) d[i++].toString() else "0" }
+        while (true) {
+            skip(); if (i >= d.length) break
+            val c = d[i]
+            if (c.isLetter()) { cmd = c; out.append(c).append(' '); i++; continue }
+            val before = i
+            if (cmd == 'a' || cmd == 'A') out.append("${num()} ${num()} ${num()} ${flag()} ${flag()} ${num()} ${num()} ")
+            else out.append(num()).append(' ')
+            if (i == before) i++                     // ký tự lạ: bỏ qua để không lặp vô hạn
+        }
+        return out.toString().trim()
+    }
+
     private fun build(name: String, filled: Boolean, vararg paths: String): ImageVector =
         ImageVector.Builder(name, 24.dp, 24.dp, 24f, 24f).apply {
             for (d in paths) addPath(
-                PathParser().parsePathString(d).toNodes(),
+                PathParser().parsePathString(expandArcs(d)).toNodes(),
                 fill = if (filled) SolidColor(Color.Black) else null,
                 stroke = if (filled) null else SolidColor(Color.Black),
                 strokeLineWidth = 1.8f, strokeLineCap = StrokeCap.Round, strokeLineJoin = StrokeJoin.Round,
@@ -75,6 +109,11 @@ object Ic {
     val Brick = build("brick", false, "M3.5 7h17v10h-17zM3.5 12h17M9 7v5M15 12v5")
     val Heart = build("heart", true, "M12 20s-7.5-4.6-7.5-10A4.2 4.2 0 0112 7.2 4.2 4.2 0 0119.5 10c0 5.4-7.5 10-7.5 10z")
     val Crosshair = build("crosshair", false, "M12 4v16M4 12h16")
+    val Home = build("home", false, "M4 11l8-6.5 8 6.5", "M6 9.5V19a1 1 0 001 1h3.5v-5h3v5H17a1 1 0 001-1V9.5")
     val Menu = build("menu", false, "M4.5 7h15M4.5 12h15M4.5 17h9")
+    /** Hai điện thoại kết nối trực tiếp (Bluetooth / Wi-Fi) - chơi gần nhau. */
+    val Nearby = build("nearby", false, "M3.5 6.5h4a1 1 0 011 1v9a1 1 0 01-1 1h-4a1 1 0 01-1-1v-9a1 1 0 011-1zM16.5 6.5h4a1 1 0 011 1v9a1 1 0 01-1 1h-4a1 1 0 01-1-1v-9a1 1 0 011-1z", "M10.6 10.2a2.6 2.6 0 000 3.6M13.4 10.2a2.6 2.6 0 010 3.6", "M5.5 15h.01M18.5 15h.01")
+    /** Quả địa cầu có mạng lưới - chơi qua internet. */
+    val Internet = build("internet", false, circle(12f, 12f, 8.5f), "M3.5 12h17M12 3.5c2.6 2.4 2.6 14.6 0 17M12 3.5c-2.6 2.4-2.6 14.6 0 17M5 7.5h14M5 16.5h14")
     val Apps = build("apps", false, "M5.5 4h3A1.5 1.5 0 0110 5.5v3A1.5 1.5 0 018.5 10h-3A1.5 1.5 0 014 8.5v-3A1.5 1.5 0 015.5 4zM15.5 4h3A1.5 1.5 0 0120 5.5v3a1.5 1.5 0 01-1.5 1.5h-3A1.5 1.5 0 0114 8.5v-3A1.5 1.5 0 0115.5 4zM5.5 14h3a1.5 1.5 0 011.5 1.5v3A1.5 1.5 0 018.5 20h-3A1.5 1.5 0 014 18.5v-3A1.5 1.5 0 015.5 14z", circle(17f, 17f, 3f))
 }
