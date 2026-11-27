@@ -291,11 +291,11 @@ class ChessTT(bits: Int) {
  * so A/B các giá trị khác nhau trong cùng một tiến trình (người chơi "new@rfpm70+asp14" trong job ab).
  */
 object SP {
-    val NAMES = arrayOf("rfpm", "rfpi", "razb", "razd", "nmpdiv", "sing", "sde", "futb", "futd", "hp", "seeq", "seec", "lmrh", "asp", "qd")
-    val DEF = intArrayOf(80, 60, 220, 180, 200, 16, 24, 120, 100, 3500, 30, 100, 7000, 18, 180)
+    val NAMES = arrayOf("rfpm", "rfpi", "razb", "razd", "nmpdiv", "sing", "sde", "futb", "futd", "hp", "seeq", "seec", "lmrh", "asp", "qd", "corr")
+    val DEF = intArrayOf(80, 60, 220, 180, 200, 16, 24, 120, 100, 3500, 30, 100, 7000, 18, 180, 0)
     const val RFP_M = 0; const val RFP_I = 1; const val RAZ_B = 2; const val RAZ_D = 3; const val NMP_DIV = 4; const val SING = 5
     const val SDE = 6; const val FUT_B = 7; const val FUT_D = 8; const val HP = 9; const val SEEQ = 10; const val SEEC = 11
-    const val LMRH = 12; const val ASP = 13; const val QD = 14
+    const val LMRH = 12; const val ASP = 13; const val QD = 14; const val CORR = 15
     /** "rfpm70+asp14" -> bản tham số đã sửa. */
     fun parse(spec: String): IntArray {
         val p = DEF.copyOf()
@@ -368,6 +368,9 @@ class ChessEngine(private val tt: ChessTT) {
     private val capHist = Array(16) { Array(64) { IntArray(8) } }
     private val killers = Array(MAXPLY + 2) { IntArray(2) }
     private val counter = IntArray(1024)
+    /** Correction history: sai lệch trung bình (×256) giữa điểm tìm kiếm và đánh giá tĩnh theo cấu trúc tốt, mỗi bên đi. */
+    private val corr = Array(2) { IntArray(16384) }
+    private fun pawnIdx(): Int = (((bb[P] * -0x61c8864680b583ebL) xor (bb[P or 8] * 0x5851f42d4c957f2dL)) ushr 50).toInt()
 
     // ───── ngăn xếp tìm kiếm ─────
     private val bufs = Array(MAXPLY + 2) { IntArray(256) }
@@ -930,9 +933,10 @@ class ChessEngine(private val tt: ChessTT) {
             ttEval = ((d ushr 48) and 0xFFFF).toInt() - 32768
             if (!pv && (fl == EXACT || (fl == LOWER && s >= beta) || (fl == UPPER && s <= alpha))) return s
         }
-        var best: Int; val stand: Int
+        var best: Int; val stand: Int; var rawStand = NONE
         if (!inChk) {
-            stand = if (ttEval != NONE) ttEval else evaluate()
+            rawStand = if (ttEval != NONE) ttEval else evaluate()
+            stand = if (prm[SP.CORR] > 0) rawStand + corr[stm][pawnIdx()] / 256 else rawStand
             if (stand >= beta) return stand
             if (stand > alpha) alpha = stand
             best = stand
@@ -962,7 +966,7 @@ class ChessEngine(private val tt: ChessTT) {
             }
         }
         if (inChk && legalN == 0) return -(MATE - ply)
-        ttStore(hash, bestMove, scoreToTT(best, ply), if (stand == NONE) 0 else stand, 0,
+        ttStore(hash, bestMove, scoreToTT(best, ply), if (rawStand == NONE) 0 else rawStand, 0,
             if (best >= beta) LOWER else if (best > origAlpha) EXACT else UPPER)
         return best
     }
@@ -1003,9 +1007,12 @@ class ChessEngine(private val tt: ChessTT) {
             }
         }
         var eval: Int
+        var rawEval = NONE
         if (inChk) { eval = NONE; sEval[ply] = NONE }
         else {
             eval = if (ttHit && ttEval != NONE && ttF != 3) ttEval else evaluate()
+            rawEval = eval
+            if (prm[SP.CORR] > 0) eval += corr[stm][pawnIdx()] / 256
             sEval[ply] = eval
             if (ttHit && ttS != NONE && ((ttF == LOWER && ttS > eval) || (ttF == UPPER && ttS < eval) || ttF == EXACT)) eval = ttS
         }
@@ -1132,8 +1139,15 @@ class ChessEngine(private val tt: ChessTT) {
         }
         if (legalN == 0) return if (excluded != 0) alpha else if (inChk) -(MATE - ply) else 0
         if (excluded == 0) {
-            ttStore(key, bestMove, scoreToTT(best, ply), if (sEval[ply] == NONE) 0 else sEval[ply], depth,
-                if (best >= beta) LOWER else if (best > origAlpha) EXACT else UPPER)
+            val bound = if (best >= beta) LOWER else if (best > origAlpha) EXACT else UPPER
+            ttStore(key, bestMove, scoreToTT(best, ply), if (rawEval == NONE) 0 else rawEval, depth, bound)
+            val cm = prm[SP.CORR]
+            if (cm > 0 && !inChk && (bestMove == 0 || isQuiet(bestMove)) && abs(best) < MATE - 500 &&
+                !(bound == LOWER && best <= sEval[ply]) && !(bound == UPPER && best >= sEval[ply])) {
+                val t = corr[stm]; val i = pawnIdx(); val w = min(16, depth + 1)
+                val v = (t[i] * (256 - w) + (best - rawEval) * 256 * w) / 256
+                t[i] = v.coerceIn(-cm * 256, cm * 256)
+            }
         }
         return best
     }
@@ -1310,6 +1324,7 @@ class ChessEngine(private val tt: ChessTT) {
         for (c in cont) c.fill(0)
         for (a in capHist) for (b in a) b.fill(0)
         counter.fill(0)
+        for (c in corr) c.fill(0)
     }
 
     /** FEN rút gọn của thế hiện tại (để ghi dữ liệu tinh chỉnh). */

@@ -27,13 +27,17 @@ private class ChessP(val threads: Int, ref: Boolean, spec: String) : AbPlayer {
     }
 }
 
-private class XqP(val threads: Int, ref: Boolean) : AbPlayer {
+private class XqP(val threads: Int, ref: Boolean, spec: String = "") : AbPlayer {
     val e = XiangqiEngine(20)
     private val start = IntArray(90).also { val g = XiangqiGame(); for (i in 0 until 90) it[i] = g.pieceAt(i) }
     init {
         if (ref) synchronized(XW) {
             val mg = XW.MG.copyOf(); val eg = XW.EG.copyOf(); XW.defaults()
             e.wMg = XW.MG.copyOf(); e.wEg = XW.EG.copyOf(); mg.copyInto(XW.MG); eg.copyInto(XW.EG)
+        }
+        // spec: "corr64" (biên correction history); để trống = mặc định của engine
+        for (it in spec.split('+').filter { it.isNotEmpty() }) {
+            require(it.startsWith("corr")) { "tham số lạ: $it" }; e.corrMax = it.removePrefix("corr").toInt()
         }
     }
     override fun move(hist: List<Int>, ms: Long, nodes: Long) =
@@ -53,7 +57,7 @@ fun abMain(args: List<String>) {
         val th = if (s.startsWith("smp")) s.removePrefix("smp").toInt() else 1
         return when (game) {
             "chess" -> ChessP(th, s == "ref", spec)
-            "xiangqi" -> if (s == "old") XqOldP() else XqP(th, s == "ref")
+            "xiangqi" -> if (s == "old") XqOldP() else XqP(th, s == "ref", spec)
             else -> error("ab: game $game chưa hỗ trợ")
         }
     }

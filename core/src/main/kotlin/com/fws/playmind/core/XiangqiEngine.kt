@@ -17,6 +17,8 @@ import kotlin.math.min
  */
 internal object XQ {
     const val K = 1; const val A = 2; const val E = 3; const val H = 4; const val R = 5; const val C = 6; const val P = 7
+    /** Loại quân thuộc "cấu trúc" (khóa correction history). */
+    val STRUCT = BooleanArray(8).also { it[K] = true; it[A] = true; it[E] = true; it[P] = true }
     private fun ok(f: Int, r: Int) = f in 0..8 && r in 0..9
     private fun sq(f: Int, r: Int) = r * 9 + f
     fun inPalace(c: Int, s: Int): Boolean { val f = s % 9; val r = s / 9; return f in 3..5 && (if (c == 0) r in 0..2 else r in 7..9) }
@@ -165,6 +167,8 @@ class XiangqiEngine(private val tt: ChessTT) {
     var stm = 0; private set
     private var half = 0
     private var hash = 0L
+    /** Khóa cấu trúc (tốt, sĩ, tượng, tướng) cho correction history; cập nhật bằng XOR nên tự khôi phục khi đi lùi. */
+    private var skey = 0L
     private val kingSq = IntArray(2)
 
     private val STACK = 4096 + MAXPLY + 8
@@ -184,6 +188,10 @@ class XiangqiEngine(private val tt: ChessTT) {
     private val capHist = Array(14) { Array(90) { IntArray(8) } }
     private val killers = Array(MAXPLY + 2) { IntArray(2) }
     private val counter = IntArray(1260)
+    /** Correction history (×256) theo khóa cấu trúc, mỗi bên đi; [corrMax] = biên (điểm), 0 = tắt. */
+    private val corr = Array(2) { IntArray(16384) }
+    var corrMax = 0
+    private fun corrIdx(): Int = ((skey * -0x61c8864680b583ebL) ushr 50).toInt()
 
     private val bufs = Array(MAXPLY + 2) { IntArray(160) }
     private val scr = Array(MAXPLY + 2) { IntArray(160) }
@@ -208,6 +216,7 @@ class XiangqiEngine(private val tt: ChessTT) {
         val c = p shr 3
         pc[s] = p; pix[s] = pcount[c]; plist[c][pcount[c]++] = s; cnt[p]++
         hash = hash xor ZP[p][s]
+        if (XQ.STRUCT[p and 7]) skey = skey xor ZP[p][s]
         if ((p and 7) == K) kingSq[c] = s
     }
 
@@ -217,6 +226,7 @@ class XiangqiEngine(private val tt: ChessTT) {
         plist[c][i] = last; pix[last] = i
         pc[s] = 0; cnt[p]--
         hash = hash xor ZP[p][s]
+        if (XQ.STRUCT[p and 7]) skey = skey xor ZP[p][s]
     }
 
     private fun movePiece(from: Int, to: Int) {
@@ -224,10 +234,11 @@ class XiangqiEngine(private val tt: ChessTT) {
         val i = pix[from]; plist[c][i] = to; pix[to] = i
         pc[to] = p; pc[from] = 0
         hash = hash xor ZP[p][from] xor ZP[p][to]
+        if (XQ.STRUCT[p and 7]) skey = skey xor ZP[p][from] xor ZP[p][to]
         if ((p and 7) == K) kingSq[c] = to
     }
 
-    private fun clearBoard() { pc.fill(0); pcount.fill(0); cnt.fill(0); hash = 0; sp = 0; hp = 0; half = 0 }
+    private fun clearBoard() { pc.fill(0); pcount.fill(0); cnt.fill(0); hash = 0; skey = 0; sp = 0; hp = 0; half = 0 }
 
     /** FEN cờ tướng: hàng 9 (Đen) trước; chữ hoa = Đỏ; K A B N R C P. */
     fun setFen(fen: String) {
@@ -685,9 +696,10 @@ class XiangqiEngine(private val tt: ChessTT) {
             ttEval = ((d0 ushr 48) and 0xFFFF).toInt() - 32768
             if (!pv && (fl == EXACT || (fl == LOWER && s >= beta) || (fl == UPPER && s <= alpha))) return s
         }
-        var best: Int; val stand: Int
+        var best: Int; val stand: Int; var rawStand = NONE
         if (!inChk) {
-            stand = if (ttEval != NONE) ttEval else evaluate()
+            rawStand = if (ttEval != NONE) ttEval else evaluate()
+            stand = if (corrMax > 0) rawStand + corr[stm][corrIdx()] / 256 else rawStand
             if (stand >= beta) return stand
             if (stand > alpha) alpha = stand
             best = stand
@@ -716,7 +728,7 @@ class XiangqiEngine(private val tt: ChessTT) {
             }
         }
         if (inChk && legalN == 0) return -(MATE - ply)
-        ttStore(hash, bestMove, scoreToTT(best, ply), if (stand == NONE) 0 else stand, 0,
+        ttStore(hash, bestMove, scoreToTT(best, ply), if (rawStand == NONE) 0 else rawStand, 0,
             if (best >= beta) LOWER else if (best > origAlpha) EXACT else UPPER)
         return best
     }
@@ -756,9 +768,12 @@ class XiangqiEngine(private val tt: ChessTT) {
             }
         }
         var eval: Int
+        var rawEval = NONE
         if (inChk) { eval = NONE; sEval[ply] = NONE }
         else {
             eval = if (ttHit && ttEval != NONE) ttEval else evaluate()
+            rawEval = eval
+            if (corrMax > 0) eval += corr[stm][corrIdx()] / 256
             sEval[ply] = eval
             if (ttHit && ttS != NONE && ((ttF == LOWER && ttS > eval) || (ttF == UPPER && ttS < eval) || ttF == EXACT)) eval = ttS
         }
@@ -877,8 +892,15 @@ class XiangqiEngine(private val tt: ChessTT) {
         // luật app: hết nước đi là thua (kể cả không bị chiếu)
         if (legalN == 0) return if (excluded != 0) alpha else -(MATE - ply)
         if (excluded == 0) {
-            ttStore(key, bestMove, scoreToTT(best, ply), if (sEval[ply] == NONE) 0 else sEval[ply], depth,
-                if (best >= beta) LOWER else if (best > origAlpha) EXACT else UPPER)
+            val bound = if (best >= beta) LOWER else if (best > origAlpha) EXACT else UPPER
+            ttStore(key, bestMove, scoreToTT(best, ply), if (rawEval == NONE) 0 else rawEval, depth, bound)
+            val cm = corrMax
+            if (cm > 0 && !inChk && (bestMove == 0 || isQuiet(bestMove)) && abs(best) < MATE - 500 &&
+                !(bound == LOWER && best <= sEval[ply]) && !(bound == UPPER && best >= sEval[ply])) {
+                val t = corr[stm]; val i = corrIdx(); val w = min(16, depth + 1)
+                val v = (t[i] * (256 - w) + (best - rawEval) * 256 * w) / 256
+                t[i] = v.coerceIn(-cm * 256, cm * 256)
+            }
         }
         return best
     }
@@ -1024,7 +1046,7 @@ class XiangqiEngine(private val tt: ChessTT) {
         load(board, redToMove, moves)
         if (threads <= 1 || lim.nodes > 0 || lim.depth > 0 || lim.timeMs <= 0) return search(lim, allowed, delta)
         while (helpers.size < threads - 1) helpers.add(XiangqiEngine(tt).also { it.helperId = helpers.size + 1 })
-        for (h in helpers) { h.wMg = wMg; h.wEg = wEg }
+        for (h in helpers) { h.wMg = wMg; h.wEg = wEg; h.corrMax = corrMax }
         tt.stop = false
         val ths = (0 until threads - 1).map { k ->
             val h = helpers[k]
@@ -1047,6 +1069,7 @@ class XiangqiEngine(private val tt: ChessTT) {
         for (c in cont) c.fill(0)
         for (a in capHist) for (b in a) b.fill(0)
         counter.fill(0)
+        for (c in corr) c.fill(0)
     }
 
     fun quiescence(): Int { abort = false; nodeLimit = Long.MAX_VALUE; deadline = Long.MAX_VALUE; return qsearch(-INF, INF, 0) }
