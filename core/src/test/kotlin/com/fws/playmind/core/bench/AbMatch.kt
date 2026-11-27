@@ -8,13 +8,14 @@ import kotlin.random.Random
  *   ab <game> <A> <B> <games> <ms> <seed> [nodes]
  *   game: chess | xiangqi.  A, B: new (bản hiện tại, 1 luồng) | smpN (N luồng) | ref (trọng số khởi điểm, chưa tinh chỉnh)
  *         | old (engine cũ, chỉ cờ tướng).  nodes > 0: giới hạn nút thay cho thời gian.
+ *         Cờ vua thêm "@tham số": ví dụ new@rfpm70+asp14 hoặc smp3@futb100 (tên tham số xem SP trong ChessEngine.kt).
  * In mỗi ván "R <i> <A đi trước 1/0> <điểm của A> <số nửa nước> <lý do>", cuối cùng "TOTAL W D L".
  */
 private interface AbPlayer { fun move(hist: List<Int>, ms: Long, nodes: Long): Int; fun newGame() }
 
-private class ChessP(val threads: Int, ref: Boolean) : AbPlayer {
+private class ChessP(val threads: Int, ref: Boolean, spec: String) : AbPlayer {
     val e = ChessEngine(20)
-    init { if (ref) { val w = defaultWeights(); e.wMg = w.first; e.wEg = w.second } }
+    init { if (ref) { val w = defaultWeights(); e.wMg = w.first; e.wEg = w.second }; e.prm = SP.parse(spec) }
     override fun move(hist: List<Int>, ms: Long, nodes: Long) =
         e.searchSmp(ChessEngine.START_FEN, hist, SearchLimit(timeMs = if (nodes > 0) 0 else ms, nodes = nodes), null, 0, threads).best
     override fun newGame() = e.clear()
@@ -47,10 +48,11 @@ private class XqOldP : AbPlayer {
 
 fun abMain(args: List<String>) {
     val game = args[0]
-    fun mk(s: String): AbPlayer {
+    fun mk(full: String): AbPlayer {
+        val s = full.substringBefore('@'); val spec = if ('@' in full) full.substringAfter('@') else ""
         val th = if (s.startsWith("smp")) s.removePrefix("smp").toInt() else 1
         return when (game) {
-            "chess" -> ChessP(th, s == "ref")
+            "chess" -> ChessP(th, s == "ref", spec)
             "xiangqi" -> if (s == "old") XqOldP() else XqP(th, s == "ref")
             else -> error("ab: game $game chưa hỗ trợ")
         }

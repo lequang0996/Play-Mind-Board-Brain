@@ -5,12 +5,28 @@
 #   ab     <game> <A> <B> games=<số ván> ms=<ms/nước> shards=<số máy> [nodes=<giới hạn nút>]   (A, B: new | smpN | ref | old)
 #   Mọi dòng thêm được props=k1=v1;k2=v2 (thuộc tính hệ thống, ví dụ pm.level.chess.5=n15000 để thử cấu hình cấp).
 # Cấp: 0 Dễ, 1 Trung bình, 2 Khá, 3 Giỏi, 4 Cao thủ, 5 Thách đấu, 6 Siêu việt.
-tag=g3-chess-tm-xiangqi-v1
-note=Cờ vua: quản lý thời gian mới (dùng gần hết ngân sách mỗi nước), đo lại với Stockfish 2800 (80 ván, 3 luồng và 1 luồng), thử Lazy SMP, quét số nút cấp Thách đấu/Cao thủ. Cờ tướng: engine mới XiangqiEngine (chưa tinh chỉnh) so engine cũ.
-gauge chess elo=2800 games=80 ms=2000 sfms=2000 shards=8 threads=3
-gauge chess elo=2800 games=80 ms=2000 sfms=2000 shards=4 threads=1
-ab chess smp3 new games=100 ms=1000 shards=5
-ladder chess 6 5 pairs=60 ms=2000 shards=4 props=pm.level.chess.5=n15000
-ladder chess 6 5 pairs=60 ms=2000 shards=4 props=pm.level.chess.5=n5000
-ladder chess 6 5 pairs=60 ms=2000 shards=4 props=pm.level.chess.5=n1500
-ab xiangqi new old games=240 ms=1000 shards=5
+tag=g4-chess-params-1
+note=Cờ vua: thử từng tham số tìm kiếm (SP trong ChessEngine.kt), mỗi biến thể 400 ván với bản mặc định, 200 ms/nước, 1 luồng.
+ab chess new@rfpm65 new games=400 ms=200 shards=3
+ab chess new@rfpm95 new games=400 ms=200 shards=3
+ab chess new@razb320 new games=400 ms=200 shards=3
+ab chess new@nmpdiv150 new games=400 ms=200 shards=3
+ab chess new@nmpdiv260 new games=400 ms=200 shards=3
+ab chess new@futb90 new games=400 ms=200 shards=3
+ab chess new@futb160 new games=400 ms=200 shards=3
+ab chess new@futd75 new games=400 ms=200 shards=3
+ab chess new@futd130 new games=400 ms=200 shards=3
+ab chess new@hp2500 new games=400 ms=200 shards=3
+ab chess new@hp5000 new games=400 ms=200 shards=3
+ab chess new@seeq20 new games=400 ms=200 shards=3
+ab chess new@seeq45 new games=400 ms=200 shards=3
+ab chess new@seec70 new games=400 ms=200 shards=3
+ab chess new@seec140 new games=400 ms=200 shards=3
+ab chess new@lmrh5000 new games=400 ms=200 shards=3
+ab chess new@lmrh10000 new games=400 ms=200 shards=3
+ab chess new@asp12 new games=400 ms=200 shards=3
+ab chess new@asp26 new games=400 ms=200 shards=3
+ab chess new@sing11 new games=400 ms=200 shards=3
+ab chess new@sing22 new games=400 ms=200 shards=3
+ab chess new@qd130 new games=400 ms=200 shards=3
+ab chess new@qd240 new games=400 ms=200 shards=3

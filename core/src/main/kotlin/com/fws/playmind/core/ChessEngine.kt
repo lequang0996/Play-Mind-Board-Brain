@@ -286,6 +286,28 @@ class ChessTT(bits: Int) {
     fun clear() { key.fill(0); data.fill(0) }
 }
 
+/**
+ * Tham số tìm kiếm của [ChessEngine] (biên cắt tỉa, cửa sổ...). Mỗi engine giữ bản sao riêng ([ChessEngine.prm]) để bộ đo
+ * so A/B các giá trị khác nhau trong cùng một tiến trình (người chơi "new@rfpm70+asp14" trong job ab).
+ */
+object SP {
+    val NAMES = arrayOf("rfpm", "rfpi", "razb", "razd", "nmpdiv", "sing", "sde", "futb", "futd", "hp", "seeq", "seec", "lmrh", "asp", "qd")
+    val DEF = intArrayOf(80, 60, 220, 180, 200, 16, 24, 120, 100, 3500, 30, 100, 7000, 18, 180)
+    const val RFP_M = 0; const val RFP_I = 1; const val RAZ_B = 2; const val RAZ_D = 3; const val NMP_DIV = 4; const val SING = 5
+    const val SDE = 6; const val FUT_B = 7; const val FUT_D = 8; const val HP = 9; const val SEEQ = 10; const val SEEC = 11
+    const val LMRH = 12; const val ASP = 13; const val QD = 14
+    /** "rfpm70+asp14" -> bản tham số đã sửa. */
+    fun parse(spec: String): IntArray {
+        val p = DEF.copyOf()
+        for (item in spec.split('+').filter { it.isNotEmpty() }) {
+            val i = item.indexOfFirst { it == '-' || it.isDigit() }
+            val k = NAMES.indexOf(item.substring(0, i)); require(k >= 0) { "tham số lạ: $item" }
+            p[k] = item.substring(i).toInt()
+        }
+        return p
+    }
+}
+
 class ChessEngine(private val tt: ChessTT) {
     constructor(ttBits: Int = 20) : this(ChessTT(ttBits))
     companion object {
@@ -642,6 +664,8 @@ class ChessEngine(private val tt: ChessTT) {
     private var mgS = 0; private var egS = 0
     /** Trọng số đánh giá đang dùng (mặc định CW; bộ đo A/B có thể gán bộ khác). */
     var wMg: IntArray = CW.MG; var wEg: IntArray = CW.EG
+    /** Tham số tìm kiếm (xem [SP]); luồng phụ của Lazy SMP dùng chung bản của luồng chính. */
+    var prm: IntArray = SP.DEF.copyOf()
     private val pawnAtt = LongArray(2)
     private val attAll = LongArray(2)
     private val attT = Array(2) { LongArray(8) }
@@ -923,7 +947,7 @@ class ChessEngine(private val tt: ChessTT) {
             if (!inChk) {
                 if (scr[ply][k] < 0) continue     // SEE < 0 (nước ăn thiệt) hoặc phong thấp
                 val cap = if (m shr 16 and F_EP != 0) P else pc[(m shr 6) and 63] and 7
-                if (((m shr 12) and 7) == 0 && stand + SEEV[cap] + 180 <= alpha) continue
+                if (((m shr 12) and 7) == 0 && stand + SEEV[cap] + prm[SP.QD] <= alpha) continue
             }
             make(m)
             if (attacked(kingSq[stm xor 1], stm)) { unmake(); continue }
@@ -990,15 +1014,15 @@ class ChessEngine(private val tt: ChessTT) {
 
         if (!pv && !inChk && excluded == 0) {
             // reverse futility
-            if (depth <= 8 && eval - (80 * depth - (if (improving) 60 else 0)) >= beta && eval < MATE - 500) return (eval + beta) / 2
+            if (depth <= 8 && eval - (prm[SP.RFP_M] * depth - (if (improving) prm[SP.RFP_I] else 0)) >= beta && eval < MATE - 500) return (eval + beta) / 2
             // razoring
-            if (depth <= 3 && eval + 220 + 180 * depth <= alpha) {
+            if (depth <= 3 && eval + prm[SP.RAZ_B] + prm[SP.RAZ_D] * depth <= alpha) {
                 val q = qsearch(alpha, alpha + 1, ply)
                 if (q <= alpha) return q
             }
             // null move
             if (depth >= 3 && eval >= beta && ply > 0 && curMove[ply - 1] != 0 && nonPawn(stm) && beta > -MATE + 500) {
-                val r = 3 + depth / 3 + min(3, (eval - beta) / 200)
+                val r = 3 + depth / 3 + min(3, (eval - beta) / prm[SP.NMP_DIV])
                 curMove[ply] = 0; curPc[ply] = 0
                 makeNull()
                 val s = -search(depth - r, -beta, -beta + 1, ply + 1, !cut)
@@ -1013,12 +1037,12 @@ class ChessEngine(private val tt: ChessTT) {
         // singular extension (tính trước khi sinh nước vì tìm kiếm loại trừ dùng chung bộ đệm của ply này)
         var singularExt = 0
         if (ply > 0 && excluded == 0 && depth >= 7 && ttm != 0 && ttD >= depth - 3 && ttF != UPPER && abs(ttS) < MATE - 500 && legalTT(ttm)) {
-            val sBeta = ttS - 2 * depth
+            val sBeta = ttS - prm[SP.SING] * depth / 8
             excl[ply] = ttm
             val s = search((depth - 1) / 2, sBeta - 1, sBeta, ply, cut)
             excl[ply] = 0
             if (abort) return 0
-            if (s < sBeta) singularExt = if (!pv && s < sBeta - 24) 2 else 1
+            if (s < sBeta) singularExt = if (!pv && s < sBeta - prm[SP.SDE]) 2 else 1
             else if (sBeta >= beta) return sBeta
             else if (ttS >= beta) singularExt = -1
         }
@@ -1044,10 +1068,10 @@ class ChessEngine(private val tt: ChessTT) {
                 val lmrD = max(0, depth - 1 - LMR[min(depth, 63)][min(legalN + 1, 63)])
                 if (quiet) {
                     if (!inChk && legalN >= (3 + depth * depth) / (if (improving) 1 else 2)) { skipQuiets = true; continue }
-                    if (!inChk && lmrD <= 6 && eval != NONE && eval + 120 + 100 * lmrD <= alpha) { skipQuiets = true; continue }
-                    if (lmrD <= 3 && hscore < -3500 * depth) continue
-                    if (lmrD <= 7 && see(m) < -30 * lmrD * lmrD) continue
-                } else if (depth <= 6 && scr[ply][k] < 0 && see(m) < -100 * depth) continue
+                    if (!inChk && lmrD <= 6 && eval != NONE && eval + prm[SP.FUT_B] + prm[SP.FUT_D] * lmrD <= alpha) { skipQuiets = true; continue }
+                    if (lmrD <= 3 && hscore < -prm[SP.HP] * depth) continue
+                    if (lmrD <= 7 && see(m) < -prm[SP.SEEQ] * lmrD * lmrD) continue
+                } else if (depth <= 6 && scr[ply][k] < 0 && see(m) < -prm[SP.SEEC] * depth) continue
             }
             make(m)
             if (attacked(kingSq[us], stm)) { unmake(); continue }
@@ -1070,7 +1094,7 @@ class ChessEngine(private val tt: ChessTT) {
                     if (gives) r--
                     if (quiet) {
                         if (m == killers[ply][0] || m == killers[ply][1]) r--
-                        r -= hscore / 7000
+                        r -= hscore / prm[SP.LMRH]
                     }
                     if (ttCapture) r++
                     r = r.coerceIn(0, max(0, newDepth - 1))
@@ -1177,7 +1201,7 @@ class ChessEngine(private val tt: ChessTT) {
             if (helperId > 0 && tt.stop) break
             rootDepth = depth
             nodeLimit = if (depth == 1) Long.MAX_VALUE else nl
-            var window = if (depth >= 4) 18 else INF
+            var window = if (depth >= 4) prm[SP.ASP] else INF
             var alpha = if (depth >= 4) max(-INF, bestScore - window) else -INF
             var beta = if (depth >= 4) min(INF, bestScore + window) else INF
             var iterBest = -1; var iterScore = -INF
@@ -1262,7 +1286,7 @@ class ChessEngine(private val tt: ChessTT) {
         load(fen, moves)
         if (threads <= 1 || lim.nodes > 0 || lim.depth > 0 || lim.timeMs <= 0) return search(lim, allowed, delta)
         while (helpers.size < threads - 1) helpers.add(ChessEngine(tt).also { it.helperId = helpers.size + 1 })
-        for (h in helpers) { h.wMg = wMg; h.wEg = wEg }
+        for (h in helpers) { h.wMg = wMg; h.wEg = wEg; h.prm = prm }
         tt.stop = false
         val ths = (0 until threads - 1).map { k ->
             val h = helpers[k]
