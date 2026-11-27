@@ -87,7 +87,11 @@ jobs:
 
       # 5) Build release (AAB + APK, R8 bật)
       - name: Build release (AAB + APK, R8 bật)
-        run: gradle :app:bundleRelease :app:assembleRelease --no-daemon
+        run: |
+          # NDK có sẵn trên máy CI: Gradle dùng nó để trích biểu tượng gỡ lỗi native vào .aab và strip thư viện
+          export ANDROID_NDK_VERSION="$(basename "${ANDROID_NDK_LATEST_HOME:-$ANDROID_NDK_HOME}")"
+          echo "NDK $ANDROID_NDK_VERSION"
+          gradle :app:bundleRelease :app:assembleRelease --no-daemon
         env:
           VERSION_CODE: ${{ github.run_number }}
           KEYSTORE_PATH: ${{ steps.ks.outputs.path }}
@@ -101,6 +105,16 @@ jobs:
           ADMOB_APP_OPEN: ${{ vars.ADMOB_APP_OPEN || secrets.ADMOB_APP_OPEN }}
           REQUIRE_REAL_ADS: "true"
           PRIVACY_URL: ${{ vars.PRIVACY_URL }}
+
+      # 5b) Biểu tượng gỡ lỗi native phải nằm trong .aab (nếu không, Play Console cảnh báo và không phân tích được crash/ANR)
+      - name: Check native debug symbols in AAB
+        run: |
+          aab=$(ls app/build/outputs/bundle/release/*.aab | head -1)
+          if ! unzip -l "$aab" | grep -E 'BUNDLE-METADATA/com.android.tools.build.debugsymbols/.*libkatago[.]so'; then
+            echo "::error::Thiếu biểu tượng gỡ lỗi của libkatago.so trong $aab"
+            unzip -l "$aab" | grep -i debugsymbols || true
+            exit 1
+          fi
 
       # 6) Chỉ xuất đúng 2 file: APK release và AAB release
       - uses: actions/upload-artifact@v4

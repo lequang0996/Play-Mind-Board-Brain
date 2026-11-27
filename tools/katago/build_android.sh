@@ -75,7 +75,7 @@ for ABI in $ABIS; do
   cmake --build "$B" --target katago -j"$(nproc)"
   mkdir -p "$ROOT/app/src/main/jniLibs/$ABI"
   cp "$B/katago" "$ROOT/app/src/main/jniLibs/$ABI/libkatago.so"
-  "$NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip" "$ROOT/app/src/main/jniLibs/$ABI/libkatago.so"
+  # KHÔNG strip ở đây: Gradle cần bảng ký hiệu để đưa biểu tượng gỡ lỗi vào .aab (debugSymbolLevel), rồi tự strip khi đóng gói.
   ls -la "$ROOT/app/src/main/jniLibs/$ABI/libkatago.so"
 done
 

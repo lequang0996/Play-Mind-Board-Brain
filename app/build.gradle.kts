@@ -18,6 +18,8 @@ val ADMOB_TEST_PUBLISHER = "ca-app-pub-3940256099942544"
 android {
     namespace = "com.fws.playmind"
     compileSdk = 36
+    // NDK dùng để trích biểu tượng gỡ lỗi và strip thư viện native khi đóng gói (CI đặt ANDROID_NDK_VERSION theo NDK có sẵn trên máy)
+    (System.getenv("ANDROID_NDK_VERSION") ?: findProperty("ndkVersion") as String?)?.let { ndkVersion = it }
 
     defaultConfig {
         applicationId = "com.fws.playmind"
@@ -50,8 +52,10 @@ android {
             isShrinkResources = true      // loại bỏ tài nguyên không dùng
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfigs.findByName("release")?.let { signingConfig = it }
-            // Đưa biểu tượng gỡ lỗi của thư viện native (WebRTC, AdMob...) vào chính file .aab để Play Console hết cảnh báo
-            ndk { debugSymbolLevel = "FULL" }
+            // Đưa biểu tượng gỡ lỗi của thư viện native (libkatago.so, WebRTC, AdMob...) vào chính file .aab để Play Console
+            // hết cảnh báo "chưa tải biểu tượng gỡ lỗi". Thư viện phải còn bảng ký hiệu khi vào jniLibs (không strip trước);
+            // Gradle tự trích bảng ký hiệu vào .aab rồi mới strip bản đóng gói.
+            ndk { debugSymbolLevel = "SYMBOL_TABLE" }
         }
         debug {
             applicationIdSuffix = ".debug"
