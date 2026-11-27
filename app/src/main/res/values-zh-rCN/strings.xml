@@ -87,6 +87,9 @@
     <string name="manage_sub">管理订阅</string>
     <string name="menu">菜单</string>
     <string name="minutes_n">约 %d 分钟</string>
+    <string name="multi_bot_fill">开始时空座位由电脑代打。离开、认输或超时的玩家将由电脑接替。</string>
+    <string name="multi_continues">你已出局，但其他人的对局仍在继续。若你是房主，离开会结束所有人的房间。</string>
+    <string name="multi_seat_free">空座位</string>
     <string name="n_players">%d 人</string>
     <string name="nearby">附近对战（无需联网）</string>
     <string name="nearby_card_desc">通过蓝牙或 Wi-Fi，无需网络</string>
@@ -163,6 +166,7 @@
     <string name="sd_won">解开了！</string>
     <string name="sd_won_text">用时 %1$s · 失误 %2$d 次</string>
     <string name="searching_rooms">正在查找附近的房间…</string>
+    <string name="see_more">查看全部</string>
     <string name="see_more_n">查看更多（%d）</string>
     <string name="settings">设置</string>
     <string name="share">分享</string>
@@ -226,5 +230,8 @@
     </plurals>
     <plurals name="streak_bonus">
         <item quantity="other">连胜奖励：+%d</item>
+    </plurals>
+    <plurals name="topic_games">
+        <item quantity="other">%d 款游戏</item>
     </plurals>
 </resources>

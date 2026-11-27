@@ -87,6 +87,9 @@
     <string name="manage_sub">サブスクリプションの管理</string>
     <string name="menu">メニュー</string>
     <string name="minutes_n">約%d分</string>
+    <string name="multi_bot_fill">空席は開始時にコンピューターが担当します。退出・投了・時間切れのプレイヤーはコンピューターに交代します。</string>
+    <string name="multi_continues">あなたは脱落しましたが、他のプレイヤーの対局は続きます。ホストが退出すると全員のルームが終了します。</string>
+    <string name="multi_seat_free">空席</string>
     <string name="n_players">%d人</string>
     <string name="nearby">近くで対戦（通信不要）</string>
     <string name="nearby_card_desc">Bluetooth または Wi-Fi、通信不要</string>
@@ -163,6 +166,7 @@
     <string name="sd_won">クリア！</string>
     <string name="sd_won_text">タイム %1$s ・ ミス %2$d 回</string>
     <string name="searching_rooms">近くのルームを探しています…</string>
+    <string name="see_more">すべて</string>
     <string name="see_more_n">もっと見る（%d）</string>
     <string name="settings">設定</string>
     <string name="share">共有</string>
@@ -226,5 +230,8 @@
     </plurals>
     <plurals name="streak_bonus">
         <item quantity="other">連勝ボーナス：+%d</item>
+    </plurals>
+    <plurals name="topic_games">
+        <item quantity="other">%d ゲーム</item>
     </plurals>
 </resources>

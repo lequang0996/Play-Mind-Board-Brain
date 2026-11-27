@@ -88,6 +88,9 @@
     <string name="manage_sub">Manage subscription</string>
     <string name="menu">Menu</string>
     <string name="minutes_n">~%d min</string>
+    <string name="multi_bot_fill">Empty seats are played by the computer when the game starts. Players who leave, resign or run out of time are replaced by the computer.</string>
+    <string name="multi_continues">You are out, but the game continues for the others. If you are the host, leaving ends the room for everyone.</string>
+    <string name="multi_seat_free">Empty seat</string>
     <string name="n_players">%d players</string>
     <string name="nearby">Nearby (no internet needed)</string>
     <string name="nearby_card_desc">Bluetooth or Wi-Fi, no internet needed</string>
@@ -164,6 +167,7 @@
     <string name="sd_won">Solved!</string>
     <string name="sd_won_text">Time %1$s · %2$d mistakes</string>
     <string name="searching_rooms">Looking for nearby rooms…</string>
+    <string name="see_more">See all</string>
     <string name="see_more_n">See more (%d)</string>
     <string name="settings">Settings</string>
     <string name="share">Share</string>
@@ -231,5 +235,9 @@
     <plurals name="streak_bonus">
         <item quantity="one">Win-streak bonus: +%d</item>
         <item quantity="other">Win-streak bonus: +%d</item>
+    </plurals>
+    <plurals name="topic_games">
+        <item quantity="one">%d game</item>
+        <item quantity="other">%d games</item>
     </plurals>
 </resources>

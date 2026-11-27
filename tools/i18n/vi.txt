@@ -213,3 +213,7 @@ nearby_why_text|Play Mind chỉ dùng Bluetooth và Wi-Fi để tìm và kết n
 continue_label|Tiếp tục
 go_end_game|Kết thúc ván
 reason_timeout|Hết thời gian đi nước
+multi_seat_free|Ghế trống
+multi_bot_fill|Ghế trống sẽ do máy chơi khi bắt đầu. Ai rời ván, đầu hàng hoặc hết giờ sẽ được máy chơi thay.
+multi_continues|Bạn đã bị loại nhưng ván vẫn tiếp tục cho những người khác. Nếu bạn là chủ phòng, rời đi sẽ kết thúc phòng của mọi người.
+see_more|Xem thêm

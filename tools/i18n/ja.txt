@@ -213,3 +213,7 @@ nearby_why_text|Play Mind は Bluetooth と Wi-Fi を使って近くの友達を
 continue_label|続ける
 go_end_game|対局を終える
 reason_timeout|持ち時間切れ
+multi_seat_free|空席
+multi_bot_fill|空席は開始時にコンピューターが担当します。退出・投了・時間切れのプレイヤーはコンピューターに交代します。
+multi_continues|あなたは脱落しましたが、他のプレイヤーの対局は続きます。ホストが退出すると全員のルームが終了します。
+see_more|すべて

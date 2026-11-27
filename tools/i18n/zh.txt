@@ -213,3 +213,7 @@ nearby_why_text|Play Mind 仅使用蓝牙和 Wi-Fi 来查找并连接身边的�
 continue_label|继续
 go_end_game|结束对局
 reason_timeout|走棋超时
+multi_seat_free|空座位
+multi_bot_fill|开始时空座位由电脑代打。离开、认输或超时的玩家将由电脑接替。
+multi_continues|你已出局，但其他人的对局仍在继续。若你是房主，离开会结束所有人的房间。
+see_more|查看全部

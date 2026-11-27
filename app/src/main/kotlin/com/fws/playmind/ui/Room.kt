@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -99,6 +100,21 @@ private fun Seat(name: String?, you: Boolean, waitingLabel: String) {
 }
 
 @Composable
+private fun EmptySeat(label: String) {
+    val shape = RoundedCornerShape(24.dp)
+    Row(
+        Modifier.fillMaxWidth().clip(shape).background(pm.surfaceHigh.copy(alpha = .6f)).border(1.dp, pm.outlineDeep, shape).padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(Modifier.size(46.dp).clip(CircleShape).background(pm.bgDeep), contentAlignment = Alignment.Center) {
+            Icon(Ic.Computer, null, Modifier.size(22.dp), tint = pm.inkSoft)
+        }
+        Spacer(Modifier.width(12.dp))
+        Text(label, style = MaterialTheme.typography.bodyMedium, color = pm.inkSoft)
+    }
+}
+
+@Composable
 private fun CodeField(value: String, onChange: (String) -> Unit, label: String, modifier: Modifier = Modifier) {
     OutlinedTextField(
         value, onChange, modifier.fillMaxWidth(), label = { Text(label) }, maxLines = 4,
@@ -169,8 +185,29 @@ fun RoomScreen(vm: SessionViewModel, onLeave: () -> Unit) {
     Column(Modifier.fillMaxSize()) {
         TopBar(stringResource(R.string.room), onLeave)
         Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 18.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            when (vm.mode) {
-                Mode.HOST_NEARBY, Mode.HOST_NET -> {
+            when {
+                vm.multi && (vm.mode == Mode.HOST_NEARBY || vm.mode == Mode.HOST_NET) -> {
+                    // Phòng 3-4 người: chủ phòng + khách đã vào + ghế trống (máy sẽ chơi khi bắt đầu)
+                    Text(stringResource(R.string.n_players, vm.playerCount), style = MaterialTheme.typography.titleMedium, color = pm.ink)
+                    Seat(vm.prefs.nickname, true, "")
+                    vm.peers.filter { !it.gone }.forEach { pr -> Seat(pr.name.ifEmpty { null }, false, stringResource(R.string.connecting)) }
+                    repeat(vm.freeSeats) { EmptySeat(stringResource(R.string.multi_seat_free)) }
+                    if (nearbyErr) Text(stringResource(R.string.nearby_unavailable) + " [$nearbyCode]", color = pm.danger, style = MaterialTheme.typography.bodyMedium)
+                    if (vm.mode == Mode.HOST_NET && vm.freeSeats > 0)
+                        OutlineButton(stringResource(R.string.invite), { if (vm.inviteCode.isEmpty() && !vm.inviteBusy) vm.newNetInvite(); showInvite = true }, Modifier.fillMaxWidth(), Ic.Qr)
+                    if (vm.mode == Mode.HOST_NEARBY && vm.freeSeats > 0)
+                        Text(stringResource(R.string.nearby_host_hint), color = pm.inkSoft, style = MaterialTheme.typography.bodyMedium)
+                    Text(stringResource(R.string.multi_bot_fill), color = pm.inkSoft, style = MaterialTheme.typography.bodySmall)
+                    Gap(4)
+                    GoldButton(stringResource(R.string.start_game), { vm.hostStart() }, Modifier.fillMaxWidth(), Ic.Play)
+                }
+                vm.multi && vm.guestConnected -> {
+                    Text(stringResource(R.string.n_players, vm.playerCount), style = MaterialTheme.typography.titleMedium, color = pm.ink)
+                    vm.roster.forEach { n -> Seat(n, n == vm.prefs.nickname, "") }
+                    repeat((vm.playerCount - vm.roster.size).coerceAtLeast(0)) { EmptySeat(stringResource(R.string.multi_seat_free)) }
+                    Text(stringResource(R.string.waiting_host_start), color = pm.inkSoft, style = MaterialTheme.typography.bodyMedium)
+                }
+                vm.mode == Mode.HOST_NEARBY || vm.mode == Mode.HOST_NET -> {
                     Seat(vm.prefs.nickname, true, "")
                     Seat(if (vm.opp == Opp.NONE) null else vm.oppName, false, stringResource(R.string.waiting_opponent))
                     if (nearbyErr) Text(stringResource(R.string.nearby_unavailable) + " [$nearbyCode]", color = pm.danger, style = MaterialTheme.typography.bodyMedium)
@@ -184,7 +221,7 @@ fun RoomScreen(vm: SessionViewModel, onLeave: () -> Unit) {
                     GoldButton(stringResource(R.string.start_game), { vm.hostStart() }, Modifier.fillMaxWidth(), Ic.Play, enabled = vm.opp != Opp.NONE)
                     if (vm.opp != Opp.NONE) OutlineButton(stringResource(R.string.kick), { vm.kick() }, Modifier.fillMaxWidth())
                 }
-                Mode.JOIN_NEARBY -> {
+                vm.mode == Mode.JOIN_NEARBY -> {
                     if (vm.guestConnected) {
                         Seat(vm.oppName, false, "")
                         Text(stringResource(R.string.waiting_host_start), color = pm.inkSoft, style = MaterialTheme.typography.bodyMedium)
@@ -198,7 +235,7 @@ fun RoomScreen(vm: SessionViewModel, onLeave: () -> Unit) {
                         rooms.forEach { r -> RoomRow(r, link == LinkState.CONNECTING) { vm.connectTo(r) } }
                     }
                 }
-                Mode.JOIN_NET -> {
+                vm.mode == Mode.JOIN_NET -> {
                     if (vm.guestConnected) {
                         Seat(vm.oppName, false, "")
                         Text(stringResource(R.string.waiting_host_start), color = pm.inkSoft, style = MaterialTheme.typography.bodyMedium)

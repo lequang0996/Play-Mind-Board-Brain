@@ -87,6 +87,9 @@
     <string name="manage_sub">구독 관리</string>
     <string name="menu">메뉴</string>
     <string name="minutes_n">약 %d분</string>
+    <string name="multi_bot_fill">빈자리는 시작 시 컴퓨터가 플레이합니다. 나가거나 기권하거나 시간이 초과된 플레이어는 컴퓨터가 대신합니다.</string>
+    <string name="multi_continues">탈락했지만 다른 플레이어의 게임은 계속됩니다. 방장이 나가면 모두의 방이 종료됩니다.</string>
+    <string name="multi_seat_free">빈자리</string>
     <string name="n_players">%d명</string>
     <string name="nearby">근거리 (인터넷 불필요)</string>
     <string name="nearby_card_desc">블루투스 또는 Wi-Fi, 인터넷 불필요</string>
@@ -163,6 +166,7 @@
     <string name="sd_won">해결!</string>
     <string name="sd_won_text">시간 %1$s · 실수 %2$d회</string>
     <string name="searching_rooms">근처 방을 찾는 중…</string>
+    <string name="see_more">모두 보기</string>
     <string name="see_more_n">더 보기 (%d)</string>
     <string name="settings">설정</string>
     <string name="share">공유</string>
@@ -226,5 +230,8 @@
     </plurals>
     <plurals name="streak_bonus">
         <item quantity="other">연승 보너스: +%d</item>
+    </plurals>
+    <plurals name="topic_games">
+        <item quantity="other">게임 %d개</item>
     </plurals>
 </resources>

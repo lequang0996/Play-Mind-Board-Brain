@@ -213,3 +213,7 @@ nearby_why_text|Play Mind solo usa Bluetooth y Wi-Fi para encontrar y conectar c
 continue_label|Continuar
 go_end_game|Terminar partida
 reason_timeout|Se agotó el tiempo para mover
+multi_seat_free|Asiento libre
+multi_bot_fill|Los asientos libres los juega el ordenador al empezar. Quien abandone, se rinda o agote su tiempo será sustituido por el ordenador.
+multi_continues|Has quedado fuera, pero la partida sigue para los demás. Si eres el anfitrión, al salir se cierra la sala para todos.
+see_more|Ver todo

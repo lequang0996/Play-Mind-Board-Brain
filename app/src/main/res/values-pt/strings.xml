@@ -87,6 +87,9 @@
     <string name="manage_sub">Gerenciar assinatura</string>
     <string name="menu">Menu</string>
     <string name="minutes_n">~%d min</string>
+    <string name="multi_bot_fill">Os lugares vazios são jogados pelo computador no início. Quem sair, desistir ou ficar sem tempo é substituído pelo computador.</string>
+    <string name="multi_continues">Você foi eliminado, mas a partida continua para os outros. Se você for o anfitrião, sair encerra a sala para todos.</string>
+    <string name="multi_seat_free">Lugar vazio</string>
     <string name="n_players">%d jogadores</string>
     <string name="nearby">Por perto (sem internet)</string>
     <string name="nearby_card_desc">Por Bluetooth ou Wi-Fi, sem internet</string>
@@ -163,6 +166,7 @@
     <string name="sd_won">Resolvido!</string>
     <string name="sd_won_text">Tempo %1$s · %2$d erros</string>
     <string name="searching_rooms">Procurando salas por perto…</string>
+    <string name="see_more">Ver tudo</string>
     <string name="see_more_n">Ver mais (%d)</string>
     <string name="settings">Configurações</string>
     <string name="share">Compartilhar</string>
@@ -230,5 +234,9 @@
     <plurals name="streak_bonus">
         <item quantity="one">Bônus de sequência: +%d</item>
         <item quantity="other">Bônus de sequência: +%d</item>
+    </plurals>
+    <plurals name="topic_games">
+        <item quantity="one">%d jogo</item>
+        <item quantity="other">%d jogos</item>
     </plurals>
 </resources>

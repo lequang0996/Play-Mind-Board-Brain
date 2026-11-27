@@ -87,6 +87,9 @@
     <string name="manage_sub">Gestionar suscripción</string>
     <string name="menu">Menú</string>
     <string name="minutes_n">~%d min</string>
+    <string name="multi_bot_fill">Los asientos libres los juega el ordenador al empezar. Quien abandone, se rinda o agote su tiempo será sustituido por el ordenador.</string>
+    <string name="multi_continues">Has quedado fuera, pero la partida sigue para los demás. Si eres el anfitrión, al salir se cierra la sala para todos.</string>
+    <string name="multi_seat_free">Asiento libre</string>
     <string name="n_players">%d jugadores</string>
     <string name="nearby">Cercano (sin internet)</string>
     <string name="nearby_card_desc">Por Bluetooth o Wi-Fi, sin internet</string>
@@ -163,6 +166,7 @@
     <string name="sd_won">¡Resuelto!</string>
     <string name="sd_won_text">Tiempo %1$s · %2$d fallos</string>
     <string name="searching_rooms">Buscando salas cercanas…</string>
+    <string name="see_more">Ver todo</string>
     <string name="see_more_n">Ver más (%d)</string>
     <string name="settings">Ajustes</string>
     <string name="share">Compartir</string>
@@ -230,5 +234,9 @@
     <plurals name="streak_bonus">
         <item quantity="one">Bonus de racha: +%d</item>
         <item quantity="other">Bonus de racha: +%d</item>
+    </plurals>
+    <plurals name="topic_games">
+        <item quantity="one">%d juego</item>
+        <item quantity="other">%d juegos</item>
     </plurals>
 </resources>

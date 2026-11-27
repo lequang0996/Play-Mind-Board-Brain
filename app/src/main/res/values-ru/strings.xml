@@ -87,6 +87,9 @@
     <string name="manage_sub">Управление подпиской</string>
     <string name="menu">Меню</string>
     <string name="minutes_n">~%d мин</string>
+    <string name="multi_bot_fill">Свободные места при старте занимает компьютер. Тех, кто вышел, сдался или не уложился во время, заменяет компьютер.</string>
+    <string name="multi_continues">Вы выбыли, но игра продолжается для остальных. Если вы хозяин, ваш выход закроет комнату для всех.</string>
+    <string name="multi_seat_free">Свободное место</string>
     <string name="n_players">%d игрока</string>
     <string name="nearby">Рядом (без интернета)</string>
     <string name="nearby_card_desc">По Bluetooth или Wi-Fi, без интернета</string>
@@ -163,6 +166,7 @@
     <string name="sd_won">Решено!</string>
     <string name="sd_won_text">Время %1$s · ошибок: %2$d</string>
     <string name="searching_rooms">Ищем комнаты рядом…</string>
+    <string name="see_more">Все</string>
     <string name="see_more_n">Ещё (%d)</string>
     <string name="settings">Настройки</string>
     <string name="share">Поделиться</string>
@@ -238,5 +242,11 @@
         <item quantity="few">Бонус за серию: +%d</item>
         <item quantity="many">Бонус за серию: +%d</item>
         <item quantity="other">Бонус за серию: +%d</item>
+    </plurals>
+    <plurals name="topic_games">
+        <item quantity="one">%d игра</item>
+        <item quantity="few">%d игры</item>
+        <item quantity="many">%d игр</item>
+        <item quantity="other">%d игры</item>
     </plurals>
 </resources>

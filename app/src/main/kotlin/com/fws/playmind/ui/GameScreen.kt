@@ -160,7 +160,7 @@ fun GameScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onExit: (
     val tick = vm.tick
     var confirmResign by remember { mutableStateOf(false) }
     var confirmLeave by remember { mutableStateOf(false) }
-    val over = vm.phase == Phase.OVER
+    val over = vm.phase == Phase.OVER || vm.eliminated
     BackHandler { if (over) onExit() else confirmLeave = true }
     if (g == null) return
 
@@ -238,8 +238,9 @@ private fun reasonText(info: GameInfo, r: EndReason): String = stringResource(wh
 private fun ResultDialog(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, activity: Activity, onExit: () -> Unit) {
     val g = vm.game ?: return
     val local = vm.mode == Mode.LOCAL
-    val draw = g.result == Outcome.DRAW
-    val win = !draw && (g.result == Outcome.WIN_FIRST) == (vm.mySide == 0)
+    val out = vm.myOutcome()
+    val draw = out == com.fws.playmind.data.MatchOutcome.DRAW
+    val win = out == com.fws.playmind.data.MatchOutcome.WIN
     val winnerSeat = when (g) { is WallGoGame -> g.winner; is QuoridorGame -> g.winner; else -> if (g.result == Outcome.WIN_FIRST) 0 else if (g.result == Outcome.WIN_SECOND) 1 else -1 }
     val title = when {
         local && winnerSeat >= 0 -> stringResource(R.string.winner_is, seatName(vm, info, winnerSeat))
@@ -262,7 +263,7 @@ private fun ResultDialog(app: PlayMindApp, vm: SessionViewModel, info: GameInfo,
                 contentAlignment = Alignment.Center,
             ) { Icon(if (win || (local && winnerSeat >= 0)) Ic.Trophy else if (draw) Ic.Check else Ic.Flag, null, Modifier.size(32.dp), tint = tone) }
             Text(title, style = MaterialTheme.typography.headlineMedium, color = pm.ink, textAlign = TextAlign.Center)
-            val rt = reasonText(info, g.reason)
+            val rt = reasonText(info, if (vm.eliminated) vm.eliminatedReason else g.reason)
             if (rt.isNotEmpty()) Text(rt, style = MaterialTheme.typography.bodyMedium, color = pm.inkSoft, textAlign = TextAlign.Center)
             // Bảng điểm cuối ván
             if (g is WallGoGame && g.reason == EndReason.TERRITORY) FinalScores(vm, info, g.finalScores.toList())
@@ -292,7 +293,9 @@ private fun ResultDialog(app: PlayMindApp, vm: SessionViewModel, info: GameInfo,
                 else -> stringResource(R.string.play_again)
             }
             val canRematch = (vm.opp != Opp.NONE || local) && !vm.verifying && !(vm.opp == Opp.HUMAN && vm.rematchAsked)
-            GoldButton(rematchLabel, { vm.rematch() }, Modifier.fillMaxWidth(), Ic.Refresh, enabled = canRematch)
+            if (vm.multi) {
+                if (vm.eliminated && g.result == Outcome.ONGOING) Text(stringResource(R.string.multi_continues), style = MaterialTheme.typography.labelMedium, color = pm.inkSoft, textAlign = TextAlign.Center)
+            } else GoldButton(rematchLabel, { vm.rematch() }, Modifier.fillMaxWidth(), Ic.Refresh, enabled = canRematch)
             OutlineButton(stringResource(R.string.back_to_lobby), exit, Modifier.fillMaxWidth())
         }
     }

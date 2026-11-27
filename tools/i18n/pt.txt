@@ -213,3 +213,7 @@ nearby_why_text|O Play Mind usa apenas Bluetooth e Wi-Fi para encontrar e conect
 continue_label|Continuar
 go_end_game|Encerrar partida
 reason_timeout|O tempo para jogar acabou
+multi_seat_free|Lugar vazio
+multi_bot_fill|Os lugares vazios são jogados pelo computador no início. Quem sair, desistir ou ficar sem tempo é substituído pelo computador.
+multi_continues|Você foi eliminado, mas a partida continua para os outros. Se você for o anfitrião, sair encerra a sala para todos.
+see_more|Ver tudo

@@ -87,6 +87,9 @@
     <string name="manage_sub">Quản lý gói đăng ký</string>
     <string name="menu">Menu</string>
     <string name="minutes_n">~%d phút</string>
+    <string name="multi_bot_fill">Ghế trống sẽ do máy chơi khi bắt đầu. Ai rời ván, đầu hàng hoặc hết giờ sẽ được máy chơi thay.</string>
+    <string name="multi_continues">Bạn đã bị loại nhưng ván vẫn tiếp tục cho những người khác. Nếu bạn là chủ phòng, rời đi sẽ kết thúc phòng của mọi người.</string>
+    <string name="multi_seat_free">Ghế trống</string>
     <string name="n_players">%d người</string>
     <string name="nearby">Gần nhau (không cần internet)</string>
     <string name="nearby_card_desc">Qua Bluetooth hoặc Wi-Fi, không cần internet</string>
@@ -163,6 +166,7 @@
     <string name="sd_won">Giải xong!</string>
     <string name="sd_won_text">Thời gian %1$s · %2$d lỗi</string>
     <string name="searching_rooms">Đang tìm phòng ở gần…</string>
+    <string name="see_more">Xem thêm</string>
     <string name="see_more_n">Xem thêm (%d)</string>
     <string name="settings">Cài đặt</string>
     <string name="share">Chia sẻ</string>
@@ -226,5 +230,8 @@
     </plurals>
     <plurals name="streak_bonus">
         <item quantity="other">Thưởng chuỗi thắng: +%d</item>
+    </plurals>
+    <plurals name="topic_games">
+        <item quantity="other">%d trò chơi</item>
     </plurals>
 </resources>

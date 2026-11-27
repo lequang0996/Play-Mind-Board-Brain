@@ -213,3 +213,7 @@ nearby_why_text|Play Mind는 블루투스와 Wi-Fi로 가까운 친구를 찾아
 continue_label|계속
 go_end_game|대국 종료
 reason_timeout|수 제한 시간 초과
+multi_seat_free|빈자리
+multi_bot_fill|빈자리는 시작 시 컴퓨터가 플레이합니다. 나가거나 기권하거나 시간이 초과된 플레이어는 컴퓨터가 대신합니다.
+multi_continues|탈락했지만 다른 플레이어의 게임은 계속됩니다. 방장이 나가면 모두의 방이 종료됩니다.
+see_more|모두 보기

@@ -28,7 +28,7 @@ object Ic {
     val GemFacets = build("gem_facets", false, "M2 9.5h20M9 3l-2 6.5L12 21M15 3l2 6.5L12 21")
     val Sun = build("sun", false, circle(12f, 12f, 4f), "M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4")
     val Moon = build("moon", false, "M20 14.5A8 8 0 019.5 4a8 8 0 1010.5 10.5z")
-    val Sliders = build("sliders", false, "M4 6h16M4 12h16M4 18h16", circle(9f, 6f, 2f), circle(15f, 12f, 2f), circle(7f, 18f, 2f))
+    val Sliders = build("sliders", false, "M4 7h9M17 7h3M4 17h3M11 17h9", circle(15f, 7f, 2f), circle(9f, 17f, 2f))
     val Help = build("help", false, circle(12f, 12f, 9f), "M9.6 9.6a2.5 2.5 0 114.2 1.8c-.9.8-1.8 1.3-1.8 2.6M12 17.2v.01")
     val Back = build("back", false, "M15 5l-7 7 7 7")
     val Close = build("close", false, "M6 6l12 12M18 6L6 18")
@@ -56,14 +56,14 @@ object Ic {
     val Video = build("video", false, "M4 6.5h11v11H4zM15 10.5l5-2.5v8l-5-2.5z")
 
     // Biểu tượng 4 chủ đề
-    val Puzzle = build("puzzle", false, "M4.5 9.5h3.2a2.3 2.3 0 114.6 0h3.2v3.2a2.3 2.3 0 110 4.6v3.2H4.5z")
+    val Puzzle = build("puzzle", false, "M10 4.5a2 2 0 014 0V6h3a1 1 0 011 1v3h-1.5a2 2 0 000 4H18v3a1 1 0 01-1 1h-3v-1.5a2 2 0 00-4 0V18H7a1 1 0 01-1-1v-3h1.5a2 2 0 000-4H6V7a1 1 0 011-1h3z")
     val Crown = build("crown", false, "M4 18.5L3 8.5l5 4 4-7 4 7 5-4-1 10zM4.5 21.5h15")
-    val Calculator = build("calculator", false, "M6.5 3.5h11v17h-11zM9 7.5h6M9 12v.01M12 12v.01M15 12v.01M9 16v.01M12 16v.01M15 16v.01")
-    val Cards = build("cards", false, "M3.5 8h10v12.5h-10zM9.5 4.5h10.5v12.5")
+    val Calculator = build("calculator", false, "M7.5 3.5h9a2 2 0 012 2v13a2 2 0 01-2 2h-9a2 2 0 01-2-2v-13a2 2 0 012-2z", "M8.5 6.5h7v3h-7z", "M9 13h.01M12 13h.01M15 13h.01M9 16.5h.01M12 16.5h.01M15 16.5h.01")
+    val Cards = build("cards", false, "M5.5 7h7.5a1.5 1.5 0 011.5 1.5v10a1.5 1.5 0 01-1.5 1.5H5.5A1.5 1.5 0 014 18.5v-10A1.5 1.5 0 015.5 7z", "M9 5.2l.4-1a1.5 1.5 0 011.9-.9l7.1 2.6a1.5 1.5 0 01.9 1.9l-3.3 9", "M9.3 11.6c-.5-.8-2-.6-2 .6 0 1 2 2.2 2 2.2s2-1.2 2-2.2c0-1.2-1.5-1.4-2-.6z")
 
     // Biểu tượng bổ sung cho giao diện mới
-    val Book = build("book", false, "M4 5.5A1.5 1.5 0 015.5 4H12v16H5.5A1.5 1.5 0 014 18.5zM20 5.5A1.5 1.5 0 0018.5 4H12v16h6.5a1.5 1.5 0 001.5-1.5z")
-    val Bag = build("bag", false, "M5 8h14l-1 12H6zM9 8V6.5a3 3 0 016 0V8")
+    val Book = build("book", false, "M12 6.8C10.6 5.5 8.3 4.8 4.5 4.8v12.6c3.8 0 6.1.7 7.5 2 1.4-1.3 3.7-2 7.5-2V4.8c-3.8 0-6.1.7-7.5 2z", "M12 6.8v12.6")
+    val Bag = build("bag", false, "M6.2 8.5h11.6a1 1 0 011 1.1l-.8 9.1a2 2 0 01-2 1.8H8a2 2 0 01-2-1.8l-.8-9.1a1 1 0 011-1.1z", "M9 10.5V7a3 3 0 016 0v3.5")
     val Undo = build("undo", false, "M9 14L4 9l5-5M4 9h10a6 6 0 010 12h-3")
     val Eraser = build("eraser", false, "M7 20h12M5.5 15.5l9-9a2 2 0 013 0l1.5 1.5a2 2 0 010 3l-7 7H8.5z")
     val Pencil = build("pencil", false, "M4 20l1-4L16.5 4.5a2 2 0 013 3L8 19zM14 7l3 3")
@@ -75,6 +75,6 @@ object Ic {
     val Brick = build("brick", false, "M3.5 7h17v10h-17zM3.5 12h17M9 7v5M15 12v5")
     val Heart = build("heart", true, "M12 20s-7.5-4.6-7.5-10A4.2 4.2 0 0112 7.2 4.2 4.2 0 0119.5 10c0 5.4-7.5 10-7.5 10z")
     val Crosshair = build("crosshair", false, "M12 4v16M4 12h16")
-    val Menu = build("menu", false, "M4 7h16M4 12h16M4 17h16")
-    val Apps = build("apps", false, "M4 4h6.5v6.5H4zM13.5 4H20v6.5h-6.5zM4 13.5h6.5V20H4zM13.5 13.5H20V20h-6.5z")
+    val Menu = build("menu", false, "M4.5 7h15M4.5 12h15M4.5 17h9")
+    val Apps = build("apps", false, "M5.5 4h3A1.5 1.5 0 0110 5.5v3A1.5 1.5 0 018.5 10h-3A1.5 1.5 0 014 8.5v-3A1.5 1.5 0 015.5 4zM15.5 4h3A1.5 1.5 0 0120 5.5v3a1.5 1.5 0 01-1.5 1.5h-3A1.5 1.5 0 0114 8.5v-3A1.5 1.5 0 0115.5 4zM5.5 14h3a1.5 1.5 0 011.5 1.5v3A1.5 1.5 0 018.5 20h-3A1.5 1.5 0 014 18.5v-3A1.5 1.5 0 015.5 14z", circle(17f, 17f, 3f))
 }

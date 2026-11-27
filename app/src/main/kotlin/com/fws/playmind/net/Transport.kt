@@ -23,9 +23,23 @@ interface Transport {
  *  K                                   chủ phòng mời khách ra
  *  RM                                  muốn chơi lại
  *  E|kếtQuả|băm                        xác nhận kết quả ván (đối chiếu hai máy)
+ *  T                                   người gửi hết thời gian cho nước đi
+ *
+ * Phòng 3-4 người (chủ phòng là trạm trung tâm, mọi nước đi đi qua chủ phòng rồi được phát lại cho các khách):
+ *  H|gameId|tên|0|sốNgười              lời chào có thêm số người chơi
+ *  P|tên0;tên1;...                     danh sách người trong phòng
+ *  S3|ghếCủaBạn|sốNgười|tên0;tên1;...  bắt đầu ván, tên theo thứ tự ghế
+ *  B|ghế                               ghế này từ giờ do máy chơi (người đó đã rời/đầu hàng/hết giờ)
+ *  X                                   chủ phòng báo: bạn đã bị xử thua (hết giờ)
  */
 object Proto {
-    fun hello(gameId: String, name: String, hostSide: Int) = "H|$gameId|$name|$hostSide"
+    fun hello(gameId: String, name: String, hostSide: Int, players: Int = 2) = "H|$gameId|$name|$hostSide|$players"
+    fun roster(names: List<String>) = "P|" + names.joinToString(";")
+    fun startMulti(seat: Int, players: Int, names: List<String>) = "S3|$seat|$players|" + names.joinToString(";")
+    fun botSeat(seat: Int) = "B|$seat"
+    const val ELIMINATED = "X"
+    /** Bỏ các ký tự dùng làm dấu ngăn cách khỏi biệt danh. */
+    fun clean(name: String) = name.replace('|', ' ').replace(';', ' ').trim().take(16).ifEmpty { "?" }
     fun join(name: String) = "J|$name"
     fun start(hostSide: Int, option: Int = 0) = "S|$hostSide|$option"
     fun move(index: Int, move: Int) = "M|$index|$move"

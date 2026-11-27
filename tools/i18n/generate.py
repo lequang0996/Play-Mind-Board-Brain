@@ -29,7 +29,15 @@ STREAK_BONUS = {
     "ru": {"one": "Бонус за серию: +%d", "few": "Бонус за серию: +%d", "many": "Бонус за серию: +%d", "other": "Бонус за серию: +%d"},
     "ja": {"other": "連勝ボーナス：+%d"}, "ko": {"other": "연승 보너스: +%d"}, "vi": {"other": "Thưởng chuỗi thắng: +%d"},
 }
-PLURALS = {"check_in_reward": DIAMONDS, "reward_diamonds": DIAMONDS, "streak_days": STREAK_DAYS, "streak_bonus": STREAK_BONUS}
+TOPIC_GAMES = {
+    "en": {"one": "%d game", "other": "%d games"},
+    "zh": {"other": "%d 款游戏"},
+    "es": {"one": "%d juego", "other": "%d juegos"},
+    "pt": {"one": "%d jogo", "other": "%d jogos"},
+    "ru": {"one": "%d игра", "few": "%d игры", "many": "%d игр", "other": "%d игры"},
+    "ja": {"other": "%d ゲーム"}, "ko": {"other": "게임 %d개"}, "vi": {"other": "%d trò chơi"},
+}
+PLURALS = {"check_in_reward": DIAMONDS, "reward_diamonds": DIAMONDS, "streak_days": STREAK_DAYS, "streak_bonus": STREAK_BONUS, "topic_games": TOPIC_GAMES}
 
 def esc(s):
     s = s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("'", "\\'").replace('"', '\\"')

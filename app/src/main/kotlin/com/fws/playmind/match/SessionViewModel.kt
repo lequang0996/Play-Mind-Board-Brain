@@ -14,6 +14,10 @@ import com.fws.playmind.core.BoardGame
 import com.fws.playmind.core.SudokuGame
 import com.fws.playmind.core.SudokuLevel
 import com.fws.playmind.core.SudokuStatus
+import com.fws.playmind.core.QuoridorGame
+import com.fws.playmind.core.WallGoGame
+import com.fws.playmind.net.NearbyHub
+import kotlinx.coroutines.flow.first
 import com.fws.playmind.catalog.GameKind
 import com.fws.playmind.catalog.OptionKind
 import androidx.compose.runtime.mutableStateListOf
@@ -96,6 +100,26 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
     private val _link = MutableStateFlow(LinkState.IDLE)
 
     private var transport: Transport? = null
+
+    // ── Phòng 3-4 người: chủ phòng là trạm trung tâm ──
+    /** Một khách trong phòng nhiều người (chỉ có ở máy chủ phòng). */
+    inner class Peer(val t: Transport) {
+        var name by mutableStateOf("")
+        var seat = -1
+        var gone = false
+    }
+    /** Ván online có hơn 2 người. */
+    var multi by mutableStateOf(false); private set
+    val peers = mutableStateListOf<Peer>()
+    /** Danh sách tên trong phòng (khách nhận từ chủ phòng). */
+    var roster by mutableStateOf<List<String>>(emptyList()); private set
+    /** Bạn đã bị xử thua giữa ván nhiều người (đầu hàng / hết giờ); ván vẫn tiếp tục với máy thay ghế của bạn. */
+    var eliminated by mutableStateOf(false); private set
+    var eliminatedReason by mutableStateOf(EndReason.NONE); private set
+    private val botSeats = HashSet<Int>()
+    private var hub: NearbyHub? = null
+    private var pendingNet: WebRtcTransport? = null
+    private val peerJobs = ArrayList<Job>()
     private var hostSide = 0
     private var botJob: Job? = null
     private var timerJob: Job? = null
@@ -113,7 +137,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
     /** Số người chơi của ván hiện tại (2 với mọi game không có tùy chọn số người). */
     val playerCount get() = if (info?.optionKind == OptionKind.PLAYERS) option else 2
     /** Người dùng có được đi ngay bây giờ không (chế độ chơi chung một máy: bên nào đang đến lượt cũng được). */
-    val canAct get() = game?.let { it.result == Outcome.ONGOING && phase == Phase.PLAYING && (mode == Mode.LOCAL || it.turn == mySide) } ?: false
+    val canAct get() = !eliminated && game?.let { it.result == Outcome.ONGOING && phase == Phase.PLAYING && (mode == Mode.LOCAL || it.turn == mySide) } ?: false
     val myTurn get() = game?.let { it.result == Outcome.ONGOING && (mode == Mode.LOCAL || it.turn == mySide) } ?: false
     /** Bên đang được người dùng điều khiển: khi chơi chung một máy thì là bên đang đến lượt. */
     val actingSide get() = if (mode == Mode.LOCAL) (game?.turn ?: 0) else mySide
@@ -136,12 +160,16 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
             sd.giveUp()
             wallet.finishMatch(inf.id, MatchOutcome.LOSS, true)
         } else if (phase == Phase.PLAYING && g != null && inf != null && g.result == Outcome.ONGOING) {
-            if (mode == Mode.LOCAL) { /* chơi chung một máy: không tính thắng/thua */ } else {
+            if (mode == Mode.LOCAL) { /* chơi chung một máy: không tính thắng/thua */ } else if (multi) {
+                if (isHost) broadcast(Proto.QUIT) else transport?.send(Proto.QUIT)
+                if (!eliminated) wallet.finishMatch(inf.id, MatchOutcome.LOSS, true)
+            } else {
                 if (isOnline) transport?.send(Proto.QUIT)
                 g.forfeit(mySide, EndReason.LEAVE)
                 wallet.finishMatch(inf.id, MatchOutcome.LOSS, true)
             }
-        } else if (phase == Phase.ROOM && isOnline) transport?.send(Proto.QUIT)
+        } else if (phase == Phase.ROOM && isOnline) { transport?.send(Proto.QUIT); broadcast(Proto.QUIT) }
+        else if (phase == Phase.OVER && multi && isHost) broadcast(Proto.QUIT)
         teardown()
         phase = Phase.IDLE; mode = Mode.NONE
     }
@@ -152,6 +180,11 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         turnDeadline = 0L; turnSecondsLeft = 0
         transport?.onMessage = null
         transport?.close(); transport = null
+        for (j in peerJobs) j.cancel()
+        peerJobs.clear()
+        for (pr in peers) { pr.t.onMessage = null; pr.t.close() }
+        peers.clear(); hub?.close(); hub = null; pendingNet?.close(); pendingNet = null
+        botSeats.clear(); multi = false; roster = emptyList(); eliminated = false; eliminatedReason = EndReason.NONE
         game = null; opp = Opp.NONE; oppName = ""; botThinking = false; verifying = false
         sudokuJob?.cancel(); sudokuClock?.cancel(); sudoku = null; sudokuLoading = false; sudokuSeconds = 0; seatNames = emptyList()
         inviteCode = ""; replyCode = ""; inviteBusy = false; inviteOpen = false; guestConnected = false
@@ -223,9 +256,138 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         teardown()
         mode = if (nearby) Mode.HOST_NEARBY else Mode.HOST_NET
         phase = Phase.ROOM
+        if (playerCount > 2) { startMultiRoom(nearby); return true }
         newHostTransport()
         armBotTimer(10)
         return true
+    }
+
+    // ───────────────────────── phòng 3-4 người (chủ phòng) ─────────────────────────
+    private fun startMultiRoom(nearby: Boolean) {
+        val inf = info ?: return
+        multi = true; opp = Opp.HUMAN
+        if (nearby) {
+            val h = NearbyHub(getApplication(), inf.id, playerCount - 1); hub = h
+            h.onPeer = { link -> viewModelScope.launch { attachPeer(link) } }
+            peerJobs += viewModelScope.launch { h.error.collect { nearbyError.value = it } }
+            peerJobs += viewModelScope.launch { h.errorCode.collect { nearbyErrorCode.value = it } }
+            h.start(prefs.nickname)
+        } else newNetInvite()
+    }
+
+    /** Số ghế còn trống cho khách. */
+    val freeSeats: Int get() = (playerCount - 1 - peers.count { !it.gone }).coerceAtLeast(0)
+
+    /** Chủ phòng (internet): tạo mã mời mới cho ghế trống tiếp theo. */
+    fun newNetInvite() {
+        if (!multi || !isHost || mode != Mode.HOST_NET || phase != Phase.ROOM || freeSeats == 0) return
+        pendingNet?.let { if (it.state.value != LinkState.CONNECTED) it.close() }
+        val t = WebRtcTransport(getApplication()); pendingNet = t
+        inviteCode = ""; replyCode = ""; inviteBusy = true
+        peerJobs += viewModelScope.launch {
+            try { inviteCode = t.createInvite() } catch (e: Exception) { notice = Notice.CONN_FAILED }
+            inviteBusy = false
+        }
+        peerJobs += viewModelScope.launch {
+            val st = t.state.first { it == LinkState.CONNECTED || it == LinkState.FAILED }
+            if (pendingNet === t) pendingNet = null
+            if (st == LinkState.CONNECTED) attachPeer(t) else notice = Notice.CONN_FAILED
+            inviteCode = ""
+        }
+    }
+
+    private fun attachPeer(t: Transport) {
+        val inf = info ?: return
+        if (phase != Phase.ROOM || freeSeats == 0) { t.close(); return }
+        val pr = Peer(t); peers.add(pr)
+        t.onMessage = { m -> viewModelScope.launch { onPeerMessage(pr, m) } }
+        peerJobs += viewModelScope.launch {
+            t.state.collect { st ->
+                when (st) {
+                    LinkState.CONNECTED -> t.send(Proto.hello(inf.id, Proto.clean(prefs.nickname), 0, playerCount))
+                    LinkState.CLOSED, LinkState.FAILED -> onPeerDown(pr)
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    private fun broadcast(msg: String, except: Peer? = null) { for (pr in peers) if (pr !== except && !pr.gone) pr.t.send(msg) }
+
+    private fun broadcastRoster() {
+        val names = listOf(Proto.clean(prefs.nickname)) + peers.filter { !it.gone && it.name.isNotEmpty() }.map { it.name }
+        roster = names
+        broadcast(Proto.roster(names))
+    }
+
+    private fun onPeerDown(pr: Peer) {
+        if (pr.gone) return
+        pr.gone = true
+        when (phase) {
+            Phase.ROOM -> { peers.remove(pr); broadcastRoster(); if (mode == Mode.HOST_NET && pendingNet == null && inviteOpen) newNetInvite() }
+            Phase.PLAYING -> if (pr.seat >= 0) seatToBot(pr.seat)
+            else -> {}
+        }
+    }
+
+    private fun onPeerMessage(pr: Peer, msg: String) {
+        if (pr.gone) return
+        val p = msg.split("|")
+        when (p[0]) {
+            "J" -> if (phase == Phase.ROOM && p.size >= 2) { pr.name = Proto.clean(p[1]); broadcastRoster() }
+            "M" -> {
+                val g = game ?: return
+                if (phase != Phase.PLAYING || p.size < 3 || g.turn != pr.seat || pr.seat in botSeats) return
+                val idx = p[1].toIntOrNull() ?: return
+                val mv = p[2].toIntOrNull() ?: return
+                if (idx != g.plies || !g.play(mv)) return
+                broadcast(Proto.move(idx, g.lastMove), except = pr)
+                afterMove()
+            }
+            "R", "T" -> if (phase == Phase.PLAYING && pr.seat >= 0) seatToBot(pr.seat)
+            "Q" -> { pr.t.close(); onPeerDown(pr) }
+        }
+    }
+
+    /** Ghế [seat] từ giờ do máy chơi (người ngồi ghế đó đã rời, đầu hàng hoặc hết giờ). */
+    private fun seatToBot(seat: Int) {
+        val g = game ?: return
+        if (seat in botSeats || g.result != Outcome.ONGOING) return
+        botSeats.add(seat)
+        broadcast(Proto.botSeat(seat))
+        if (g.turn == seat) { resetTurnClock(); scheduleBotIfNeeded() }
+    }
+
+    /** Chủ phòng bắt đầu ván nhiều người: xếp ghế ngẫu nhiên, ghế trống do máy chơi. */
+    private fun hostStartMulti() {
+        val n = playerCount
+        val live = peers.filter { !it.gone && it.name.isNotEmpty() }.take(n - 1)
+        for (pr in peers) if (pr !in live) { pr.t.send(Proto.KICK); pr.gone = true; pr.t.close() }
+        peers.retainAll(live.toSet())
+        hub?.lock(); pendingNet?.close(); pendingNet = null; inviteCode = ""
+        val order = (0 until n).shuffled()
+        val names = Array(n) { "" }
+        mySide = order[0]; names[mySide] = Proto.clean(prefs.nickname)
+        live.forEachIndexed { i, pr -> pr.seat = order[i + 1]; names[pr.seat] = pr.name }
+        botSeats.clear()
+        val used = names.filter { it.isNotEmpty() }.toMutableSet()
+        for (k in live.size + 1 until n) {
+            val seat = order[k]; botSeats.add(seat)
+            var nm = BotNames.pick(lang()); var tries = 0
+            while (nm in used && tries++ < 20) nm = BotNames.pick(lang())
+            used.add(nm); names[seat] = Proto.clean(nm)
+        }
+        seatNames = names.toList()
+        for (pr in live) pr.t.send(Proto.startMulti(pr.seat, n, seatNames))
+        beginMatch()
+    }
+
+    /** Bạn đầu hàng / hết giờ trong ván nhiều người: bạn thua, máy thay ghế của bạn và ván vẫn tiếp tục cho người khác. */
+    private fun eliminateSelf(reason: EndReason, notify: String?) {
+        if (eliminated || phase != Phase.PLAYING) return
+        if (isHost) seatToBot(mySide) else if (notify != null) transport?.send(notify)
+        eliminated = true; eliminatedReason = reason
+        settle(MatchOutcome.LOSS, true)
     }
 
     private fun newHostTransport() {
@@ -250,7 +412,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
 
     /** Chủ phòng dán/quét mã trả lời của khách. */
     fun acceptReply(code: String) {
-        val t = transport as? WebRtcTransport ?: return
+        val t = (if (multi) pendingNet else transport) as? WebRtcTransport ?: return
         viewModelScope.launch { if (!t.acceptReply(code)) notice = Notice.BAD_CODE }
     }
 
@@ -280,6 +442,11 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
     /** Chủ phòng bấm bắt đầu. */
     fun hostStart() {
         val inf = info ?: return
+        if (multi) {
+            if (phase != Phase.ROOM) return
+            if (!wallet.canStart(inf.id)) { notice = Notice.NOT_ENOUGH; return }
+            hostStartMulti(); return
+        }
         if (phase != Phase.ROOM || opp == Opp.NONE) return
         if (!wallet.canStart(inf.id)) { notice = Notice.NOT_ENOUGH; return }
         hostSide = Random.nextInt(2); mySide = hostSide
@@ -350,6 +517,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
     private fun onLinkDown(failed: Boolean) {
         val inf = info ?: return
         when {
+            multi && !isHost && phase == Phase.PLAYING && game?.result == Outcome.ONGOING -> hostLeftMulti()
             phase == Phase.PLAYING && game?.result == Outcome.ONGOING -> {
                 game?.forfeit(mySide, EndReason.LEAVE)
                 wallet.finishMatch(inf.id, MatchOutcome.LOSS, true)
@@ -368,6 +536,10 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         when (p[0]) {
             "H" -> if (!isHost && phase == Phase.ROOM && p.size >= 4 && p[1] == info?.id) {
                 oppName = p[2]; opp = Opp.HUMAN; guestConnected = true
+                val n = p.getOrNull(4)?.toIntOrNull() ?: 2
+                if (info?.optionKind == OptionKind.PLAYERS && info?.options?.contains(n) == true) option = n
+                multi = n > 2
+                if (multi) roster = listOf(p[2])
                 transport?.send(Proto.join(prefs.nickname))
             }
             "J" -> if (isHost && phase == Phase.ROOM && p.size >= 2) {
@@ -379,10 +551,22 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
                 mySide = 1 - hostSide
                 beginMatch()
             }
+            "P" -> if (!isHost && p.size >= 2) roster = p[1].split(";")
+            "S3" -> if (!isHost && (phase == Phase.ROOM || phase == Phase.OVER) && p.size >= 4) {
+                val seat = p[1].toIntOrNull() ?: return
+                val n = p[2].toIntOrNull() ?: return
+                if (info?.options?.contains(n) != true || seat !in 0 until n) return
+                option = n; multi = true; mySide = seat; seatNames = p[3].split(";")
+                beginMatch()
+            }
+            "B" -> {}                                   // ghế khác chuyển sang máy: chỉ để thông tin
+            "X" -> if (multi && !isHost) eliminateSelf(EndReason.TIMEOUT, null)
             "M" -> onRemoteMove(p)
-            "R" -> remoteForfeit(EndReason.RESIGN)
-            "T" -> remoteForfeit(EndReason.TIMEOUT)
-            "Q" -> if (phase == Phase.PLAYING) remoteForfeit(EndReason.LEAVE)
+            "R" -> if (!multi) remoteForfeit(EndReason.RESIGN)
+            "T" -> if (!multi) remoteForfeit(EndReason.TIMEOUT)
+            "Q" -> if (multi && !isHost && phase == Phase.PLAYING) hostLeftMulti()
+                   else if (multi && !isHost && phase == Phase.ROOM) { notice = Notice.HOST_LEFT; guestConnected = false }
+                   else if (phase == Phase.PLAYING) remoteForfeit(EndReason.LEAVE)
                    else if (phase == Phase.ROOM && isHost) { /* khách rời: onLinkDown xử lý */ }
                    else if (phase == Phase.OVER) { oppAskedRematch = false; opp = Opp.NONE }
             "K" -> if (!isHost) { notice = Notice.KICKED; leave() }
@@ -391,9 +575,17 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    /** Chủ phòng nhiều người rời đi giữa ván: ván dừng lại, không tính thắng/thua cho khách. */
+    private fun hostLeftMulti() {
+        if (finalized) { phase = Phase.OVER; return }
+        botJob?.cancel(); turnClock?.cancel(); botThinking = false
+        finalized = true; wallet.cancelMatch()
+        notice = Notice.HOST_LEFT; phase = Phase.OVER; tick++
+    }
+
     private fun onRemoteMove(p: List<String>) {
         val g = game ?: return
-        if (phase != Phase.PLAYING || g.turn == mySide || p.size < 3) return
+        if (phase != Phase.PLAYING || (g.turn == mySide && !eliminated) || p.size < 3) return
         val idx = p[1].toIntOrNull() ?: return
         val mv = p[2].toIntOrNull() ?: return
         if (idx != g.plies || !g.play(mv)) { transport?.close(); return }
@@ -468,6 +660,17 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         val g = game ?: return true
         if (g.result != Outcome.ONGOING) return true
         val loser = g.turn
+        if (multi) {
+            when {
+                loser in botSeats -> resetTurnClock()
+                loser == mySide && !eliminated -> eliminateSelf(EndReason.TIMEOUT, Proto.TIMEOUT)
+                isHost && loser != mySide && left <= -GRACE_MS -> {
+                    peers.firstOrNull { it.seat == loser && !it.gone }?.t?.send(Proto.ELIMINATED)
+                    seatToBot(loser)
+                }
+            }
+            return false                                        // ván nhiều người vẫn tiếp tục
+        }
         when {
             mode == Mode.LOCAL -> g.forfeit(loser, EndReason.TIMEOUT)
             oppIsMachine && loser != mySide -> { resetTurnClock(); return false }   // lượt của máy: không tính giờ
@@ -489,7 +692,8 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         if (!canAct) return false
         val index = g.plies
         if (!g.play(move)) return false
-        if (isOnline && opp == Opp.HUMAN) transport?.send(Proto.move(index, g.lastMove))
+        if (multi && isHost) broadcast(Proto.move(index, g.lastMove))
+        else if (isOnline && opp == Opp.HUMAN) transport?.send(Proto.move(index, g.lastMove))
         afterMove()
         return true
     }
@@ -503,7 +707,8 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
 
     private fun scheduleBotIfNeeded() {
         val g = game ?: return; val inf = info ?: return
-        if (!oppIsMachine || phase != Phase.PLAYING || g.result != Outcome.ONGOING || g.turn == mySide) return
+        val botTurn = if (multi) isHost && g.turn in botSeats else oppIsMachine && g.turn != mySide
+        if (!botTurn || phase != Phase.PLAYING || g.result != Outcome.ONGOING) return
         val my = epoch
         botThinking = true
         botJob?.cancel()
@@ -515,19 +720,39 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
             if (wait > 0) delay(wait)
             if (my != epoch || game !== g || phase != Phase.PLAYING) return@launch
             botThinking = false
-            if (mv >= 0 && g.play(mv)) afterMove()
+            val idx = g.plies
+            if (mv >= 0 && g.play(mv)) { if (multi && isHost) broadcast(Proto.move(idx, g.lastMove)); afterMove() }
         }
     }
 
     fun resign() {
         val g = game ?: return
         if (phase != Phase.PLAYING || g.result != Outcome.ONGOING) return
+        if (multi) { eliminateSelf(EndReason.RESIGN, Proto.RESIGN); return }
         if (isOnline && opp == Opp.HUMAN) transport?.send(Proto.RESIGN)
         g.forfeit(if (mode == Mode.LOCAL) g.turn else mySide, EndReason.RESIGN)
         afterMove()
     }
 
-    private fun outcomeForMe(g: BoardGame): MatchOutcome = when {
+    /** Kết quả của ván hiện tại với người dùng (null nếu ván chưa xong). */
+    fun myOutcome(): MatchOutcome? {
+        if (eliminated) return MatchOutcome.LOSS
+        val g = game ?: return null
+        return if (g.result == Outcome.ONGOING) null else outcomeForMe(g)
+    }
+
+    private fun outcomeForMe(g: BoardGame): MatchOutcome {
+        if (playerCount > 2) {
+            val w = when (g) { is WallGoGame -> g.winner; is QuoridorGame -> g.winner; else -> -1 }
+            if (w >= 0) return if (w == mySide) MatchOutcome.WIN else MatchOutcome.LOSS
+            if (g.result == Outcome.DRAW) return MatchOutcome.DRAW
+            if (g is WallGoGame && mySide < g.finalScores.size && g.finalScores[mySide] == g.finalScores.max()) return MatchOutcome.DRAW
+            return MatchOutcome.LOSS
+        }
+        return outcome2(g)
+    }
+
+    private fun outcome2(g: BoardGame): MatchOutcome = when {
         g.result == Outcome.DRAW -> MatchOutcome.DRAW
         (g.result == Outcome.WIN_FIRST) == (mySide == 0) -> MatchOutcome.WIN
         else -> MatchOutcome.LOSS
@@ -541,6 +766,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         botJob?.cancel(); botThinking = false; turnClock?.cancel()
         phase = Phase.OVER
         if (mode == Mode.LOCAL) { finalized = true; return }       // chơi chung một máy: không thưởng, không thống kê
+        if (multi) { settle(if (eliminated) MatchOutcome.LOSS else outcomeForMe(g), true); return }
         val out = outcomeForMe(g)
         if (isOnline && opp == Opp.HUMAN) {
             localEnd = Proto.end(g.result, movesHash(g.history))
@@ -582,6 +808,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         if (phase != Phase.OVER) return
         if (mode == Mode.LOCAL) { beginMatch(); return }
         if (mode == Mode.SOLO) { startSudoku(option); return }
+        if (multi) return                                       // phòng nhiều người: về phòng chờ để tạo ván mới
         if (!wallet.canStart(inf.id)) { notice = Notice.NOT_ENOUGH; return }
         if (isOnline && opp == Opp.HUMAN) { rematchAsked = true; transport?.send(Proto.REMATCH); maybeRematch() }
         else if (oppIsMachine) { mySide = 0; beginMatch() }

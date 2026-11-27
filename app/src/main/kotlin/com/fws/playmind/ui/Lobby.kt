@@ -112,11 +112,11 @@ fun LobbyScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onBack: 
     val solo = info.kind == GameKind.SOLO
     val hasOptions = info.options.isNotEmpty()
     val optIndex = info.options.indexOf(vm.option).coerceAtLeast(0)
-    val onlineOk = !solo && (info.optionKind != OptionKind.PLAYERS || vm.option == 2)
+    val onlineOk = !solo
     @Suppress("UNUSED_VARIABLE") val keepRecomposing = wallet.diamonds
 
     Column(Modifier.fillMaxSize()) {
-        TopBar(stringResource(info.name), onBack) { PmIconButton(Ic.Book, stringResource(R.string.view_guide), onGuide) }
+        TopBar(stringResource(info.name), onBack)
         Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 18.dp, vertical = 6.dp), verticalArrangement = Arrangement.spacedBy(18.dp)) {
             // ── Thẻ giới thiệu game ──
             val heroShape = RoundedCornerShape(28.dp)
