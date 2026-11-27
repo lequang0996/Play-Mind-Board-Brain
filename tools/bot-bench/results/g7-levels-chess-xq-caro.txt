@@ -1,0 +1,13 @@
+# date: 2026-11-27
+# note: Cờ vua: chuỗi cấp dưới (Giỏi n700 cố định; thử Khá, Trung bình, Dễ với nhiễu mạnh hơn). Cờ tướng và caro: quét số nút cấp Thách đấu so Siêu việt. Engine cờ vua/cờ tướng đã bật correction history.
+exp ladder chess 3v2 ms=2000 props=pm.level.chess.3=n700,p0.05,x20;pm.level.chess.2=d2,p0.1,x40 n=120  W/D/L=71/3/46  S=0.604 [0.517,0.691]  elo=+73  plies~119  {'CHECKMATE': 109, 'FIFTY': 2, 'MATERIAL': 1, 'REPETITION': 8}
+exp ladder chess 3v2 ms=2000 props=pm.level.chess.3=n700,p0.05,x20;pm.level.chess.2=d2,p0.2,x60 n=120  W/D/L=79/9/32  S=0.696 [0.617,0.775]  elo=+144  plies~129  {'CHECKMATE': 103, 'FIFTY': 7, 'MATERIAL': 1, 'REPETITION': 8, 'STALEMATE': 1}
+exp ladder chess 2v1 ms=2000 props=pm.level.chess.2=d2,p0.1,x40;pm.level.chess.1=d1,p0.3,x100 n=120  W/D/L=86/8/26  S=0.750 [0.676,0.824]  elo=+191  plies~111  {'CHECKMATE': 109, 'FIFTY': 5, 'MATERIAL': 2, 'REPETITION': 3, 'STALEMATE': 1}
+exp ladder chess 2v1 ms=2000 props=pm.level.chess.2=d2,p0.1,x40;pm.level.chess.1=d1,p0.5,x150 n=120  W/D/L=107/6/7  S=0.917 [0.871,0.962]  elo=+417  plies~101  {'CHECKMATE': 103, 'FIFTY': 1, 'MATERIAL': 1, 'REPETITION': 11, 'STALEMATE': 4}
+exp ladder chess 1v0 ms=2000 props=pm.level.chess.1=d1,p0.5,x150;pm.level.chess.0=d1,p0.8,x300 n=204  W/D/L=182/18/4  S=0.936 [0.910,0.963]  elo=+467  plies~94  {'CHECKMATE': 183, 'REPETITION': 3, 'STALEMATE': 18}
+exp ladder chess 1v0 ms=2000 props=pm.level.chess.1=d1,p0.5,x150;pm.level.chess.0=d1,p1.0,x500 n=204  W/D/L=194/10/0  S=0.975 [0.961,0.990]  elo=-  plies~65  {'CHECKMATE': 193, 'REPETITION': 1, 'STALEMATE': 10}
+exp ladder chess 1v0 ms=2000 props=pm.level.chess.1=d1,p0.3,x100;pm.level.chess.0=d1,p1.0,x500 n=204  W/D/L=195/9/0  S=0.978 [0.964,0.992]  elo=-  plies~58  {'CHECKMATE': 195, 'STALEMATE': 9}
+exp ladder xiangqi 6v5 ms=2000 props=pm.level.xiangqi.5=n20000 n=120  W/D/L=79/29/12  S=0.779 [0.719,0.839]  elo=+219  plies~203  {'CHECKMATE': 45, 'FIFTY': 29, 'NOMOVES': 22, 'REPETITION': 24}
+exp ladder xiangqi 6v5 ms=2000 props=pm.level.xiangqi.5=n6000 n=120  W/D/L=95/21/4  S=0.879 [0.834,0.924]  elo=+345  plies~169  {'CHECKMATE': 47, 'FIFTY': 21, 'NOMOVES': 37, 'REPETITION': 15}
+exp ladder caro 6v5 ms=2000 props=pm.level.caro.5=n20000 n=120  W/D/L=72/0/48  S=0.600 [0.512,0.688]  elo=+70  plies~39  {'FIVE': 120}
+exp ladder caro 6v5 ms=2000 props=pm.level.caro.5=n5000 n=120  W/D/L=95/0/25  S=0.792 [0.719,0.865]  elo=+232  plies~37  {'FIVE': 120}
