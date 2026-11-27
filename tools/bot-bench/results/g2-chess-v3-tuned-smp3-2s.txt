@@ -1,0 +1,5 @@
+# date: 2026-11-27
+# note: Engine cờ vua mới đã tinh chỉnh Texel (978k thế), Lazy SMP 3 luồng, đấu Stockfish 17.1 UCI_Elo 1 luồng, mỗi bên 2000 ms/nước, máy CI 4 vCPU. Lặp thế = hòa.
+gauge chess elo=2600 ms=2000 sfms=2000 threads=3 n=40  W/D/L=22/12/6  S=0.700 [0.585,0.815]  est=2747  plies~93  {'CHECKMATE': 28, 'REPETITION': 12}
+gauge chess elo=2800 ms=2000 sfms=2000 threads=3 n=40  W/D/L=8/19/13  S=0.438 [0.326,0.549]  est=2756  plies~91  {'CHECKMATE': 21, 'REPETITION': 19}
+gauge chess elo=3000 ms=2000 sfms=2000 threads=3 n=40  W/D/L=3/22/15  S=0.350 [0.256,0.444]  est=2892  plies~96  {'CHECKMATE': 18, 'REPETITION': 22}
