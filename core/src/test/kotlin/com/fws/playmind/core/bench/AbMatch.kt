@@ -88,7 +88,9 @@ fun abMain(args: List<String>) {
                 val eng = CaroEngine().also { it.prm = CP.parse(spec) }
                 GameP { GomokuGame().also { it.engineOverride = eng } }
             }
-            "quoridor" -> GameP { if (s == "old") QuoridorGameOld(2) else QuoridorGame(2) }
+            "quoridor" -> if (s == "old") GameP { QuoridorGameOld(2) } else {
+                val prm = QP.parse(spec); GameP { QuoridorGame(2).also { it.prm = prm } }
+            }
             "wallgo" -> GameP { if (s == "old") WallGoGameOld(2) else WallGoGame(2) }
             else -> error("ab: game $game chưa hỗ trợ")
         }

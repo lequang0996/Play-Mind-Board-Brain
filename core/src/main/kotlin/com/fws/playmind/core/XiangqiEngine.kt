@@ -190,7 +190,7 @@ class XiangqiEngine(private val tt: ChessTT) {
     private val counter = IntArray(1260)
     /** Correction history (×256) theo khóa cấu trúc, mỗi bên đi; [corrMax] = biên (điểm), 0 = tắt. */
     private val corr = Array(2) { IntArray(16384) }
-    var corrMax = 0
+    var corrMax = 32
     private fun corrIdx(): Int = ((skey * -0x61c8864680b583ebL) ushr 50).toInt()
 
     private val bufs = Array(MAXPLY + 2) { IntArray(160) }

@@ -17,6 +17,23 @@ import kotlin.random.Random
  *
  * Mã nước đi: đi quân = ô đích (0..80); đặt tường = 128 + hướng * 64 + r * 8 + c (hướng 0 = ngang, 1 = dọc).
  */
+/** Tham số bot Quoridor (để thử A/B: "ww80+lmr4"). */
+object QP {
+    val NAMES = arrayOf("ww", "tempo", "walls", "rootw", "dag", "lmr", "hist", "race")
+    val DEF = intArrayOf(75, 30, 10, 14, 1, 0, 1, 3000)
+    const val WW = 0; const val TEMPO = 1; const val WALLS = 2; const val ROOTW = 3; const val DAG = 4; const val LMR = 5
+    const val HIST = 6; const val RACE = 7
+    fun parse(spec: String): IntArray {
+        val p = DEF.copyOf()
+        for (item in spec.split('+').filter { it.isNotEmpty() }) {
+            val i = item.indexOfFirst { it == '-' || it.isDigit() }
+            val k = NAMES.indexOf(item.substring(0, i)); require(k >= 0) { "tham số lạ: $item" }
+            p[k] = item.substring(i).toInt()
+        }
+        return p
+    }
+}
+
 class QuoridorGame(val players: Int = 2) : BoardGame, LeveledEngine {
     companion object {
         const val N = 9
@@ -27,9 +44,6 @@ class QuoridorGame(val players: Int = 2) : BoardGame, LeveledEngine {
         fun wallR(m: Int) = ((m - 128) and 63) / 8
         fun wallC(m: Int) = ((m - 128) and 63) % 8
         @JvmStatic var lastDepthReached = 0
-        /** Trọng số mỗi tường còn lại trong đánh giá (đo bằng trận A/B). */
-        @JvmStatic var wallWeight = 75
-        @JvmStatic var tempo = 30
         fun wallsPerPlayer(players: Int) = if (players == 2) 10 else 5
 
         private val lock = Any()
@@ -60,6 +74,8 @@ class QuoridorGame(val players: Int = 2) : BoardGame, LeveledEngine {
     init { require(players == 2 || players == 4) }
 
     override val id = "quoridor"
+    /** Tham số bot (mặc định [QP.DEF]; bộ đo A/B có thể thay). */
+    internal var prm: IntArray = QP.DEF
     /** open[cell * 4 + dir] = true nếu đi từ ô theo hướng dir không bị tường/mép chặn. */
     internal val open = BooleanArray(81 * 4)
     private val hWalls = BooleanArray(64)
@@ -249,6 +265,7 @@ class QuoridorGame(val players: Int = 2) : BoardGame, LeveledEngine {
         System.arraycopy(hWalls, 0, g.hWalls, 0, 64); System.arraycopy(vWalls, 0, g.vWalls, 0, 64)
         System.arraycopy(pos, 0, g.pos, 0, players); System.arraycopy(wallsLeft, 0, g.wallsLeft, 0, players)
         g.hist.addAll(hist); g.keys.clear(); g.keys.addAll(keys); g.cur = cur; g.result = result; g.reason = reason; g.winner = winner
+        g.prm = prm
         return g
     }
 
@@ -262,10 +279,10 @@ class QuoridorGame(val players: Int = 2) : BoardGame, LeveledEngine {
         for (p in 0 until players) if (p != me && dists[p] == 0) return -INF + 1
         if (players == 2) {
             val opp = dists[1 - me]
-            var v = (opp - my) * 100 + (wallsLeft[me] - wallsLeft[1 - me]) * wallWeight + tempo
+            var v = (opp - my) * 100 + (wallsLeft[me] - wallsLeft[1 - me]) * prm[QP.WW] + prm[QP.TEMPO]
             // Chạy đua đã ngã ngũ: bên kia hết tường mà mình (đang tới lượt) không chậm hơn -> thắng chắc; ngược lại thì thua chắc.
-            if (wallsLeft[1 - me] == 0 && my <= opp) v += 3000
-            else if (wallsLeft[me] == 0 && opp < my) v -= 3000
+            if (wallsLeft[1 - me] == 0 && my <= opp) v += prm[QP.RACE]
+            else if (wallsLeft[me] == 0 && opp < my) v -= prm[QP.RACE]
             return v
         }
         var minOpp = 99; var sum = 0
@@ -299,6 +316,28 @@ class QuoridorGame(val players: Int = 2) : BoardGame, LeveledEngine {
         }
         val cand = LinkedHashSet<Int>()
         fun add(h: Boolean, r: Int, c: Int) { if (r in 0..7 && c in 0..7) cand.add(mvWall(h, r, c)) }   // neo ngoài lưới 8x8 thì bỏ
+        fun block(a: Int, b: Int) {
+            if (a / 9 != b / 9) { val r = minOf(a, b) / 9; val col = a % 9; add(true, r, col - 1); add(true, r, col) }
+            else { val r = a / 9; val col = minOf(a, b) % 9; add(false, r - 1, col); add(false, r, col) }
+        }
+        if (prm[QP.DAG] > 0) {
+            // mọi cạnh nằm trên MỘT đường ngắn nhất nào đó của đối thủ: khoảng cách tới đích giảm đúng 1 dọc cạnh
+            val dg = goalDist(goal)
+            val onDag = BooleanArray(81); val qq = IntArray(81); var hh = 0; var tt = 0
+            qq[tt++] = pos[target]; onDag[pos[target]] = true
+            while (hh < tt) {
+                val u = qq[hh++]
+                if (dg[u] == 0) continue
+                for (d in 0 until 4) {
+                    if (!open[u * 4 + d]) continue
+                    val v = (u / 9 + DR[d]) * 9 + u % 9 + DC[d]
+                    if (dg[v] != dg[u] - 1) continue
+                    block(u, v)
+                    if (!onDag[v]) { onDag[v] = true; qq[tt++] = v }
+                }
+            }
+            return cand.toList()
+        }
         var c = end
         while (c >= 0 && prev[c] >= 0) {
             val a = prev[c]; val b = c
@@ -314,6 +353,22 @@ class QuoridorGame(val players: Int = 2) : BoardGame, LeveledEngine {
         return cand.toList()
     }
 
+    /** Khoảng cách từ mọi ô tới cạnh đích [goal] (BFS nhiều nguồn từ cạnh đích; 99 = không tới được). */
+    private fun goalDist(goal: Int): IntArray {
+        val dist = IntArray(81) { 99 }; val q = IntArray(81); var h = 0; var t = 0
+        for (c in 0 until 81) if (atGoal(c, goal)) { dist[c] = 0; q[t++] = c }
+        while (h < t) {
+            val c = q[h++]
+            for (d in 0 until 4) {
+                if (!open[c * 4 + d]) continue
+                val n = (c / 9 + DR[d]) * 9 + c % 9 + DC[d]
+                if (dist[n] != 99) continue
+                dist[n] = dist[c] + 1; q[t++] = n
+            }
+        }
+        return dist
+    }
+
     private class Scored(val move: Int, val score: Int)
 
     /** Sinh nước đi có thứ tự (nước đi quân trước, rồi tường theo mức "gây khó" cho đối thủ). */
@@ -322,7 +377,7 @@ class QuoridorGame(val players: Int = 2) : BoardGame, LeveledEngine {
         for (m in pawnMoves(seat)) {
             val old = pos[seat]; pos[seat] = m
             val d = pathLen(m, goalSide(players, seat)); pos[seat] = old
-            out.add(Scored(m, (dists[seat] - d) * 1000))
+            out.add(Scored(m, (dists[seat] - d) * 1000 + hScore(seat, m)))
         }
         val walls = ArrayList<Scored>()
         for (m in wallCandidates(seat, dists)) {
@@ -333,7 +388,7 @@ class QuoridorGame(val players: Int = 2) : BoardGame, LeveledEngine {
             var gain = 0
             for (p in 0 until players) if (p != seat) gain += (nd[p] - dists[p]) * (if (players == 2) 100 else 60)
             gain -= (nd[seat] - dists[seat]) * 110
-            walls.add(Scored(m, gain))
+            walls.add(Scored(m, gain + hScore(seat, m)))
         }
         walls.sortByDescending { it.score }
         for (w in walls.take(maxWalls)) out.add(w)
@@ -358,6 +413,8 @@ class QuoridorGame(val players: Int = 2) : BoardGame, LeveledEngine {
     private var rootKeys = LongArray(0)
     private val path = LongArray(160)
     private val killers = Array(160) { IntArray(2) }
+    private val histTab = Array(2) { IntArray(256) }
+    private fun hScore(seat: Int, m: Int) = if (prm[QP.HIST] > 0 && seat < 2) histTab[seat][m] / 256 else 0
 
     private fun checkStop() {
         if ((++nodes and 63L) == 0L && (nodes >= nodeLimit || System.nanoTime() > deadline)) aborted = true
@@ -400,13 +457,13 @@ class QuoridorGame(val players: Int = 2) : BoardGame, LeveledEngine {
             val td = ttInf[slot] shr 2; val fl = ttInf[slot] and 3; val s = ttSc[slot]
             if (td >= depth && (fl == EXACT || (fl == LOWER && s >= beta) || (fl == UPPER && s <= alpha))) return s
         }
-        val moves = orderedMoves(seat, dists, 10).toMutableList()
+        val moves = orderedMoves(seat, dists, prm[QP.WALLS]).toMutableList()
         if (moves.isEmpty()) return evaluate(seat, dists)
         for (km in killers[ply].reversed()) if (km >= 0) front(moves, km)
         if (ttMove >= 0) front(moves, ttMove)
         val a0 = alpha
         var best = -INF * 2; var bestMove = -1; var first = true
-        for (m in moves) {
+        for ((idx, m) in moves.withIndex()) {
             val old = apply(seat, m)
             var v: Int
             if (!isWall(m) && atGoal(m, goalSide(players, seat))) v = INF - ply - 1
@@ -415,7 +472,9 @@ class QuoridorGame(val players: Int = 2) : BoardGame, LeveledEngine {
                 if (!isWall(m) && repeatedAt(ply + 1)) v = -(INF - ply - 1)          // tự lặp thế: thua
                 else if (first) v = -ab(1 - seat, depth - 1, -beta, -alpha, ply + 1)
                 else {
-                    v = -ab(1 - seat, depth - 1, -alpha - 1, -alpha, ply + 1)
+                    val r = if (prm[QP.LMR] > 0 && depth >= 3 && idx >= prm[QP.LMR] && isWall(m) && m != killers[ply][0] && m != killers[ply][1]) 1 else 0
+                    v = -ab(1 - seat, depth - 1 - r, -alpha - 1, -alpha, ply + 1)
+                    if (v > alpha && r > 0 && !aborted) v = -ab(1 - seat, depth - 1, -alpha - 1, -alpha, ply + 1)
                     if (v > alpha && v < beta && !aborted) v = -ab(1 - seat, depth - 1, -beta, -alpha, ply + 1)
                 }
             }
@@ -426,6 +485,8 @@ class QuoridorGame(val players: Int = 2) : BoardGame, LeveledEngine {
             if (v > alpha) alpha = v
             if (alpha >= beta) {
                 if (killers[ply][0] != m) { killers[ply][1] = killers[ply][0]; killers[ply][0] = m }
+                val ht = histTab[seat]; ht[m] += depth * depth * 64
+                if (ht[m] > 1_000_000) for (q in 0..1) for (i in 0 until 256) histTab[q][i] /= 2
                 break
             }
         }
@@ -482,7 +543,8 @@ class QuoridorGame(val players: Int = 2) : BoardGame, LeveledEngine {
         for (row in killers) { row[0] = -1; row[1] = -1 }
         if (players == 2) java.util.Arrays.fill(ttKey, 0L)
         val dists = allDists()
-        var moves = orderedMoves(me, dists, if (players == 2) 14 else 10).toMutableList()
+        for (q in 0..1) for (i in 0 until 256) histTab[q][i] /= 4
+        var moves = orderedMoves(me, dists, if (players == 2) prm[QP.ROOTW] else 10).toMutableList()
         // các tường ngoài danh sách ứng viên vẫn có thể được phép khi lọc an toàn chỉ còn chúng
         if (allowed != null) {
             val f = moves.filter { it in allowed }.toMutableList()

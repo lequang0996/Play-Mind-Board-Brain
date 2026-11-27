@@ -5,12 +5,16 @@
 #   ab     <game> <A> <B> games=<số ván> ms=<ms/nước> shards=<số máy> [nodes=<giới hạn nút>]   (A, B: new | smpN | ref | old; thêm @spec, ví dụ new@corr64)
 #   Mọi dòng thêm được props=k1=v1;k2=v2 (thuộc tính hệ thống, ví dụ pm.level.chess.5=n15000 để thử cấu hình cấp).
 # Cấp: 0 Dễ, 1 Trung bình, 2 Khá, 3 Giỏi, 4 Cao thủ, 5 Thách đấu, 6 Siêu việt.
-tag=g6-chess-params-caro-v3
-note=Cờ vua: tổ hợp tham số thắng ở g4 (qd240, futd130, asp12, hp2500) và trọng số Texel chess-t2, 1000 ván mỗi dòng. Caro: engine CaroEngine mới so engine cũ ở 1 giây/nước. Cờ tướng: đo lại với Pikafish (sửa tên tệp chạy).
-ab chess new@qd240+futd130+asp12 new games=1000 ms=200 shards=6
-ab chess new@qd240+futd130+asp12+hp2500 new games=1000 ms=200 shards=6
-ab chess new@qd300 new games=600 ms=200 shards=4
-ab chess new@w:chess-t2 new games=1000 ms=200 shards=6
-ab caro new old games=400 ms=1000 shards=4
-gauge xiangqi elo=2000 games=20 ms=2000 sfms=2000 shards=2 threads=3
-gauge xiangqi elo=2500 games=20 ms=2000 sfms=2000 shards=2 threads=3
+tag=g7-levels-chess-xq-caro
+note=Cờ vua: chuỗi cấp dưới (Giỏi n700 cố định; thử Khá, Trung bình, Dễ với nhiễu mạnh hơn). Cờ tướng và caro: quét số nút cấp Thách đấu so Siêu việt. Engine cờ vua/cờ tướng đã bật correction history.
+ladder chess 3 2 pairs=60 ms=2000 shards=2 props=pm.level.chess.3=n700,p0.05,x20;pm.level.chess.2=d2,p0.1,x40
+ladder chess 3 2 pairs=60 ms=2000 shards=2 props=pm.level.chess.3=n700,p0.05,x20;pm.level.chess.2=d2,p0.2,x60
+ladder chess 2 1 pairs=60 ms=2000 shards=2 props=pm.level.chess.2=d2,p0.1,x40;pm.level.chess.1=d1,p0.3,x100
+ladder chess 2 1 pairs=60 ms=2000 shards=2 props=pm.level.chess.2=d2,p0.1,x40;pm.level.chess.1=d1,p0.5,x150
+ladder chess 1 0 pairs=100 ms=2000 shards=2 props=pm.level.chess.1=d1,p0.5,x150;pm.level.chess.0=d1,p0.8,x300
+ladder chess 1 0 pairs=100 ms=2000 shards=2 props=pm.level.chess.1=d1,p0.5,x150;pm.level.chess.0=d1,p1.0,x500
+ladder chess 1 0 pairs=100 ms=2000 shards=2 props=pm.level.chess.1=d1,p0.3,x100;pm.level.chess.0=d1,p1.0,x500
+ladder xiangqi 6 5 pairs=60 ms=2000 shards=2 props=pm.level.xiangqi.5=n20000
+ladder xiangqi 6 5 pairs=60 ms=2000 shards=2 props=pm.level.xiangqi.5=n6000
+ladder caro 6 5 pairs=60 ms=2000 shards=2 props=pm.level.caro.5=n20000
+ladder caro 6 5 pairs=60 ms=2000 shards=2 props=pm.level.caro.5=n5000

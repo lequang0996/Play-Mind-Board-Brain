@@ -2,6 +2,13 @@ package com.fws.playmind.core
 
 import kotlin.random.Random
 
+internal object WgZ {
+    private val r = java.util.Random(0x3A11)
+    val OWN = Array(4) { LongArray(49) { r.nextLong() } }
+    val WALL = Array(49) { LongArray(16) { r.nextLong() } }
+    val SIDE = LongArray(4) { r.nextLong() }
+}
+
 /** Kết quả phân tích bàn: chia bàn thành các "vùng" bị tường ngăn cách. */
 internal class WgAnalysis(val region: IntArray, val size: IntArray, val mask: IntArray, val count: Int)
 
@@ -30,6 +37,26 @@ internal class WgBoard(val players: Int) {
         walls[c] = walls[c] or (1 shl side)
         val n = neighbor(c, side)
         if (n >= 0) walls[n] = walls[n] or (1 shl ((side + 2) % 4))
+    }
+
+    fun removeWall(c: Int, side: Int) {
+        walls[c] = walls[c] and (1 shl side).inv()
+        val n = neighbor(c, side)
+        if (n >= 0) walls[n] = walls[n] and (1 shl ((side + 2) % 4)).inv()
+    }
+
+    /** Hoàn tác [applyPlay] (quân ở [to] về [from], gỡ tường). */
+    fun undoPlay(from: Int, to: Int, side: Int) {
+        val p = owner[to]
+        removeWall(to, side)
+        owner[to] = -1; owner[from] = p
+    }
+
+    /** Khóa Zobrist (quân + tường + người đi). */
+    fun hash(seat: Int): Long {
+        var k = WgZ.SIDE[seat]
+        for (c in 0 until WallGoGame.CELLS) { val o = owner[c]; if (o >= 0) k = k xor WgZ.OWN[o][c]; val w = walls[c]; if (w != 0) k = k xor WgZ.WALL[c][w] }
+        return k
     }
 
     /** Các ô quân ở [from] có thể tới trong tối đa 2 bước (gồm chính [from] = đứng yên). Không xuyên tường, không xuyên/đứng lên quân khác. */
@@ -134,6 +161,60 @@ internal class WgBoard(val players: Int) {
             for (p in 0 until players) { val t = if (dist[p][c] >= inf) inf else (dist[p][c] + 1) / 2; if (t == best) sc[p] += 0.85 / ties }
         }
         return sc
+    }
+
+    // ── đánh giá nhanh cho 2 người (không cấp phát) ──
+    private val rg = IntArray(WallGoGame.CELLS); private val stk = IntArray(WallGoGame.CELLS)
+    private val mixedR = BooleanArray(WallGoGame.CELLS)
+    private val q = IntArray(WallGoGame.CELLS); private val d0 = IntArray(WallGoGame.CELLS); private val d1 = IntArray(WallGoGame.CELLS)
+    /** Kết quả phụ của [score2]: ván đã kết thúc (không còn vùng có quân của cả hai người). */
+    var finished2 = false; private set
+
+    /** Như [scoreVector] cho 2 người, trả điểm bên 0 trừ bên 1. */
+    fun score2(): Double {
+        java.util.Arrays.fill(rg, -1)
+        var cnt = 0; var mixed = false; var s0 = 0.0; var s1 = 0.0
+        for (s in 0 until WallGoGame.CELLS) {
+            if (rg[s] >= 0) continue
+            var sp = 0; stk[sp++] = s; rg[s] = cnt
+            var sz = 0; var mk = 0
+            while (sp > 0) {
+                val c = stk[--sp]; sz++
+                val o = owner[c]; if (o >= 0) mk = mk or (1 shl o)
+                val w = walls[c]; val r = c / 7; val col = c % 7
+                if (r > 0 && (w and 1) == 0) { val n = c - 7; if (rg[n] < 0) { rg[n] = cnt; stk[sp++] = n } }
+                if (col < 6 && (w and 2) == 0) { val n = c + 1; if (rg[n] < 0) { rg[n] = cnt; stk[sp++] = n } }
+                if (r < 6 && (w and 4) == 0) { val n = c + 7; if (rg[n] < 0) { rg[n] = cnt; stk[sp++] = n } }
+                if (col > 0 && (w and 8) == 0) { val n = c - 1; if (rg[n] < 0) { rg[n] = cnt; stk[sp++] = n } }
+            }
+            mixedR[cnt] = mk == 3
+            if (mk == 1) s0 += sz else if (mk == 2) s1 += sz else if (mk == 3) mixed = true
+            cnt++
+        }
+        finished2 = !mixed
+        if (!mixed) return s0 - s1
+        bfs(0, d0); bfs(1, d1)
+        for (c in 0 until WallGoGame.CELLS) {
+            if (!mixedR[rg[c]]) continue
+            val t0 = if (d0[c] >= 99) 99 else (d0[c] + 1) / 2
+            val t1 = if (d1[c] >= 99) 99 else (d1[c] + 1) / 2
+            if (t0 >= 99 && t1 >= 99) continue
+            if (t0 < t1) s0 += 0.85 else if (t1 < t0) s1 += 0.85 else { s0 += 0.425; s1 += 0.425 }
+        }
+        return s0 - s1
+    }
+
+    private fun bfs(p: Int, dist: IntArray) {
+        java.util.Arrays.fill(dist, 99)
+        var h = 0; var t = 0
+        for (c in 0 until WallGoGame.CELLS) if (owner[c] == p) { dist[c] = 0; q[t++] = c }
+        while (h < t) {
+            val c = q[h++]; val w = walls[c]; val r = c / 7; val col = c % 7; val nd = dist[c] + 1
+            if (r > 0 && (w and 1) == 0 && dist[c - 7] == 99) { dist[c - 7] = nd; q[t++] = c - 7 }
+            if (col < 6 && (w and 2) == 0 && dist[c + 1] == 99) { dist[c + 1] = nd; q[t++] = c + 1 }
+            if (r < 6 && (w and 4) == 0 && dist[c + 7] == 99) { dist[c + 7] = nd; q[t++] = c + 7 }
+            if (col > 0 && (w and 8) == 0 && dist[c - 1] == 99) { dist[c - 1] = nd; q[t++] = c - 1 }
+        }
     }
 
     /** Áp dụng nước đi (đã hợp lệ). Trả về người vừa đi. */
@@ -401,6 +482,103 @@ class WallGoGame(val players: Int = 2) : BoardGame, LeveledEngine {
         return best
     }
 
+    // ── 2 người: negamax nhìn từ người đang đi, đi/hoàn tác trên một bàn, bảng băm, killer, PVS ──
+    private val TTB = 16
+    // cấp phát khi tìm kiếm lần đầu (WallGoGame còn được sao chép nhiều lần cho giao diện)
+    private var ttK = LongArray(0); private var ttV = IntArray(0)
+    private var ttI = IntArray(0); private var ttM = IntArray(0)
+    private var killer = Array(0) { IntArray(0) }
+    private var genM = Array(0) { IntArray(0) }
+    private var genV = Array(0) { IntArray(0) }
+    private fun allocSearch() {
+        if (ttK.isNotEmpty()) return
+        ttK = LongArray(1 shl TTB); ttV = IntArray(1 shl TTB); ttI = IntArray(1 shl TTB); ttM = IntArray(1 shl TTB)
+        killer = Array(64) { IntArray(2) { -1 } }; genM = Array(64) { IntArray(512) }; genV = Array(64) { IntArray(512) }
+    }
+
+    /** Sinh mọi nước của [seat] kèm điểm tĩnh của thế con (nhìn từ [seat]); trả số nước. */
+    private fun gen2(b: WgBoard, seat: Int, ply: Int): Int {
+        val ms = genM[ply]; val vs = genV[ply]; var n = 0
+        for (c in 0 until CELLS) {
+            if (b.owner[c] != seat) continue
+            for (d in b.reach(c)) {
+                val ws = b.wallSides(d)
+                for (s in 0 until 4) if ((ws shr s) and 1 == 1 && n < ms.size) {
+                    b.applyPlay(c, d, s)
+                    val sc = b.score2()
+                    vs[n] = if (b.finished2) terminal(b, b.analyze(), seat, ply + 1) else ((if (seat == 0) sc else -sc) * 100).toInt()
+                    b.undoPlay(c, d, s)
+                    ms[n++] = mvMove(c, d, s)
+                }
+            }
+        }
+        return n
+    }
+
+    private fun nega(b: WgBoard, seat: Int, depth: Int, alphaIn: Int, beta: Int, ply: Int): Int {
+        checkStop(); if (aborted) return 0
+        val sc0 = b.score2()
+        if (b.finished2) return terminal(b, b.analyze(), seat, ply)
+        if (depth <= 0 || ply >= 60) return ((if (seat == 0) sc0 else -sc0) * 100).toInt()
+        var alpha = alphaIn
+        val opp = 1 - seat
+        if (!b.hasMove(seat)) {
+            // bị bỏ lượt
+            return if (!b.hasMove(opp)) terminal(b, b.analyze(), seat, ply) else -nega(b, opp, depth - 1, -beta, -alpha, ply + 1)
+        }
+        val key = b.hash(seat)
+        val slot = (key and ((1L shl TTB) - 1)).toInt()
+        var ttMove = -1
+        if (ttK[slot] == key) {
+            ttMove = ttM[slot]
+            val td = ttI[slot] shr 2; val fl = ttI[slot] and 3; val v = ttV[slot]
+            if (td >= depth && (fl == 0 || (fl == 1 && v >= beta) || (fl == 2 && v <= alpha))) return v
+        }
+        val n = gen2(b, seat, ply)
+        if (n == 0) return ((if (seat == 0) sc0 else -sc0) * 100).toInt()
+        val ms = genM[ply]; val vs = genV[ply]
+        if (depth == 1) {
+            // lá: điểm tĩnh của thế con chính là giá trị (không cắt nước, không đánh giá lại)
+            var best = -INF
+            for (i in 0 until n) if (vs[i] > best) best = vs[i]
+            return best
+        }
+        // thứ tự: nước bảng băm, killer, rồi điểm tĩnh
+        for (i in 0 until n) {
+            val m = ms[i]
+            if (m == ttMove) vs[i] += 1 shl 28 else if (m == killer[ply][0]) vs[i] += 1 shl 26 else if (m == killer[ply][1]) vs[i] += 1 shl 25
+        }
+        val limit = minOf(n, 12)
+        val a0 = alpha
+        var best = -INF; var bestMove = -1
+        for (k in 0 until limit) {
+            var bi = k
+            for (i in k + 1 until n) if (vs[i] > vs[bi]) bi = i
+            if (bi != k) { val tm = ms[k]; ms[k] = ms[bi]; ms[bi] = tm; val tv = vs[k]; vs[k] = vs[bi]; vs[bi] = tv }
+            val m = ms[k]
+            val f = mvFrom(m); val t = mvTo(m); val sd = mvSide(m)
+            b.applyPlay(f, t, sd)
+            var v: Int
+            if (k == 0) v = -nega(b, opp, depth - 1, -beta, -alpha, ply + 1)
+            else {
+                v = -nega(b, opp, depth - 1, -alpha - 1, -alpha, ply + 1)
+                if (v > alpha && v < beta && !aborted) v = -nega(b, opp, depth - 1, -beta, -alpha, ply + 1)
+            }
+            b.undoPlay(f, t, sd)
+            if (aborted) return 0
+            if (v > best) { best = v; bestMove = m }
+            if (v > alpha) alpha = v
+            if (alpha >= beta) {
+                if (killer[ply][0] != m) { killer[ply][1] = killer[ply][0]; killer[ply][0] = m }
+                break
+            }
+        }
+        val mate = best > WIN - 1000 || best < -WIN + 1000
+        ttK[slot] = key; ttM[slot] = bestMove; ttV[slot] = best
+        ttI[slot] = ((if (mate) 0 else depth) shl 2) or (if (best <= a0) 2 else if (best >= beta) 1 else 0)
+        return best
+    }
+
     private fun setupMove(cfg: LevelConfig, rnd: Random): Int {
         val me = cur
         val ms = ArrayList<Int>(); val vs = ArrayList<Int>()
@@ -427,6 +605,8 @@ class WallGoGame(val players: Int = 2) : BoardGame, LeveledEngine {
         val nl = if (lim.nodes > 0) lim.nodes else Long.MAX_VALUE
         val maxDepth = if (lim.depth > 0) lim.depth else 30
         nodes = 0
+        allocSearch()
+        for (k in killer) { k[0] = -1; k[1] = -1 }
         val root = board
         var moves = ordered(root, me, me, 400).toMutableList()
         if (allowed != null) { val f = moves.filter { it in allowed }.toMutableList(); if (f.isNotEmpty()) moves = f }
@@ -441,7 +621,9 @@ class WallGoGame(val players: Int = 2) : BoardGame, LeveledEngine {
             for (m in moves) {
                 val nb = applyTo(root, m)
                 val nx = nextSeat(nb, me)
-                val v = if (nx < 0 || nb.finished()) terminal(nb, nb.analyze(), me, 1) else mm(nb, nx, me, depth - 1, alpha, INF, 1)
+                val v = if (nx < 0 || nb.finished()) terminal(nb, nb.analyze(), me, 1)
+                    else if (players == 2) (if (nx == me) nega(nb, me, depth - 1, alpha, INF, 1) else -nega(nb, nx, depth - 1, -INF, -alpha, 1))
+                    else mm(nb, nx, me, depth - 1, alpha, INF, 1)
                 if (aborted) break
                 if (v > alpha) { alpha = v; iterBest = m }
             }
@@ -460,7 +642,9 @@ class WallGoGame(val players: Int = 2) : BoardGame, LeveledEngine {
                 if (m == best) continue
                 val nb = applyTo(root, m)
                 val nx = nextSeat(nb, me)
-                val v = if (nx < 0 || nb.finished()) terminal(nb, nb.analyze(), me, 1) else mm(nb, nx, me, completed - 1, thr - 1, thr, 1)
+                val v = if (nx < 0 || nb.finished()) terminal(nb, nb.analyze(), me, 1)
+                    else if (players == 2) (if (nx == me) nega(nb, me, completed - 1, thr - 1, thr, 1) else -nega(nb, nx, completed - 1, -thr, -thr + 1, 1))
+                    else mm(nb, nx, me, completed - 1, thr - 1, thr, 1)
                 if (v >= thr) out.add(m)
             }
             near = out.toIntArray()

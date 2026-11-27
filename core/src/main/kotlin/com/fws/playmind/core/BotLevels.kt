@@ -109,19 +109,20 @@ object BotLevels {
 
     /**
      * Chỉ dùng khi đo (bộ bench): thuộc tính hệ thống "pm.level.<game>.<cấp 0..6>" = "d<độ sâu>" hoặc "n<số nút>",
-     * thêm tùy chọn ",p<xác suất nhiễu>,x<delta>". Ví dụ -Dpm.level.chess.5=n15000. App không đặt thuộc tính này.
+     * thêm tùy chọn ",p<xác suất nhiễu>,x<delta>,e<extra>". Ví dụ -Dpm.level.chess.5=n15000. App không đặt thuộc tính này.
      */
     private fun override(gameId: String, level: BotLevel): LevelConfig? {
         val v = System.getProperty("pm.level.$gameId.${level.ordinal}") ?: return null
         val base = of(gameId)[level.ordinal]
-        var lim = base.limit; var p = base.noiseP; var dl = base.delta
+        var lim = base.limit; var p = base.noiseP; var dl = base.delta; var ex = base.extra
         for (t in v.split(',')) when (t.firstOrNull()) {
             'd' -> lim = SearchLimit(depth = t.drop(1).toInt())
             'n' -> lim = SearchLimit(nodes = t.drop(1).toLong())
             'p' -> p = t.drop(1).toDouble()
             'x' -> dl = t.drop(1).toInt()
+            'e' -> ex = t.drop(1).toInt()
         }
-        return LevelConfig(lim, p, dl, base.extra)
+        return LevelConfig(lim, p, dl, ex)
     }
 }
 
