@@ -1,0 +1,6 @@
+# chess-t3: game=chess games/proc=600 nodes=8000 iters=2000 shards=20 date=2026-11-27
+positions: 2147324, params: 545
+used: 2147324, skipped: 0, linear-model mismatches: 0
+K = 1.2245, start error = 0.113637
+iter 1000 error = 0.111092
+iter 2000 error = 0.111090
