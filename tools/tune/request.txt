@@ -1,0 +1,9 @@
+# Yêu cầu tinh chỉnh Texel (xem .github/workflows/tune.yml). Sửa rồi push lên main để chạy.
+# GitHub sinh dữ liệu tự đấu trên <shards> máy (mỗi máy 4 tiến trình x <games> ván, giới hạn <nodes> nút/nước),
+# rồi tinh chỉnh <iters> vòng và commit trọng số vào tools/tune/results/<tag>.txt (chuỗi để dán vào *WeightsData.kt).
+tag=xiangqi-t1
+game=xiangqi
+games=500
+nodes=6000
+shards=16
+iters=1500

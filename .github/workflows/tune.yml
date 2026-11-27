@@ -1,0 +1,92 @@
+name: Texel tune
+
+# Tinh chỉnh đánh giá tuyến tính (cờ vua / cờ tướng): sinh dữ liệu tự đấu trên nhiều máy, tinh chỉnh, commit trọng số.
+# Kích hoạt: sửa tools/tune/request.txt rồi push lên main (hoặc chạy tay). Trọng số KHÔNG tự vào engine:
+# dán chuỗi trong tools/tune/results/<tag>.txt vào ChessWeightsData / XiangqiWeightsData rồi kiểm A/B (bot-bench, job ab ... new ref).
+
+on:
+  push:
+    branches: [main]
+    paths: ["tools/tune/request.txt"]
+  workflow_dispatch:
+
+concurrency: { group: texel-tune, cancel-in-progress: false }
+
+env:
+  GRADLE_VERSION: "8.14.3"
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      shards: ${{ steps.p.outputs.shards }}
+      cfg: ${{ steps.p.outputs.cfg }}
+    steps:
+      - uses: actions/checkout@v5
+      - id: p
+        run: |
+          get() { sed -n "s/^$1=//p" tools/tune/request.txt | head -1; }
+          n=$(get shards); echo "shards=$(python3 -c "import json;print(json.dumps(list(range($n))))")" >> "$GITHUB_OUTPUT"
+          echo "cfg=$(get tag) $(get game) $(get games) $(get nodes) $(get iters)" >> "$GITHUB_OUTPUT"
+
+  datagen:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix: { shard: "${{ fromJSON(needs.plan.outputs.shards) }}" }
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with: { distribution: temurin, java-version: "17" }
+      - uses: gradle/actions/setup-gradle@v4
+        with: { gradle-version: "${{ env.GRADLE_VERSION }}" }
+      - name: Sinh dữ liệu
+        run: |
+          read tag game games nodes iters <<< "${{ needs.plan.outputs.cfg }}"
+          CP=$(gradle :core:benchClasspath --no-daemon -q | sed -n 's/^CP=//p')
+          mkdir -p data
+          for k in 0 1 2 3; do
+            java -Xss16m -cp "$CP" com.fws.playmind.core.bench.BenchMainKt texel datagen "$game" $(( ${{ matrix.shard }} * 10 + k + 1 )) "$games" "$nodes" "data/d-${{ matrix.shard }}-$k.txt" &
+          done
+          wait
+          wc -l data/*.txt
+      - uses: actions/upload-artifact@v4
+        with: { name: "data-${{ matrix.shard }}", path: data/, retention-days: 3 }
+
+  tune:
+    needs: [plan, datagen]
+    if: always() && needs.plan.result == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    permissions: { contents: write }
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with: { distribution: temurin, java-version: "17" }
+      - uses: gradle/actions/setup-gradle@v4
+        with: { gradle-version: "${{ env.GRADLE_VERSION }}" }
+      - uses: actions/download-artifact@v4
+        with: { path: data }
+      - name: Tinh chỉnh
+        run: |
+          read tag game games nodes iters <<< "${{ needs.plan.outputs.cfg }}"
+          CP=$(gradle :core:benchClasspath --no-daemon -q | sed -n 's/^CP=//p')
+          mkdir -p tools/tune/results
+          java -Xmx12g -cp "$CP" com.fws.playmind.core.bench.BenchMainKt texel tune "$game" data "$iters" "tools/tune/results/$tag.txt" | tee tune.log
+          { echo "# $tag: game=$game games/proc=$games nodes=$nodes iters=$iters shards=$(ls data | wc -l) date=$(date -u +%F)"; grep -v '^iter [0-9]*[1-9]00 ' tune.log; } > "tools/tune/results/$tag.log"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"; cat "tools/tune/results/$tag.log" >> "$GITHUB_STEP_SUMMARY"; echo '```' >> "$GITHUB_STEP_SUMMARY"
+      - name: Commit vào main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tools/tune/results
+          git diff --cached --quiet && exit 0
+          git commit -m "Kết quả tinh chỉnh Texel: $(sed -n 's/^tag=//p' tools/tune/request.txt)"
+          for n in 1 2 3 4 5; do
+            git pull --rebase -q origin main && git push -q origin HEAD:main && exit 0
+            sleep $((n * 10))
+          done
+          exit 1
