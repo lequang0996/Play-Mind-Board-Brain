@@ -110,10 +110,10 @@ internal fun TurnClock(seconds: Int, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun PlayerBar(info: GameInfo, seat: Int, name: String, label: String, active: Boolean, status: String?, extra: String?, showCheck: Boolean, clock: Int? = null) {
+private fun PlayerBar(info: GameInfo, seat: Int, name: String, label: String, active: Boolean, status: String?, extra: String?, showCheck: Boolean, clock: Int? = null, total0: Int = 60) {
     val shape = RoundedCornerShape(20.dp)
     // thanh thời gian còn lại của lượt đi chạy dọc mép dưới thẻ (đỏ khi còn ≤ 10 giây)
-    val total = info.moveSeconds.coerceAtLeast(1)
+    val total = total0.coerceAtLeast(1)
     val frac = if (clock != null) (clock.toFloat() / total).coerceIn(0f, 1f) else -1f
     val barColor = if (clock != null && clock <= 10) pm.danger else pm.goldBright
     val track = pm.outline
@@ -196,7 +196,7 @@ fun GameScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onExit: (
             info, topSeat, seatName(vm, info, topSeat), sideLabel(info, topSeat), oppTurn,
             if (oppTurn && vm.botThinking) stringResource(R.string.thinking) else if (oppTurn) stringResource(R.string.their_turn) else null,
             seatInfo(vm, topSeat), inCheck && oppTurn,
-            clock = if (oppTurn && info.moveSeconds > 0) vm.turnSecondsLeft else null,
+            clock = if (oppTurn && vm.moveSeconds > 0) vm.turnSecondsLeft else null, total0 = vm.moveSeconds,
         )
         Box(Modifier.weight(1f).fillMaxWidth().padding(horizontal = 12.dp, vertical = 4.dp), contentAlignment = Alignment.Center) {
             when (info.id) {
@@ -220,7 +220,7 @@ fun GameScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onExit: (
         } else PlayerBar(
             info, bottomSeat, seatName(vm, info, bottomSeat), sideLabel(info, bottomSeat), myTurn,
             if (myTurn) stringResource(R.string.your_turn) else null, seatInfo(vm, bottomSeat), inCheck && myTurn,
-            clock = if (myTurn && info.moveSeconds > 0) vm.turnSecondsLeft else null,
+            clock = if (myTurn && vm.moveSeconds > 0) vm.turnSecondsLeft else null, total0 = vm.moveSeconds,
         )
         Spacer(Modifier.height(10.dp))
     }
@@ -246,6 +246,7 @@ private fun reasonText(info: GameInfo, r: EndReason): String = stringResource(wh
     EndReason.LEAVE -> R.string.reason_leave
     EndReason.TIMEOUT -> R.string.reason_timeout
     EndReason.TERRITORY -> R.string.reason_territory
+    EndReason.MOVE_LIMIT -> R.string.reason_move_limit
     EndReason.NONE -> if (info.id == "quoridor") R.string.reason_goal else R.string.empty
 })
 
@@ -280,6 +281,13 @@ private fun ResultDialog(app: PlayMindApp, vm: SessionViewModel, info: GameInfo,
             Text(title, style = MaterialTheme.typography.headlineMedium, color = pm.ink, textAlign = TextAlign.Center)
             val rt = reasonText(info, if (vm.eliminated) vm.eliminatedReason else g.reason)
             if (rt.isNotEmpty()) Text(rt, style = MaterialTheme.typography.bodyMedium, color = pm.inkSoft, textAlign = TextAlign.Center)
+            if (vm.unlockedNow >= 0) Row(
+                Modifier.clip(RoundedCornerShape(50)).background(pm.goldSoft).border(1.dp, pm.goldBright.copy(alpha = .7f), RoundedCornerShape(50)).padding(horizontal = 14.dp, vertical = 7.dp),
+                verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Icon(Ic.Unlock, null, Modifier.size(18.dp), tint = pm.gold)
+                Text(stringResource(R.string.level_unlocked, levelName(vm.unlockedNow)), style = MaterialTheme.typography.labelLarge, color = pm.gold, textAlign = TextAlign.Center)
+            }
             // Bảng điểm cuối ván
             if (g is WallGoGame && g.reason == EndReason.TERRITORY) FinalScores(vm, info, g.finalScores.toList())
             if (g is GoGame && g.reason == EndReason.TERRITORY) {

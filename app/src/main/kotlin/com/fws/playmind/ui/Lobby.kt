@@ -93,6 +93,83 @@ private fun ModeCard(icon: ImageVector, title: String, subtitle: String?, modifi
     }
 }
 
+private val LEVEL_NAMES = intArrayOf(R.string.level_0, R.string.level_1, R.string.level_2, R.string.level_3, R.string.level_4, R.string.level_5, R.string.level_6)
+private val LEVEL_DESCS = intArrayOf(R.string.level_desc_0, R.string.level_desc_1, R.string.level_desc_2, R.string.level_desc_3, R.string.level_desc_4, R.string.level_desc_5, R.string.level_desc_6)
+
+/** Tên cấp bot (Dễ ... Siêu việt). */
+@Composable
+fun levelName(i: Int): String = stringResource(LEVEL_NAMES[i.coerceIn(0, LEVEL_NAMES.size - 1)])
+
+/**
+ * Chọn 1 trong 7 cấp bot. Chỉ cấp Dễ mở sẵn; thắng cấp L thì mở cấp L + 1. Cấp chưa mở hiện ổ khóa, bấm vào chỉ hiện gợi ý.
+ * Dưới lưới là mô tả cấp và thời gian tối đa cho mỗi nước của người chơi ở cấp đó.
+ */
+@Composable
+private fun LevelPicker(selected: Int, unlocked: Int, onSelect: (Int) -> Unit) {
+    var hint by remember { mutableStateOf(-1) }
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        for (row in listOf(0..3, 4..6)) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                for (i in row) {
+                    val on = i == selected; val locked = i > unlocked
+                    val shape = RoundedCornerShape(14.dp)
+                    Row(
+                        Modifier.weight(1f).height(44.dp).clip(shape)
+                            .background(if (on) Brush.verticalGradient(listOf(pm.goldSoft, pm.goldHi.copy(alpha = .55f))) else cardBrush())
+                            .border(1.2.dp, if (on) Brush.verticalGradient(listOf(pm.goldHi, pm.goldBright)) else hairline(), shape)
+                            .clickable { if (locked) hint = i else { hint = -1; onSelect(i) } }
+                            .padding(horizontal = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center,
+                    ) {
+                        if (locked) { Icon(Ic.Lock, null, Modifier.size(13.dp), tint = pm.inkSoft.copy(alpha = .7f)); Spacer(Modifier.width(3.dp)) }
+                        Text(
+                            levelName(i), style = MaterialTheme.typography.labelMedium, maxLines = 1, overflow = TextOverflow.Ellipsis,
+                            color = if (on) pm.gold else if (locked) pm.inkSoft.copy(alpha = .6f) else pm.ink,
+                        )
+                    }
+                }
+                if (row.last - row.first < 3) Spacer(Modifier.weight(1f))
+            }
+        }
+        val shown = if (hint >= 0) hint else selected
+        Text(
+            if (hint >= 0) stringResource(R.string.level_locked, levelName(hint - 1)) else stringResource(LEVEL_DESCS[shown]),
+            style = MaterialTheme.typography.bodySmall, color = if (hint >= 0) pm.danger else pm.inkSoft,
+        )
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            Icon(Ic.Hourglass, null, Modifier.size(14.dp), tint = pm.gold)
+            Text(stringResource(R.string.level_move_time, Catalog.LEVEL_MOVE_SECONDS[selected] / 60), style = MaterialTheme.typography.labelMedium, color = pm.gold)
+        }
+    }
+}
+
+/** Nhãn ngắn của một mức thời gian mỗi nước (1 phút ... 1 giờ). */
+@Composable
+fun timeLabel(seconds: Int): String = if (seconds >= 3600) stringResource(R.string.time_1h) else stringResource(R.string.time_n_min, seconds / 60)
+
+/** Chọn thời gian mỗi nước khi chơi với người: cùng 7 mức với các cấp máy (Catalog.LEVEL_MOVE_SECONDS). */
+@Composable
+private fun TimePicker(selected: Int, onSelect: (Int) -> Unit) {
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        for (row in listOf(0..3, 4..6)) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                for (i in row) {
+                    val on = i == selected
+                    val shape = RoundedCornerShape(14.dp)
+                    Box(
+                        Modifier.weight(1f).height(40.dp).clip(shape)
+                            .background(if (on) Brush.verticalGradient(listOf(pm.goldSoft, pm.goldHi.copy(alpha = .55f))) else cardBrush())
+                            .border(1.2.dp, if (on) Brush.verticalGradient(listOf(pm.goldHi, pm.goldBright)) else hairline(), shape)
+                            .clickable { onSelect(i) },
+                        contentAlignment = Alignment.Center,
+                    ) { Text(timeLabel(Catalog.LEVEL_MOVE_SECONDS[i]), style = MaterialTheme.typography.labelMedium, color = if (on) pm.gold else pm.ink, maxLines = 1) }
+                }
+                if (row.last - row.first < 3) Spacer(Modifier.weight(1f))
+            }
+        }
+    }
+}
+
 @Composable
 fun LobbyScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onBack: () -> Unit, onRoom: () -> Unit, onGuide: () -> Unit) {
     val ctx = LocalContext.current
@@ -135,7 +212,7 @@ fun LobbyScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onBack: 
                         Modifier.clip(RoundedCornerShape(6.dp)).clickable(onClick = onGuide).padding(vertical = 2.dp),
                         style = MaterialTheme.typography.labelLarge, color = pm.gold, textDecoration = TextDecoration.Underline,
                     )
-                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    if (!app.wallet.noDiamonds()) Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                         if (free > 0) {
                             Icon(Ic.Check, null, Modifier.size(16.dp), tint = pm.good)
                             Text(if (free == Int.MAX_VALUE) stringResource(R.string.free_unlimited) else stringResource(R.string.free_left_n, free), style = MaterialTheme.typography.labelMedium, color = pm.good)
@@ -162,6 +239,10 @@ fun LobbyScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onBack: 
                 stringResource(if (solo) R.string.solo_play else R.string.vs_computer),
                 if (!solo && info.optionKind == OptionKind.PLAYERS && vm.option > 2) stringResource(R.string.vs_computers_note, vm.option - 1) else null,
             ) {
+                if (!solo) {
+                    SectionTitle(stringResource(R.string.bot_level))
+                    LevelPicker(vm.botLevel, app.prefs.unlockedLevel(info.id)) { vm.selectLevel(it) }
+                }
                 GoldButton(
                     stringResource(R.string.start),
                     { if (solo) vm.startSudoku(Catalog.SUDOKU_LEVEL) else vm.startVsComputer() },
@@ -175,6 +256,11 @@ fun LobbyScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onBack: 
                     ModeCard(Ic.Users, stringResource(R.string.play_friends), stringResource(R.string.online_two_only)) {}
                 } else {
                     SectionTitle(stringResource(R.string.play_friends))
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(stringResource(R.string.pvp_time), style = MaterialTheme.typography.titleSmall, color = pm.ink)
+                        TimePicker(vm.pvpTime) { vm.selectPvpTime(it) }
+                        Text(stringResource(R.string.pvp_time_note), style = MaterialTheme.typography.bodySmall, color = pm.inkSoft)
+                    }
                     ModeCard(Ic.Nearby, stringResource(R.string.nearby), stringResource(R.string.nearby_card_desc)) {
                         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                             OutlineButton(stringResource(R.string.create_room), { withNearby { if (vm.hostRoom(true)) onRoom() } }, Modifier.weight(1f))

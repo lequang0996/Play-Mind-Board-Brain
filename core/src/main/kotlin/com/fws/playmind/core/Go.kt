@@ -214,7 +214,7 @@ internal class GoBoard(val n: Int) {
  *
  * Mã nước đi: ô (0..n*n-1) hoặc [PASS].
  */
-class GoGame(val size: Int = 9) : BoardGame {
+class GoGame(val size: Int = 9) : BoardGame, LeveledEngine {
     companion object {
         const val PASS = 511
         const val KOMI = 7.5
@@ -265,6 +265,21 @@ class GoGame(val size: Int = 9) : BoardGame {
         if (!board.legal(color, p)) return false
         val t = board.copy(); t.place(color, p)
         return t.hash !in seen
+    }
+
+    /**
+     * Nước nên tránh theo BOT_GUIDE mục 8.2: tự lấp mắt thật của mình (bất biến cứng, mọi cấp), hoặc khi [selfAtari]
+     * thì cả nước tự đưa nhóm của mình vào thế chỉ còn 1 khí (bộ lọc nhiễu của các cấp thấp). Bỏ lượt không tính.
+     */
+    fun isBlunder(m: Int, selfAtari: Boolean): Boolean {
+        if (m == PASS) return false
+        if (!isLegal(m)) return true
+        val p = board.pad(m); val color = cur + 1
+        if (board.ownEye(color, p)) return true
+        if (!selfAtari) return false
+        val t = board.copy()
+        if (t.place(color, p) < 0) return true
+        return t.liberties(p) <= 1
     }
 
     override fun legalMoves(): IntArray {
@@ -329,7 +344,18 @@ class GoGame(val size: Int = 9) : BoardGame {
         return out.toIntArray()
     }
 
-    override fun bestMove(timeMs: Long): Int {
+    override fun bestMove(timeMs: Long): Int = mcts(timeMs, 0)
+
+    /**
+     * 7 cấp cho bot MCTS dự phòng (khi không chạy được KataGo): giới hạn số lượt mô phỏng theo BotLevels.go.
+     * Bất biến cứng ở mọi cấp (mục 8.2): ứng viên đã loại nước tự lấp mắt (candidates) và nước tự sát (luật).
+     */
+    override fun levelMove(level: BotLevel, timeMs: Long, rnd: Random): Int {
+        val cfg = BotLevels.config(id, level, timeMs)
+        return if (level == BotLevel.SUPREME) mcts(timeMs, 0) else mcts(0, cfg.extra)
+    }
+
+    private fun mcts(timeMs: Long, simLimit: Int): Int {
         if (result != Outcome.ONGOING) return -1
         // Khai cuộc: nước đầu vào thiên nguyên / sao; trắng chiếm thiên nguyên nếu còn trống (bàn nhỏ)
         if (hist.isEmpty()) return when (size) { 9 -> 40; 13 -> 84; else -> 3 * 19 + 15 }
@@ -346,9 +372,10 @@ class GoGame(val size: Int = 9) : BoardGame {
         val myLead = (if (color == 1) area[0] - area[1] - KOMI else area[1] - area[0] + KOMI)
         if (rootCands.isEmpty()) return PASS
         if (lastWasPass && myLead > 0) return PASS
-        val deadline = System.nanoTime() + timeMs * 1_000_000L
+        val deadline = if (timeMs > 0) System.nanoTime() + timeMs * 1_000_000L else Long.MAX_VALUE
         // Song song hóa gốc: mỗi luồng một cây riêng, cuối cùng cộng dồn số lượt thăm / thắng của các nước ở gốc.
         val threads = minOf(Runtime.getRuntime().availableProcessors(), 4).coerceAtLeast(1)
+        val perThread = if (simLimit > 0) (simLimit + threads - 1) / threads else Int.MAX_VALUE
         val totalN = IntArray(rootCands.size); val totalW = FloatArray(rootCands.size)
         var totalSims = 0
         val workers = ArrayList<Thread>()
@@ -356,7 +383,7 @@ class GoGame(val size: Int = 9) : BoardGame {
         for (t in 0 until threads) {
             val job = Runnable {
                 val n = IntArray(rootCands.size); val w = FloatArray(rootCands.size)
-                val sims = searchTree(root, rootCands, cur, deadline, n, w)
+                val sims = searchTree(root, rootCands, cur, deadline, perThread, n, w)
                 synchronized(lock) { for (k in n.indices) { totalN[k] += n[k]; totalW[k] += w[k] }; totalSims += sims }
             }
             if (t == threads - 1) job.run() else { val th = Thread(job); th.isDaemon = true; th.start(); workers.add(th) }
@@ -372,7 +399,7 @@ class GoGame(val size: Int = 9) : BoardGame {
     }
 
     /** Một luồng MCTS-RAVE: chạy tới [deadline], ghi thống kê các nước ở gốc vào [outN]/[outW], trả về số mô phỏng. */
-    private fun searchTree(root: GoBoard, rootCands: IntArray, rootPlayer: Int, deadline: Long, outN: IntArray, outW: FloatArray): Int {
+    private fun searchTree(root: GoBoard, rootCands: IntArray, rootPlayer: Int, deadline: Long, simLimit: Int, outN: IntArray, outW: FloatArray): Int {
         val rnd = Random
         val rootNode = Node(rootCands, rootPlayer)
         val sim = GoBoard(size)
@@ -381,7 +408,7 @@ class GoGame(val size: Int = 9) : BoardGame {
         var sims = 0
         val maxLen = size * size * 2
         while (true) {
-            if ((sims and 15) == 0 && System.nanoTime() > deadline) break
+            if (sims >= simLimit || ((sims and 15) == 0 && System.nanoTime() > deadline)) break
             sims++
             sim.copyFrom(root)
             path.clear(); pathIdx.clear()

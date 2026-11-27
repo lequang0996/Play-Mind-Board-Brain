@@ -29,9 +29,9 @@ game_xiangqi|Cờ tướng
 game_xiangqi_desc|Tướng, pháo và con sông phải vượt qua.
 guide|Hướng dẫn
 guide_app_title|Cách dùng Play Mind
-guide_app|• Trang chủ: chọn thẻ nổi bật (đổi mỗi 2 phút) hoặc bất kỳ game nào ở các hàng bên dưới.\n• Kim cương: điểm danh mỗi ngày +1 kim cương. Mỗi game được chơi miễn phí 1 ván/ngày (gói tháng: 3 ván, gói năm: không giới hạn), sau đó mỗi ván tốn 1 kim cương. Thắng được +1 kim cương.\n• Chuỗi thắng: thắng liên tiếp 5 ván ở một game được +2 kim cương, 10 ván được +3.\n• Thưởng gắn bó: điểm danh liên tục 30 ngày thì mỗi lần điểm danh tiếp theo +2 kim cương (gói tháng, gói năm: +4 kim cương).\n• Chế độ: chơi với máy (bạn luôn đi trước), với bạn ở gần (không cần internet) hoặc online bằng cách trao đổi mã phòng/QR. Một số game còn hỗ trợ 3-4 người chơi với máy.\n• Thời gian mỗi nước: Caro 45 giây, Wall Go và Quoridor 1 phút, Cờ vua và Cờ tướng 3 phút, Cờ vây tối đa 1 ngày. Hết giờ mà chưa đi thì người đang đến lượt bị xử thua.\n• Cửa hàng: bỏ quảng cáo, thêm lượt chơi miễn phí hoặc mua kim cương.\n• Đổi ngôn ngữ và biệt danh trong Cài đặt.
-guide_chess|Mục tiêu: chiếu hết vua đối phương.\n• Tốt đi thẳng một ô và ăn chéo. Mã nhảy hình chữ L. Tượng đi chéo, xe đi thẳng, hậu đi cả hai kiểu, vua đi một ô.\n• Nước đặc biệt: nhập thành, bắt tốt qua đường và phong cấp khi tốt tới hàng cuối.\n• Chạm vào quân rồi chạm ô được tô sáng để đi. Ván hòa khi hết nước đi (hòa cờ), lặp thế cờ, luật 50 nước hoặc không đủ quân để thắng.
-guide_xiangqi|Mục tiêu: chiếu bí tướng đối phương. Bên Đỏ đi trước.\n• Tướng và sĩ chỉ đi trong cung. Hai tướng không được đối mặt nhau trên cùng một cột khi không có quân cản.\n• Tượng đi chéo hai ô, không qua sông và bị cản nếu có quân ở giữa đường.\n• Mã đi hình chữ L nhưng bị cản nếu có quân sát chân. Xe đi thẳng.\n• Pháo đi thẳng và ăn quân bằng cách nhảy qua đúng một quân. Tốt đi tới, qua sông thì được đi ngang.\n• Bên hết nước đi hợp lệ là thua. Trong app này, lặp lại một thế cờ ba lần là hòa.
+guide_app|• Trang chủ: chọn thẻ nổi bật (đổi mỗi 2 phút) hoặc bất kỳ game nào ở các hàng bên dưới.\n• Kim cương: điểm danh mỗi ngày +1 kim cương. Mỗi game được chơi miễn phí 1 ván/ngày (gói tháng: 3 ván, gói năm: không giới hạn), sau đó mỗi ván tốn 1 kim cương. Thắng được +1 kim cương.\n• Chuỗi thắng: thắng liên tiếp 5 ván ở một game được +2 kim cương, 10 ván được +3.\n• Thưởng gắn bó: điểm danh liên tục 30 ngày thì mỗi lần điểm danh tiếp theo +2 kim cương (gói tháng, gói năm: +4 kim cương).\n• Chế độ: chơi với máy (bạn luôn đi trước), với bạn ở gần (không cần internet) hoặc online bằng cách trao đổi mã phòng/QR. Một số game còn hỗ trợ 3-4 người chơi với máy.\n• Cấp độ máy: 7 cấp từ Dễ đến Siêu việt. Lúc đầu chỉ mở cấp Dễ; thắng một cấp sẽ mở cấp kế tiếp của game đó. Gói năm mở ngay mọi cấp và bỏ hẳn kim cương.\n• Thời gian mỗi nước (mọi game): 1 phút, 2 phút, 3 phút, 5 phút, 10 phút, 30 phút hoặc 1 giờ. Chơi với máy thì theo cấp (Dễ 1 phút ... Siêu việt 1 giờ); chơi với người thì chủ phòng chọn một trong 7 mức này. Hết giờ mà chưa đi thì người đang đến lượt bị xử thua.\n• Cửa hàng: bỏ quảng cáo, thêm lượt chơi miễn phí hoặc mua kim cương.\n• Đổi ngôn ngữ và biệt danh trong Cài đặt.
+guide_chess|Mục tiêu: chiếu hết vua đối phương.\n• Tốt đi thẳng một ô và ăn chéo. Mã nhảy hình chữ L. Tượng đi chéo, xe đi thẳng, hậu đi cả hai kiểu, vua đi một ô.\n• Nước đặc biệt: nhập thành, bắt tốt qua đường và phong cấp khi tốt tới hàng cuối.\n• Chạm vào quân rồi chạm ô được tô sáng để đi. Ván hòa khi hết nước đi (hòa cờ), luật 50 nước hoặc không đủ quân để thắng.\n• Lặp thế: nước đi tạo lại một thế cờ đã có thì bên vừa đi bị xử thua.
+guide_xiangqi|Mục tiêu: chiếu bí tướng đối phương. Bên Đỏ đi trước.\n• Tướng và sĩ chỉ đi trong cung. Hai tướng không được đối mặt nhau trên cùng một cột khi không có quân cản.\n• Tượng đi chéo hai ô, không qua sông và bị cản nếu có quân ở giữa đường.\n• Mã đi hình chữ L nhưng bị cản nếu có quân sát chân. Xe đi thẳng.\n• Pháo đi thẳng và ăn quân bằng cách nhảy qua đúng một quân. Tốt đi tới, qua sông thì được đi ngang.\n• Bên hết nước đi hợp lệ là thua. Trong app này, nước đi tạo lại một thế cờ đã có thì bên vừa đi bị xử thua.
 guide_caro|Mục tiêu: xếp năm quân trở lên của bạn liên tiếp theo hàng ngang, dọc hoặc chéo. X (gỗ sẫm) đi trước.\n• Bàn cờ không có giới hạn: kéo một ngón để di chuyển, chụm hai ngón để thu phóng.\n• Nếu cả hai đầu của hàng bị quân đối phương chặn thì không tính thắng.\n• Chạm vào ô trống để đặt quân. Hãy chặn các hàng ba, hàng bốn hở của đối phương!
 how_to_play|Cách chơi
 how_to_use|Hướng dẫn sử dụng
@@ -75,7 +75,7 @@ reason_full|Bàn cờ đã đầy
 reason_leave|Một người chơi đã rời ván
 reason_material|Hòa: không đủ quân để thắng
 reason_nomoves|Hết nước đi hợp lệ
-reason_repetition|Hòa do lặp thế cờ
+reason_repetition|Lặp lại thế cờ đã có: bên lặp bị xử thua
 reason_resign|Một người chơi đã đầu hàng
 reason_stalemate|Hòa cờ (hết nước đi)
 reply_hint|Gửi mã trả lời của bạn cho chủ phòng. Ván sẽ kết nối khi họ nhập mã.
@@ -147,7 +147,7 @@ go_pass|Bỏ lượt
 go_place|Đặt quân
 go_score|Đen %1$d – Trắng %2$d (+%3$s điểm komi)
 guide_go|Mục tiêu: kiểm soát nhiều bàn cờ hơn đối thủ. Đen đi trước.\n• Bắt quân: nhóm quân không còn ô trống kề bên (hết khí) bị nhấc khỏi bàn.\n• Điều cấm: không được đi nước khiến nhóm của mình hết khí (trừ khi bắt được quân) và không được lặp lại thế cờ đã có.\n• Kết thúc: khi đối thủ bỏ lượt và không còn nước hữu ích, bấm Kết thúc ván để tính điểm.\n• Tính điểm: theo diện tích - quân trên bàn cộng vùng trống chỉ tiếp giáp quân của bạn. Trắng được 7,5 điểm komi. Quân chết không tự gỡ, hãy bắt chúng trước khi bỏ lượt.\n• Chạm một giao điểm để xem trước quân, rồi bấm Đặt quân.
-guide_quoridor|Mục tiêu: là người đầu tiên chạm cạnh đối diện của bàn cờ.\n• Đi quân: bước một ô lên, xuống, trái hoặc phải. Nếu quân đối thủ đứng kề, nhảy qua nó, hoặc bước chéo nếu phía sau là tường hay mép bàn.\n• Tường: thay vì đi, bạn có thể đặt một bức tường dài hai ô. Tường không được chồng hay cắt nhau và không bao giờ được chặn kín mọi đường tới đích.\n• Số tường: mỗi người 10 tường khi chơi 2 người, 5 tường khi chơi 4 người.\n• Đặt tường: chọn Tường, chạm gần giao điểm muốn đặt để xem trước (xanh = hợp lệ) rồi bấm Đặt tường.
+guide_quoridor|Mục tiêu: là người đầu tiên chạm cạnh đối diện của bàn cờ.\n• Đi quân: bước một ô lên, xuống, trái hoặc phải. Nếu quân đối thủ đứng kề, nhảy qua nó, hoặc bước chéo nếu phía sau là tường hay mép bàn.\n• Tường: thay vì đi, bạn có thể đặt một bức tường dài hai ô. Tường không được chồng hay cắt nhau và không bao giờ được chặn kín mọi đường tới đích.\n• Số tường: mỗi người 10 tường khi chơi 2 người, 5 tường khi chơi 4 người.\n• Đặt tường: chọn Tường, chạm gần giao điểm muốn đặt để xem trước (xanh = hợp lệ) rồi bấm Đặt tường.\n• Lặp thế: khi chơi 2 người, đi quân tạo lại một thế đã có thì bị xử thua; khi chơi 4 người, nước đi như vậy không được phép.
 guide_sudoku|Mục tiêu: điền mọi ô trống sao cho mỗi hàng, mỗi cột và mỗi khối 3×3 chứa các số từ 1 đến 9, mỗi số một lần.\n• Điền số: chạm một ô rồi chạm số. Số sai hiện màu đỏ, hãy dùng Xóa để sửa.\n• Ghi chú: bật bút chì để ghi các số có thể điền nhỏ (màu đỏ) trong ô.\n• Xóa: xóa ô đang chọn. Mỗi khối 3×3 chỉ gợi ý sẵn 1 số (cả bàn 9 số), nên mọi cách điền đúng luật đều thắng.
 guide_wallgo|Mục tiêu: kết thúc ván với nhiều lãnh thổ hơn các đối thủ.\n• Đặt quân: lần lượt đặt quân lên ô trống (2 người: mỗi người 4 quân, 3 người: 3 quân, 4 người: 2 quân).\n• Lượt đi: chọn một quân của mình rồi đi 0, 1 hoặc 2 ô lên, xuống, trái, phải. Không đi xuyên tường hay quân khác.\n• Tường: sau khi đi, BẮT BUỘC đặt một bức tường lên một cạnh còn trống của ô bạn đang đứng.\n• Lãnh thổ: khi mọi vùng bị tường ngăn chỉ còn quân của một người, ván kết thúc. Bạn ghi điểm bằng số ô của các vùng chỉ có quân của bạn.\n• Hòa điểm: vùng đơn lớn hơn thắng; nếu vẫn bằng thì hòa. Người không còn nước đi sẽ bị bỏ lượt.
 leave_confirm_local|Rời ván này? Ván chơi chung một máy không được ghi nhận.
@@ -159,7 +159,7 @@ per_month|/ tháng
 per_year|/ năm
 perk_free3|3 ván miễn phí mỗi game mỗi ngày
 perk_no_ads|Không còn quảng cáo
-perk_unlimited|Chơi không giới hạn - không cần kim cương
+perk_unlimited|Bỏ hẳn kim cương: chơi không giới hạn, không cần điểm danh
 plan_active|Đang dùng
 plan_monthly|Plus (theo tháng)
 plan_yearly|Pro (theo năm)
@@ -217,3 +217,28 @@ multi_seat_free|Ghế trống
 multi_bot_fill|Ghế trống sẽ do máy chơi khi bắt đầu. Ai rời ván, đầu hàng hoặc hết giờ sẽ được máy chơi thay.
 multi_continues|Bạn đã bị loại nhưng ván vẫn tiếp tục cho những người khác. Nếu bạn là chủ phòng, rời đi sẽ kết thúc phòng của mọi người.
 see_more|Xem thêm
+reason_move_limit|Đạt số nước tối đa: hòa
+bot_level|Cấp độ máy
+level_locked|Thắng cấp %s để mở khóa cấp này.
+level_unlocked|Đã mở khóa cấp %s!
+level_move_time|Mỗi nước tối đa %d phút
+level_0|Dễ
+level_desc_0|Chỉ nhìn một hai nước, hợp với người mới. Không bao giờ bỏ lỡ nước thắng ngay.
+level_1|Trung bình
+level_desc_1|Tránh mất quân trực tiếp nhưng còn sai khi thế cờ phức tạp.
+level_2|Khá
+level_desc_2|Biết chiến thuật cơ bản, thỉnh thoảng sai ở thế khó.
+level_3|Giỏi
+level_desc_3|Ít sai chiến thuật và có kế hoạch ngắn hạn.
+level_4|Cao thủ
+level_desc_4|Chơi chắc, ít sai; rất khó thắng.
+level_5|Thách đấu
+level_desc_5|Gần như không mắc sai lầm chiến thuật.
+level_6|Siêu việt
+level_desc_6|Toàn lực: bot mạnh nhất của game, không nhường.
+licenses|Giấy phép mã nguồn mở
+pvp_time|Thời gian mỗi nước
+pvp_time_note|Chủ phòng chọn; người vào phòng chơi theo thời gian của chủ phòng.
+time_n_min|%d phút
+time_1h|1 giờ
+perk_all_levels|Mở khóa ngay mọi cấp độ máy

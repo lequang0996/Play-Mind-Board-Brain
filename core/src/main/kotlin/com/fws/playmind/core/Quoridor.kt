@@ -12,10 +12,12 @@ import kotlin.random.Random
  *  - Mỗi lượt: đi quân 1 ô (nhảy qua quân đối thủ kề bên, hoặc chéo nếu bị chặn sau lưng) HOẶC đặt một tường.
  *    Không được đặt tường chồng/cắt tường khác, và không được chặn kín mọi đường tới đích của BẤT KỲ quân nào.
  *  - Ai chạm cạnh đích trước thắng. Quá [MAX_PLIES] nước chưa ai thắng thì hòa.
+ *  - Lặp thế (luật của app): 2 người, đi quân tạo lại một thế đã có (cùng người tới lượt) thì người vừa đi THUA ngay;
+ *    4 người, nước đi quân như vậy bị cấm.
  *
  * Mã nước đi: đi quân = ô đích (0..80); đặt tường = 128 + hướng * 64 + r * 8 + c (hướng 0 = ngang, 1 = dọc).
  */
-class QuoridorGame(val players: Int = 2) : BoardGame {
+class QuoridorGame(val players: Int = 2) : BoardGame, LeveledEngine {
     companion object {
         const val N = 9
         const val MAX_PLIES = 300
@@ -29,6 +31,19 @@ class QuoridorGame(val players: Int = 2) : BoardGame {
         @JvmStatic var wallWeight = 75
         @JvmStatic var tempo = 30
         fun wallsPerPlayer(players: Int) = if (players == 2) 10 else 5
+
+        private val lock = Any()
+        private const val TT_BITS = 17
+        private const val TT_MASK = (1L shl TT_BITS) - 1
+        private const val EXACT = 0; private const val LOWER = 1; private const val UPPER = 2
+        private val ttKey = LongArray(1 shl TT_BITS); private val ttMv = IntArray(1 shl TT_BITS)
+        private val ttSc = IntArray(1 shl TT_BITS); private val ttInf = IntArray(1 shl TT_BITS)
+        private val ZP: Array<LongArray>; private val ZH: LongArray; private val ZV: LongArray; private val ZS: LongArray
+        init {
+            val r = java.util.Random(0x51C0D1L)
+            ZP = Array(4) { LongArray(81) { r.nextLong() } }; ZH = LongArray(64) { r.nextLong() }
+            ZV = LongArray(64) { r.nextLong() }; ZS = LongArray(4) { r.nextLong() }
+        }
 
         private val DR = intArrayOf(-1, 0, 1, 0)   // 0 = lên, 1 = phải, 2 = xuống, 3 = trái
         private val DC = intArrayOf(0, 1, 0, -1)
@@ -52,6 +67,8 @@ class QuoridorGame(val players: Int = 2) : BoardGame {
     internal val pos = IntArray(players)
     internal val wallsLeft = IntArray(players) { wallsPerPlayer(players) }
     private val hist = ArrayList<Int>()
+    /** Khóa của mọi thế đã xuất hiện trong ván (để xử luật lặp thế). */
+    private val keys = ArrayList<Long>()
     private var cur = 0
     override var result = Outcome.ONGOING; private set
     override var reason = EndReason.NONE; private set
@@ -67,6 +84,22 @@ class QuoridorGame(val players: Int = 2) : BoardGame {
         java.util.Arrays.fill(hWalls, false); java.util.Arrays.fill(vWalls, false)
         for (p in 0 until players) { pos[p] = startCell(players, p); wallsLeft[p] = wallsPerPlayer(players) }
         hist.clear(); cur = 0; result = Outcome.ONGOING; reason = EndReason.NONE; winner = -1
+        keys.clear(); keys.add(key(0))
+    }
+
+    /** Khóa Zobrist của thế hiện tại với [seat] tới lượt (quân + tường + người đi). */
+    private fun key(seat: Int): Long {
+        var k = ZS[seat]
+        for (p in 0 until players) k = k xor ZP[p][pos[p]]
+        for (i in 0 until 64) { if (hWalls[i]) k = k xor ZH[i]; if (vWalls[i]) k = k xor ZV[i] }
+        return k
+    }
+
+    /** Nước đi quân [m] của [seat] có tạo lại một thế đã có không. */
+    private fun wouldRepeat(seat: Int, m: Int): Boolean {
+        val old = pos[seat]; pos[seat] = m
+        val k = key((seat + 1) % players); pos[seat] = old
+        return k in keys
     }
 
     override fun reset() = reset0()
@@ -167,7 +200,7 @@ class QuoridorGame(val players: Int = 2) : BoardGame {
     override fun legalMoves(): IntArray {
         if (result != Outcome.ONGOING) return IntArray(0)
         val out = ArrayList<Int>()
-        for (m in pawnMoves(cur)) out.add(m)
+        for (m in pawnMoves(cur)) if (players == 2 || !wouldRepeat(cur, m)) out.add(m)
         if (wallsLeft[cur] > 0) for (h in booleanArrayOf(true, false)) for (r in 0..7) for (c in 0..7) {
             if (tryWall(h, r, c)) { setWall(h, r, c, false); out.add(mvWall(h, r, c)) }
         }
@@ -178,10 +211,17 @@ class QuoridorGame(val players: Int = 2) : BoardGame {
         if (result != Outcome.ONGOING || move < 0) return false
         if (!isWall(move)) {
             if (move > 80 || move !in pawnMoves(cur)) return false
+            if (players != 2 && wouldRepeat(cur, move)) return false
             pos[cur] = move
             hist.add(move)
             if (atGoal(move, goalSide(players, cur))) {
                 result = if (cur == 0) Outcome.WIN_FIRST else Outcome.WIN_SECOND; reason = EndReason.NONE; winner = cur
+                return true
+            }
+            val k = key((cur + 1) % players)
+            if (players == 2 && k in keys) {                 // lặp thế: người vừa đi thua
+                result = if (cur == 0) Outcome.WIN_SECOND else Outcome.WIN_FIRST; reason = EndReason.REPETITION; winner = 1 - cur
+                keys.add(k); cur = 1 - cur
                 return true
             }
         } else {
@@ -191,7 +231,8 @@ class QuoridorGame(val players: Int = 2) : BoardGame {
             hist.add(move)
         }
         cur = (cur + 1) % players
-        if (hist.size >= MAX_PLIES) { result = Outcome.DRAW; reason = EndReason.REPETITION }
+        keys.add(key(cur))
+        if (hist.size >= MAX_PLIES) { result = Outcome.DRAW; reason = EndReason.MOVE_LIMIT }
         return true
     }
 
@@ -207,7 +248,7 @@ class QuoridorGame(val players: Int = 2) : BoardGame {
         System.arraycopy(open, 0, g.open, 0, open.size)
         System.arraycopy(hWalls, 0, g.hWalls, 0, 64); System.arraycopy(vWalls, 0, g.vWalls, 0, 64)
         System.arraycopy(pos, 0, g.pos, 0, players); System.arraycopy(wallsLeft, 0, g.wallsLeft, 0, players)
-        g.hist.addAll(hist); g.cur = cur; g.result = result; g.reason = reason; g.winner = winner
+        g.hist.addAll(hist); g.keys.clear(); g.keys.addAll(keys); g.cur = cur; g.result = result; g.reason = reason; g.winner = winner
         return g
     }
 
@@ -221,7 +262,11 @@ class QuoridorGame(val players: Int = 2) : BoardGame {
         for (p in 0 until players) if (p != me && dists[p] == 0) return -INF + 1
         if (players == 2) {
             val opp = dists[1 - me]
-            return (opp - my) * 100 + (wallsLeft[me] - wallsLeft[1 - me]) * wallWeight + tempo
+            var v = (opp - my) * 100 + (wallsLeft[me] - wallsLeft[1 - me]) * wallWeight + tempo
+            // Chạy đua đã ngã ngũ: bên kia hết tường mà mình (đang tới lượt) không chậm hơn -> thắng chắc; ngược lại thì thua chắc.
+            if (wallsLeft[1 - me] == 0 && my <= opp) v += 3000
+            else if (wallsLeft[me] == 0 && opp < my) v -= 3000
+            return v
         }
         var minOpp = 99; var sum = 0
         for (p in 0 until players) if (p != me) { if (dists[p] < minOpp) minOpp = dists[p]; sum += dists[p] }
@@ -304,77 +349,220 @@ class QuoridorGame(val players: Int = 2) : BoardGame {
         if (!isWall(m)) pos[seat] = old else { setWall(wallH(m), wallR(m), wallC(m), false); wallsLeft[seat]++ }
     }
 
-    private var deadline = 0L
+    // ═════════════════ Tìm kiếm: Siêu việt (thời gian) và 6 cấp giảm sức (độ sâu / số nút) ═════════════════
+    private var deadline = Long.MAX_VALUE
+    private var nodeLimit = Long.MAX_VALUE
+    private var nodes = 0L
     private var aborted = false
+    /** Khóa thế cờ: lịch sử ván ([rootKeys]) nối với đường tìm kiếm ([path], path[ply] = thế sau ply nước tính từ gốc). */
+    private var rootKeys = LongArray(0)
+    private val path = LongArray(160)
+    private val killers = Array(160) { IntArray(2) }
 
-    /** Negamax alpha-beta cho 2 người, [seat] là bên đang đi. */
-    private fun negamax(seat: Int, depth: Int, alphaIn: Int, beta: Int): Int {
+    private fun checkStop() {
+        if ((++nodes and 63L) == 0L && (nodes >= nodeLimit || System.nanoTime() > deadline)) aborted = true
+    }
+
+    /** Thế ở path[ply] (vừa có sau một nước đi quân) đã từng xuất hiện trong ván hoặc trên đường tìm kiếm? */
+    private fun repeatedAt(ply: Int): Boolean {
+        val k = path[ply]
+        val base = rootKeys.size - 1                     // chỉ số của gốc trong chuỗi khóa chung
+        var idx = base + ply - players                    // cùng người tới lượt: cách nhau đúng [players] nước
+        while (idx >= 0) {
+            val other = if (idx >= base) path[idx - base] else rootKeys[idx]
+            if (other == k) return true
+            idx -= players
+        }
+        return false
+    }
+
+    private fun ttStore(k: Long, depth: Int, score: Int, flag: Int, move: Int) {
+        val slot = (k and TT_MASK).toInt()
+        if (ttKey[slot] == k && (ttInf[slot] shr 2) > depth && move < 0) return
+        ttKey[slot] = k; ttMv[slot] = move
+        val mate = score > INF - 1000 || score < -INF + 1000
+        ttSc[slot] = score; ttInf[slot] = ((if (mate) 0 else depth) shl 2) or flag
+    }
+
+    private fun front(moves: MutableList<Int>, m: Int) { val i = moves.indexOf(m); if (i > 0) { moves.removeAt(i); moves.add(0, m) } }
+
+    /** Negamax alpha-beta + bảng băm + PVS + killer cho 2 người. [seat] là bên đang đi; path[ply] là khóa của thế hiện tại. */
+    private fun ab(seat: Int, depth: Int, alphaIn: Int, beta: Int, ply: Int): Int {
+        checkStop(); if (aborted) return 0
         val dists = allDists()
-        if (dists[0] == 0 || dists[1] == 0 || depth == 0) return evaluate(seat, dists) + depth
-        if (System.nanoTime() > deadline) { aborted = true; return 0 }
+        if (depth <= 0 || ply >= 150) return evaluate(seat, dists)
         var alpha = alphaIn
-        var best = -INF
-        val moves = orderedMoves(seat, dists, 9)
+        val k = path[ply]
+        val slot = (k and TT_MASK).toInt()
+        var ttMove = -1
+        if (ttKey[slot] == k) {
+            ttMove = ttMv[slot]
+            val td = ttInf[slot] shr 2; val fl = ttInf[slot] and 3; val s = ttSc[slot]
+            if (td >= depth && (fl == EXACT || (fl == LOWER && s >= beta) || (fl == UPPER && s <= alpha))) return s
+        }
+        val moves = orderedMoves(seat, dists, 10).toMutableList()
+        if (moves.isEmpty()) return evaluate(seat, dists)
+        for (km in killers[ply].reversed()) if (km >= 0) front(moves, km)
+        if (ttMove >= 0) front(moves, ttMove)
+        val a0 = alpha
+        var best = -INF * 2; var bestMove = -1; var first = true
         for (m in moves) {
             val old = apply(seat, m)
-            val won = !isWall(m) && atGoal(m, goalSide(players, seat))
-            val v = if (won) INF - 1 + depth else -negamax(1 - seat, depth - 1, -beta, -alpha)
+            var v: Int
+            if (!isWall(m) && atGoal(m, goalSide(players, seat))) v = INF - ply - 1
+            else {
+                path[ply + 1] = key(1 - seat)
+                if (!isWall(m) && repeatedAt(ply + 1)) v = -(INF - ply - 1)          // tự lặp thế: thua
+                else if (first) v = -ab(1 - seat, depth - 1, -beta, -alpha, ply + 1)
+                else {
+                    v = -ab(1 - seat, depth - 1, -alpha - 1, -alpha, ply + 1)
+                    if (v > alpha && v < beta && !aborted) v = -ab(1 - seat, depth - 1, -beta, -alpha, ply + 1)
+                }
+            }
             undo(seat, m, old)
             if (aborted) return 0
-            if (v > best) best = v
-            if (best > alpha) alpha = best
-            if (alpha >= beta) break
+            first = false
+            if (v > best) { best = v; bestMove = m }
+            if (v > alpha) alpha = v
+            if (alpha >= beta) {
+                if (killers[ply][0] != m) { killers[ply][1] = killers[ply][0]; killers[ply][0] = m }
+                break
+            }
         }
+        if (bestMove < 0) return evaluate(seat, dists)
+        ttStore(k, depth, best, if (best <= a0) UPPER else if (best >= beta) LOWER else EXACT, bestMove)
         return best
     }
 
-    override fun bestMove(timeMs: Long): Int {
-        if (result != Outcome.ONGOING) return -1
-        val me = cur
-        val g = copyGame()          // tìm kiếm trên bản sao để không đụng tới ván thật
-        return g.searchRoot(me, timeMs)
+    /** Tường có đặt được ở thế hiện tại không (không để lại thay đổi). */
+    private fun tryWallCheck(m: Int): Boolean {
+        val h = wallH(m); val r = wallR(m); val c = wallC(m)
+        if (!tryWall(h, r, c)) return false
+        setWall(h, r, c, false); return true
     }
 
-    private fun searchRoot(me: Int, timeMs: Long): Int {
-        deadline = System.nanoTime() + timeMs * 1_000_000L
+    /** Paranoid (3-4 người): [me] tối đa hóa đánh giá của mình, mọi đối thủ cùng tối thiểu hóa. Lặp thế ở chế độ này là nước cấm. */
+    private fun para(seat: Int, me: Int, depth: Int, alphaIn: Int, betaIn: Int, ply: Int): Int {
+        checkStop(); if (aborted) return 0
         val dists = allDists()
-        // thắng ngay nếu có thể
-        for (m in pawnMoves(me)) if (atGoal(m, goalSide(players, me))) return m
-        val moves = orderedMoves(me, dists, if (players == 2) 10 else 8)
-        if (moves.isEmpty()) return pawnMoves(me).firstOrNull() ?: -1
-        var bestMove = moves[0]
-        if (players != 2) {
-            // 4 người: đánh giá 1 nước + phản ứng đơn giản (bên kế tiếp chặn/đi tốt nhất theo đánh giá của chính nó)
-            var bestV = -INF * 2
-            for (m in moves) {
-                val old = apply(me, m)
-                var v = evaluate(me, allDists())
-                undo(me, m, old)
-                v += Random.nextInt(0, 6)
-                if (v > bestV) { bestV = v; bestMove = m }
+        if (depth <= 0 || ply >= 150) return evaluate(me, dists)
+        var alpha = alphaIn; var beta = betaIn
+        val next = (seat + 1) % players
+        val moves = orderedMoves(seat, dists, if (seat == me) 8 else 5)
+        var best = if (seat == me) -INF * 2 else INF * 2
+        var any = false
+        for (m in moves) {
+            val old = apply(seat, m)
+            var v: Int
+            if (!isWall(m) && atGoal(m, goalSide(players, seat))) v = if (seat == me) INF - ply - 1 else -(INF - ply - 1)
+            else {
+                path[ply + 1] = key(next)
+                if (!isWall(m) && repeatedAt(ply + 1)) { undo(seat, m, old); continue }
+                v = para(next, me, depth - 1, alpha, beta, ply + 1)
             }
-            return bestMove
+            undo(seat, m, old)
+            if (aborted) return 0
+            any = true
+            if (seat == me) { if (v > best) best = v; if (v > alpha) alpha = v }
+            else { if (v < best) best = v; if (v < beta) beta = v }
+            if (alpha >= beta) break
         }
-        var depth = 1
-        var bestSoFar = bestMove
-        while (depth <= 12) {
+        return if (any) best else evaluate(me, dists)
+    }
+
+    /** Tìm kiếm có giới hạn ở gốc. [allowed] = các nước được xét (null = mọi nước). [delta] > 0: trả thêm các nước gần tốt nhất. */
+    private fun searchRoot(me: Int, lim: SearchLimit, allowed: IntArray?, delta: Int): RootResult {
+        val start = System.nanoTime()
+        deadline = if (lim.timeMs > 0) start + lim.timeMs * 1_000_000L else Long.MAX_VALUE
+        val soft = if (lim.timeMs > 0) start + lim.timeMs * 550_000L else Long.MAX_VALUE
+        val nl = if (lim.nodes > 0) lim.nodes else Long.MAX_VALUE
+        val maxDepth = if (lim.depth > 0) lim.depth else 40
+        nodes = 0; aborted = false
+        rootKeys = keys.toLongArray(); path[0] = key(me)
+        for (row in killers) { row[0] = -1; row[1] = -1 }
+        if (players == 2) java.util.Arrays.fill(ttKey, 0L)
+        val dists = allDists()
+        var moves = orderedMoves(me, dists, if (players == 2) 14 else 10).toMutableList()
+        // các tường ngoài danh sách ứng viên vẫn có thể được phép khi lọc an toàn chỉ còn chúng
+        if (allowed != null) {
+            val f = moves.filter { it in allowed }.toMutableList()
+            moves = if (f.isNotEmpty()) f else allowed.toMutableList()
+        }
+        if (players != 2) moves.removeAll { !isWall(it) && wouldRepeat(me, it) }
+        if (moves.isEmpty()) moves = legalMoves().toMutableList()
+        if (moves.isEmpty()) return RootResult(-1, 0, 0, 0)
+        if (moves.size == 1) return RootResult(moves[0], 0, 0, 0)
+        val next = (me + 1) % players
+        var best = moves[0]; var bestScore = 0; var completed = 0
+        for (depth in 1..maxDepth) {
+            nodeLimit = if (depth == 1) Long.MAX_VALUE else nl
             aborted = false
-            var alpha = -INF * 2; var curBest = -1
-            val ordered = if (bestSoFar != moves[0]) listOf(bestSoFar) + moves.filter { it != bestSoFar } else moves
-            for (m in ordered) {
+            var alpha = -INF * 2; var iterBest = -1
+            front(moves, best)
+            for ((i, m) in moves.withIndex()) {
                 val old = apply(me, m)
-                val won = !isWall(m) && atGoal(m, goalSide(players, me))
-                val v = if (won) INF else -negamax(1 - me, depth - 1, -INF * 2, -alpha)
+                var v: Int
+                if (!isWall(m) && atGoal(m, goalSide(players, me))) v = INF
+                else {
+                    path[1] = key(next)
+                    v = if (players == 2) {
+                        if (!isWall(m) && repeatedAt(1)) -INF
+                        else if (i == 0) -ab(next, depth - 1, -INF * 2, -alpha, 1)
+                        else {
+                            var t = -ab(next, depth - 1, -alpha - 1, -alpha, 1)
+                            if (t > alpha && !aborted) t = -ab(next, depth - 1, -INF * 2, -alpha, 1)
+                            t
+                        }
+                    } else para(next, me, depth - 1, alpha, INF * 2, 1)
+                }
                 undo(me, m, old)
                 if (aborted) break
-                if (v > alpha) { alpha = v; curBest = m }
+                if (v > alpha) { alpha = v; iterBest = m }
             }
-            if (aborted || curBest < 0) break
-            bestSoFar = curBest
+            if (aborted) { if (iterBest >= 0 && completed > 0 && alpha > bestScore - 40) best = iterBest; break }
+            if (iterBest < 0) break
+            best = iterBest; bestScore = alpha; completed = depth
             lastDepthReached = depth
-            if (alpha >= INF - 50) break
-            depth++
+            if (alpha >= INF - 200 || alpha <= -INF + 200) break
+            if (System.nanoTime() > soft) break
         }
-        return bestSoFar
+        var near = IntArray(0)
+        if (delta > 0 && completed > 0) {
+            aborted = false; nodeLimit = Long.MAX_VALUE; deadline = Long.MAX_VALUE
+            val thr = bestScore - delta
+            val out = ArrayList<Int>()
+            for (m in moves) {
+                if (m == best) continue
+                val old = apply(me, m)
+                val v = if (!isWall(m) && atGoal(m, goalSide(players, me))) INF else {
+                    path[1] = key(next)
+                    if (players == 2) { if (!isWall(m) && repeatedAt(1)) -INF else -ab(next, completed - 1, -thr, -thr + 1, 1) }
+                    else para(next, me, completed - 1, thr - 1, thr, 1)
+                }
+                undo(me, m, old)
+                if (v >= thr) out.add(m)
+            }
+            near = out.toIntArray()
+        }
+        return RootResult(best, bestScore, completed, nodes, near)
+    }
+
+    override fun bestMove(timeMs: Long): Int = levelMove(BotLevel.SUPREME, timeMs, Random)
+
+    override fun levelMove(level: BotLevel, timeMs: Long, rnd: Random): Int {
+        if (result != Outcome.ONGOING) return -1
+        val cfg = BotLevels.config(id, level, timeMs)
+        return synchronized(lock) {
+            val work = copyGame()
+            val me = work.cur
+            Bot.pick(work, cfg, rnd,
+                winNow = { work.pawnMoves(me).firstOrNull { work.atGoal(it, goalSide(players, me)) } ?: -1 },
+                losesNext = { m ->
+                    val c = work.copyGame()
+                    if (!c.play(m) || c.result != Outcome.ONGOING) c.result != Outcome.ONGOING && c.winner != me
+                    else { val nx = c.cur; c.pawnMoves(nx).any { c.atGoal(it, goalSide(players, nx)) } }
+                },
+            ) { l, allowed, delta -> work.searchRoot(me, l, allowed, delta) }
+        }
     }
 }

@@ -18,6 +18,7 @@ class PlayMindApp : Application() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)  // app chỉ có giao diện tối
         prefs = Prefs(this)
         wallet = WalletRepo(this)
+        prefs.allLevelsUnlocked = { wallet.noDiamonds() }
         ads = AdsManager(this, prefs) { wallet.currentPlan() }
         billing = BillingManager(this, wallet)
         billing.start()

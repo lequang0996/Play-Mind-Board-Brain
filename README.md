@@ -25,7 +25,7 @@ Play Mind: Board & Brain
 Chess, Xiangqi and Gomoku vs the computer, friends nearby or online.
 ```
 
-**Full description** (2395/4000 characters)
+**Full description** (2494/4000 characters)
 
 ```
 Play Mind: Board & Brain is a polished collection of classic board games and brain games, built around four ways to exercise your mind: Puzzle, Intellect, Calculation and Memory.
@@ -37,7 +37,7 @@ AVAILABLE NOW — INTELLECT
 More games for the Puzzle, Calculation and Memory topics are coming soon.
 
 PLAY YOUR WAY
-• Against the computer: a strong opponent that thinks for a couple of seconds on every move.
+• Against the computer: 7 levels from Easy to Supreme. Start at Easy and win to unlock the next level; Go is powered by KataGo.
 • With a friend nearby: no internet needed, powered by Google Nearby Connections.
 • Over the internet: peer-to-peer WebRTC. Share a room code or QR code and you are connected. No account, no sign-up.
 • Rooms: create a room and wait for a friend. If nobody joins, an opponent is added automatically (room opponents may be computer-controlled). You can remove an opponent at any time.
@@ -79,7 +79,7 @@ Play Mind: Board & Brain
 Cờ vua, cờ tướng, cờ caro: chơi với máy, bạn bè ở gần hoặc online.
 ```
 
-**Mô tả đầy đủ** (2424/4000 ký tự)
+**Mô tả đầy đủ** (2512/4000 ký tự)
 
 ```
 Play Mind: Board & Brain là bộ sưu tập game bàn cờ và trí tuệ được chăm chút kỹ lưỡng, xây dựng quanh bốn cách rèn luyện trí óc: Giải đố, Trí tuệ, Tính toán và Ghi nhớ.
@@ -91,7 +91,7 @@ Play Mind: Board & Brain là bộ sưu tập game bàn cờ và trí tuệ đư�
 Các game thuộc chủ đề Giải đố, Tính toán và Ghi nhớ sẽ sớm ra mắt.
 
 CHƠI THEO CÁCH CỦA BẠN
-• Với máy: đối thủ mạnh, suy nghĩ vài giây cho mỗi nước đi.
+• Với máy: 7 cấp từ Dễ đến Siêu việt. Bắt đầu ở cấp Dễ, thắng để mở khóa cấp kế tiếp; Cờ vây dùng KataGo.
 • Với bạn bè ở gần: không cần internet, dùng Google Nearby Connections.
 • Qua internet: kết nối ngang hàng WebRTC. Chỉ cần chia sẻ mã phòng hoặc mã QR là kết nối được. Không cần tài khoản, không cần đăng ký.
 • Phòng: tạo phòng và chờ bạn bè. Nếu không ai vào, hệ thống tự thêm đối thủ (đối thủ trong phòng có thể do máy điều khiển). Bạn có thể mời đối thủ ra khỏi phòng bất cứ lúc nào.

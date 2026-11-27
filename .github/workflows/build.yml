@@ -65,7 +65,27 @@ jobs:
           for n in ADMOB_BANNER ADMOB_APP_OPEN; do v="${!n}"; [[ -z "$v" || "$v" == *"/"* ]] || { echo "::error::$n phải có dạng ca-app-pub-xxx/yyy (dấu /)"; bad=1; }; done
           [ -z "$bad" ] || exit 1
 
-      # 4) Build release (AAB + APK, R8 bật)
+      # 4) KataGo cho cờ vây (mã MIT, mạng CC0): biên dịch bằng NDK cho arm64-v8a, armeabi-v7a, x86_64 và tải 2 mạng.
+      #    Kết quả được cache theo phiên bản trong script, nên chỉ lần đầu (hoặc khi đổi phiên bản) mới tốn thời gian.
+      - name: Cache KataGo
+        id: kgcache
+        uses: actions/cache@v4
+        with:
+          path: |
+            app/src/main/jniLibs
+            app/src/main/assets/katago
+          key: katago-${{ hashFiles('tools/katago/build_android.sh') }}
+
+      - name: Build KataGo for Android
+        if: steps.kgcache.outputs.cache-hit != 'true'
+        run: bash tools/katago/build_android.sh
+
+      - name: Check KataGo files
+        run: |
+          for abi in arm64-v8a armeabi-v7a x86_64; do test -s app/src/main/jniLibs/$abi/libkatago.so || { echo "::error::Thiếu libkatago.so ($abi)"; exit 1; }; done
+          test -s app/src/main/assets/katago/b6.bin.gz && test -s app/src/main/assets/katago/b10.bin.gz
+
+      # 5) Build release (AAB + APK, R8 bật)
       - name: Build release (AAB + APK, R8 bật)
         run: gradle :app:bundleRelease :app:assembleRelease --no-daemon
         env:
@@ -82,7 +102,7 @@ jobs:
           REQUIRE_REAL_ADS: "true"
           PRIVACY_URL: ${{ vars.PRIVACY_URL }}
 
-      # 5) Chỉ xuất đúng 2 file: APK release và AAB release
+      # 6) Chỉ xuất đúng 2 file: APK release và AAB release
       - uses: actions/upload-artifact@v4
         with:
           name: playmind-release-apk

@@ -36,7 +36,7 @@ data class GameInfo(
     @StringRes val secondSide: Int,
     /** Số nước tối thiểu để ván đầu hàng/rời đi vẫn được tính thưởng. */
     val minPlies: Int,
-    /** Thời gian suy nghĩ tối đa của bot cho mỗi nước (ms), theo tùy chọn đang chọn. Bot luôn ở mức mạnh nhất. */
+    /** Ngân sách thời gian mỗi nước của bot cấp Siêu việt (ms), theo tùy chọn đang chọn. Sáu cấp dưới giới hạn theo nút/độ sâu (core BotLevels). */
     val botMillis: (Int) -> Long,
     val kind: GameKind = GameKind.DUEL,
     val optionKind: OptionKind = OptionKind.NONE,
@@ -46,11 +46,6 @@ data class GameInfo(
     val order: Int = 0,
     /** Thời lượng một ván điển hình (phút), hiển thị ở trang "Xem thêm". */
     val minutes: Int = 10,
-    /**
-     * Thời gian tối đa cho MỖI nước đi (giây). Hết giờ mà chưa đi thì người đang đến lượt bị xử thua.
-     * Game một người (Sudoku) không giới hạn thời gian (0).
-     */
-    val moveSeconds: Int = 60,
     val create: ((Int) -> BoardGame)? = null,
 ) {
     fun make(option: Int): BoardGame = (create ?: error("game $id không phải game đối kháng"))(option)
@@ -60,30 +55,36 @@ object Catalog {
     /** Sudoku chỉ có một chế độ chuẩn: bàn 9x9 gồm 9 khối 3x3, mỗi hàng/cột/khối đủ 1-9 và đề luôn có đúng một lời giải. */
     const val SUDOKU_LEVEL = 1   // SudokuLevel.MEDIUM
 
+    /**
+     * 7 mức thời gian tối đa mỗi nước (giây), dùng chung cho MỌI game: chơi với máy theo cấp bot Dễ → Siêu việt,
+     * chơi với người thì người chơi (chủ phòng) chọn một trong 7 mức. Hết giờ mà chưa đi thì người đang đến lượt bị xử thua.
+     */
+    val LEVEL_MOVE_SECONDS = intArrayOf(60, 120, 180, 300, 600, 1800, 3600)
+    const val LEVELS = 7
+
     /** Cờ vây luôn chơi trên bàn chuẩn 19x19. */
     const val GO_SIZE = 19
 
     val games: List<GameInfo> = listOf(
         GameInfo("chess", Topic.MIND, R.string.game_chess, R.string.game_chess_desc, R.string.guide_chess,
-            R.string.side_white, R.string.side_black, 12, { 4500L }, order = 4, minutes = 20, moveSeconds = 180, create = { ChessGame() }),
+            R.string.side_white, R.string.side_black, 12, { 8000L }, order = 4, minutes = 20, create = { ChessGame() }),
         GameInfo("xiangqi", Topic.MIND, R.string.game_xiangqi, R.string.game_xiangqi_desc, R.string.guide_xiangqi,
-            R.string.side_red, R.string.side_black, 12, { 4500L }, order = 5, minutes = 20, moveSeconds = 180, create = { XiangqiGame() }),
+            R.string.side_red, R.string.side_black, 12, { 8000L }, order = 5, minutes = 20, create = { XiangqiGame() }),
         GameInfo("go", Topic.MIND, R.string.game_go, R.string.game_go_desc, R.string.guide_go,
-            R.string.stone_black, R.string.stone_white, 20, { 9000L }, order = 6, minutes = 40,
-            moveSeconds = 24 * 3600,   // cờ vây: tối đa 1 ngày cho mỗi nước
+            R.string.stone_black, R.string.stone_white, 20, { 15000L }, order = 6, minutes = 40,
             create = { GoGame(GO_SIZE) }),
         GameInfo("quoridor", Topic.MIND, R.string.game_quoridor, R.string.game_quoridor_desc, R.string.guide_quoridor,
-            R.string.side_red, R.string.side_blue, 10, { n -> if (n == 2) 3500L else 2500L },
-            optionKind = OptionKind.PLAYERS, options = listOf(2, 4), defaultOption = 2, order = 3, minutes = 12, moveSeconds = 60,
+            R.string.side_red, R.string.side_blue, 10, { n -> if (n == 2) 7000L else 5000L },
+            optionKind = OptionKind.PLAYERS, options = listOf(2, 4), defaultOption = 2, order = 3, minutes = 12,
             create = { n -> QuoridorGame(n) }),
         GameInfo("wallgo", Topic.MIND, R.string.game_wallgo, R.string.game_wallgo_desc, R.string.guide_wallgo,
-            R.string.side_red, R.string.side_blue, 12, { 3500L },
-            optionKind = OptionKind.PLAYERS, options = listOf(2, 3, 4), defaultOption = 2, order = 2, minutes = 8, moveSeconds = 60,
+            R.string.side_red, R.string.side_blue, 12, { 7000L },
+            optionKind = OptionKind.PLAYERS, options = listOf(2, 3, 4), defaultOption = 2, order = 2, minutes = 8,
             create = { n -> WallGoGame(n) }),
         GameInfo("caro", Topic.MIND, R.string.game_caro, R.string.game_caro_desc, R.string.guide_caro,
-            R.string.stone_black, R.string.stone_white, 9, { 3500L }, order = 1, minutes = 5, moveSeconds = 45, create = { GomokuGame() }),
+            R.string.stone_black, R.string.stone_white, 9, { 6000L }, order = 1, minutes = 5, create = { GomokuGame() }),
         GameInfo("sudoku", Topic.MATH, R.string.game_sudoku, R.string.game_sudoku_desc, R.string.guide_sudoku,
-            R.string.side_white, R.string.side_black, 0, { 0L }, kind = GameKind.SOLO, order = 1, minutes = 10, moveSeconds = 0),
+            R.string.side_white, R.string.side_black, 0, { 0L }, kind = GameKind.SOLO, order = 1, minutes = 10),
     )
 
     fun byId(id: String) = games.first { it.id == id }

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -38,6 +39,8 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
@@ -99,6 +102,7 @@ fun SettingsScreen(app: PlayMindApp, onBack: () -> Unit, onGuide: () -> Unit, on
     val activity = ctx as Activity
     var lang by remember { mutableStateOf(Langs.current()) }
     var nick by remember { mutableStateOf(app.prefs.nickname) }
+    var showLicenses by remember { mutableStateOf(false) }
 
     Column(Modifier.fillMaxSize()) {
         TopBar(stringResource(R.string.settings), onBack)
@@ -122,7 +126,30 @@ fun SettingsScreen(app: PlayMindApp, onBack: () -> Unit, onGuide: () -> Unit, on
             SettingsRow(Ic.Book, stringResource(R.string.how_to_use), onGuide)
             SettingsRow(Ic.Shield, stringResource(R.string.privacy_policy)) { ctx.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.PRIVACY_URL))) }
             if (app.ads.privacyOptionsRequired(activity)) SettingsRow(Ic.Info, stringResource(R.string.privacy_options)) { app.ads.showPrivacyOptions(activity) }
+            SettingsRow(Ic.Info, stringResource(R.string.licenses)) { showLicenses = true }
             Spacer(Modifier.height(20.dp))
+        }
+    }
+    if (showLicenses) LicensesDialog { showLicenses = false }
+}
+
+/** Thông báo giấy phép bên thứ ba (KataGo, mạng CC0, Eigen, phông chữ...), đọc từ assets/third_party_notices.txt. */
+@Composable
+private fun LicensesDialog(onClose: () -> Unit) {
+    val ctx = LocalContext.current
+    val text = remember { try { ctx.assets.open("third_party_notices.txt").bufferedReader().use { it.readText() } } catch (_: Exception) { "" } }
+    Dialog(onDismissRequest = onClose) {
+        val shape = RoundedCornerShape(24.dp)
+        Column(
+            Modifier.fillMaxWidth().fillMaxHeight(.85f).clip(shape).background(pm.surface).border(1.dp, pm.outline, shape).padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
+            Text(stringResource(R.string.licenses), style = MaterialTheme.typography.titleMedium, color = pm.ink)
+            Text(
+                text, Modifier.weight(1f).verticalScroll(rememberScrollState()),
+                style = MaterialTheme.typography.bodySmall.copy(fontFamily = FontFamily.Monospace), color = pm.inkSoft,
+            )
+            OutlineButton(stringResource(R.string.close), onClose, Modifier.fillMaxWidth())
         }
     }
 }

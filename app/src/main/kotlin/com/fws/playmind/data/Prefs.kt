@@ -2,6 +2,7 @@ package com.fws.playmind.data
 
 import android.content.Context
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import kotlin.random.Random
@@ -20,6 +21,39 @@ class Prefs(ctx: Context) {
     fun updateNickname(v: String) {
         val clean = v.filter { it != '|' && it != '\n' }.trim().take(16).ifEmpty { "Player" }
         nickname = clean; sp.edit().putString("nick", clean).apply()
+    }
+
+    // ── Cấp bot (Dễ = 0 ... Siêu việt = 6): mặc định chỉ mở Dễ; thắng cấp L thì mở cấp L + 1 của game đó ──
+    private val unlocked = mutableStateMapOf<String, Int>()
+    private val selected = mutableStateMapOf<String, Int>()
+
+    /** Gói năm mở khóa mọi cấp (PlayMindApp nối hàm này với WalletRepo.noDiamonds). */
+    var allLevelsUnlocked: () -> Boolean = { false }
+
+    /** Cấp cao nhất đã mở khóa của game [gameId]. */
+    fun unlockedLevel(gameId: String): Int =
+        if (allLevelsUnlocked()) 6 else (unlocked[gameId] ?: sp.getInt("lvl_$gameId", 0)).coerceIn(0, 6)
+
+    /** Thời gian mỗi nước khi chơi với người: chỉ số trong Catalog.LEVEL_MOVE_SECONDS (mặc định 5 phút). */
+    var pvpTime: Int
+        get() = sp.getInt("pvp_time", 3).coerceIn(0, 6)
+        set(v) = sp.edit().putInt("pvp_time", v.coerceIn(0, 6)).apply()
+
+    /** Mở khóa tới cấp [level] (không bao giờ hạ). Trả về true nếu vừa mở thêm. */
+    fun unlockLevel(gameId: String, level: Int): Boolean {
+        val l = level.coerceIn(0, 6)
+        if (l <= unlockedLevel(gameId)) return false
+        unlocked[gameId] = l; sp.edit().putInt("lvl_$gameId", l).apply()
+        return true
+    }
+
+    /** Cấp đang chọn của game (luôn trong phạm vi đã mở khóa). */
+    fun selectedLevel(gameId: String): Int =
+        (selected[gameId] ?: sp.getInt("sel_$gameId", 0)).coerceIn(0, unlockedLevel(gameId))
+
+    fun selectLevel(gameId: String, level: Int) {
+        val l = level.coerceIn(0, unlockedLevel(gameId))
+        selected[gameId] = l; sp.edit().putInt("sel_$gameId", l).apply()
     }
 
     var gamesSinceAd: Int

@@ -121,7 +121,8 @@ fun ShopScreen(app: PlayMindApp, onBack: () -> Unit) {
     fun ready(id: String) = offers[id] != null
 
     Column(Modifier.fillMaxSize()) {
-        TopBar(stringResource(R.string.shop), onBack) { DiamondChip(wallet.diamonds) }
+        val noGems = app.wallet.noDiamonds()
+        TopBar(stringResource(R.string.shop), onBack) { if (!noGems) DiamondChip(wallet.diamonds) }
         Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 18.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
             SectionTitle(stringResource(R.string.shop_plans))
             PlanCard(
@@ -131,18 +132,20 @@ fun ShopScreen(app: PlayMindApp, onBack: () -> Unit) {
             ) { billing.buy(activity, BillingManager.SUB_MONTHLY) }
             PlanCard(
                 stringResource(R.string.plan_yearly), price(BillingManager.SUB_YEARLY), stringResource(R.string.per_year),
-                listOf(stringResource(R.string.perk_no_ads), stringResource(R.string.perk_unlimited)),
+                listOf(stringResource(R.string.perk_no_ads), stringResource(R.string.perk_unlimited), stringResource(R.string.perk_all_levels)),
                 plan == Plan.YEARLY, true, ready(BillingManager.SUB_YEARLY),
             ) { billing.buy(activity, BillingManager.SUB_YEARLY) }
             if (plan != Plan.NONE) OutlineButton(stringResource(R.string.manage_sub), {
                 ctx.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/account/subscriptions?package=${ctx.packageName}")))
             }, Modifier.fillMaxWidth())
 
-            Spacer(Modifier.height(6.dp))
-            SectionTitle(stringResource(R.string.shop_gems))
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                GemPack(5, price(BillingManager.GEMS_5), ready(BillingManager.GEMS_5), false, { billing.buy(activity, BillingManager.GEMS_5) }, Modifier.weight(1f))
-                GemPack(30, price(BillingManager.GEMS_30), ready(BillingManager.GEMS_30), true, { billing.buy(activity, BillingManager.GEMS_30) }, Modifier.weight(1f))
+            if (!noGems) {
+                Spacer(Modifier.height(6.dp))
+                SectionTitle(stringResource(R.string.shop_gems))
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    GemPack(5, price(BillingManager.GEMS_5), ready(BillingManager.GEMS_5), false, { billing.buy(activity, BillingManager.GEMS_5) }, Modifier.weight(1f))
+                    GemPack(30, price(BillingManager.GEMS_30), ready(BillingManager.GEMS_30), true, { billing.buy(activity, BillingManager.GEMS_30) }, Modifier.weight(1f))
+                }
             }
             Spacer(Modifier.height(20.dp))
         }

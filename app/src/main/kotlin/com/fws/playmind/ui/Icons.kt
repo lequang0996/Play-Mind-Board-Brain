@@ -103,6 +103,8 @@ object Ic {
     val Bulb = build("bulb", false, "M9 18h6M10 21h4M12 3a6 6 0 00-3.5 10.9c.7.6 1 1.3 1 2.1h5c0-.8.3-1.5 1-2.1A6 6 0 0012 3z")
     val Users = build("users", false, circle(9f, 8f, 3f), "M3 20c.6-3.4 3-5 6-5s5.4 1.6 6 5M16 5.5a3 3 0 010 5.5M18 15.2c1.8.7 2.8 2.2 3 4.8")
     val Trophy = build("trophy", false, "M8 4h8v5a4 4 0 01-8 0zM8 6H5v1.5A3 3 0 008 10.5M16 6h3v1.5a3 3 0 01-3 3M12 13v4M8.5 20h7M10 17h4")
+    val Lock = build("lock", false, "M6.5 11h11a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1zM8.5 11V8a3.5 3.5 0 0 1 7 0v3M12 14.5v2")
+    val Unlock = build("unlock", false, "M6.5 11h11a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1zM8.5 11V8a3.5 3.5 0 0 1 6.9-.8M12 14.5v2")
     val Warn = build("warn", false, "M12 3.5l9.5 16.5h-19zM12 10v4.5M12 17.2v.01")
     val Skip = build("skip", false, "M6 5v14l9-7zM18 5v14")
     val Brick = build("brick", false, "M3.5 7h17v10h-17zM3.5 12h17M9 7v5M15 12v5")

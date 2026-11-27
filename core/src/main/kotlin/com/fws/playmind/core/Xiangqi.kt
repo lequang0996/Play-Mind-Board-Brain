@@ -13,11 +13,12 @@ import kotlin.random.Random
  * aspiration window, tìm kiếm tĩnh, đánh giá (vật chất theo giai đoạn, cơ động, tốt qua sông, an toàn cung,
  * sĩ/tượng phòng thủ, pháo/xe ghim tướng) và sách khai cuộc nhỏ. Xem docs/BOT_GUIDE.md.
  */
-class XiangqiGame : BoardGame {
+class XiangqiGame : BoardGame, LeveledEngine {
     companion object {
         const val K = 1; const val A = 2; const val E = 3; const val H = 4; const val R = 5; const val C = 6; const val P = 7
         private const val MATE = 30000
         private const val INF = 32000
+        private const val MAXD = 50
         private const val MAXPLY = 90
         private val VAL = intArrayOf(0, 0, 200, 200, 430, 950, 460, 100)
         private val ORTH = intArrayOf(1, 0, -1, 0, 0, 1, 0, -1)
@@ -329,17 +330,25 @@ class XiangqiGame : BoardGame {
         return true
     }
 
+    /**
+     * Luật của app: nước đi tạo lại một thế cờ đã có (cùng bên tới lượt) thì bên vừa đi THUA ngay.
+     * Thế cờ trùng chỉ có thể nằm sau nước "không thể đảo ngược" cuối cùng, nhưng so cả danh sách cho đơn giản.
+     */
+    private fun repeatedPosition(): Boolean {
+        val k = keys[keys.size - 1]
+        var i = keys.size - 3
+        while (i >= 0) { if (keys[i] == k) return true; i -= 2 }
+        return false
+    }
+
     private fun updateResult() {
         if (legalList().isEmpty()) {
             result = if (side > 0) Outcome.WIN_SECOND else Outcome.WIN_FIRST
             reason = if (inCheck()) EndReason.CHECKMATE else EndReason.NOMOVES
             return
         }
+        if (repeatedPosition()) { result = if (side > 0) Outcome.WIN_FIRST else Outcome.WIN_SECOND; reason = EndReason.REPETITION; return }
         if (quiet >= 120) { result = Outcome.DRAW; reason = EndReason.FIFTY; return }
-        val k = keys[keys.size - 1]
-        var c = 0
-        for (x in keys) if (x == k) c++
-        if (c >= 3) { result = Outcome.DRAW; reason = EndReason.REPETITION }
     }
 
     override fun forfeit(loser: Int, reason: EndReason) {
@@ -570,7 +579,7 @@ class XiangqiGame : BoardGame {
 
     private fun quiesce(alphaIn: Int, beta: Int, ply: Int): Int {
         var alpha = alphaIn
-        if ((++nodes and 1023L) == 0L && System.nanoTime() > deadline) abort = true
+        if ((++nodes and 255L) == 0L && (nodes >= nodeLimit || System.nanoTime() > deadline)) abort = true
         if (abort) return 0
         val us = side
         val inChk = isAttacked(kingSquare(us), -us)
@@ -607,11 +616,12 @@ class XiangqiGame : BoardGame {
 
     private fun search(depthIn: Int, alphaIn: Int, betaIn: Int, ply: Int, nullOk: Boolean): Int {
         var alpha = alphaIn; var beta = betaIn; var depth = depthIn
-        if ((++nodes and 1023L) == 0L && System.nanoTime() > deadline) abort = true
+        if ((++nodes and 255L) == 0L && (nodes >= nodeLimit || System.nanoTime() > deadline)) abort = true
         if (abort) return 0
         val pv = beta - alpha > 1
         if (ply > 0) {
-            if (quiet >= 120 || repeated()) return drawScore()
+            if (repeated()) return MATE - ply                 // bên vừa đi lặp lại thế cũ -> thua
+            if (quiet >= 120) return drawScore()
             alpha = maxOf(alpha, -MATE + ply); beta = minOf(beta, MATE - ply - 1)
             if (alpha >= beta) return alpha
         }
@@ -711,20 +721,32 @@ class XiangqiGame : BoardGame {
         return best
     }
 
-    private fun searchRoot(timeMs: Long): Int {
+    private var nodeLimit = Long.MAX_VALUE
+
+    private fun searchRoot(timeMs: Long): Int = searchRoot(SearchLimit(timeMs = timeMs), null, 0).best
+
+    /**
+     * Tìm kiếm có giới hạn (thời gian / số nút / độ sâu, mục 4.2 của BOT_GUIDE) trên các nước gốc [allowed] (null = mọi nước).
+     * [delta] > 0: trả thêm các nước có điểm không kém nước tốt nhất quá [delta] (để chọn nhiễu), kiểm bằng tìm kiếm cửa sổ hẹp.
+     */
+    private fun searchRoot(lim: SearchLimit, allowed: IntArray?, delta: Int): RootResult {
         val start = System.nanoTime()
-        deadline = start + timeMs * 1_000_000
-        val soft = start + (timeMs * 1_000_000 * 0.55).toLong()
+        deadline = if (lim.timeMs > 0) start + lim.timeMs * 1_000_000 else Long.MAX_VALUE
+        val soft = if (lim.timeMs > 0) start + (lim.timeMs * 1_000_000 * 0.55).toLong() else Long.MAX_VALUE
+        val nl = if (lim.nodes > 0) lim.nodes else Long.MAX_VALUE
+        val maxDepth = if (lim.depth > 0) lim.depth else MAXD
         abort = false; nodes = 0; rootSide = side
-        val root = legalList()
-        if (root.isEmpty()) return -1
-        if (root.size == 1) return root[0]
+        var root = legalList()
+        if (allowed != null) { val f = root.filter { it in allowed }.toIntArray(); if (f.isNotEmpty()) root = f }
+        if (root.isEmpty()) return RootResult(-1, 0, 0, 0)
+        if (root.size == 1) return RootResult(root[0], 0, 0, 0)
         var best = root[0]
         var prevScore = 0
         for (i in 0 until MAXPLY) { killers[i][0] = 0; killers[i][1] = 0 }
         val rsc = IntArray(root.size)
         var completed = 0
-        for (depth in 1..50) {
+        for (depth in 1..maxDepth) {
+            nodeLimit = if (depth == 1) Long.MAX_VALUE else nl     // độ sâu 1 luôn chạy xong
             var delta = if (depth >= 5) 30 else INF
             var alpha = if (depth >= 5) maxOf(-INF, prevScore - delta) else -INF
             var beta = if (depth >= 5) minOf(INF, prevScore + delta) else INF
@@ -768,6 +790,46 @@ class XiangqiGame : BoardGame {
             if (System.nanoTime() > soft) break
         }
         lastNodes = nodes
-        return best
+        var near = IntArray(0)
+        if (delta > 0 && completed > 0) {
+            abort = false; nodeLimit = Long.MAX_VALUE; deadline = Long.MAX_VALUE
+            val thr = prevScore - delta
+            val out = ArrayList<Int>()
+            for (mv in root) {
+                if (mv == best) continue
+                make(mv)
+                val sc = -search(completed - 1, -thr, -thr + 1, 1, true)
+                unmake()
+                if (sc >= thr) out.add(mv)
+            }
+            near = out.toIntArray()
+        }
+        return RootResult(best, prevScore, completed, nodes, near)
+    }
+
+    /** Bên đang đi bị chiếu hết / hết nước. */
+    private fun matedNow(): Boolean = legalList().isEmpty()
+
+    private fun fastWin(): Int {
+        for (mv in legalList()) { make(mv); val w = matedNow(); unmake(); if (w) return mv }
+        return -1
+    }
+
+    private fun fastLosesNext(mv: Int): Boolean {
+        make(mv)
+        var lose = false
+        if (repeated()) lose = true else for (r in legalList()) { make(r); if (matedNow()) lose = true; unmake(); if (lose) break }
+        unmake()
+        return lose
+    }
+
+    override fun levelMove(level: BotLevel, timeMs: Long, rnd: Random): Int {
+        if (result != Outcome.ONGOING) return -1
+        if (level != BotLevel.EASY) { val b = bookMove(); if (b >= 0) return b }
+        val cfg = BotLevels.config(id, level, timeMs)
+        return synchronized(lock) {
+            val work = copyGame()
+            Bot.pick(work, cfg, rnd, { work.fastWin() }, { work.fastLosesNext(it) }) { l, allowed, delta -> work.searchRoot(l, allowed, delta) }
+        }
     }
 }

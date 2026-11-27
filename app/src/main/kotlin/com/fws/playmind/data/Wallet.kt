@@ -70,6 +70,9 @@ class WalletRepo(private val ctx: Context) {
         return if (st.plan != Plan.NONE && trustedNow() - st.planAt < 8 * 86_400_000L) st.plan else Plan.NONE
     }
 
+    /** Gói năm (10$/năm): bỏ hẳn kim cương (không tốn, không thưởng, không điểm danh) và mở khóa mọi cấp bot. */
+    fun noDiamonds(): Boolean = currentPlan() == Plan.YEARLY
+
     /** BillingManager gọi khi biết gói hiện tại. */
     fun setPlan(plan: Plan) {
         val st = _state.value
@@ -185,7 +188,7 @@ class WalletRepo(private val ctx: Context) {
 
     fun checkIn(): CheckIn {
         val st = _state.value; val day = today()
-        if (st.lastCheckInDay == day) return CheckIn.Already
+        if (st.lastCheckInDay == day || noDiamonds()) return CheckIn.Already
         val streak = if (st.lastCheckInDay == day - 1) st.streakDays + 1 else 1
         // Điểm danh +1; sau 30 ngày liên tục, mỗi lần tiếp theo +2 (gói tháng/năm: +4)
         val reward = if (streak > 30) (if (currentPlan() != Plan.NONE) 4 else 2) else 1
@@ -229,7 +232,9 @@ class WalletRepo(private val ctx: Context) {
         var ws = st.winStreak[gameId] ?: 0
         var bonus = 0; var gained = 0; var blocked = false
         when (outcome) {
-            MatchOutcome.WIN -> if (valid && rewardsAllowed) {
+            MatchOutcome.WIN -> if (noDiamonds()) {
+                if (valid) ws += 1                                   // gói năm: chỉ giữ thống kê, không có kim cương
+            } else if (valid && rewardsAllowed) {
                 ws += 1; gained = 1
                 if (ws == 5) bonus = 2 else if (ws == 10) { bonus = 3; ws = 0 }
                 gained += bonus

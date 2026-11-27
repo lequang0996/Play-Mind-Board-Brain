@@ -48,7 +48,7 @@ fun TopicScreen(app: PlayMindApp, topic: Topic, onBack: () -> Unit, onOpenGame: 
     val games = Catalog.byTopicEasiestFirst(topic)
 
     Column(Modifier.fillMaxSize()) {
-        TopBar(stringResource(topic.title), onBack) { DiamondChip(wallet.diamonds) }
+        TopBar(stringResource(topic.title), onBack) { if (!app.wallet.noDiamonds()) DiamondChip(wallet.diamonds) }
         Column(
             Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 18.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -89,7 +89,8 @@ private fun TopicRow(app: PlayMindApp, g: GameInfo, t: Topic, rank: Int, onOpen:
             Text(stringResource(g.desc), style = MaterialTheme.typography.bodySmall, color = pm.inkSoft, maxLines = 2, overflow = TextOverflow.Ellipsis)
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Pill(stringResource(R.string.minutes_n, g.minutes), color = pm.inkSoft)
-                if (free > 0) Pill(if (free == Int.MAX_VALUE) "∞" else stringResource(R.string.free_n, free), color = pm.good, filled = true)
+                if (app.wallet.noDiamonds()) { }
+                else if (free > 0) Pill(if (free == Int.MAX_VALUE) "∞" else stringResource(R.string.free_n, free), color = pm.good, filled = true)
                 else Pill(stringResource(R.string.cost_one_gem), color = pm.goldBright)
             }
         }

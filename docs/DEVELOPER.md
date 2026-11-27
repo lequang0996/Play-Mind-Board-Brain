@@ -59,7 +59,13 @@ Mặc định dùng **ID thử nghiệm của Google** (an toàn khi phát tri�
 Các chủ đề chưa có game tự hiển thị "Sắp ra mắt".
 
 ### Danh sách game hiện có
-Cờ vua, Cờ tướng, Cờ vây (9x9 / 13x13 / 19x19), Quoridor (2 hoặc 4 người), Wall Go (2-4 người), Cờ caro, Sudoku (4 mức độ). Cờ vây dùng luật diện tích Tromp-Taylor (không gỡ quân chết tự động); bot dùng MCTS-RAVE song song theo luồng. Wall Go 3 và 4 người dùng số quân mỗi người (3 và 2) là quy ước của app, không phải luật chính thức.
+Cờ vua, Cờ tướng, Cờ vây 19x19, Quoridor (2 hoặc 4 người), Wall Go (2-4 người), Cờ caro, Sudoku. Cờ vây dùng luật diện tích Tromp-Taylor (không gỡ quân chết tự động); bot cờ vây là KataGo (tiến trình GTP `libkatago.so`, xem `match/KataGo.kt` và `tools/katago/build_android.sh`), dự phòng bằng MCTS-RAVE của core khi thiết bị không chạy được KataGo.
+
+### Bot 7 cấp
+Mọi game từ 2 người trở lên có 7 cấp bot (Dễ ... Siêu việt) theo [`BOT_GUIDE.md`](BOT_GUIDE.md). Bảng cấu hình duy nhất nằm ở `core/.../BotLevels.kt`; engine cài `LeveledEngine.levelMove(level, botMillis, rnd)`. Người chơi bắt đầu ở cấp Dễ, thắng cấp L mở cấp L + 1 (`Prefs.unlockLevel`). Thời gian mỗi nước khi đấu máy theo cấp ở `Catalog.LEVEL_MOVE_SECONDS`. Đo 7 cấp: `tools/bot-bench/LevelMatch.kt`, `LevelProbe.kt`.
+
+### Luật lặp thế của app
+Cờ vua, cờ tướng, Quoridor 2 người: nước tạo lại thế đã có (cùng bên tới lượt) thì bên vừa đi thua (`EndReason.REPETITION`). Quoridor 4 người: nước đó bị cấm. Wall Go 3 và 4 người dùng số quân mỗi người (3 và 2) là quy ước của app, không phải luật chính thức.
 
 Gói đăng ký, kim cương và quảng cáo: xem [`MONETIZATION.md`](MONETIZATION.md). Giao diện và phông chữ: [`DESIGN.md`](DESIGN.md).
 

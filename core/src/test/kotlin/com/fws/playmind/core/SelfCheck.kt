@@ -246,6 +246,70 @@ fun main() {
     }
     expect("go: 9x9 va 13x13 choi ngau nhien + bot hop le, phat lai giong het (co superko)", goOk)
 
+    // ── Luật lặp thế của app: nước tạo lại thế cũ (cùng bên tới lượt) thì bên vừa đi THUA ──
+    run {
+        val c = ChessGame()
+        for ((f, t) in listOf(6 to 21, 62 to 45, 21 to 6)) c.play(c.findMove(f, t))
+        val okBefore = c.result == Outcome.ONGOING
+        c.play(c.findMove(45, 62))                       // Đen đưa mã về: thế ban đầu lặp lại -> Đen thua
+        expect("chess: lap the lan 2 -> ben vua di thua", okBefore && c.result == Outcome.WIN_FIRST && c.reason == EndReason.REPETITION)
+    }
+    run {
+        val x = XiangqiGame()
+        val seq = listOf(1 to 20, 82 to 65, 20 to 1, 65 to 82)
+        var ok = true
+        for ((f, t) in seq) { val m = x.findMove(f, t); if (m < 0 || !x.play(m)) ok = false }
+        expect("xiangqi: lap the lan 2 -> ben vua di thua", ok && x.result == Outcome.WIN_FIRST && x.reason == EndReason.REPETITION)
+    }
+    run {
+        val q = QuoridorGame(2)
+        for (m in listOf(67, 13, 76)) q.play(m)
+        val okBefore = q.result == Outcome.ONGOING
+        q.play(4)                                         // bên 1 quay về: thế đầu lặp lại -> bên 1 thua
+        expect("quoridor 2 nguoi: lap the -> ben vua di thua", okBefore && q.result == Outcome.WIN_FIRST && q.reason == EndReason.REPETITION)
+        val q4 = QuoridorGame(4)
+        var ok = true
+        for (m in listOf(67, 37, 13, 43, 76, 36, 4)) if (!q4.play(m)) ok = false
+        expect("quoridor 4 nguoi: nuoc lap the bi cam", ok && 44 !in q4.legalMoves() && !q4.play(44) && q4.result == Outcome.ONGOING)
+    }
+
+    // ── 7 cấp bot: mọi cấp đều đi nước hợp lệ ──
+    run {
+        val makers: List<() -> BoardGame> = listOf({ ChessGame() }, { XiangqiGame() }, { GomokuGame() }, { QuoridorGame(2) }, { QuoridorGame(4) }, { WallGoGame(2) }, { WallGoGame(3) })
+        var ok = true; val bad = ArrayList<String>()
+        val rnd = kotlin.random.Random(5)
+        for (mk in makers) {
+            val g = mk()
+            // đi tới giữa ván bằng nước ngẫu nhiên hợp lệ
+            repeat(10) { val ms = g.legalMoves(); if (ms.isNotEmpty() && g.result == Outcome.ONGOING) g.play(ms[rnd.nextInt(ms.size)]) }
+            if (g.result != Outcome.ONGOING) continue
+            for (lv in BotLevel.entries) {
+                val c = g.copyGame()
+                val m = (c as LeveledEngine).levelMove(lv, 200, kotlin.random.Random(lv.ordinal))
+                if (m < 0 || !c.play(m)) { ok = false; bad.add("${g.id}/$lv") }
+            }
+        }
+        expect("7 cap bot: moi cap di nuoc hop le " + bad, ok)
+    }
+
+    // ── Lớp an toàn (BOT_GUIDE mục 4.2): cấp Dễ luôn đi nước thắng ngay và không để đối phương thắng ngay ──
+    run {
+        var win = 0
+        for (s in 0 until 10) {
+            val c = ChessGame(); c.setFen("6k1/5ppp/8/8/8/8/5PPP/3R2K1 w - - 0 1")
+            val m = c.levelMove(BotLevel.EASY, 200, kotlin.random.Random(s))
+            if (c.play(m) && c.result == Outcome.WIN_FIRST) win++
+        }
+        expect("an toan: cap De luon chieu het trong 1 nuoc ($win/10)", win == 10)
+        var safe = 0
+        for (s in 0 until 10) {
+            val c = ChessGame(); c.setFen("3r2k1/5ppp/8/8/8/8/5PPP/6K1 w - - 0 1")
+            val m = c.levelMove(BotLevel.EASY, 200, kotlin.random.Random(s))
+            if (c.play(m) && !Bot.genericLosesNext(ChessGame().also { it.setFen("3r2k1/5ppp/8/8/8/8/5PPP/6K1 w - - 0 1") }, m)) safe++
+        }
+        expect("an toan: cap De khong de bi chieu het ngay ($safe/10)", safe == 10)
+    }
+
     println(if (failures == 0) "ALL CHECKS PASSED" else "$failures CHECK(S) FAILED")
     if (failures > 0) exitProcess(1)
 }

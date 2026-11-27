@@ -11,3 +11,7 @@
 *.jks
 *.keystore
 keystore.properties
+
+# KataGo (cờ vây): sinh bởi tools/katago/build_android.sh trên CI
+/app/src/main/jniLibs/
+/app/src/main/assets/katago/

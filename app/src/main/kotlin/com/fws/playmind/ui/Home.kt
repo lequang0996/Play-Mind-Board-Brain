@@ -160,7 +160,7 @@ fun HomeScreen(
                 }
             }
             Gap(16)
-            Vault(wallet.diamonds, wallet.streakDays, canCheckIn) {
+            if (!app.wallet.noDiamonds()) Vault(wallet.diamonds, wallet.streakDays, canCheckIn) {
                 val r = app.wallet.checkIn(); if (r is CheckIn.Done) checkIn = r
             }
             if (plan == Plan.NONE) {
@@ -478,7 +478,8 @@ private fun GameTile(app: PlayMindApp, g: GameInfo, t: Topic, onOpen: (GameInfo)
             Text(stringResource(g.name), style = MaterialTheme.typography.titleLarge.copy(fontSize = 15.sp), color = pm.ink, maxLines = 1, overflow = TextOverflow.Ellipsis)
             Text(stringResource(g.desc), style = MaterialTheme.typography.bodySmall, color = pm.inkSoft, maxLines = 2, overflow = TextOverflow.Ellipsis, minLines = 2)
             Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
-                if (free > 0) MetaChip(if (free == Int.MAX_VALUE) "∞" else stringResource(R.string.free_n, free), pm.good) { Icon(Ic.Check, null, Modifier.size(12.dp), tint = pm.good) }
+                if (app.wallet.noDiamonds()) { /* gói năm: không còn kim cương / lượt miễn phí */ }
+                else if (free > 0) MetaChip(if (free == Int.MAX_VALUE) "∞" else stringResource(R.string.free_n, free), pm.good) { Icon(Ic.Check, null, Modifier.size(12.dp), tint = pm.good) }
                 else MetaChip("1", pm.goldBright) { GemMark(13.dp) }
                 if (g.optionKind == OptionKind.PLAYERS) MetaChip("${g.options.min()}–${g.options.max()}", pm.royal) { Icon(Ic.Users, null, Modifier.size(13.dp), tint = pm.royal.onLight(.2f)) }
             }

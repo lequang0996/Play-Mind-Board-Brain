@@ -29,9 +29,9 @@ game_xiangqi|Xiangqi (Chinese Chess)
 game_xiangqi_desc|Generals, cannons and a river to cross.
 guide|Guide
 guide_app_title|Using Play Mind
-guide_app|• Home: pick the featured card (it changes every 2 minutes) or any game in the rows below.\n• Diamonds: check in daily for +1 diamond. Each game gives 1 free play per day (monthly plan: 3, yearly plan: unlimited); after that each game costs 1 diamond. A win earns +1 diamond.\n• Win streaks: 5 wins in a row in one game give +2 diamonds, 10 in a row give +3.\n• Loyalty bonus: after a 30-day check-in streak, each next check-in gives +2 diamonds (monthly and yearly plans: +4).\n• Modes: play the computer (you move first), a friend nearby without internet, or online by exchanging a room code or QR. Some games also support 3-4 players against the computer.\n• Move timer: Caro 45 s, Wall Go and Quoridor 1 min, Chess and Xiangqi 3 min, Go up to 1 day per move. If time runs out, the player to move loses.\n• Shop: remove ads, get more free plays or buy diamonds.\n• Change language and nickname in Settings.
-guide_chess|Goal: checkmate the enemy king.\n• Pawns step forward and capture diagonally. Knights jump in an L. Bishops slide diagonally, rooks slide straight, queens do both, kings step one square.\n• Special moves: castling, en passant and promotion on the last rank.\n• Tap a piece, then a highlighted square. A game is drawn by stalemate, repetition, the 50-move rule or too few pieces.
-guide_xiangqi|Goal: checkmate the enemy general. Red moves first.\n• The general and advisors stay inside the palace. The two generals may never face each other on an open file.\n• Elephants move two points diagonally, cannot cross the river and can be blocked at the midpoint.\n• Horses move like an L but are blocked by an adjacent piece. Chariots slide straight.\n• Cannons slide straight and capture by jumping over exactly one piece. Soldiers step forward, and sideways after crossing the river.\n• A player with no legal move loses. Repeating a position three times is a draw in this app.
+guide_app|• Home: pick the featured card (it changes every 2 minutes) or any game in the rows below.\n• Diamonds: check in daily for +1 diamond. Each game gives 1 free play per day (monthly plan: 3, yearly plan: unlimited); after that each game costs 1 diamond. A win earns +1 diamond.\n• Win streaks: 5 wins in a row in one game give +2 diamonds, 10 in a row give +3.\n• Loyalty bonus: after a 30-day check-in streak, each next check-in gives +2 diamonds (monthly and yearly plans: +4).\n• Modes: play the computer (you move first), a friend nearby without internet, or online by exchanging a room code or QR. Some games also support 3-4 players against the computer.\n• Computer levels: 7 levels from Easy to Supreme. Only Easy is open at first; beating a level unlocks the next one for that game. The yearly plan unlocks every level and removes diamonds entirely.\n• Time per move (all games): 1, 2, 3, 5, 10 or 30 minutes, or 1 hour. Against the computer it follows the level (Easy 1 min ... Supreme 1 h); against people the host picks one of these seven. If time runs out, the player to move loses.\n• Shop: remove ads, get more free plays or buy diamonds.\n• Change language and nickname in Settings.
+guide_chess|Goal: checkmate the enemy king.\n• Pawns step forward and capture diagonally. Knights jump in an L. Bishops slide diagonally, rooks slide straight, queens do both, kings step one square.\n• Special moves: castling, en passant and promotion on the last rank.\n• Tap a piece, then a highlighted square. A game is drawn by stalemate, the 50-move rule or too few pieces.\n• Repetition: a move that recreates an earlier position loses for the player who made it.
+guide_xiangqi|Goal: checkmate the enemy general. Red moves first.\n• The general and advisors stay inside the palace. The two generals may never face each other on an open file.\n• Elephants move two points diagonally, cannot cross the river and can be blocked at the midpoint.\n• Horses move like an L but are blocked by an adjacent piece. Chariots slide straight.\n• Cannons slide straight and capture by jumping over exactly one piece. Soldiers step forward, and sideways after crossing the river.\n• A player with no legal move loses. In this app, a move that recreates an earlier position loses for the player who made it.
 guide_caro|Goal: make five or more of your marks in a row, across, down or diagonally. X (dark) moves first.\n• The board is endless: drag with one finger to move around, pinch to zoom.\n• If both ends of your line are blocked by enemy marks, it does not count.\n• Tap an empty cell to place your mark. Block your opponent's open threes and fours!
 how_to_play|How to play
 how_to_use|User guide
@@ -75,7 +75,7 @@ reason_full|The board is full
 reason_leave|A player left the game
 reason_material|Draw: not enough pieces to win
 reason_nomoves|No legal moves
-reason_repetition|Draw by repetition
+reason_repetition|Repeated an earlier position: that player loses
 reason_resign|A player resigned
 reason_stalemate|Stalemate: draw
 reply_hint|Send your reply code to the host. The game connects once they enter it.
@@ -147,7 +147,7 @@ go_pass|Pass
 go_place|Place stone
 go_score|Black %1$d – White %2$d (+%3$s komi)
 guide_go|Goal: control more of the board than your opponent. Black moves first.\n• Capture: a group of stones with no empty point next to it (no liberties) is removed from the board.\n• Forbidden: you may not play a move that leaves your own group with no liberties (unless it captures), and you may not repeat an earlier board position.\n• Ending: when your opponent passes and nothing useful is left, tap End game to score the position.\n• Scoring: by area - your stones plus the empty regions only you border. White receives 7.5 komi. Dead stones are not removed automatically, so capture them before you pass.\n• Tap an intersection to preview a stone, then press Place stone.
-guide_quoridor|Goal: be the first to reach the opposite side of the board.\n• Move: step one square up, down, left or right. If an opponent's pawn is next to you, jump over it, or step diagonally if a wall or the edge is behind it.\n• Walls: instead of moving you may place a wall two squares long. Walls cannot overlap or cross, and you may never block every path to a goal.\n• Walls left: 10 each with 2 players, 5 each with 4 players.\n• Build: choose Wall, tap near the crossing where it goes to preview it (green = allowed), then press Place wall.
+guide_quoridor|Goal: be the first to reach the opposite side of the board.\n• Move: step one square up, down, left or right. If an opponent's pawn is next to you, jump over it, or step diagonally if a wall or the edge is behind it.\n• Walls: instead of moving you may place a wall two squares long. Walls cannot overlap or cross, and you may never block every path to a goal.\n• Walls left: 10 each with 2 players, 5 each with 4 players.\n• Build: choose Wall, tap near the crossing where it goes to preview it (green = allowed), then press Place wall.\n• Repetition: in 2-player games, a pawn move that recreates an earlier position loses; in 4-player games such a move is not allowed.
 guide_sudoku|Goal: fill every empty square so each row, column and 3×3 box contains the digits 1 to 9 once.\n• Entering: tap a square, then a number. Wrong numbers show in red; fix them with Erase.\n• Notes: switch on the pencil to jot small candidate numbers (shown in red) in a square.\n• Erase clears the selected square. Each 3×3 box starts with only one given number (9 in total), so any grid that follows the rules wins.
 guide_wallgo|Goal: end the game with more territory than your rivals.\n• Setup: take turns placing your stones on empty squares (4 each with 2 players, 3 with 3 players, 2 with 4 players).\n• Your turn: choose one of your stones and move it 0, 1 or 2 squares up, down, left or right. It cannot pass through walls or other stones.\n• Wall: after moving you MUST place a wall on one free side of the square you stand on.\n• Territory: when every walled-off area holds stones of only one player, the game ends. You score the squares of the areas that contain only your stones.\n• Ties: the larger single area wins; otherwise it is a draw. A player who cannot move skips the turn.
 leave_confirm_local|Leave this game? Nothing is recorded for same-device games.
@@ -159,7 +159,7 @@ per_month|/ month
 per_year|/ year
 perk_free3|3 free plays per game every day
 perk_no_ads|No ads at all
-perk_unlimited|Unlimited plays - no diamonds needed
+perk_unlimited|No more diamonds: unlimited play, no check-in needed
 plan_active|Active
 plan_monthly|Plus (monthly)
 plan_yearly|Pro (yearly)
@@ -217,3 +217,28 @@ multi_seat_free|Empty seat
 multi_bot_fill|Empty seats are played by the computer when the game starts. Players who leave, resign or run out of time are replaced by the computer.
 multi_continues|You are out, but the game continues for the others. If you are the host, leaving ends the room for everyone.
 see_more|See all
+reason_move_limit|Move limit reached: draw
+bot_level|Computer level
+level_locked|Beat %s to unlock this level.
+level_unlocked|%s unlocked!
+level_move_time|Up to %d min per move
+level_0|Easy
+level_desc_0|Looks only a move or two ahead; great for beginners. Never misses an immediate win.
+level_1|Medium
+level_desc_1|Avoids losing pieces directly but still slips in complex positions.
+level_2|Good
+level_desc_2|Knows basic tactics; sometimes errs in hard positions.
+level_3|Strong
+level_desc_3|Rarely misses tactics and plans a few moves ahead.
+level_4|Master
+level_desc_4|Solid and accurate; very hard to beat.
+level_5|Challenger
+level_desc_5|Almost never makes a tactical mistake.
+level_6|Supreme
+level_desc_6|Full strength: the game's strongest bot, no handicap.
+licenses|Open-source licenses
+pvp_time|Time per move
+pvp_time_note|The host chooses; players who join use the host's time.
+time_n_min|%d min
+time_1h|1 h
+perk_all_levels|Every computer level unlocked

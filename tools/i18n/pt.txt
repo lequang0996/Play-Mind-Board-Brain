@@ -29,9 +29,9 @@ game_xiangqi|Xiangqi (xadrez chinês)
 game_xiangqi_desc|Generais, canhões e um rio para atravessar.
 guide|Guia
 guide_app_title|Como usar o Play Mind
-guide_app|• Início: escolha o cartão em destaque (muda a cada 2 minutos) ou qualquer jogo nas linhas abaixo.\n• Diamantes: o check-in diário dá +1 diamante. Cada jogo tem 1 partida grátis por dia (plano mensal: 3, plano anual: ilimitadas); depois cada partida custa 1 diamante. Vencer dá +1 diamante.\n• Sequências: 5 vitórias seguidas em um jogo dão +2 diamantes, 10 seguidas dão +3.\n• Bônus de fidelidade: após 30 dias seguidos de check-in, cada check-in seguinte dá +2 diamantes (planos mensal e anual: +4).\n• Modos: jogue contra a máquina (você começa), com um amigo por perto sem internet, ou online trocando um código de sala ou QR. Alguns jogos aceitam 3-4 jogadores contra a máquina.\n• Tempo por jogada: Caro 45 s, Wall Go e Quoridor 1 min, xadrez e xiangqi 3 min, go até 1 dia. Se o tempo acabar, perde quem deve jogar.\n• Loja: remova anúncios, ganhe mais partidas grátis ou compre diamantes.\n• Altere idioma e apelido em Configurações.
-guide_chess|Objetivo: dar xeque-mate no rei adversário.\n• Peões avançam e capturam na diagonal. Cavalos saltam em L. Bispos deslizam na diagonal, torres em linha reta, a dama de ambos os modos e o rei anda uma casa.\n• Jogadas especiais: roque, en passant e promoção na última fileira.\n• Toque em uma peça e depois em uma casa destacada. O jogo empata por afogamento, repetição, regra dos 50 lances ou material insuficiente.
-guide_xiangqi|Objetivo: dar xeque-mate no general adversário. O vermelho começa.\n• O general e os conselheiros ficam dentro do palácio. Os dois generais nunca podem se encarar em uma coluna livre.\n• Elefantes andam duas casas na diagonal, não atravessam o rio e podem ser bloqueados no ponto médio.\n• Cavalos andam em L, mas uma peça adjacente os bloqueia. Carros deslizam em linha reta.\n• Canhões deslizam em linha reta e capturam saltando exatamente uma peça. Soldados avançam e, depois de atravessar o rio, também andam de lado.\n• Quem não tem lance legal perde. Neste app, repetir uma posição três vezes é empate.
+guide_app|• Início: escolha o cartão em destaque (muda a cada 2 minutos) ou qualquer jogo nas linhas abaixo.\n• Diamantes: o check-in diário dá +1 diamante. Cada jogo tem 1 partida grátis por dia (plano mensal: 3, plano anual: ilimitadas); depois cada partida custa 1 diamante. Vencer dá +1 diamante.\n• Sequências: 5 vitórias seguidas em um jogo dão +2 diamantes, 10 seguidas dão +3.\n• Bônus de fidelidade: após 30 dias seguidos de check-in, cada check-in seguinte dá +2 diamantes (planos mensal e anual: +4).\n• Modos: jogue contra a máquina (você começa), com um amigo por perto sem internet, ou online trocando um código de sala ou QR. Alguns jogos aceitam 3-4 jogadores contra a máquina.\n• Níveis da máquina: 7 níveis de Fácil a Supremo. No início só o Fácil está aberto; vencer um nível desbloqueia o próximo naquele jogo. O plano anual desbloqueia todos os níveis e remove os diamantes.\n• Tempo por jogada (todos os jogos): 1, 2, 3, 5, 10 ou 30 minutos, ou 1 hora. Contra a máquina depende do nível (Fácil 1 min ... Supremo 1 h); contra pessoas o anfitrião escolhe um destes sete. Se o tempo acabar, perde quem deve jogar.\n• Loja: remova anúncios, ganhe mais partidas grátis ou compre diamantes.\n• Altere idioma e apelido em Configurações.
+guide_chess|Objetivo: dar xeque-mate no rei adversário.\n• Peões avançam e capturam na diagonal. Cavalos saltam em L. Bispos deslizam na diagonal, torres em linha reta, a dama de ambos os modos e o rei anda uma casa.\n• Jogadas especiais: roque, en passant e promoção na última fileira.\n• Toque em uma peça e depois em uma casa destacada. O jogo empata por afogamento, regra dos 50 lances ou material insuficiente.\n• Repetição: quem faz um lance que repete uma posição anterior perde.
+guide_xiangqi|Objetivo: dar xeque-mate no general adversário. O vermelho começa.\n• O general e os conselheiros ficam dentro do palácio. Os dois generais nunca podem se encarar em uma coluna livre.\n• Elefantes andam duas casas na diagonal, não atravessam o rio e podem ser bloqueados no ponto médio.\n• Cavalos andam em L, mas uma peça adjacente os bloqueia. Carros deslizam em linha reta.\n• Canhões deslizam em linha reta e capturam saltando exatamente uma peça. Soldados avançam e, depois de atravessar o rio, também andam de lado.\n• Quem não tem lance legal perde. Neste app, quem faz um lance que repete uma posição anterior perde.
 guide_caro|Objetivo: formar cinco ou mais marcas suas em linha, na horizontal, vertical ou diagonal. O X (escuro) começa.\n• O tabuleiro não tem bordas: arraste com um dedo para se mover e use o gesto de pinça para dar zoom.\n• Se as duas pontas da sua linha estiverem bloqueadas por marcas adversárias, não vale.\n• Toque em uma casa vazia para colocar sua marca. Bloqueie as trincas e quadras abertas do adversário!
 how_to_play|Como jogar
 how_to_use|Guia de uso
@@ -75,7 +75,7 @@ reason_full|O tabuleiro está cheio
 reason_leave|Um jogador saiu da partida
 reason_material|Empate: material insuficiente para vencer
 reason_nomoves|Sem lances legais
-reason_repetition|Empate por repetição
+reason_repetition|Posição repetida: perde quem repetiu
 reason_resign|Um jogador desistiu
 reason_stalemate|Afogamento: empate
 reply_hint|Envie seu código de resposta ao anfitrião. A partida conecta quando ele o inserir.
@@ -147,7 +147,7 @@ go_pass|Passar
 go_place|Colocar pedra
 go_score|Preto %1$d – Branco %2$d (+%3$s de komi)
 guide_go|Objetivo: controlar mais do tabuleiro que o oponente. As pretas começam.\n• Captura: um grupo de pedras sem pontos vazios adjacentes (sem liberdades) é retirado.\n• Proibido: não pode jogar se o seu grupo ficar sem liberdades (a não ser que capture) nem repetir uma posição anterior.\n• Fim: quando o oponente passa e não resta nada útil, toque em Encerrar partida para contar os pontos.\n• Pontuação: por área - suas pedras mais as regiões vazias que só você cerca. As brancas recebem 7,5 de komi. Pedras mortas não saem sozinhas: capture-as antes de passar.\n• Toque numa interseção para ver a pedra e pressione Colocar pedra.
-guide_quoridor|Objetivo: ser o primeiro a chegar ao lado oposto do tabuleiro.\n• Mover: ande uma casa para cima, baixo, esquerda ou direita. Se houver um peão rival ao lado, salte-o, ou ande na diagonal se atrás houver um muro ou a borda.\n• Muros: em vez de mover, você pode colocar um muro de duas casas. Muros não podem se sobrepor nem se cruzar, e você nunca pode fechar todos os caminhos até uma meta.\n• Muros: 10 por jogador com 2 jogadores, 5 com 4 jogadores.\n• Construir: escolha Muro, toque perto do cruzamento onde ele vai para ver (verde = permitido) e pressione Colocar muro.
+guide_quoridor|Objetivo: ser o primeiro a chegar ao lado oposto do tabuleiro.\n• Mover: ande uma casa para cima, baixo, esquerda ou direita. Se houver um peão rival ao lado, salte-o, ou ande na diagonal se atrás houver um muro ou a borda.\n• Muros: em vez de mover, você pode colocar um muro de duas casas. Muros não podem se sobrepor nem se cruzar, e você nunca pode fechar todos os caminhos até uma meta.\n• Muros: 10 por jogador com 2 jogadores, 5 com 4 jogadores.\n• Construir: escolha Muro, toque perto do cruzamento onde ele vai para ver (verde = permitido) e pressione Colocar muro.\n• Repetição: com 2 jogadores, mover o peão para uma posição já vista faz perder; com 4 jogadores esse lance não é permitido.
 guide_sudoku|Objetivo: preencha todas as casas para que cada linha, coluna e bloco 3×3 contenha de 1 a 9 uma única vez.\n• Inserir: toque numa casa e depois num número. Números errados ficam vermelhos; corrija-os com Apagar.\n• Notas: ative o lápis para anotar pequenos números candidatos (em vermelho).\n• Apagar limpa a casa selecionada. Cada bloco 3×3 começa com um só número (9 no total), por isso qualquer grelha que siga as regras vence.
 guide_wallgo|Objetivo: terminar com mais território que os rivais.\n• Preparação: em turnos, coloque suas pedras em casas vazias (4 cada com 2 jogadores, 3 com 3 jogadores, 2 com 4 jogadores).\n• Sua vez: escolha uma das suas pedras e mova-a 0, 1 ou 2 casas para cima, baixo, esquerda ou direita. Ela não atravessa muros nem outras pedras.\n• Muro: depois de mover, você DEVE colocar um muro em um lado livre da casa onde parou.\n• Território: quando cada área cercada tiver pedras de um só jogador, a partida termina. Você pontua as casas das áreas que contêm só as suas pedras.\n• Empates: vence a maior área única; senão, empate. Quem não puder mover perde a vez.
 leave_confirm_local|Sair desta partida? Partidas no mesmo aparelho não são registradas.
@@ -159,7 +159,7 @@ per_month|/ mês
 per_year|/ ano
 perk_free3|3 partidas grátis por jogo por dia
 perk_no_ads|Sem nenhum anúncio
-perk_unlimited|Partidas ilimitadas, sem gastar diamantes
+perk_unlimited|Sem diamantes: jogo ilimitado, sem check-in
 plan_active|Ativo
 plan_monthly|Plus (mensal)
 plan_yearly|Pro (anual)
@@ -217,3 +217,28 @@ multi_seat_free|Lugar vazio
 multi_bot_fill|Os lugares vazios são jogados pelo computador no início. Quem sair, desistir ou ficar sem tempo é substituído pelo computador.
 multi_continues|Você foi eliminado, mas a partida continua para os outros. Se você for o anfitrião, sair encerra a sala para todos.
 see_more|Ver tudo
+reason_move_limit|Limite de lances: empate
+bot_level|Nível da máquina
+level_locked|Vença %s para desbloquear este nível.
+level_unlocked|%s desbloqueado!
+level_move_time|Até %d min por jogada
+level_0|Fácil
+level_desc_0|Vê só um ou dois lances à frente; ótimo para iniciantes. Nunca perde uma vitória imediata.
+level_1|Médio
+level_desc_1|Evita perder peças diretamente, mas ainda erra em posições complexas.
+level_2|Bom
+level_desc_2|Conhece táticas básicas; às vezes erra em posições difíceis.
+level_3|Forte
+level_desc_3|Raramente erra táticas e planeja a curto prazo.
+level_4|Mestre
+level_desc_4|Sólido e preciso; muito difícil de vencer.
+level_5|Desafiante
+level_desc_5|Quase nunca comete erros táticos.
+level_6|Supremo
+level_desc_6|Força total: o bot mais forte do jogo, sem concessões.
+licenses|Licenças de código aberto
+pvp_time|Tempo por jogada
+pvp_time_note|O anfitrião escolhe; quem entra usa o tempo do anfitrião.
+time_n_min|%d min
+time_1h|1 h
+perk_all_levels|Todos os níveis da máquina desbloqueados

@@ -8,7 +8,7 @@ object Outcome {
     const val DRAW = 3
 }
 
-enum class EndReason { NONE, CHECKMATE, STALEMATE, NOMOVES, REPETITION, FIFTY, MATERIAL, FIVE, FULL, RESIGN, LEAVE, TERRITORY, TIMEOUT }
+enum class EndReason { NONE, CHECKMATE, STALEMATE, NOMOVES, REPETITION, FIFTY, MATERIAL, FIVE, FULL, RESIGN, LEAVE, TERRITORY, TIMEOUT, MOVE_LIMIT }
 
 /**
  * Giao diện chung cho mọi game bàn cờ. Nước đi luôn được mã hóa thành Int

@@ -7,11 +7,15 @@
 | Lượt chơi miễn phí / game / ngày | 1 | 3 | không giới hạn |
 | Quảng cáo biểu ngữ | có | **không** | **không** |
 | Quảng cáo mở app | có | **không** | **không** |
+| Cấp độ máy | mở dần (thắng cấp L mở cấp L + 1) | mở dần | **mở ngay cả 7 cấp** |
+| Kim cương (tốn, thưởng, điểm danh) | có | có | **bỏ hẳn**: không hiện ở đâu trong app |
 
 App chỉ có 2 loại quảng cáo: biểu ngữ (`ADMOB_BANNER`) và mở app (`ADMOB_APP_OPEN`). Không có quảng cáo xen kẽ hay quảng cáo thưởng.
 
-Hết lượt miễn phí: mỗi ván tốn 1 kim cương (không áp dụng cho gói năm). Thắng +1 kim cương, điểm danh +1, chuỗi thắng và thưởng gắn bó như cũ (xem trong app: Trợ giúp).
-Điểm danh +1 mỗi ngày; điểm danh liên tục 30 ngày thì mỗi lần tiếp theo +2 (gói tháng/năm: +4). Đã bỏ chế độ chơi chung một máy.
+Hết lượt miễn phí: mỗi ván tốn 1 kim cương. Thắng +1 kim cương, điểm danh +1, chuỗi thắng và thưởng gắn bó như cũ (xem trong app: Trợ giúp).
+Điểm danh +1 mỗi ngày; điểm danh liên tục 30 ngày thì mỗi lần tiếp theo +2 (gói tháng: +4).
+
+**Gói năm bỏ hẳn kim cương** (`WalletRepo.noDiamonds()`): không tốn, không thưởng, không điểm danh; ô kim cương ở trang chủ, chip kim cương, nhãn lượt miễn phí và mục mua kim cương trong cửa hàng đều ẩn. Số kim cương cũ vẫn được giữ trong ví và hiện lại nếu gói hết hạn. Gói năm cũng mở ngay cả 7 cấp độ máy (`Prefs.allLevelsUnlocked`). Đã bỏ chế độ chơi chung một máy.
 
 Gói kim cương (mua một lần, tiêu thụ được): **1 USD = 5 kim cương**, **5 USD = 30 kim cương**.
 

@@ -11,6 +11,10 @@ import androidx.lifecycle.viewModelScope
 import com.fws.playmind.PlayMindApp
 import com.fws.playmind.catalog.GameInfo
 import com.fws.playmind.core.BoardGame
+import com.fws.playmind.core.BotLevel
+import com.fws.playmind.core.GoGame
+import com.fws.playmind.core.LeveledEngine
+import com.fws.playmind.catalog.Catalog
 import com.fws.playmind.core.SudokuGame
 import com.fws.playmind.core.SudokuLevel
 import com.fws.playmind.core.SudokuStatus
@@ -67,6 +71,14 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
     var tick by mutableIntStateOf(0); private set          // tăng mỗi khi bàn cờ thay đổi
     /** Tùy chọn trước ván: số người chơi (Wall Go, Quoridor) hoặc cỡ bàn (cờ vây) hoặc mức độ (Sudoku). */
     var option by mutableIntStateOf(0); private set
+    /** Cấp bot đang chọn (0 = Dễ ... 6 = Siêu việt), luôn trong phạm vi đã mở khóa của game. */
+    var botLevel by mutableIntStateOf(0); private set
+    /** Thời gian mỗi nước khi chơi với người (chỉ số trong Catalog.LEVEL_MOVE_SECONDS). Chủ phòng chọn, khách nhận theo chủ phòng. */
+    var pvpTime by mutableIntStateOf(prefs.pvpTime); private set
+    /** Cấp vừa được mở khóa nhờ thắng ván này (-1 nếu không có), để hộp kết quả báo cho người chơi. */
+    var unlockedNow by mutableIntStateOf(-1); private set
+    /** Bot cờ vây KataGo (khởi động khi cần; null nếu chưa dùng). */
+    private var kata: KataGo? = null
     var seatNames by mutableStateOf<List<String>>(emptyList()); private set   // tên từng ghế khi chơi với máy 3-4 người
     // Sudoku (game một người)
     var sudoku by mutableStateOf<SudokuGame?>(null); private set
@@ -147,9 +159,44 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
     fun open(g: GameInfo) {
         teardown()
         info = g; mode = Mode.NONE; phase = Phase.IDLE; notice = Notice.NONE; reward = null; option = g.defaultOption
+        botLevel = prefs.selectedLevel(g.id)
     }
 
     fun selectOption(v: Int) { option = v }
+
+    fun selectPvpTime(i: Int) { pvpTime = i.coerceIn(0, Catalog.LEVELS - 1); prefs.pvpTime = pvpTime }
+
+    /** Chọn cấp bot. Cấp chưa mở khóa thì không chọn được (trả về false). */
+    fun selectLevel(level: Int): Boolean {
+        val inf = info ?: return false
+        if (level > prefs.unlockedLevel(inf.id)) return false
+        prefs.selectLevel(inf.id, level); botLevel = level
+        return true
+    }
+
+    /**
+     * Thời gian tối đa cho mỗi nước của ván hiện tại (giây). Chơi với máy: theo cấp bot (Catalog.LEVEL_MOVE_SECONDS);
+     * chơi với người: cùng 7 mức đó, theo lựa chọn [pvpTime]; game một người: 0 (không giới hạn).
+     */
+    val moveSeconds: Int get() {
+        val inf = info ?: return 0
+        if (inf.kind == GameKind.SOLO) return 0
+        val i = if (mode == Mode.BOT) botLevel else pvpTime
+        return Catalog.LEVEL_MOVE_SECONDS[i.coerceIn(0, Catalog.LEVELS - 1)]
+    }
+
+    /** Cấp của bot ở ván hiện tại: chơi với máy theo cấp đã chọn; bot thay ghế trống / bot ẩn trong phòng dùng cấp Khá. */
+    private fun matchLevel(): BotLevel = if (mode == Mode.BOT) BotLevel.of(botLevel) else BotLevel.GOOD
+
+    /** Tính nước của bot ở cấp [lv] (chạy trên luồng nền với bản sao [g]). Cờ vây dùng KataGo nếu chạy được. */
+    private fun computeBotMove(g: BoardGame, inf: GameInfo, lv: BotLevel): Int {
+        val ms = inf.botMillis(option)
+        if (g is GoGame) {
+            val k = kata ?: KataGo(getApplication<Application>()).also { kata = it }
+            k.move(g, lv, ms, Random)?.let { return it }
+        }
+        return if (g is LeveledEngine) g.levelMove(lv, ms, Random) else g.bestMove(ms)
+    }
 
     /** Thoát hoàn toàn phiên hiện tại (về lobby / trang chủ). Rời giữa ván = thua. */
     fun leave() {
@@ -376,7 +423,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
             used.add(nm); names[seat] = Proto.clean(nm)
         }
         seatNames = names.toList()
-        for (pr in live) pr.t.send(Proto.startMulti(pr.seat, n, seatNames))
+        for (pr in live) pr.t.send(Proto.startMulti(pr.seat, n, seatNames, pvpTime))
         beginMatch()
     }
 
@@ -448,7 +495,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         if (phase != Phase.ROOM || opp == Opp.NONE) return
         if (!wallet.canStart(inf.id)) { notice = Notice.NOT_ENOUGH; return }
         hostSide = Random.nextInt(2); mySide = hostSide
-        if (opp == Opp.HUMAN) transport?.send(Proto.start(hostSide, option))
+        if (opp == Opp.HUMAN) transport?.send(Proto.start(hostSide, option, pvpTime))
         timerJob?.cancel()
         beginMatch()
     }
@@ -546,6 +593,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
             "S" -> if (!isHost && phase == Phase.ROOM || phase == Phase.OVER && !isHost) {
                 hostSide = p.getOrNull(1)?.toIntOrNull() ?: return
                 p.getOrNull(2)?.toIntOrNull()?.let { o -> if (info?.options?.contains(o) == true) option = o }
+                p.getOrNull(3)?.toIntOrNull()?.let { t -> pvpTime = t.coerceIn(0, Catalog.LEVELS - 1) }   // thời gian do chủ phòng chọn
                 mySide = 1 - hostSide
                 beginMatch()
             }
@@ -555,6 +603,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
                 val n = p[2].toIntOrNull() ?: return
                 if (info?.options?.contains(n) != true || seat !in 0 until n) return
                 option = n; multi = true; mySide = seat; seatNames = p[3].split(";")
+                p.getOrNull(4)?.toIntOrNull()?.let { t -> pvpTime = t.coerceIn(0, Catalog.LEVELS - 1) }
                 beginMatch()
             }
             "B" -> {}                                   // ghế khác chuyển sang máy: chỉ để thông tin
@@ -609,6 +658,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         epoch++
         game = inf.make(option); reward = null; verifying = false; finalized = false
         localEnd = null; remoteEnd = null; rematchAsked = false; oppAskedRematch = false; botThinking = false
+        unlockedNow = -1
         phase = Phase.PLAYING; tick++
         resetTurnClock()
         startTurnClock()
@@ -617,7 +667,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     // ───────────────────────── đồng hồ nước đi ─────────────────────────
-    private fun moveMillis(): Long = (info?.moveSeconds ?: 60) * 1000L
+    private fun moveMillis(): Long = moveSeconds * 1000L
 
     /** Bắt đầu tính giờ lại từ đầu cho lượt hiện tại (gọi sau mỗi nước đi / thao tác). */
     private fun resetTurnClock() {
@@ -713,7 +763,8 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         botJob = viewModelScope.launch {
             val snap = g.copyGame()
             val t0 = System.currentTimeMillis()
-            val mv = withContext(Dispatchers.Default) { snap.bestMove(inf.botMillis(option)) }
+            val lv = matchLevel()
+            val mv = withContext(Dispatchers.Default) { computeBotMove(snap, inf, lv) }
             val wait = BotNames.humanDelay() - (System.currentTimeMillis() - t0)
             if (wait > 0) delay(wait)
             if (my != epoch || game !== g || phase != Phase.PLAYING) return@launch
@@ -766,6 +817,8 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         if (mode == Mode.LOCAL) { finalized = true; return }       // chơi chung một máy: không thưởng, không thống kê
         if (multi) { settle(if (eliminated) MatchOutcome.LOSS else outcomeForMe(g), true); return }
         val out = outcomeForMe(g)
+        // thắng máy ở cấp L thì mở khóa cấp L + 1 của game này
+        if (mode == Mode.BOT && out == MatchOutcome.WIN && botLevel < Catalog.LEVELS - 1 && prefs.unlockLevel(inf.id, botLevel + 1)) unlockedNow = botLevel + 1
         if (isOnline && opp == Opp.HUMAN) {
             localEnd = Proto.end(g.result, movesHash(g.history))
             transport?.send(localEnd!!)
@@ -814,10 +867,10 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
 
     private fun maybeRematch() {
         if (phase != Phase.OVER || !rematchAsked || !oppAskedRematch) return
-        if (isHost) { hostSide = 1 - hostSide; mySide = hostSide; transport?.send(Proto.start(hostSide, option)); beginMatch() }
+        if (isHost) { hostSide = 1 - hostSide; mySide = hostSide; transport?.send(Proto.start(hostSide, option, pvpTime)); beginMatch() }
     }
 
     companion object { private const val GRACE_MS = 10_000L }
 
-    override fun onCleared() { teardown(); super.onCleared() }
+    override fun onCleared() { teardown(); kata?.close(); kata = null; super.onCleared() }
 }

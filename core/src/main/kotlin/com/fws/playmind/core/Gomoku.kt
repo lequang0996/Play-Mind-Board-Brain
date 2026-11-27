@@ -13,7 +13,7 @@ import kotlin.random.Random
  * Bot dùng [GomokuEngine] (engine bàn vuông cỡ cố định, đã tinh chỉnh): mỗi lần suy nghĩ, cắt một cửa sổ quanh các quân
  * đang có (cỡ 15..24, chừa lề), tìm nước trong cửa sổ rồi dịch ngược về tọa độ thật. Xem docs/BOT_GUIDE.md.
  */
-class GomokuGame : BoardGame {
+class GomokuGame : BoardGame, LeveledEngine {
     companion object {
         /** Phạm vi tọa độ hợp lệ: -LIMIT .. LIMIT-1. */
         const val LIMIT = 16384
@@ -131,7 +131,9 @@ class GomokuGame : BoardGame {
     }
 
     // ═════════════════════════ AI (cửa sổ trượt) ═════════════════════════
-    override fun bestMove(timeMs: Long): Int {
+    override fun bestMove(timeMs: Long): Int = levelMove(BotLevel.SUPREME, timeMs, Random)
+
+    override fun levelMove(level: BotLevel, timeMs: Long, rnd: Random): Int {
         if (result != Outcome.ONGOING) return -1
         val n = hist.size
         lastMode = "book"
@@ -144,7 +146,7 @@ class GomokuGame : BoardGame {
                 val x = px(c0) + dx; val y = py(c0) + dy
                 if (inRange(x, y)) opts.add(pack(x, y))
             }
-            return opts[Random.nextInt(opts.size)]
+            return opts[rnd.nextInt(opts.size)]
         }
         val snap = copyGame()
         val (size, ox, oy) = snap.chooseWindow()
@@ -155,8 +157,12 @@ class GomokuGame : BoardGame {
         }
         val eng = GomokuEngine(size)
         eng.setPosition(owner, turn)
-        val c = eng.bestMove(timeMs)
+        val cfg = BotLevels.config(id, level, timeMs)
+        val r = eng.levelSearch(cfg, level)
+        Bot.lastNodes = r.nodes; Bot.lastDepth = r.depth
         lastMode = GomokuEngine.lastMode; lastDepth = GomokuEngine.lastDepth
+        var c = r.best
+        if (cfg.noiseP > 0 && r.near.isNotEmpty() && rnd.nextDouble() < cfg.noiseP) c = r.near[rnd.nextInt(r.near.size)]
         if (c < 0) return legalMoves().firstOrNull() ?: -1
         return pack(ox + c % size, oy + c / size)
     }

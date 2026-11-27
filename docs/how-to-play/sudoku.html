@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sudoku — How to play · Play Mind: Board & Brain</title><meta name="description" content="Play Mind: Board & Brain — Sudoku — How to play">
+<style>
+:root{--bg:#f5f3fa;--card:#fff;--ink:#16162f;--soft:#5c5c7a;--gold:#9c6d12;--line:#dad5e8;--chip:#ece8f5}
+@media (prefers-color-scheme:dark){:root{--bg:#0a0d1d;--card:#141832;--ink:#f2effa;--soft:#a4a7cb;--gold:#e8c56e;--line:#2c3158;--chip:#1e2347}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 -apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif}
+.wrap{max-width:820px;margin:0 auto;padding:28px 20px 64px}
+header{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:space-between;margin-bottom:8px}
+.brand{font-family:Georgia,"Noto Serif",serif;font-weight:700;font-size:28px;letter-spacing:-.4px}
+.brand small{display:block;font:600 12px/1 sans-serif;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;margin-top:6px}
+.lang{display:inline-flex;background:var(--chip);border-radius:12px;padding:4px;gap:4px}
+.lang button{border:0;background:transparent;color:var(--soft);font:600 14px sans-serif;padding:8px 14px;border-radius:9px;cursor:pointer}
+.lang button[aria-pressed=true]{background:var(--card);color:var(--ink);box-shadow:inset 0 0 0 1px var(--gold)}
+h1{font-family:Georgia,"Noto Serif",serif;font-size:34px;line-height:1.2;margin:28px 0 6px}
+h2{font-family:Georgia,"Noto Serif",serif;font-size:22px;margin:34px 0 8px;padding-top:6px}
+h3{font-size:16px;margin:20px 0 4px;color:var(--gold)}
+p,li{color:var(--ink)}li{margin:4px 0}.muted{color:var(--soft)}
+a{color:var(--gold)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px 20px;margin:14px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.grid a{text-decoration:none;color:inherit}.grid .card{height:100%;margin:0}.grid b{display:block;font-family:Georgia,serif;font-size:19px}
+.topics{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.topics>span{padding:6px 14px;border-radius:99px;color:#fff;font:600 13px sans-serif}
+table{border-collapse:collapse;width:100%;margin:10px 0}th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top;font-size:15px}th{background:var(--chip)}
+footer{margin-top:46px;color:var(--soft);font-size:14px;border-top:1px solid var(--line);padding-top:16px}
+[data-l]{display:none}body[data-lang=en] [data-l=en],body[data-lang=vi] [data-l=vi]{display:revert}
+noscript style{display:none}
+</style><noscript><style>[data-l]{display:revert!important}</style></noscript></head>
+<body data-lang="en"><div class="wrap">
+<header><div class="brand">Play Mind<small>Board &amp; Brain</small></div>
+<div class="lang" role="group" aria-label="Language"><button data-set="en" aria-pressed="true">English</button><button data-set="vi" aria-pressed="false">Tiếng Việt</button></div></header>
+<p><a href="../index.html">&larr; <span data-l="en">Home</span><span data-l="vi">Trang chủ</span></a></p>
+<h1><span data-l="en">Sudoku</span><span data-l="vi">Sudoku</span></h1><div data-l="en"><p class="muted">A single-player number puzzle on a 9×9 grid made of nine 3×3 boxes. There is no opponent and no time limit.</p>
+<h2>Rules</h2>
+<ul><li>Fill every empty square so that each row, each column and each 3×3 box contains the digits 1 to 9 exactly once.</li>
+<li>Each 3×3 box starts with <b>only one given number</b> (9 givens in total), so many solutions are possible: any grid that follows the rules wins.</li>
+<li>A number is marked wrong (red) when it clashes with another number in its row, column or box, or when it makes the grid impossible to finish. Mistakes are counted but never end the game.</li></ul>
+<h2>Using the app</h2>
+<ul><li>Tap a square, then a number. The keypad shows how many of each digit are still missing.</li>
+<li>Pencil mode writes small candidate notes; Erase clears a square; Undo takes back your last action; Hint fills one correct square.</li></ul>
+<h2>Tips</h2><ul><li>With so few givens, start where a row, column and box overlap the most filled squares, and use notes to keep track of candidates.</li></ul></div><div data-l="vi"><p class="muted">Trò chơi số một người trên lưới 9×9 gồm chín khối 3×3. Không có đối thủ và không giới hạn thời gian.</p>
+<h2>Luật</h2>
+<ul><li>Điền mọi ô trống sao cho mỗi hàng, mỗi cột và mỗi khối 3×3 chứa các số từ 1 đến 9, mỗi số đúng một lần.</li>
+<li>Mỗi khối 3×3 chỉ gợi ý sẵn <b>đúng một số</b> (cả bàn 9 số), nên có nhiều lời giải: mọi cách điền đúng luật đều thắng.</li>
+<li>Số bị đánh dấu sai (màu đỏ) khi trùng với số khác trong cùng hàng, cột hoặc khối, hoặc khi khiến bàn không thể hoàn thành. Lỗi được đếm nhưng không bao giờ làm thua ván.</li></ul>
+<h2>Dùng trong app</h2>
+<ul><li>Chạm một ô rồi chạm số. Bàn phím số cho biết mỗi số còn thiếu bao nhiêu lần.</li>
+<li>Bút chì để ghi chú số có thể điền; Xóa để xóa ô; Hoàn tác để lùi thao tác vừa làm; Gợi ý để điền đúng một ô.</li></ul>
+<h2>Mẹo</h2><ul><li>Vì gợi ý rất ít, hãy bắt đầu ở nơi hàng, cột và khối có nhiều ô đã điền nhất, và dùng ghi chú để theo dõi các số có thể điền.</li></ul></div>
+<footer><span data-l="en">© FWs. Contact: <a href="mailto:17eathday@gmail.com">17eathday@gmail.com</a></span><span data-l="vi">© FWs. Liên hệ: <a href="mailto:17eathday@gmail.com">17eathday@gmail.com</a></span></footer>
+</div><script>
+(function(){var b=document.body,s=null;try{s=localStorage.getItem('pm_lang')}catch(e){}
+var l=s||((navigator.language||'en').toLowerCase().indexOf('vi')===0?'vi':'en');
+function set(x){b.setAttribute('data-lang',x);document.documentElement.lang=x;
+document.querySelectorAll('.lang button').forEach(function(e){e.setAttribute('aria-pressed',e.dataset.set===x)});
+try{localStorage.setItem('pm_lang',x)}catch(e){}}
+document.querySelectorAll('.lang button').forEach(function(e){e.onclick=function(){set(e.dataset.set)}});set(l)})();
+</script></body></html>

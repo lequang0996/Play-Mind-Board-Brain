@@ -158,7 +158,7 @@ internal class WgBoard(val players: Int) {
  * Nước đi mã hóa thành Int: đặt quân = số ô (0..48); đi + đặt tường = [mvMove].
  * Với [BoardGame]: bên 0 là "người chơi chính"; với 3-4 người, [result] được nhìn từ phía bên 0.
  */
-class WallGoGame(val players: Int = 2) : BoardGame {
+class WallGoGame(val players: Int = 2) : BoardGame, LeveledEngine {
     companion object {
         const val N = 7
         const val CELLS = 49
@@ -166,6 +166,8 @@ class WallGoGame(val players: Int = 2) : BoardGame {
         internal val DR = intArrayOf(-1, 0, 1, 0)
         internal val DC = intArrayOf(0, 1, 0, -1)
         private const val PLAY_FLAG = 1 shl 14
+        private const val WIN = 10_000_000
+        private const val INF = 100_000_000
 
         fun stonesPerPlayer(players: Int) = when (players) { 2 -> 4; 3 -> 3; else -> 2 }
 
@@ -321,7 +323,7 @@ class WallGoGame(val players: Int = 2) : BoardGame {
         return g
     }
 
-    // ═════════════════════════ AI ═════════════════════════
+    // ═════════════════════════ AI: Siêu việt (thời gian) và 6 cấp giảm sức (độ sâu / số nút) ═════════════════════════
     private fun heur(sc: DoubleArray, me: Int): Double {
         if (players == 2) return sc[me] - sc[1 - me]
         var sum = 0.0; var mx = -1e9
@@ -329,70 +331,179 @@ class WallGoGame(val players: Int = 2) : BoardGame {
         return sc[me] - 0.5 * mx - 0.5 * sum / (players - 1)
     }
 
-    override fun bestMove(timeMs: Long): Int {
-        if (over) return -1
-        val me = cur
-        val deadline = System.nanoTime() + timeMs * 1_000_000L
-        val rnd = Random
-        if (inSetup) {
-            var best = -1; var bestV = -1e18
-            for (c in 0 until CELLS) {
-                if (board.owner[c] != -1) continue
-                val b = board.copy(); b.owner[c] = me
-                val dr = kotlin.math.abs(c / 7 - 3); val dc = kotlin.math.abs(c % 7 - 3)
-                val v = heur(b.scoreVector(), me) + 0.06 * (6 - dr - dc) + rnd.nextDouble() * 0.05
-                if (v > bestV) { bestV = v; best = c }
-            }
-            return best
-        }
-        class Cand(val move: Int, val from: Int, val to: Int, val side: Int, val v: Double)
-        val cands = ArrayList<Cand>()
+    private var deadline = Long.MAX_VALUE
+    private var nodeLimit = Long.MAX_VALUE
+    private var nodes = 0L
+    private var aborted = false
+
+    private fun checkStop() {
+        if ((++nodes and 31L) == 0L && (nodes >= nodeLimit || System.nanoTime() > deadline)) aborted = true
+    }
+
+    /** Điểm cuối ván cho [me]: thắng/thua rõ ràng cộng chênh lệch lãnh thổ (đơn vị: 100 = 1 ô). */
+    private fun terminal(b: WgBoard, a: WgAnalysis, me: Int, ply: Int): Int {
+        val t = b.territory(a); val lg = b.largest(a)
+        var bestOther = -1; var bestLg = -1
+        for (p in 0 until players) if (p != me && (t[p] > bestOther || (t[p] == bestOther && lg[p] > bestLg))) { bestOther = t[p]; bestLg = lg[p] }
+        val diff = t[me] - bestOther
+        val win = diff > 0 || (diff == 0 && lg[me] > bestLg)
+        val draw = diff == 0 && lg[me] == bestLg
+        return (if (draw) 0 else if (win) WIN - ply else -(WIN - ply)) + diff * 100
+    }
+
+    private fun evalBoard(b: WgBoard, me: Int): Int = (heur(b.scoreVector(), me) * 100).toInt()
+
+    /** Người đi sau [seat] (bỏ qua người không còn nước); -1 nếu không ai đi được. */
+    private fun nextSeat(b: WgBoard, seat: Int): Int {
+        for (k in 1..players) { val p = (seat + k) % players; if (b.hasMove(p)) return p }
+        return -1
+    }
+
+    /** Các nước của [seat] trên [b], xếp theo đánh giá tĩnh (từ phía [me]: người của mình xếp giảm dần, đối thủ xếp tăng dần). */
+    private fun ordered(b: WgBoard, seat: Int, me: Int, limit: Int): IntArray {
+        val ms = ArrayList<Int>(); val vs = ArrayList<Int>()
         for (c in 0 until CELLS) {
-            if (board.owner[c] != me) continue
-            for (d in board.reach(c)) {
-                val ws = board.wallSides(d)
+            if (b.owner[c] != seat) continue
+            for (d in b.reach(c)) {
+                val ws = b.wallSides(d)
                 for (s in 0 until 4) if ((ws shr s) and 1 == 1) {
-                    val b = board.copy(); b.applyPlay(c, d, s)
-                    cands.add(Cand(mvMove(c, d, s), c, d, s, heur(b.scoreVector(), me) + rnd.nextDouble() * 0.02))
+                    val nb = b.copy(); nb.applyPlay(c, d, s)
+                    ms.add(mvMove(c, d, s)); vs.add(evalBoard(nb, me))
                 }
             }
         }
-        if (cands.isEmpty()) return -1
-        cands.sortByDescending { it.v }
-        var best = cands[0]
-        if (players != 2 || timeMs < 50) return best.move
-        // Chiều sâu 2 (nước của mình rồi nước đáp trả tốt nhất của đối thủ), cắt tỉa alpha-beta theo thứ tự đã xếp.
-        val opp = 1 - me
-        var alpha = -1e18
-        var bestDeep = best
-        var nodes = 0
-        var timedOut = false
-        for (cand in cands) {
-            val b1 = board.copy(); b1.applyPlay(cand.from, cand.to, cand.side)
-            val a1 = b1.analyze()
-            var value: Double
-            if (b1.finished(a1) || !b1.hasMove(opp)) {
-                value = heur(b1.scoreVector(), me)
-            } else {
-                var worst = 1e18
-                loop@ for (c in 0 until CELLS) {
-                    if (b1.owner[c] != opp) continue
-                    for (d in b1.reach(c)) {
-                        val ws = b1.wallSides(d)
-                        for (s in 0 until 4) if ((ws shr s) and 1 == 1) {
-                            val b2 = b1.copy(); b2.applyPlay(c, d, s)
-                            val v = heur(b2.scoreVector(), me)
-                            if (v < worst) worst = v
-                            if (worst <= alpha) break@loop      // cắt tỉa: nước này không thể tốt hơn nước đã tìm
-                            if ((++nodes and 63) == 0 && System.nanoTime() > deadline) { timedOut = true; break@loop }
+        val idx = ms.indices.sortedBy { if (seat == me) -vs[it] else vs[it] }
+        val n = minOf(limit, idx.size)
+        return IntArray(n) { ms[idx[it]] }
+    }
+
+    private fun applyTo(b: WgBoard, m: Int): WgBoard { val nb = b.copy(); nb.applyPlay(mvFrom(m), mvTo(m), mvSide(m)); return nb }
+
+    /** Minimax alpha-beta nhìn từ [me] (2 người: đối thủ tối thiểu hóa; 3-4 người: paranoid, mọi đối thủ cùng tối thiểu hóa). */
+    private fun mm(b: WgBoard, seat: Int, me: Int, depth: Int, alphaIn: Int, betaIn: Int, ply: Int): Int {
+        checkStop(); if (aborted) return 0
+        val a = b.analyze()
+        if (b.finished(a)) return terminal(b, a, me, ply)
+        if (depth <= 0) return evalBoard(b, me)
+        var alpha = alphaIn; var beta = betaIn
+        val moves = ordered(b, seat, me, if (seat == me) 12 else 10)
+        if (moves.isEmpty()) return evalBoard(b, me)
+        var best = if (seat == me) -INF else INF
+        for (m in moves) {
+            val nb = applyTo(b, m)
+            val nx = nextSeat(nb, seat)
+            val v = if (nx < 0) terminal(nb, nb.analyze(), me, ply + 1) else mm(nb, nx, me, depth - 1, alpha, beta, ply + 1)
+            if (aborted) return 0
+            if (seat == me) { if (v > best) best = v; if (v > alpha) alpha = v }
+            else { if (v < best) best = v; if (v < beta) beta = v }
+            if (alpha >= beta) break
+        }
+        return best
+    }
+
+    private fun setupMove(cfg: LevelConfig, rnd: Random): Int {
+        val me = cur
+        val ms = ArrayList<Int>(); val vs = ArrayList<Int>()
+        for (c in 0 until CELLS) {
+            if (board.owner[c] != -1) continue
+            val b = board.copy(); b.owner[c] = me
+            val dr = kotlin.math.abs(c / 7 - 3); val dc = kotlin.math.abs(c % 7 - 3)
+            ms.add(c); vs.add(((heur(b.scoreVector(), me) + 0.06 * (6 - dr - dc)) * 100).toInt() + rnd.nextInt(5))
+        }
+        if (ms.isEmpty()) return -1
+        val bi = vs.indices.maxByOrNull { vs[it] }!!
+        if (cfg.noiseP > 0 && rnd.nextDouble() < cfg.noiseP) {
+            val near = vs.indices.filter { it != bi && vs[it] >= vs[bi] - cfg.delta }
+            if (near.isNotEmpty()) return ms[near[rnd.nextInt(near.size)]]
+        }
+        return ms[bi]
+    }
+
+    private fun searchRoot(lim: SearchLimit, allowed: IntArray?, delta: Int): RootResult {
+        val me = cur
+        val start = System.nanoTime()
+        deadline = if (lim.timeMs > 0) start + lim.timeMs * 1_000_000L else Long.MAX_VALUE
+        val soft = if (lim.timeMs > 0) start + lim.timeMs * 500_000L else Long.MAX_VALUE
+        val nl = if (lim.nodes > 0) lim.nodes else Long.MAX_VALUE
+        val maxDepth = if (lim.depth > 0) lim.depth else 30
+        nodes = 0
+        val root = board
+        var moves = ordered(root, me, me, 400).toMutableList()
+        if (allowed != null) { val f = moves.filter { it in allowed }.toMutableList(); if (f.isNotEmpty()) moves = f }
+        if (moves.isEmpty()) return RootResult(-1, 0, 0, 0)
+        if (moves.size == 1) return RootResult(moves[0], 0, 0, 0)
+        var best = moves[0]; var bestScore = 0; var completed = 0
+        for (depth in 1..maxDepth) {
+            nodeLimit = if (depth == 1) Long.MAX_VALUE else nl
+            aborted = false
+            val i0 = moves.indexOf(best); if (i0 > 0) { moves.removeAt(i0); moves.add(0, best) }
+            var alpha = -INF; var iterBest = -1
+            for (m in moves) {
+                val nb = applyTo(root, m)
+                val nx = nextSeat(nb, me)
+                val v = if (nx < 0 || nb.finished()) terminal(nb, nb.analyze(), me, 1) else mm(nb, nx, me, depth - 1, alpha, INF, 1)
+                if (aborted) break
+                if (v > alpha) { alpha = v; iterBest = m }
+            }
+            if (aborted) { if (iterBest >= 0 && completed > 0 && alpha > bestScore - 50) best = iterBest; break }
+            if (iterBest < 0) break
+            best = iterBest; bestScore = alpha; completed = depth
+            if (alpha >= WIN - 200 || alpha <= -WIN + 200) break
+            if (System.nanoTime() > soft) break
+        }
+        var near = IntArray(0)
+        if (delta > 0 && completed > 0) {
+            aborted = false; nodeLimit = Long.MAX_VALUE; deadline = Long.MAX_VALUE
+            val thr = bestScore - delta
+            val out = ArrayList<Int>()
+            for (m in moves) {
+                if (m == best) continue
+                val nb = applyTo(root, m)
+                val nx = nextSeat(nb, me)
+                val v = if (nx < 0 || nb.finished()) terminal(nb, nb.analyze(), me, 1) else mm(nb, nx, me, completed - 1, thr - 1, thr, 1)
+                if (v >= thr) out.add(m)
+            }
+            near = out.toIntArray()
+        }
+        return RootResult(best, bestScore, completed, nodes, near)
+    }
+
+    /** Nước [m] của người đang đi có kết thúc ván với người đó thắng không. */
+    private fun winsNow(m: Int): Boolean {
+        val nb = applyTo(board, m); val a = nb.analyze()
+        return (nb.finished(a) || nextSeat(nb, cur) < 0) && terminal(nb, a, cur, 0) > 0
+    }
+
+    override fun bestMove(timeMs: Long): Int = levelMove(BotLevel.SUPREME, timeMs, Random)
+
+    override fun levelMove(level: BotLevel, timeMs: Long, rnd: Random): Int {
+        if (over) return -1
+        val cfg = BotLevels.config(id, level, timeMs)
+        val work = copyGame()
+        if (work.inSetup) return work.setupMove(cfg, rnd)
+        val me = work.cur
+        return Bot.pick(work, cfg, rnd,
+            winNow = { work.legalMoves().firstOrNull { work.winsNow(it) } ?: -1 },
+            losesNext = { m ->
+                // sau nước m, người đi kế tiếp có nước kết thúc ván mà mình không thắng không
+                val nb = work.applyTo(work.board, m); val a = nb.analyze()
+                if (nb.finished(a)) work.terminal(nb, a, me, 0) < 0
+                else {
+                    val nx = work.nextSeat(nb, me)
+                    if (nx < 0 || nx == me) false
+                    else {
+                        var lose = false
+                        loop@ for (c in 0 until CELLS) {
+                            if (nb.owner[c] != nx) continue
+                            for (d in nb.reach(c)) { val ws = nb.wallSides(d); for (s in 0 until 4) if ((ws shr s) and 1 == 1) {
+                                val b2 = nb.copy(); b2.applyPlay(c, d, s); val a2 = b2.analyze()
+                                if (b2.finished(a2) && work.terminal(b2, a2, me, 0) < 0) { lose = true; break@loop }
+                            } }
                         }
+                        lose
                     }
                 }
-                value = worst
-            }
-            if (timedOut) break                                  // đánh giá dở dang thì bỏ, giữ kết quả đã có
-            if (value > alpha) { alpha = value; bestDeep = cand }
-        }
-        return bestDeep.move
+            },
+        ) { l, allowed, delta -> work.searchRoot(l, allowed, delta) }
     }
 }

@@ -69,7 +69,11 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    packaging { resources.excludes += "/META-INF/{AL2.0,LGPL2.1}" }
+    packaging {
+        resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        // libkatago.so là tệp CHẠY ĐƯỢC (KataGo cho cờ vây), phải được giải nén ra thư mục thư viện để app gọi bằng ProcessBuilder
+        jniLibs.useLegacyPackaging = true
+    }
     bundle { language { enableSplit = false } }   // giữ đủ ngôn ngữ để đổi ngôn ngữ trong app
     lint { abortOnError = false }
 

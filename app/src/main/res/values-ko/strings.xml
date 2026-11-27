@@ -10,6 +10,7 @@
     <string name="bill_ok_plan">플랜이 활성화되었습니다. 응원해 주셔서 감사합니다!</string>
     <string name="bill_ok_title">구매 완료</string>
     <string name="bill_pending">결제가 보류 중입니다. 확인되는 즉시 혜택이 지급됩니다.</string>
+    <string name="bot_level">컴퓨터 레벨</string>
     <string name="cancel">취소</string>
     <string name="caro_hint">끌어서 이동 · 핀치로 확대/축소</string>
     <string name="caro_recenter">가운데로</string>
@@ -61,15 +62,15 @@
     <string name="go_place">착수</string>
     <string name="go_score">흑 %1$d – 백 %2$d (덤 %3$s)</string>
     <string name="guide">가이드</string>
-    <string name="guide_app">• 홈: 추천 카드(2분마다 바뀜) 또는 아래 줄의 게임을 선택하세요.\n• 다이아몬드: 매일 출석하면 +1 다이아몬드. 게임마다 하루 1판 무료(월간 플랜 3판, 연간 플랜 무제한), 이후 한 판에 1 다이아몬드가 듭니다. 승리하면 +1 다이아몬드.\n• 연승: 한 게임에서 5연승 시 +2, 10연승 시 +3.\n• 충성 보너스: 30일 연속 출석하면 이후 출석할 때마다 +2 다이아몬드(월간·연간 플랜: +4).\n• 모드: 컴퓨터와 대결(항상 선공), 근처 친구와(인터넷 불필요), 방 코드/QR 교환으로 온라인 대결. 일부 게임은 컴퓨터와 함께하는 3~4인 대결도 지원합니다.\n• 수당 제한 시간: 오목 45초, Wall Go와 쿼리도 1분, 체스와 장기 3분, 바둑은 최대 1일. 시간이 지나면 차례인 쪽이 패배합니다.\n• 상점: 광고 제거, 무료 횟수 추가, 다이아 구매.\n• 설정에서 언어와 닉네임을 바꿀 수 있습니다.</string>
+    <string name="guide_app">• 홈: 추천 카드(2분마다 바뀜) 또는 아래 줄의 게임을 선택하세요.\n• 다이아몬드: 매일 출석하면 +1 다이아몬드. 게임마다 하루 1판 무료(월간 플랜 3판, 연간 플랜 무제한), 이후 한 판에 1 다이아몬드가 듭니다. 승리하면 +1 다이아몬드.\n• 연승: 한 게임에서 5연승 시 +2, 10연승 시 +3.\n• 충성 보너스: 30일 연속 출석하면 이후 출석할 때마다 +2 다이아몬드(월간·연간 플랜: +4).\n• 모드: 컴퓨터와 대결(항상 선공), 근처 친구와(인터넷 불필요), 방 코드/QR 교환으로 온라인 대결. 일부 게임은 컴퓨터와 함께하는 3~4인 대결도 지원합니다.\n• 컴퓨터 레벨: 쉬움부터 최강까지 7단계. 처음에는 쉬움만 열려 있으며, 이기면 그 게임의 다음 레벨이 열립니다. 연간 플랜은 모든 레벨을 열고 다이아몬드를 완전히 없앱니다.\n• 수당 시간(모든 게임): 1, 2, 3, 5, 10, 30분 또는 1시간. 컴퓨터와 대결 시 레벨별(쉬움 1분 … 최강 1시간), 사람과 대결 시 방장이 이 7단계 중 하나를 고릅니다. 시간이 지나면 차례인 쪽이 패배합니다.\n• 상점: 광고 제거, 무료 횟수 추가, 다이아 구매.\n• 설정에서 언어와 닉네임을 바꿀 수 있습니다.</string>
     <string name="guide_app_title">Play Mind 사용법</string>
     <string name="guide_caro">목표: 가로, 세로, 대각선으로 자신의 표시 다섯 개 이상을 잇기. X(짙은 색)가 먼저 둡니다.\n• 판에는 가장자리가 없습니다. 한 손가락으로 끌어 이동하고, 두 손가락으로 확대/축소하세요.\n• 줄의 양쪽 끝이 상대 표시로 막혀 있으면 인정되지 않습니다.\n• 빈 칸을 눌러 표시를 놓으세요. 상대의 열린 3, 4를 막으세요!</string>
-    <string name="guide_chess">목표: 상대 킹을 체크메이트하는 것.\n• 폰은 앞으로 한 칸 가고 대각선으로 잡습니다. 나이트는 L자로 점프하고, 비숍은 대각선, 룩은 직선, 퀸은 둘 다, 킹은 한 칸 움직입니다.\n• 특수 이동: 캐슬링, 앙파상, 마지막 줄에서의 프로모션.\n• 말을 누른 뒤 강조된 칸을 누르세요. 스테일메이트, 동일 국면 반복, 50수 규칙, 기물 부족이면 무승부입니다.</string>
+    <string name="guide_chess">목표: 상대 킹을 체크메이트하는 것.\n• 폰은 앞으로 한 칸 가고 대각선으로 잡습니다. 나이트는 L자로 점프하고, 비숍은 대각선, 룩은 직선, 퀸은 둘 다, 킹은 한 칸 움직입니다.\n• 특수 이동: 캐슬링, 앙파상, 마지막 줄에서의 프로모션.\n• 말을 누른 뒤 강조된 칸을 누르세요. 스테일메이트, 50수 규칙, 기물 부족이면 무승부입니다.\n• 반복: 이전과 같은 국면을 만든 쪽이 패배합니다.</string>
     <string name="guide_go">목표: 상대보다 더 넓은 판을 차지하는 것. 흑이 먼저 둡니다.\n• 따냄: 이웃한 빈 점이 없는(활로가 없는) 돌 무리는 판에서 제거됩니다.\n• 금지: 자기 돌 무리의 활로가 사라지는 수(따내는 경우 제외)와 이전 판 모양의 반복은 둘 수 없습니다.\n• 종료: 상대가 패스하고 더 둘 곳이 없으면 ‘대국 종료’를 눌러 계가합니다.\n• 계가: 면적(중국식) - 내 돌과 나만 접한 빈 영역. 백은 덤 7.5집. 사석은 자동으로 치워지지 않으니 패스 전에 따내세요.\n• 교차점을 눌러 돌을 미리 보고 ‘착수’를 누르세요.</string>
-    <string name="guide_quoridor">목표: 판의 반대편에 가장 먼저 도착하기.\n• 이동: 상하좌우로 한 칸 이동합니다. 옆에 상대 말이 있으면 뛰어넘고, 뒤가 벽이나 가장자리면 대각선으로 이동합니다.\n• 벽: 이동 대신 두 칸 길이의 벽을 놓을 수 있습니다. 벽은 겹치거나 교차할 수 없고, 목표로 가는 모든 길을 막아서도 안 됩니다.\n• 벽 개수: 2명이면 각 10개, 4명이면 각 5개.\n• 설치: ‘벽’을 고르고 놓을 교차점 근처를 눌러 미리 보기(초록 = 가능) 후 ‘벽 놓기’를 누르세요.</string>
+    <string name="guide_quoridor">목표: 판의 반대편에 가장 먼저 도착하기.\n• 이동: 상하좌우로 한 칸 이동합니다. 옆에 상대 말이 있으면 뛰어넘고, 뒤가 벽이나 가장자리면 대각선으로 이동합니다.\n• 벽: 이동 대신 두 칸 길이의 벽을 놓을 수 있습니다. 벽은 겹치거나 교차할 수 없고, 목표로 가는 모든 길을 막아서도 안 됩니다.\n• 벽 개수: 2명이면 각 10개, 4명이면 각 5개.\n• 설치: ‘벽’을 고르고 놓을 교차점 근처를 눌러 미리 보기(초록 = 가능) 후 ‘벽 놓기’를 누르세요.\n• 반복: 2인 게임에서 이전 국면을 다시 만드는 말 이동은 패배이며, 4인 게임에서는 그런 수를 둘 수 없습니다.</string>
     <string name="guide_sudoku">목표: 모든 빈칸을 채워 각 행, 열, 3×3 블록에 1~9가 한 번씩 들어가게 하세요.\n• 입력: 칸을 누른 뒤 숫자를 누릅니다. 틀린 숫자는 빨간색으로 표시되며 지우기로 고칠 수 있습니다.\n• 메모: 연필을 켜면 칸 안에 작은 후보 숫자(빨간색)를 적을 수 있습니다.\n• 지우기는 선택한 칸을 비웁니다. 각 3×3 블록에는 숫자가 하나만 주어지므로(총 9개) 규칙만 지키면 어떤 배치든 승리합니다.</string>
     <string name="guide_wallgo">목표: 상대보다 더 넓은 영역을 가지고 게임을 끝내기.\n• 배치: 차례로 빈칸에 돌을 놓습니다(2명은 각 4개, 3명은 각 3개, 4명은 각 2개).\n• 내 차례: 내 돌 하나를 골라 상하좌우로 0, 1, 2칸 이동합니다. 벽이나 다른 돌은 지나갈 수 없습니다.\n• 벽: 이동한 뒤 서 있는 칸의 빈 변에 반드시 벽을 하나 세웁니다.\n• 영역: 벽으로 나뉜 모든 구역에 한 사람의 돌만 남으면 게임이 끝납니다. 내 돌만 있는 구역의 칸 수가 점수입니다.\n• 동점: 가장 큰 단일 구역이 넓은 쪽이 승리, 아니면 무승부. 움직일 수 없는 사람은 차례를 넘깁니다.</string>
-    <string name="guide_xiangqi">목표: 상대 장수를 외통수로 몰기. 홍(빨강)이 먼저 둡니다.\n• 장수와 사(士)는 궁 안에서만 움직입니다. 두 장수는 막힘없는 같은 줄에서 마주 볼 수 없습니다.\n• 상(象)은 대각선으로 두 칸 가며 강을 건널 수 없고 중간이 막히면 움직일 수 없습니다.\n• 마(馬)는 L자로 움직이지만 인접한 말이 막으면 못 갑니다. 차(車)는 직선으로 갑니다.\n• 포(炮)는 직선으로 가고 정확히 한 개의 말을 뛰어넘어 잡습니다. 졸(兵)은 앞으로 가며 강을 건넌 뒤에는 옆으로도 갑니다.\n• 둘 수 있는 수가 없으면 패배합니다. 이 앱에서는 같은 국면이 3번 반복되면 무승부입니다.</string>
+    <string name="guide_xiangqi">목표: 상대 장수를 외통수로 몰기. 홍(빨강)이 먼저 둡니다.\n• 장수와 사(士)는 궁 안에서만 움직입니다. 두 장수는 막힘없는 같은 줄에서 마주 볼 수 없습니다.\n• 상(象)은 대각선으로 두 칸 가며 강을 건널 수 없고 중간이 막히면 움직일 수 없습니다.\n• 마(馬)는 L자로 움직이지만 인접한 말이 막으면 못 갑니다. 차(車)는 직선으로 갑니다.\n• 포(炮)는 직선으로 가고 정확히 한 개의 말을 뛰어넘어 잡습니다. 졸(兵)은 앞으로 가며 강을 건넌 뒤에는 옆으로도 갑니다.\n• 둘 수 있는 수가 없으면 패배합니다. 이 앱에서는 이전과 같은 국면을 만든 쪽이 패배합니다.</string>
     <string name="how_to_play">게임 방법</string>
     <string name="how_to_use">사용 가이드</string>
     <string name="internet">인터넷</string>
@@ -83,6 +84,24 @@
     <string name="leave_confirm">지금 나가면 이 게임에서 패배합니다.</string>
     <string name="leave_confirm_local">이 게임을 나갈까요? 한 기기 대결은 기록되지 않습니다.</string>
     <string name="leave_game">게임에서 나갈까요?</string>
+    <string name="level_0">쉬움</string>
+    <string name="level_1">보통</string>
+    <string name="level_2">능숙</string>
+    <string name="level_3">강함</string>
+    <string name="level_4">고수</string>
+    <string name="level_5">도전자</string>
+    <string name="level_6">최강</string>
+    <string name="level_desc_0">한두 수 앞만 봅니다. 초보자에게 좋습니다. 즉시 이기는 수는 놓치지 않습니다.</string>
+    <string name="level_desc_1">기물을 바로 잃는 수는 피하지만 복잡한 국면에서는 실수합니다.</string>
+    <string name="level_desc_2">기본 전술을 알며 어려운 국면에서 가끔 실수합니다.</string>
+    <string name="level_desc_3">전술 실수가 적고 단기 계획을 세웁니다.</string>
+    <string name="level_desc_4">탄탄하고 정확해 이기기 매우 어렵습니다.</string>
+    <string name="level_desc_5">전술 실수를 거의 하지 않습니다.</string>
+    <string name="level_desc_6">전력: 이 게임의 최강 봇, 봐주기 없음.</string>
+    <string name="level_locked">%s 레벨을 이기면 이 레벨이 열립니다.</string>
+    <string name="level_move_time">수당 최대 %d분</string>
+    <string name="level_unlocked">%s 레벨이 열렸습니다!</string>
+    <string name="licenses">오픈소스 라이선스</string>
     <string name="local_no_reward">한 기기 대결은 다이아를 주지 않고 플레이 횟수도 쓰지 않습니다.</string>
     <string name="manage_sub">구독 관리</string>
     <string name="menu">메뉴</string>
@@ -116,9 +135,10 @@
     <string name="paste_reply">친구의 응답 코드 붙여넣기</string>
     <string name="per_month">/ 월</string>
     <string name="per_year">/ 년</string>
+    <string name="perk_all_levels">모든 컴퓨터 레벨 즉시 해제</string>
     <string name="perk_free3">게임마다 하루 3회 무료</string>
     <string name="perk_no_ads">광고 없음</string>
-    <string name="perk_unlimited">무제한 플레이 - 다이아 불필요</string>
+    <string name="perk_unlimited">다이아몬드 없음: 무제한 플레이, 출석 불필요</string>
     <string name="plan_active">이용 중</string>
     <string name="plan_monthly">Plus (월간)</string>
     <string name="plan_yearly">Pro (연간)</string>
@@ -129,6 +149,8 @@
     <string name="players">플레이어 수</string>
     <string name="privacy_options">개인정보 옵션</string>
     <string name="privacy_policy">개인정보 처리방침</string>
+    <string name="pvp_time">수당 시간</string>
+    <string name="pvp_time_note">방장이 선택하며, 참가자는 방장의 시간으로 대결합니다.</string>
     <string name="qd_mode_move">이동</string>
     <string name="qd_mode_wall_h">가로벽</string>
     <string name="qd_mode_wall_v">세로벽</string>
@@ -141,8 +163,9 @@
     <string name="reason_goal">목표선에 도착했습니다.</string>
     <string name="reason_leave">플레이어가 게임을 나갔습니다</string>
     <string name="reason_material">무승부: 이기기에 기물 부족</string>
+    <string name="reason_move_limit">최대 수 도달: 무승부</string>
     <string name="reason_nomoves">둘 수 있는 수 없음</string>
-    <string name="reason_repetition">반복으로 무승부</string>
+    <string name="reason_repetition">이전 국면 반복: 반복한 쪽 패배</string>
     <string name="reason_resign">플레이어가 기권했습니다</string>
     <string name="reason_stalemate">스테일메이트: 무승부</string>
     <string name="reason_territory">영역으로 승부가 갈렸습니다.</string>
@@ -196,6 +219,8 @@
     <string name="tag_solo">1인</string>
     <string name="their_turn">상대 차례</string>
     <string name="thinking">생각 중…</string>
+    <string name="time_1h">1시간</string>
+    <string name="time_n_min">%d분</string>
     <string name="topic_math">계산</string>
     <string name="topic_memory">기억</string>
     <string name="topic_mind">지력</string>

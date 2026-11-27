@@ -447,7 +447,7 @@ class GomokuEngine(val size: Int = 15) : BoardGame {
 
     private fun search(depth: Int, alphaIn: Int, betaIn: Int, p: Int, ply: Int): Int {
         var alpha = alphaIn; val beta = betaIn
-        if ((++nodes and 15L) == 0L && System.nanoTime() > deadline) abort = true
+        if ((++nodes and 15L) == 0L && (nodes >= nodeLimit || System.nanoTime() > deadline)) abort = true
         if (abort) return 0
         val o = 3 - p
         val wp = sW[ply]
@@ -502,14 +502,27 @@ class GomokuEngine(val size: Int = 15) : BoardGame {
         return best
     }
 
-    private fun searchRoot(timeMs: Long): Int {
+    private var nodeLimit = Long.MAX_VALUE
+
+    private fun searchRoot(timeMs: Long): Int = levelRoot(SearchLimit(timeMs = timeMs), 24, true, 0).best
+
+    /**
+     * Tìm nước ở gốc theo cấp (BOT_GUIDE mục 7.4): luôn thắng ngay / chặn thắng ngay (lớp an toàn), rồi VCF của mình
+     * tới độ sâu [vcfDepth] (0 = tắt), phòng VCF của đối phương nếu [defend], cuối cùng alpha-beta trong giới hạn [lim].
+     * [delta] > 0: trả thêm các nước gốc có điểm kém nước tốt nhất không quá [delta] (để chọn nhiễu).
+     */
+    private fun levelRoot(lim: SearchLimit, vcfDepth: Int, defend: Boolean, delta: Int): RootResult {
         val start = System.nanoTime()
-        deadline = start + timeMs * 1_000_000
+        val timeMs = lim.timeMs
+        deadline = if (timeMs > 0) start + timeMs * 1_000_000 else Long.MAX_VALUE
+        fun frac(f: Double) = if (timeMs > 0) start + (timeMs * 1_000_000 * f).toLong() else Long.MAX_VALUE
+        val nl = if (lim.nodes > 0) lim.nodes else Long.MAX_VALUE
+        val maxDepth = if (lim.depth > 0) lim.depth else 14
         abort = false; nodes = 0
         val stones = hist.size
         val mid = (size / 2) * size + size / 2
         lastMode = "book"
-        if (stones == 0) return mid
+        if (stones == 0) return RootResult(mid, 0, 0, 0)
         if (stones == 1) {
             val opts = ArrayList<Int>()
             val c0 = hist[0]
@@ -518,53 +531,58 @@ class GomokuEngine(val size: Int = 15) : BoardGame {
                 val x = c0 % size + dx; val y = c0 / size + dy
                 if (inb(x, y)) opts.add(y * size + x)
             }
-            return opts[Random.nextInt(opts.size)]
+            return RootResult(opts[Random.nextInt(opts.size)], 0, 0, 0)
         }
         prepareAi()
         val me = turn + 1; val op = 3 - me
-        // 1) thắng ngay / 2) chặn thắng ngay
+        // 1) thắng ngay / 2) chặn thắng ngay (mọi cấp)
         val w0 = IntArray(8)
-        if (winCells(me, w0) > 0) { lastMode = "win"; return w0[0] }
+        if (winCells(me, w0) > 0) { lastMode = "win"; return RootResult(w0[0], WIN, 0, 0) }
         val on0 = winCells(op, w0)
         if (on0 >= 1) {
             lastMode = "block"
-            if (on0 == 1) return w0[0]
+            if (on0 == 1) return RootResult(w0[0], 0, 0, 0)
         }
-        // 3) VCF của mình, rồi VCT
-        vNodes = 0; vLimit = 400_000; vDeadline = start + (timeMs * 1_000_000 * 0.10).toLong(); vMove = -1
-        if (on0 == 0 && vcf(me, 24) && vMove >= 0) { lastMode = "vcf"; return vMove }
-        var depthT = 2
-        vDeadline = start + (timeMs * 1_000_000 * 0.20).toLong()
-        while (USE_VCT && on0 == 0 && depthT <= 8 && System.nanoTime() < vDeadline) {
-            vNodes = 0; vLimit = 60_000 * depthT; vMove = -1
-            if (vct(me, depthT) && vMove >= 0) { lastMode = "vct"; return vMove }
-            depthT += 2
+        // 3) VCF của mình, rồi VCT (chỉ khi bật)
+        if (vcfDepth > 0) {
+            vNodes = 0; vLimit = 400_000; vDeadline = frac(0.10); vMove = -1
+            if (on0 == 0 && vcf(me, vcfDepth) && vMove >= 0) { lastMode = "vcf"; return RootResult(vMove, WIN, 0, 0) }
+            var depthT = 2
+            vDeadline = frac(0.20)
+            while (USE_VCT && on0 == 0 && depthT <= 8 && System.nanoTime() < vDeadline) {
+                vNodes = 0; vLimit = 60_000 * depthT; vMove = -1
+                if (vct(me, depthT) && vMove >= 0) { lastMode = "vct"; return RootResult(vMove, WIN, 0, 0) }
+                depthT += 2
+            }
         }
         // 4) phòng thủ: nếu đối phương có VCF thì chỉ xét các nước phá được VCF (kết quả "hết giờ/hết nút" không được coi là an toàn)
         val n = genCands(0, me, true)
         var cand = candBuf[0].copyOf(minOf(n, 40))
-        val defEnd = start + (timeMs * 1_000_000 * 0.35).toLong()
-        vNodes = 0; vLimit = 20_000; vDeadline = defEnd
-        if (actLen[op] > 0 && vcf(op, 16)) {
-            val safe = ArrayList<Int>()
-            for (c in cand) {
-                if (System.nanoTime() > defEnd) break
-                aiPut(c, me)
-                vNodes = 0; vLimit = 6_000; vDeadline = defEnd
-                val opVcf = vcf(op, 16)
-                val exhausted = vNodes > vLimit || System.nanoTime() > defEnd
-                aiTake(c)
-                if (!opVcf && !exhausted) safe.add(c)
+        if (defend) {
+            val defEnd = frac(0.35)
+            vNodes = 0; vLimit = 20_000; vDeadline = defEnd
+            if (actLen[op] > 0 && vcf(op, 16)) {
+                val safe = ArrayList<Int>()
+                for (c in cand) {
+                    if (System.nanoTime() > defEnd) break
+                    aiPut(c, me)
+                    vNodes = 0; vLimit = 6_000; vDeadline = defEnd
+                    val opVcf = vcf(op, 16)
+                    val exhausted = vNodes > vLimit || System.nanoTime() > defEnd
+                    aiTake(c)
+                    if (!opVcf && !exhausted) safe.add(c)
+                }
+                if (safe.isNotEmpty()) { cand = safe.toIntArray(); lastMode = "defend" }
             }
-            if (safe.isNotEmpty()) { cand = safe.toIntArray(); lastMode = "defend" }
         }
-        if (cand.size == 1) return cand[0]
+        if (cand.size == 1) return RootResult(cand[0], 0, 0, 0)
         if (lastMode != "defend") lastMode = "search"
         // 5) alpha-beta lặp sâu trên các ứng viên gốc
         val limit = minOf(cand.size, 16)
         val root = cand.copyOf(limit)
-        var best = root[0]
-        for (depth in 2..14) {
+        var best = root[0]; var bestScore = 0; var completed = 0
+        for (depth in 1..maxDepth) {
+            nodeLimit = if (depth == 1) Long.MAX_VALUE else nl
             var alpha = -WIN * 2; var iterBest = -1; var iterScore = -WIN * 2
             for (k in 0 until limit) {
                 val c = root[k]
@@ -576,13 +594,33 @@ class GomokuEngine(val size: Int = 15) : BoardGame {
                 if (s > alpha) alpha = s
             }
             if (abort) break
-            best = iterBest; lastDepth = depth
+            best = iterBest; bestScore = iterScore; completed = depth; lastDepth = depth
             val bi = root.indexOf(best)
             if (bi > 0) { System.arraycopy(root, 0, root, 1, bi); root[0] = best }
             if (iterScore >= WIN - 100 || iterScore <= -WIN + 100) break
-            if (System.nanoTime() - start > (deadline - start) * 0.6) break
+            if (timeMs > 0 && System.nanoTime() - start > (deadline - start) * 0.6) break
         }
         lastNodes = nodes
-        return best
+        var near = IntArray(0)
+        if (delta > 0 && completed > 0) {
+            abort = false; nodeLimit = Long.MAX_VALUE; deadline = Long.MAX_VALUE
+            val thr = bestScore - delta
+            val out = ArrayList<Int>()
+            for (k in 0 until limit) {
+                val c = root[k]
+                if (c == best) continue
+                aiPut(c, me)
+                val s = -search(completed - 1, -thr, -thr + 1, op, 1)
+                aiTake(c)
+                if (s >= thr) out.add(c)
+            }
+            near = out.toIntArray()
+        }
+        return RootResult(best, bestScore, completed, nodes, near)
+    }
+
+    /** Nước theo cấp trên bàn cửa sổ này (GomokuGame dịch tọa độ). */
+    fun levelSearch(cfg: LevelConfig, level: BotLevel): RootResult = synchronized(lock) {
+        copyGame().levelRoot(cfg.limit, cfg.extra, level >= BotLevel.STRONG, if (cfg.noiseP > 0) cfg.delta else 0)
     }
 }

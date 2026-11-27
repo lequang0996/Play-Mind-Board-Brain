@@ -11,6 +11,7 @@
     <string name="bill_ok_plan">Your plan is now active. Thank you for your support!</string>
     <string name="bill_ok_title">Purchase complete</string>
     <string name="bill_pending">Your payment is pending. The reward will arrive as soon as it is confirmed.</string>
+    <string name="bot_level">Computer level</string>
     <string name="cancel">Cancel</string>
     <string name="caro_hint">Drag to move · pinch to zoom</string>
     <string name="caro_recenter">Center</string>
@@ -62,15 +63,15 @@
     <string name="go_place">Place stone</string>
     <string name="go_score">Black %1$d – White %2$d (+%3$s komi)</string>
     <string name="guide">Guide</string>
-    <string name="guide_app">• Home: pick the featured card (it changes every 2 minutes) or any game in the rows below.\n• Diamonds: check in daily for +1 diamond. Each game gives 1 free play per day (monthly plan: 3, yearly plan: unlimited); after that each game costs 1 diamond. A win earns +1 diamond.\n• Win streaks: 5 wins in a row in one game give +2 diamonds, 10 in a row give +3.\n• Loyalty bonus: after a 30-day check-in streak, each next check-in gives +2 diamonds (monthly and yearly plans: +4).\n• Modes: play the computer (you move first), a friend nearby without internet, or online by exchanging a room code or QR. Some games also support 3-4 players against the computer.\n• Move timer: Caro 45 s, Wall Go and Quoridor 1 min, Chess and Xiangqi 3 min, Go up to 1 day per move. If time runs out, the player to move loses.\n• Shop: remove ads, get more free plays or buy diamonds.\n• Change language and nickname in Settings.</string>
+    <string name="guide_app">• Home: pick the featured card (it changes every 2 minutes) or any game in the rows below.\n• Diamonds: check in daily for +1 diamond. Each game gives 1 free play per day (monthly plan: 3, yearly plan: unlimited); after that each game costs 1 diamond. A win earns +1 diamond.\n• Win streaks: 5 wins in a row in one game give +2 diamonds, 10 in a row give +3.\n• Loyalty bonus: after a 30-day check-in streak, each next check-in gives +2 diamonds (monthly and yearly plans: +4).\n• Modes: play the computer (you move first), a friend nearby without internet, or online by exchanging a room code or QR. Some games also support 3-4 players against the computer.\n• Computer levels: 7 levels from Easy to Supreme. Only Easy is open at first; beating a level unlocks the next one for that game. The yearly plan unlocks every level and removes diamonds entirely.\n• Time per move (all games): 1, 2, 3, 5, 10 or 30 minutes, or 1 hour. Against the computer it follows the level (Easy 1 min ... Supreme 1 h); against people the host picks one of these seven. If time runs out, the player to move loses.\n• Shop: remove ads, get more free plays or buy diamonds.\n• Change language and nickname in Settings.</string>
     <string name="guide_app_title">Using Play Mind</string>
     <string name="guide_caro">Goal: make five or more of your marks in a row, across, down or diagonally. X (dark) moves first.\n• The board is endless: drag with one finger to move around, pinch to zoom.\n• If both ends of your line are blocked by enemy marks, it does not count.\n• Tap an empty cell to place your mark. Block your opponent\'s open threes and fours!</string>
-    <string name="guide_chess">Goal: checkmate the enemy king.\n• Pawns step forward and capture diagonally. Knights jump in an L. Bishops slide diagonally, rooks slide straight, queens do both, kings step one square.\n• Special moves: castling, en passant and promotion on the last rank.\n• Tap a piece, then a highlighted square. A game is drawn by stalemate, repetition, the 50-move rule or too few pieces.</string>
+    <string name="guide_chess">Goal: checkmate the enemy king.\n• Pawns step forward and capture diagonally. Knights jump in an L. Bishops slide diagonally, rooks slide straight, queens do both, kings step one square.\n• Special moves: castling, en passant and promotion on the last rank.\n• Tap a piece, then a highlighted square. A game is drawn by stalemate, the 50-move rule or too few pieces.\n• Repetition: a move that recreates an earlier position loses for the player who made it.</string>
     <string name="guide_go">Goal: control more of the board than your opponent. Black moves first.\n• Capture: a group of stones with no empty point next to it (no liberties) is removed from the board.\n• Forbidden: you may not play a move that leaves your own group with no liberties (unless it captures), and you may not repeat an earlier board position.\n• Ending: when your opponent passes and nothing useful is left, tap End game to score the position.\n• Scoring: by area - your stones plus the empty regions only you border. White receives 7.5 komi. Dead stones are not removed automatically, so capture them before you pass.\n• Tap an intersection to preview a stone, then press Place stone.</string>
-    <string name="guide_quoridor">Goal: be the first to reach the opposite side of the board.\n• Move: step one square up, down, left or right. If an opponent\'s pawn is next to you, jump over it, or step diagonally if a wall or the edge is behind it.\n• Walls: instead of moving you may place a wall two squares long. Walls cannot overlap or cross, and you may never block every path to a goal.\n• Walls left: 10 each with 2 players, 5 each with 4 players.\n• Build: choose Wall, tap near the crossing where it goes to preview it (green = allowed), then press Place wall.</string>
+    <string name="guide_quoridor">Goal: be the first to reach the opposite side of the board.\n• Move: step one square up, down, left or right. If an opponent\'s pawn is next to you, jump over it, or step diagonally if a wall or the edge is behind it.\n• Walls: instead of moving you may place a wall two squares long. Walls cannot overlap or cross, and you may never block every path to a goal.\n• Walls left: 10 each with 2 players, 5 each with 4 players.\n• Build: choose Wall, tap near the crossing where it goes to preview it (green = allowed), then press Place wall.\n• Repetition: in 2-player games, a pawn move that recreates an earlier position loses; in 4-player games such a move is not allowed.</string>
     <string name="guide_sudoku">Goal: fill every empty square so each row, column and 3×3 box contains the digits 1 to 9 once.\n• Entering: tap a square, then a number. Wrong numbers show in red; fix them with Erase.\n• Notes: switch on the pencil to jot small candidate numbers (shown in red) in a square.\n• Erase clears the selected square. Each 3×3 box starts with only one given number (9 in total), so any grid that follows the rules wins.</string>
     <string name="guide_wallgo">Goal: end the game with more territory than your rivals.\n• Setup: take turns placing your stones on empty squares (4 each with 2 players, 3 with 3 players, 2 with 4 players).\n• Your turn: choose one of your stones and move it 0, 1 or 2 squares up, down, left or right. It cannot pass through walls or other stones.\n• Wall: after moving you MUST place a wall on one free side of the square you stand on.\n• Territory: when every walled-off area holds stones of only one player, the game ends. You score the squares of the areas that contain only your stones.\n• Ties: the larger single area wins; otherwise it is a draw. A player who cannot move skips the turn.</string>
-    <string name="guide_xiangqi">Goal: checkmate the enemy general. Red moves first.\n• The general and advisors stay inside the palace. The two generals may never face each other on an open file.\n• Elephants move two points diagonally, cannot cross the river and can be blocked at the midpoint.\n• Horses move like an L but are blocked by an adjacent piece. Chariots slide straight.\n• Cannons slide straight and capture by jumping over exactly one piece. Soldiers step forward, and sideways after crossing the river.\n• A player with no legal move loses. Repeating a position three times is a draw in this app.</string>
+    <string name="guide_xiangqi">Goal: checkmate the enemy general. Red moves first.\n• The general and advisors stay inside the palace. The two generals may never face each other on an open file.\n• Elephants move two points diagonally, cannot cross the river and can be blocked at the midpoint.\n• Horses move like an L but are blocked by an adjacent piece. Chariots slide straight.\n• Cannons slide straight and capture by jumping over exactly one piece. Soldiers step forward, and sideways after crossing the river.\n• A player with no legal move loses. In this app, a move that recreates an earlier position loses for the player who made it.</string>
     <string name="how_to_play">How to play</string>
     <string name="how_to_use">User guide</string>
     <string name="internet">Over the internet</string>
@@ -84,6 +85,24 @@
     <string name="leave_confirm">If you leave now, you lose this game.</string>
     <string name="leave_confirm_local">Leave this game? Nothing is recorded for same-device games.</string>
     <string name="leave_game">Leave game?</string>
+    <string name="level_0">Easy</string>
+    <string name="level_1">Medium</string>
+    <string name="level_2">Good</string>
+    <string name="level_3">Strong</string>
+    <string name="level_4">Master</string>
+    <string name="level_5">Challenger</string>
+    <string name="level_6">Supreme</string>
+    <string name="level_desc_0">Looks only a move or two ahead; great for beginners. Never misses an immediate win.</string>
+    <string name="level_desc_1">Avoids losing pieces directly but still slips in complex positions.</string>
+    <string name="level_desc_2">Knows basic tactics; sometimes errs in hard positions.</string>
+    <string name="level_desc_3">Rarely misses tactics and plans a few moves ahead.</string>
+    <string name="level_desc_4">Solid and accurate; very hard to beat.</string>
+    <string name="level_desc_5">Almost never makes a tactical mistake.</string>
+    <string name="level_desc_6">Full strength: the game\'s strongest bot, no handicap.</string>
+    <string name="level_locked">Beat %s to unlock this level.</string>
+    <string name="level_move_time">Up to %d min per move</string>
+    <string name="level_unlocked">%s unlocked!</string>
+    <string name="licenses">Open-source licenses</string>
     <string name="local_no_reward">Same-device games give no diamonds and use no plays.</string>
     <string name="manage_sub">Manage subscription</string>
     <string name="menu">Menu</string>
@@ -117,9 +136,10 @@
     <string name="paste_reply">Paste your friend\'s reply code</string>
     <string name="per_month">/ month</string>
     <string name="per_year">/ year</string>
+    <string name="perk_all_levels">Every computer level unlocked</string>
     <string name="perk_free3">3 free plays per game every day</string>
     <string name="perk_no_ads">No ads at all</string>
-    <string name="perk_unlimited">Unlimited plays - no diamonds needed</string>
+    <string name="perk_unlimited">No more diamonds: unlimited play, no check-in needed</string>
     <string name="plan_active">Active</string>
     <string name="plan_monthly">Plus (monthly)</string>
     <string name="plan_yearly">Pro (yearly)</string>
@@ -130,6 +150,8 @@
     <string name="players">Players</string>
     <string name="privacy_options">Privacy options</string>
     <string name="privacy_policy">Privacy policy</string>
+    <string name="pvp_time">Time per move</string>
+    <string name="pvp_time_note">The host chooses; players who join use the host\'s time.</string>
     <string name="qd_mode_move">Move</string>
     <string name="qd_mode_wall_h">H-wall</string>
     <string name="qd_mode_wall_v">V-wall</string>
@@ -142,8 +164,9 @@
     <string name="reason_goal">Reached the goal line.</string>
     <string name="reason_leave">A player left the game</string>
     <string name="reason_material">Draw: not enough pieces to win</string>
+    <string name="reason_move_limit">Move limit reached: draw</string>
     <string name="reason_nomoves">No legal moves</string>
-    <string name="reason_repetition">Draw by repetition</string>
+    <string name="reason_repetition">Repeated an earlier position: that player loses</string>
     <string name="reason_resign">A player resigned</string>
     <string name="reason_stalemate">Stalemate: draw</string>
     <string name="reason_territory">Territory decided the game.</string>
@@ -197,6 +220,8 @@
     <string name="tag_solo">Solo</string>
     <string name="their_turn">Their turn</string>
     <string name="thinking">Thinking…</string>
+    <string name="time_1h">1 h</string>
+    <string name="time_n_min">%d min</string>
     <string name="topic_math">Calculation</string>
     <string name="topic_memory">Memory</string>
     <string name="topic_mind">Intellect</string>
