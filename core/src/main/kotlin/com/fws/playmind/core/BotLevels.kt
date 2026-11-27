@@ -68,7 +68,7 @@ object BotLevels {
         n(20_000, 0.05, 25), n(60_000), n(180_000), top(),
     )
 
-    // Cờ caro (mục 7.4). extra = độ sâu VCF tối đa (0 = tắt); phòng VCF bật từ Giỏi (GomokuEngine.levelSearch).
+    // Cờ caro (mục 7.4). extra = độ sâu VCF tối đa (0 = tắt); phòng VCF bật từ Giỏi (CaroEngine.levelSearch).
     val caro = listOf(
         d(1, 0.45, 3_000, 0), d(2, 0.25, 1_500, 0), d(4, 0.10, 600, 5),
         n(8_000, 0.03, 200, 12), n(25_000, 0.0, 0, 24), n(70_000, 0.0, 0, 24), top(24),

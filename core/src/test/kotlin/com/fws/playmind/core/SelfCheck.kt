@@ -98,7 +98,9 @@ fun main() {
     expect("caro AI hoan thanh 5", m1 == idx(3, 7) || m1 == idx(8, 7))
     val d = GomokuGame()
     listOf(idx(4, 7), idx(3, 7), idx(5, 7), idx(12, 1), idx(6, 7), idx(12, 12), idx(7, 7)).forEach { d.play(it) }
-    expect("caro AI chan day 4", d.bestMove(800) == idx(8, 7))
+    // O X X X X _ : đỡ bằng ô thành năm (8,7) hoặc chặn đầu kia (9,7) để dãy năm bị chặn hai đầu (luật dự án)
+    val dm = d.bestMove(800)
+    expect("caro AI chan day 4", dm == idx(8, 7) || dm == idx(9, 7))
     // VCF: đen đi (7,7) tạo bốn-bốn (hàng ngang và cột dọc đều bị chặn một đầu) => thắng
     val v = GomokuGame()
     listOf(idx(4, 7), idx(3, 7), idx(5, 7), idx(7, 3), idx(6, 7), idx(0, 0), idx(7, 4), idx(14, 0), idx(7, 5), idx(0, 14), idx(7, 6), idx(14, 14))
@@ -110,6 +112,26 @@ fun main() {
     val ob = o.bestMove(800)
     expect("caro AI chan ba ho", ob == idx(6, 7) || ob == idx(10, 7) || ob == idx(5, 7) || ob == idx(11, 7))
 
+    expect("caro engine: du lieu tang dan khop tinh lai (300 buoc ngau nhien x 3)", (1..3).all { CaroEngine().fuzz(it, 300) })
+    // hình cờ theo luật chặn hai đầu: OXXXX_O (đặt vào _ bị chặn hai đầu) không phải bốn
+    run {
+        // 9 ô (4 mỗi phía) như hình vẽ, thêm một ô trống ở mỗi đầu cho đủ 11 ô của bảng hình
+        fun key(vararg a9: Int): Int { val a = intArrayOf(0, *a9, 0); var k = 0; var pos = 0; for (j in 0 until 11) if (j != 5) { k += a[j] * CaroPat.POW3[pos]; pos++ }; return k }
+        fun key11(vararg a: Int): Int { var k = 0; var pos = 0; for (j in 0 until 11) if (j != 5) { k += a[j] * CaroPat.POW3[pos]; pos++ }; return k }
+        expect("caro hinh: ba ho, bon, bon chan hai dau",
+            CaroPat.PAT[0][key(0, 0, 1, 1, 1, 0, 0, 0, 0)] == CaroPat.F3 &&
+            CaroPat.PAT[0][key(0, 2, 1, 1, 1, 0, 0, 0, 0)] == CaroPat.B3 &&
+            CaroPat.PAT[0][key(0, 2, 1, 1, 1, 0, 2, 0, 0)] == CaroPat.DEAD &&
+            CaroPat.PAT[0][key(0, 2, 1, 1, 1, 1, 0, 2, 0)] == CaroPat.DEAD &&
+            CaroPat.PAT[0][key(0, 2, 1, 1, 1, 1, 0, 0, 0)] == CaroPat.B4 &&
+            CaroPat.PAT[0][key(0, 0, 1, 1, 1, 0, 1, 0, 0)] == CaroPat.B4 &&
+            CaroPat.PAT[0][key(0, 0, 0, 1, 1, 1, 1, 0, 0)] == CaroPat.F4 &&
+            CaroPat.PAT[0][key(2, 1, 1, 1, 1, 1, 1, 2, 0)] == CaroPat.DEAD &&
+            CaroPat.PAT[0][key(0, 1, 1, 1, 1, 1, 1, 2, 0)] == CaroPat.F5 &&
+            CaroPat.PAT[0][key11(2, 1, 1, 1, 1, 0, 2, 0, 0, 0, 0)] == CaroPat.DEAD &&
+            CaroPat.PAT[0][key11(2, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0)] == CaroPat.F5 &&
+            CaroPat.PAT[1][key(0, 0, 2, 2, 2, 0, 0, 0, 0)] == CaroPat.F3)
+    }
     // ── Cờ caro bàn vô hạn ──
     val fx = 5000; val fy = -3000
     val far = GomokuGame()

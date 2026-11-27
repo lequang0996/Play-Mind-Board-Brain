@@ -19,7 +19,7 @@ fun ladderMain(args: List<String>) {
     for (i in 0 until pairs) {
         val seed = seed0 + i
         for (aFirst in listOf(true, false)) {
-            val g = opening(game, players, seed)
+            val g = benchOpening(game, players, seed)
             val rnd = Random(seed * 2 + (if (aFirst) 0 else 1))
             var guard = 0
             while (g.result == Outcome.ONGOING && guard++ < 1200) {
@@ -47,7 +47,7 @@ private fun create(game: String, players: Int): BoardGame = when (game) {
 }
 
 /** Thế mở đầu có seed: vài nước ngẫu nhiên hợp lệ (mục 3.1). */
-private fun opening(game: String, players: Int, seed: Int): BoardGame {
+internal fun benchOpening(game: String, players: Int, seed: Int): BoardGame {
     val g = create(game, players)
     val r = Random(seed * 7919 + 13)
     val k = when (game) { "chess", "xiangqi" -> 2 + r.nextInt(3); "caro" -> 0; else -> 2 }

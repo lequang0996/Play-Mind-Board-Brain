@@ -10,8 +10,8 @@ import kotlin.random.Random
  * - Nước đi là một số Int "đóng gói" 2 tọa độ: xem [pack], [px], [py]. Phạm vi ±[LIMIT] ô quanh gốc (hơn 32 nghìn ô mỗi chiều).
  * - Luật: 5 quân liên tiếp trở lên thắng, trừ khi cả hai đầu dãy bị quân đối phương chặn (không còn mép bàn để chặn).
  *
- * Bot dùng [GomokuEngine] (engine bàn vuông cỡ cố định, đã tinh chỉnh): mỗi lần suy nghĩ, cắt một cửa sổ quanh các quân
- * đang có (cỡ 15..24, chừa lề), tìm nước trong cửa sổ rồi dịch ngược về tọa độ thật. Xem docs/BOT_GUIDE.md.
+ * Bot dùng [CaroEngine]: mỗi lần suy nghĩ, cắt một cửa sổ 32×32 quanh các quân đang có, tìm nước trong cửa sổ rồi dịch
+ * ngược về tọa độ thật. Ngoài cửa sổ coi là ô trống (không chặn), đúng với bàn vô hạn. Xem docs/BOT_GUIDE.md.
  */
 class GomokuGame : BoardGame, LeveledEngine {
     companion object {
@@ -27,13 +27,15 @@ class GomokuGame : BoardGame, LeveledEngine {
 
         private val DIRS = intArrayOf(1, 0, 0, 1, 1, 1, 1, -1)
         private const val MARGIN = 5
-        private const val MIN_WINDOW = 15
 
         @Volatile var lastMode = ""; private set
         @Volatile var lastDepth = 0; private set
+        private val engine by lazy { CaroEngine() }
     }
 
     override val id = "caro"
+    /** Engine riêng (chỉ bộ đo A/B dùng); null = engine dùng chung. */
+    internal var engineOverride: CaroEngine? = null
 
     private val stones = HashMap<Int, Int>()
     private val hist = ArrayList<Int>()
@@ -155,12 +157,11 @@ class GomokuGame : BoardGame, LeveledEngine {
             val lx = px(m) - ox; val ly = py(m) - oy
             if (lx in 0 until size && ly in 0 until size) owner[ly * size + lx] = p
         }
-        val eng = GomokuEngine(size)
-        eng.setPosition(owner, turn)
+        val eng = engineOverride ?: engine
         val cfg = BotLevels.config(id, level, timeMs)
-        val r = eng.levelSearch(cfg, level)
+        val r = synchronized(eng) { eng.setPosition(owner, turn + 1); eng.levelSearch(cfg, level) }
         Bot.lastNodes = r.nodes; Bot.lastDepth = r.depth
-        lastMode = GomokuEngine.lastMode; lastDepth = GomokuEngine.lastDepth
+        lastMode = CaroEngine.lastMode; lastDepth = CaroEngine.lastDepth
         var c = r.best
         if (cfg.noiseP > 0 && r.near.isNotEmpty() && rnd.nextDouble() < cfg.noiseP) c = r.near[rnd.nextInt(r.near.size)]
         if (c < 0) return legalMoves().firstOrNull() ?: -1
@@ -171,14 +172,14 @@ class GomokuGame : BoardGame, LeveledEngine {
     private fun chooseWindow(): Triple<Int, Int, Int> {
         val span = maxOf(maxX - minX, maxY - minY) + 1
         val wanted = span + 2 * MARGIN
-        if (wanted <= GomokuEngine.MAXW) {
-            val size = maxOf(MIN_WINDOW, wanted)
+        if (wanted <= CaroEngine.P) {
+            val size = CaroEngine.P
             val cx = Math.floorDiv(minX + maxX, 2); val cy = Math.floorDiv(minY + maxY, 2)
             return Triple(size, cx - size / 2, cy - size / 2)
         }
         // Ván rất dài / quân rải rộng: dùng cửa sổ tối đa, đặt vào cụm quân "nóng" nhất.
         // Trọng số mỗi quân = 1 + số quân kề (cụm dày quan trọng hơn quân lẻ) + thưởng cho 2 nước vừa đi.
-        val size = GomokuEngine.MAXW
+        val size = CaroEngine.P
         val n = hist.size
         val xs = IntArray(n) { px(hist[it]) }; val ys = IntArray(n) { py(hist[it]) }
         val w = IntArray(n) { 1 }

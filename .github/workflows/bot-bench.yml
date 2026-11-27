@@ -60,7 +60,9 @@ jobs:
           url=$(echo "$rel" | python3 -c "import sys,json;print([a['browser_download_url'] for a in json.load(sys.stdin)['assets'] if a['name'].endswith('.7z')][0])")
           echo "Pikafish: $url"
           mkdir -p pf && curl -sL "$url" -o pf/pf.7z && (cd pf && 7z x -y pf.7z >/dev/null)
-          bin=$(find "$PWD/pf" -type f -iname '*avx2*' ! -iname '*.exe' | grep -iv -e windows -e mac -e android | head -1)
+          # tệp chạy Linux: bản mới tên Pikafish-Linux-x86-64-universal, bản cũ có chữ avx2
+          bin=$(find "$PWD/pf" -type f -iname '*linux*' ! -iname '*.exe' | head -1)
+          [ -n "$bin" ] || bin=$(find "$PWD/pf" -type f -iname '*avx2*' ! -iname '*.exe' | grep -iv -e windows -e mac -e android | head -1)
           net=$(find "$PWD/pf" -name '*.nnue' | head -1)
           test -n "$bin" && test -n "$net" || { find pf -maxdepth 3; echo "::error::không tìm thấy Pikafish/nnue"; exit 1; }
           chmod +x "$bin"; echo "PFBIN=$bin" >> "$GITHUB_ENV"; echo "PFNET=$net" >> "$GITHUB_ENV"
