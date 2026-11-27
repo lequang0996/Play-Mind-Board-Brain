@@ -1,0 +1,8 @@
+# date: 2026-11-27
+# note: Cờ vua: Siêu việt mới (correction history + tham số qd240 futd130 asp12 hp2500) đấu Stockfish 2800, 80 ván, 3 luồng; thử lại trọng số chess-t2. Cờ tướng: đấu Pikafish giới hạn số nút. Quoridor, Wall Go: engine mới so cũ ở 1 giây/nước.
+gauge chess elo=2800 ms=2000 sfms=2000 threads=3 n=80  W/D/L=18/38/24  S=0.463 [0.383,0.542]  est=2774  plies~98  {'CHECKMATE': 42, 'REPETITION': 38}
+exp ab chess new@w:chess-t2-vs-new ms=200 props=- n=1008  W/D/L=626/71/311  S=0.656 [0.628,0.684]  elo=+112  plies~150  {'CHECKMATE': 857, 'FIFTY': 34, 'MATERIAL': 35, 'REPETITION': 80, 'STALEMATE': 2}
+exp gauge xiangqi nodes=20000 ms=2000 threads=3 n=20  W/D/L=0/5/15  S=0.125 [0.028,0.222]  elo=-338  plies~74  {'CHECKMATE': 14, 'NOMOVES': 1, 'REPETITION': 5}  (engine Pikafish 2026-09-06 nodes=20000)
+exp gauge xiangqi nodes=100000 ms=2000 threads=3 n=20  W/D/L=0/5/15  S=0.125 [0.028,0.222]  elo=-338  plies~92  {'CHECKMATE': 15, 'REPETITION': 5}  (engine Pikafish 2026-09-06 nodes=100000)
+exp ab quoridor new-vs-old ms=1000 props=- n=408  W/D/L=156/0/252  S=0.382 [0.335,0.430]  elo=-83  plies~78  {'NONE': 408}
+exp ab wallgo new-vs-old ms=1000 props=- n=408  W/D/L=273/2/133  S=0.672 [0.626,0.717]  elo=+124  plies~50  {'TERRITORY': 408}

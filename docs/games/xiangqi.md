@@ -9,8 +9,8 @@ Theo mẫu BOT_GUIDE mục 12.2. Sinh bởi `tools/bot-bench/make_profiles.py`; 
 | botMillis (Siêu việt) | 8000 ms trên điện thoại (Catalog.kt) |
 | Hệ số chậm điện thoại k | **chưa đo trên máy thật**; tạm giả định k = 4 (BotLevels.kt) |
 | Lợi thế đi trước | nhỏ; cặp ván đổi màu |
-| Nguồn bot | tự làm (cùng khung alpha-beta với cờ vua). Pikafish GPL-3.0 + mạng có điều khoản riêng: chỉ làm engine đo. Tra cứu 27/11/2026. |
-| Engine đo đối chiếu | Pikafish theo số nút (XiangqiVsPikafish.kt), chưa chạy cho 7 cấp |
+| Nguồn bot | tự làm (XiangqiEngine: cùng khung tìm kiếm với cờ vua, đánh giá tuyến tính tinh chỉnh Texel, correction history). Pikafish GPL-3.0 + mạng có điều khoản riêng: chỉ làm engine đo trên CI. Tra cứu 27/11/2026. |
+| Engine đo đối chiếu | Pikafish UCI_Elo trên CI, dòng gauge xiangqi của bot-bench (bench/Gauge.kt) |
 | Nguồn thế mở đầu | 2-4 nước ngẫu nhiên có seed |
 | Điều kiện kết thúc | lặp thế = thua; 120 nửa nước không ăn quân = hòa |
 | win_in_1 / lose_in_1 | chiếu bí / làm đối phương hết nước trong 1 nước / nước để đối phương thắng ngay hoặc tự lặp thế |

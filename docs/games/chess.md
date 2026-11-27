@@ -9,9 +9,9 @@ Theo mẫu BOT_GUIDE mục 12.2. Sinh bởi `tools/bot-bench/make_profiles.py`; 
 | botMillis (Siêu việt) | 8000 ms trên điện thoại (Catalog.kt) |
 | Hệ số chậm điện thoại k | **chưa đo trên máy thật**; tạm giả định k = 4 (BotLevels.kt) |
 | Lợi thế đi trước | nhỏ; đấu cặp ván đổi màu |
-| Nguồn bot | tự làm (alpha-beta PVS, bảng băm, LMR, null-move, SEE). Stockfish GPL-3.0 chỉ làm engine đo; các ứng viên MIT (Leorik, Zahak, Arasan, Caissa) chưa qua cổng kỹ thuật. Tra cứu 27/11/2026. |
-| Engine đo đối chiếu | Stockfish UCI_Elo (tools/bot-bench/ChessMatch.kt), chưa chạy cho 7 cấp |
-| Nguồn thế mở đầu | 2-4 nước ngẫu nhiên có seed (LevelMatch.kt), chưa lọc cân bằng bằng Siêu việt |
+| Nguồn bot | tự làm (ChessEngine: bitboard, PVS, Lazy SMP, LMR, null-move, SEE, singular, correction history; đánh giá tuyến tính tinh chỉnh Texel). Stockfish GPL-3.0 chỉ làm engine đo trên CI; các ứng viên MIT (Leorik, Zahak, Arasan, Caissa) chưa qua cổng kỹ thuật. Tra cứu 27/11/2026. |
+| Engine đo đối chiếu | Stockfish UCI_Elo (thang CCRL) trên CI, dòng gauge của bot-bench (bench/Gauge.kt) |
+| Nguồn thế mở đầu | 2-4 nước ngẫu nhiên có seed (bench/LevelMatch.kt), chưa lọc cân bằng bằng Siêu việt |
 | Điều kiện kết thúc | lặp thế = thua bên lặp; 50 nước; trần 1200 nửa nước trong bộ đo |
 | win_in_1 / lose_in_1 | chiếu hết trong 1 nước (fastWin) / nước để đối phương chiếu hết ngay, hoặc tự lặp thế (fastLosesNext) |
 | g theo vùng nút | chưa đo |

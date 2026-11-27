@@ -4,12 +4,12 @@ Theo mẫu BOT_GUIDE mục 12.2. Sinh bởi `tools/bot-bench/make_profiles.py`; 
 
 | Mục | Nội dung |
 |---|---|
-| Luật chốt | 5 quân liên tiếp trở lên thắng, trừ khi cả hai đầu của chuỗi cực đại bị quân đối phương chặn. Bàn không giới hạn (bot tính trên cửa sổ 15-24 ô quanh các quân). |
+| Luật chốt | 5 quân liên tiếp trở lên thắng, trừ khi cả hai đầu của chuỗi cực đại bị quân đối phương chặn. Bàn không giới hạn (bot tính trên cửa sổ 32×32 quanh các quân; ngoài cửa sổ coi là ô trống). Bốn có một đầu bị chặn đỡ được bằng hai cách: chiếm ô thành năm, hoặc chặn đầu kia để dãy năm bị chặn hai đầu. |
 | Kiểm thử luật | thế viết tay trong SelfCheck.kt (caro vo han: ...) |
 | botMillis (Siêu việt) | 6000 ms trên điện thoại (Catalog.kt) |
 | Hệ số chậm điện thoại k | **chưa đo trên máy thật**; tạm giả định k = 4 (BotLevels.kt) |
 | Lợi thế đi trước | rất lớn: báo cáo riêng tỉ lệ điểm khi đi trước / đi sau |
-| Nguồn bot | tự làm (alpha-beta + VCF + phòng VCF; VCT có nhưng tắt). Rapfi GPL-3.0; engine Gomocup chơi luật khác. Tra cứu 27/11/2026. |
+| Nguồn bot | tự làm (CaroEngine: bảng hình 11 ô theo luật chặn hai đầu, VCF xét mọi cách đỡ, phòng VCF, PVS lặp sâu). Rapfi GPL-3.0; engine Gomocup chơi luật khác. Tra cứu 27/11/2026. |
 | Engine đo đối chiếu | không có engine đo đúng luật |
 | Nguồn thế mở đầu | 3 quân đầu ngẫu nhiên trong ô 5×5 quanh gốc |
 | Điều kiện kết thúc | không có hòa (bàn vô hạn); trần 1200 nửa nước trong bộ đo |

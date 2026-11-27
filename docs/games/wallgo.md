@@ -9,7 +9,7 @@ Theo mẫu BOT_GUIDE mục 12.2. Sinh bởi `tools/bot-bench/make_profiles.py`; 
 | botMillis (Siêu việt) | 7000 ms trên điện thoại (Catalog.kt) |
 | Hệ số chậm điện thoại k | **chưa đo trên máy thật**; tạm giả định k = 4 (BotLevels.kt) |
 | Lợi thế đi trước | nhỏ; cặp ván đổi màu |
-| Nguồn bot | tự làm (minimax alpha-beta lặp sâu dần, sắp nước theo đánh giá tĩnh; paranoid cho 3-4 người). Remake MIT có AI yếu; WallZero chưa rõ giấy phép. Tra cứu 27/11/2026. |
+| Nguồn bot | tự làm (2 người: negamax PVS đi/hoàn tác trên một bàn, bảng băm, killer, sắp nước theo đánh giá tĩnh; paranoid cho 3-4 người). Remake MIT có AI yếu; WallZero chưa rõ giấy phép. Tra cứu 27/11/2026. |
 | Engine đo đối chiếu | không có |
 | Nguồn thế mở đầu | 2 nước đặt quân ngẫu nhiên có seed |
 | Điều kiện kết thúc | theo luật lãnh thổ |

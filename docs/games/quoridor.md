@@ -9,7 +9,7 @@ Theo mẫu BOT_GUIDE mục 12.2. Sinh bởi `tools/bot-bench/make_profiles.py`; 
 | botMillis (Siêu việt) | 7000 ms trên điện thoại (Catalog.kt) |
 | Hệ số chậm điện thoại k | **chưa đo trên máy thật**; tạm giả định k = 4 (BotLevels.kt) |
 | Lợi thế đi trước | có; cặp ván đổi màu |
-| Nguồn bot | tự làm (alpha-beta PVS + bảng băm Zobrist + killer cho 2 người; paranoid cho 4 người). Không có engine chuẩn. Tra cứu 27/11/2026. |
+| Nguồn bot | tự làm (alpha-beta PVS + bảng băm Zobrist + killer cho 2 người, tường ứng viên chặn mọi đường ngắn nhất của đối thủ; paranoid cho 4 người). Không có engine chuẩn. Tra cứu 27/11/2026. |
 | Engine đo đối chiếu | không có |
 | Nguồn thế mở đầu | 2 nước đi quân ngẫu nhiên có seed |
 | Điều kiện kết thúc | lặp thế = thua (2 người) / cấm (4 người); 300 nửa nước = hòa |
