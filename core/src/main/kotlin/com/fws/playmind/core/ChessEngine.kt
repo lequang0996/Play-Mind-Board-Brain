@@ -12,6 +12,7 @@ import kotlin.math.min
  * với seed cố định (thuật toán bảo đảm đúng: chỉ nhận magic không gây va chạm sai).
  * Ô: a1 = 0, h8 = 63.
  */
+@OptIn(ExperimentalUnsignedTypes::class)
 internal object BB {
     val KNIGHT = LongArray(64)
     val KING = LongArray(64)
@@ -30,10 +31,48 @@ internal object BB {
     const val DARK = -0x55aa55aa55aa55abL   // 0xAA55AA55AA55AA55: a1, c1, ... là ô đen
 
     private val RM = LongArray(64); private val BM = LongArray(64)
-    private val RMAG = LongArray(64); private val BMAG = LongArray(64)
+    internal val RMAG = LongArray(64); internal val BMAG = LongArray(64)
     private val RSH = IntArray(64); private val BSH = IntArray(64)
     private val ROFF = IntArray(64); private val BOFF = IntArray(64)
     private val TABLE: LongArray
+
+    // Số magic đã tìm sẵn (cùng thuật toán findMagic, seed cố định) để khởi động nhanh trên điện thoại.
+    private val ROOK_MAGIC = ulongArrayOf(
+            0x80002810804002uL, 0x2840100820004000uL, 0x3100084020001100uL, 0x500100100a42008uL,
+            0x3200050a00502820uL, 0x4500080100240002uL, 0x880010000801200uL, 0x4a80008004204500uL,
+            0x1013801040048220uL, 0x4045400048201002uL, 0x801000802000uL, 0x2002000812004022uL,
+            0x441800400080080uL, 0x242000830220184uL, 0x4009024082102uL, 0x20b2800480004100uL,
+            0x2200848000400020uL, 0x40008040802002uL, 0x881010040200012uL, 0x9000420009220210uL,
+            0x4000808004000800uL, 0x2902008080040002uL, 0x4881008080020001uL, 0x220001538904uL,
+            0xd250400080008821uL, 0x8480200040005000uL, 0x100080200088uL, 0x8040100080800800uL,
+            0x6010c0180080080uL, 0x6020080800400uL, 0x4c80080400100201uL, 0x80408200010044uL,
+            0x2000400024800480uL, 0x408106002203uL, 0x400200101001040uL, 0x200100009002101uL,
+            0x49c810800800400uL, 0x4000020080800400uL, 0x4000800100800200uL, 0x8800092082000044uL,
+            0x2000400080008020uL, 0x400020008080uL, 0x230200010008080uL, 0x4000100008008080uL,
+            0x55000408010010uL, 0x30b402004080110uL, 0x4008121841040010uL, 0x1012080420004uL,
+            0x824400480102080uL, 0x4893100420200uL, 0x1000110420004100uL, 0x80080080100080uL,
+            0x8000100408010100uL, 0x8006020004008080uL, 0x801001200040500uL, 0x182854010c8a00uL,
+            0xb0800040210417uL, 0x202108d00400021uL, 0x1006900a00a18042uL, 0x10081001842101uL,
+            0x4141001800103205uL, 0x1000802040001uL, 0x20620088011004uL, 0x1244022a8102uL,
+    )
+    private val BISHOP_MAGIC = ulongArrayOf(
+            0x604011002008108uL, 0x350100218842812uL, 0x83081004b000064uL, 0x44040882004000uL,
+            0x102121000600020uL, 0x10420040c0320uL, 0x46021024840024uL, 0x801222210042020uL,
+            0x80e2040408080108uL, 0x8002045084050020uL, 0x1000088084148001uL, 0x4073110400800014uL,
+            0x2011040420800200uL, 0x902431012101400uL, 0x8020124034040uL, 0x2210008400821001uL,
+            0x8808109002880800uL, 0x4002412408820402uL, 0x4000808202200uL, 0x2c000a02120020uL,
+            0x4002a11040000uL, 0x8000822410008803uL, 0x1000400884400uL, 0x8000440e8885uL,
+            0x4008090020021060uL, 0x4200204281080uL, 0x85480511180500uL, 0x18080000220020uL,
+            0x84004b802001uL, 0xc8084000806000uL, 0x204004609380202uL, 0x4050a0011048080uL,
+            0x8308241034410209uL, 0x854c2000022801uL, 0x8002004040040100uL, 0x1004020080080080uL,
+            0x2040008020620202uL, 0x1042480840120040uL, 0x208064040c28800uL, 0x8104900048080uL,
+            0x104100407c040uL, 0x120a01a0000400uL, 0x3044422005000uL, 0xc405104200800800uL,
+            0x128c02082000120uL, 0x600230b101000200uL, 0x501010888189810buL, 0x2140100204206uL,
+            0x1209004200010uL, 0x81010090040040uL, 0x46000420804004cuL, 0x404dc0484042202uL,
+            0x8000a40f0410000uL, 0x8202202022008c80uL, 0x891104109041000uL, 0x20010200850241uL,
+            0x112002104100400uL, 0x1021080845000uL, 0x800080052089000uL, 0x2000000208800uL,
+            0x4a80204008030400uL, 0x845280488700102uL, 0x1000404848009080uL, 0x203060080041404auL,
+    )
 
     private val RD = arrayOf(intArrayOf(1, 0), intArrayOf(-1, 0), intArrayOf(0, 1), intArrayOf(0, -1))
     private val BD = arrayOf(intArrayOf(1, 1), intArrayOf(1, -1), intArrayOf(-1, 1), intArrayOf(-1, -1))
@@ -100,9 +139,22 @@ internal object BB {
         for (sq in 0 until 64) { BOFF[sq] = total; total += 1 shl bitCount(BM[sq]) }
         TABLE = LongArray(total)
         for (sq in 0 until 64) {
-            RMAG[sq] = findMagic(sq, RM[sq], RD, rnd, ROFF[sq])
-            BMAG[sq] = findMagic(sq, BM[sq], BD, rnd, BOFF[sq])
+            RMAG[sq] = if (fill(sq, RM[sq], RD, ROOK_MAGIC[sq].toLong(), ROFF[sq])) ROOK_MAGIC[sq].toLong() else findMagic(sq, RM[sq], RD, rnd, ROFF[sq])
+            BMAG[sq] = if (fill(sq, BM[sq], BD, BISHOP_MAGIC[sq].toLong(), BOFF[sq])) BISHOP_MAGIC[sq].toLong() else findMagic(sq, BM[sq], BD, rnd, BOFF[sq])
         }
+    }
+
+    /** Điền bảng bằng magic có sẵn; trả false nếu magic không hợp lệ (khi đó tìm lại). */
+    private fun fill(sq: Int, mask: Long, dirs: Array<IntArray>, magic: Long, off: Int): Boolean {
+        val bits = bitCount(mask); var sub = 0L
+        val filled = BooleanArray(1 shl bits)
+        do {
+            val idx = ((sub * magic) ushr (64 - bits)).toInt(); val a = slide(sq, sub, dirs)
+            if (filled[idx] && TABLE[off + idx] != a) { for (i in filled.indices) TABLE[off + i] = 0L; return false }
+            filled[idx] = true; TABLE[off + idx] = a
+            sub = (sub - mask) and mask
+        } while (sub != 0L)
+        return true
     }
 
     private fun findMagic(sq: Int, mask: Long, dirs: Array<IntArray>, rnd: java.util.Random, off: Int): Long {
@@ -220,7 +272,22 @@ internal object CW {
  * Luật của app: nước tạo lại thế đã có (cùng bên tới lượt) thì bên vừa đi thua.
  * Mỗi instance có bảng băm riêng, không dùng chung giữa các luồng.
  */
-class ChessEngine(ttBits: Int = 20) {
+/**
+ * Bảng băm dùng chung giữa các luồng tìm kiếm (Lazy SMP). Mỗi mục lưu khóa XOR dữ liệu để phát hiện mục bị ghi dở
+ * khi hai luồng ghi cùng lúc (khi đó coi như không trúng).
+ */
+class ChessTT(bits: Int) {
+    val mask = (1 shl bits) - 1
+    val key = LongArray(1 shl bits)
+    val data = LongArray(1 shl bits)
+    @Volatile var gen = 0
+    /** Cờ dừng cho các luồng phụ. */
+    @Volatile var stop = false
+    fun clear() { key.fill(0); data.fill(0) }
+}
+
+class ChessEngine(private val tt: ChessTT) {
+    constructor(ttBits: Int = 20) : this(ChessTT(ttBits))
     companion object {
         const val MATE = 30000
         const val INF = 32000
@@ -266,10 +333,12 @@ class ChessEngine(ttBits: Int = 20) {
     private var hp = 0
 
     // ───── bảng băm ─────
-    private val ttMask = (1 shl ttBits) - 1
-    private val ttKey = LongArray(1 shl ttBits)
-    private val ttData = LongArray(1 shl ttBits)
-    private var gen = 0
+    private val ttMask = tt.mask
+    private val ttKey = tt.key
+    private val ttData = tt.data
+    /** 0 = luồng chính; > 0 = luồng phụ của Lazy SMP. */
+    private var helperId = 0
+    private val helpers = ArrayList<ChessEngine>()
 
     // ───── bảng thứ tự nước ─────
     private val hist = Array(2) { IntArray(4096) }
@@ -291,7 +360,7 @@ class ChessEngine(ttBits: Int = 20) {
     private var nodes = 0L
     private var nodeLimit = Long.MAX_VALUE
     private var deadline = Long.MAX_VALUE
-    private var abort = false
+    @Volatile private var abort = false
     var lastDepth = 0; private set
     var lastNodes = 0L; private set
 
@@ -571,6 +640,8 @@ class ChessEngine(ttBits: Int = 20) {
     var traceScale = 64; private set
     var traceMopup = false; private set
     private var mgS = 0; private var egS = 0
+    /** Trọng số đánh giá đang dùng (mặc định CW; bộ đo A/B có thể gán bộ khác). */
+    var wMg: IntArray = CW.MG; var wEg: IntArray = CW.EG
     private val pawnAtt = LongArray(2)
     private val attAll = LongArray(2)
     private val attT = Array(2) { LongArray(8) }
@@ -578,12 +649,23 @@ class ChessEngine(ttBits: Int = 20) {
 
     @Suppress("NOTHING_TO_INLINE")
     private inline fun add(idx: Int, coef: Int) {
-        mgS += CW.MG[idx] * coef; egS += CW.EG[idx] * coef
+        mgS += wMg[idx] * coef; egS += wEg[idx] * coef
         if (tracing) trace[idx] += coef
     }
 
-    /** Điểm đánh giá theo góc nhìn bên tới lượt. */
+    private val evKey = LongArray(1 shl 16); private val evVal = IntArray(1 shl 16)
+
+    /** Điểm đánh giá theo góc nhìn bên tới lượt (có bộ nhớ đệm theo khóa băm). */
     fun evaluate(): Int {
+        if (tracing) return evaluateFull()
+        val i = (hash and 0xFFFF).toInt()
+        if (evKey[i] == hash) return evVal[i]
+        val v = evaluateFull()
+        evKey[i] = hash; evVal[i] = v
+        return v
+    }
+
+    private fun evaluateFull(): Int {
         mgS = 0; egS = 0
         if (tracing) trace.fill(0)
         val wP = bb[P]; val bP = bb[P or 8]
@@ -735,17 +817,20 @@ class ChessEngine(ttBits: Int = 20) {
     private fun ttStore(key: Long, move: Int, score: Int, eval: Int, depth: Int, flag: Int) {
         val i = (key and ttMask.toLong()).toInt()
         val old = ttData[i]
-        if (ttKey[i] == key || ((old ushr 30) and 3L).toInt() != (gen and 3) || depth + 3 >= ((old ushr 22) and 255L).toInt() - 1 || flag == EXACT) {
-            val mvKeep = if (move == 0 && ttKey[i] == key) (old and 0xFFFFF).toInt() else move
-            ttKey[i] = key
-            ttData[i] = (mvKeep.toLong() and 0xFFFFF) or (flag.toLong() shl 20) or ((depth + 1).toLong().coerceIn(0, 255) shl 22) or
-                ((gen and 3).toLong() shl 30) or ((score + 32768).toLong() shl 32) or ((eval + 32768).toLong() shl 48)
+        val same = (ttKey[i] xor old) == key
+        val g = tt.gen
+        if (same || ((old ushr 30) and 3L).toInt() != (g and 3) || depth + 3 >= ((old ushr 22) and 255L).toInt() - 1 || flag == EXACT) {
+            val mvKeep = if (move == 0 && same) (old and 0xFFFFF).toInt() else move
+            val d = (mvKeep.toLong() and 0xFFFFF) or (flag.toLong() shl 20) or ((depth + 1).toLong().coerceIn(0, 255) shl 22) or
+                ((g and 3).toLong() shl 30) or ((score + 32768).toLong() shl 32) or ((eval + 32768).toLong() shl 48)
+            ttData[i] = d
+            ttKey[i] = key xor d
         }
     }
 
     // ───────────────────────── tìm kiếm ─────────────────────────
     private fun checkTime() {
-        if (nodes >= nodeLimit || System.nanoTime() > deadline) abort = true
+        if (nodes >= nodeLimit || System.nanoTime() > deadline || (helperId > 0 && tt.stop)) abort = true
     }
 
     private fun scoreToTT(s: Int, ply: Int) = if (s >= MATE - 500) s + ply else if (s <= -MATE + 500) s - ply else s
@@ -812,8 +897,9 @@ class ChessEngine(ttBits: Int = 20) {
         val i = (hash and ttMask.toLong()).toInt()
         var ttm = 0; var ttEval = NONE
         val pv = beta - alpha > 1
-        if (ttKey[i] == hash) {
-            val d = ttData[i]
+        val d0 = ttData[i]
+        if ((ttKey[i] xor d0) == hash) {
+            val d = d0
             ttm = (d and 0xFFFFF).toInt()
             val s = scoreFromTT(((d ushr 32) and 0xFFFF).toInt() - 32768, ply)
             val fl = ((d ushr 20) and 3).toInt()
@@ -878,9 +964,10 @@ class ChessEngine(ttBits: Int = 20) {
         val key = if (excluded != 0) hash xor (excluded.toLong() * -0x61c8864680b583ebL) else hash
         val ti = (key and ttMask.toLong()).toInt()
         var ttm = 0; var ttS = NONE; var ttD = -1; var ttF = UPPER; var ttEval = NONE
-        val ttHit = ttKey[ti] == key
+        val d0 = ttData[ti]
+        val ttHit = (ttKey[ti] xor d0) == key
         if (ttHit) {
-            val d = ttData[ti]
+            val d = d0
             ttm = (d and 0xFFFFF).toInt()
             ttF = ((d ushr 20) and 3).toInt()
             ttD = ((d ushr 22) and 255).toInt() - 1
@@ -1066,7 +1153,8 @@ class ChessEngine(ttBits: Int = 20) {
         val soft = if (lim.timeMs > 0) lim.timeMs * 1_000_000 * 0.5 else Double.MAX_VALUE
         val nl = if (lim.nodes > 0) lim.nodes else Long.MAX_VALUE
         val maxDepth = if (lim.depth > 0) min(lim.depth, MAXPLY - 10) else MAXPLY - 10
-        abort = false; nodes = 0; gen++
+        abort = false; nodes = 0
+        if (helperId == 0) tt.gen++
         for (i in 0 until MAXPLY + 2) { killers[i][0] = 0; killers[i][1] = 0; excl[i] = 0; curMove[i] = 0 }
         for (c in 0..1) for (i in 0 until 4096) hist[c][i] = hist[c][i] / 2
         var root = legalMoves()
@@ -1076,13 +1164,16 @@ class ChessEngine(ttBits: Int = 20) {
         val rs = IntArray(root.size) { -INF }
         // thứ tự ban đầu: nước băm, rồi ăn quân lớn
         val ti = (hash and ttMask.toLong()).toInt()
-        val ttm = if (ttKey[ti] == hash) (ttData[ti] and 0xFFFFF).toInt() else 0
+        val td = ttData[ti]
+        val ttm = if ((ttKey[ti] xor td) == hash) (td and 0xFFFFF).toInt() else 0
         for (i in root.indices) { val m = root[i]; rs[i] = (if (m == ttm) 100000 else 0) + SEEV[pc[(m shr 6) and 63] and 7] }
         sortRoot(root, rs)
         var best = root[0]; var bestScore = 0; var completed = 0
         var stable = 0
         sEval[0] = if (inCheck()) NONE else evaluate()
         for (depth in 1..maxDepth) {
+            if (helperId > 0 && depth > 2 && (depth + helperId) % 3 == 0) continue   // luồng phụ bỏ bớt độ sâu để đa dạng
+            if (helperId > 0 && tt.stop) break
             rootDepth = depth
             nodeLimit = if (depth == 1) Long.MAX_VALUE else nl
             var window = if (depth >= 4) 18 else INF
@@ -1162,9 +1253,34 @@ class ChessEngine(ttBits: Int = 20) {
         }
     }
 
+    /**
+     * Tìm kiếm Lazy SMP: [threads] luồng cùng tìm trên một bảng băm; kết quả lấy từ luồng chính.
+     * Chỉ dùng cho tìm kiếm theo thời gian (giới hạn nút / độ sâu phải chạy 1 luồng để kết quả cố định).
+     */
+    fun searchSmp(fen: String, moves: List<Int>, lim: SearchLimit, allowed: IntArray?, delta: Int, threads: Int): RootResult {
+        load(fen, moves)
+        if (threads <= 1 || lim.nodes > 0 || lim.depth > 0 || lim.timeMs <= 0) return search(lim, allowed, delta)
+        while (helpers.size < threads - 1) helpers.add(ChessEngine(tt).also { it.helperId = helpers.size + 1 })
+        for (h in helpers) { h.wMg = wMg; h.wEg = wEg }
+        tt.stop = false
+        val ths = (0 until threads - 1).map { k ->
+            val h = helpers[k]
+            h.load(fen, moves)
+            Thread {
+                try { h.search(SearchLimit(timeMs = lim.timeMs + 2000), allowed, 0) } catch (_: Throwable) { }
+            }.apply { isDaemon = true; start() }
+        }
+        try {
+            return search(lim, allowed, delta)
+        } finally {
+            tt.stop = true
+            for (t in ths) t.join()
+        }
+    }
+
     /** Xóa bảng băm và bảng thứ tự nước (ván mới). */
     fun clear() {
-        ttKey.fill(0); ttData.fill(0)
+        tt.clear(); evKey.fill(0)
         for (h in hist) h.fill(0)
         for (c in cont) c.fill(0)
         for (a in capHist) for (b in a) b.fill(0)
@@ -1200,5 +1316,5 @@ class ChessEngine(ttBits: Int = 20) {
     fun makeMove(m: Int) = make(m)
 
     /** Thế hiện tại có dùng điểm dồn vua (không tinh chỉnh) hay không. */
-    fun tracingMopup(): Boolean { evaluate(); return traceMopup }
+    fun tracingMopup(): Boolean { evaluateFull(); return traceMopup }
 }

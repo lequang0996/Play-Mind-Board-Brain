@@ -1,4 +1,4 @@
-package com.fws.playmind.core.gauge
+package com.fws.playmind.core.bench
 
 import com.fws.playmind.core.*
 import java.io.BufferedReader
@@ -9,7 +9,8 @@ import kotlin.random.Random
  * Đo bot cờ vua của app với Stockfish giới hạn sức (UCI_LimitStrength + UCI_Elo), BOT_GUIDE mục 3.5.
  * Stockfish (GPL-3.0) chỉ là engine đo, chạy trong CI, không phát hành cùng app.
  *
- *   gradle :core:gauge --args="chess <stockfish> <elo> <games> <ourMs> <sfMs> <seed>"
+ *   bench gauge chess <stockfish> <elo> <games> <ourMs> <sfMs> <seed> [threads]   (xem BenchMain.kt)
+ * [threads] = số luồng tìm kiếm của Siêu việt (Lazy SMP, như trên điện thoại); mặc định 1.
  * In mỗi ván một dòng "G <i> <màu của bot> <kết quả 1/0.5/0> <số nửa nước> <lý do>" rồi dòng "TOTAL <W> <D> <L>".
  */
 private val OPENINGS = listOf(
@@ -59,10 +60,11 @@ fun applyUci(g: ChessGame, s: String): Boolean {
     return m >= 0 && g.play(m)
 }
 
-fun main(args: Array<String>) {
+fun gaugeMain(args: List<String>) {
     require(args.size >= 7 && args[0] == "chess") { "args: chess <stockfish> <elo> <games> <ourMs> <sfMs> <seed>" }
     val sfPath = args[1]; val elo = args[2].toInt(); val games = args[3].toInt()
     val ourMs = args[4].toLong(); val sfMs = args[5].toInt(); val seed = args[6].toInt()
+    ChessGame.threads = args.getOrNull(7)?.toInt() ?: 1
     val sf = Stockfish(sfPath, elo)
     var w = 0; var d = 0; var l = 0
     for (i in 0 until games) {

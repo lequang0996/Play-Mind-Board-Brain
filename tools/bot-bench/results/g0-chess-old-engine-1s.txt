@@ -1,0 +1,7 @@
+# date: 2026-11-27
+# note: Engine cờ vua CŨ (mảng 8x8, trước khi viết lại) đấu Stockfish 17.1 UCI_Elo, mỗi bên 1000 ms/nước, máy CI AMD EPYC. Đo bằng workflow gauge cũ (nhánh gauge-results).
+gauge chess elo=1600 ms=1000 sfms=1000 n=40  W/D/L=31/7/2  S=0.863 [0.777,0.948]  est=1919  plies~0  {}
+gauge chess elo=1900 ms=1000 sfms=1000 n=40  W/D/L=31/8/1  S=0.875 [0.799,0.951]  est=2238  plies~0  {}
+gauge chess elo=2200 ms=1000 sfms=1000 n=40  W/D/L=25/11/4  S=0.762 [0.657,0.868]  est=2403  plies~0  {}
+gauge chess elo=2500 ms=1000 sfms=1000 n=40  W/D/L=24/15/1  S=0.787 [0.702,0.873]  est=2728  plies~0  {}
+gauge chess elo=2800 ms=1000 sfms=1000 n=40  W/D/L=6/22/12  S=0.425 [0.322,0.528]  est=2747  plies~0  {}

@@ -1,0 +1,6 @@
+# date: 2026-11-27
+# note: Engine cờ vua MỚI (bitboard, 34739ba) CHƯA tinh chỉnh Texel, 1 luồng, đấu Stockfish 17.1 UCI_Elo, mỗi bên 2000 ms/nước, máy CI 4 vCPU. Đo bằng workflow gauge cũ (run 46027235719, nhánh gauge-results). Lặp thế = hòa.
+gauge chess elo=2200 ms=2000 sfms=2000 threads=1 n=42  W/D/L=32/8/2  S=0.857 [0.773,0.941]  est=2511  plies~77  {'CHECKMATE': 34, 'REPETITION': 8}
+gauge chess elo=2500 ms=2000 sfms=2000 threads=1 n=42  W/D/L=24/16/2  S=0.762 [0.672,0.852]  est=2702  plies~86  {'CHECKMATE': 26, 'REPETITION': 16}
+gauge chess elo=2800 ms=2000 sfms=2000 threads=1 n=42  W/D/L=12/26/4  S=0.595 [0.505,0.685]  est=2867  plies~96  {'CHECKMATE': 16, 'REPETITION': 26}
+gauge chess elo=3000 ms=2000 sfms=2000 threads=1 n=42  W/D/L=0/26/16  S=0.310 [0.235,0.384]  est=2861  plies~96  {'CHECKMATE': 16, 'REPETITION': 26}

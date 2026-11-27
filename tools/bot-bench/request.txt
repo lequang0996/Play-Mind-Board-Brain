@@ -1,8 +1,10 @@
-# Yêu cầu đo bot với Stockfish (xem .github/workflows/gauge.yml). Sửa rồi push lên main để chạy.
-tag=chess-v3-untuned-2s
-game=chess
-elos=2200 2500 2800 3000
-shards=3
-games=14
-ourMs=2000
-sfMs=2000
+# Yêu cầu đo bot (xem .github/workflows/bot-bench.yml và tools/bot-bench/README.md). Sửa rồi push lên main để chạy;
+# GitHub tự ghi kết quả vào tools/bot-bench/results/<tag>.txt và docs/bot-results/ rồi commit vào main.
+#   gauge  <game> elo=<Stockfish UCI_Elo> games=<số ván> ms=<ms/nước của bot> sfms=<ms/nước của Stockfish> shards=<số máy> [threads=<luồng của bot>]
+#   ladder <game> <cấp A> <cấp B> pairs=<số cặp ván> ms=<ms/nước của Siêu việt> shards=<số máy> [players=2]
+# Cấp: 0 Dễ, 1 Trung bình, 2 Khá, 3 Giỏi, 4 Cao thủ, 5 Thách đấu, 6 Siêu việt.
+tag=g2-chess-v3-tuned-smp3-2s
+note=Engine cờ vua mới đã tinh chỉnh Texel (978k thế), Lazy SMP 3 luồng, đấu Stockfish 17.1 UCI_Elo 1 luồng, mỗi bên 2000 ms/nước, máy CI 4 vCPU. Lặp thế = hòa.
+gauge chess elo=2600 games=40 ms=2000 sfms=2000 shards=4 threads=3
+gauge chess elo=2800 games=40 ms=2000 sfms=2000 shards=4 threads=3
+gauge chess elo=3000 games=40 ms=2000 sfms=2000 shards=4 threads=3

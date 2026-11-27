@@ -22,6 +22,16 @@ fun main() {
     expect("chess perft pos3 1-4", (1..4).map { c.perft(it) } == listOf(14L, 191L, 2812L, 43238L))
     c.setFen("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1")
     expect("chess perft pos4 1-3 (phong cap, nhap thanh)", (1..3).map { c.perft(it) } == listOf(6L, 264L, 9467L))
+    // engine bitboard (ChessEngine) phải sinh nước giống hệt luật cờ
+    val ce = ChessEngine(12)
+    val ceCases = listOf(
+        Triple(ChessEngine.START_FEN, 4, 197281L),
+        Triple("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1", 3, 97862L),
+        Triple("8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1", 4, 43238L),
+        Triple("r3k2r/Pppp1ppp/1b3nbN/nP6/BBP1P3/q4N2/Pp1P2PP/R2Q1RK1 w kq - 0 1", 3, 9467L),
+        Triple("rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8", 3, 62379L),
+    )
+    expect("chess engine bitboard perft (5 the chuan)", ceCases.all { (fen, d, n) -> ce.setFen(fen); ce.perft(d) == n })
     c.setFen("6k1/5ppp/8/8/8/8/5PPP/R5K1 w - - 0 1")
     expect("chess AI chieu het 1 nuoc", c.bestMove(1500) == ChessGame.mk(0, 56))
     c.setFen("7k/5Q2/6K1/8/8/8/8/8 b - - 0 1")

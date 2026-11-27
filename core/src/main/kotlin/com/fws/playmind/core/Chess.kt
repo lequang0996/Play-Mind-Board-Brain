@@ -40,6 +40,12 @@ class ChessGame : BoardGame, LeveledEngine {
         @Volatile var lastNodes = 0L; private set
         /** Engine tìm kiếm dùng chung (bảng băm giữ giữa các nước); chỉ một luồng dùng tại một thời điểm (khóa [lock]). */
         private val engine by lazy { ChessEngine(20) }
+        /**
+         * Số luồng tìm kiếm của Siêu việt (Lazy SMP; các cấp dưới luôn 1 luồng). Mặc định min(4, số nhân − 2);
+         * đặt bằng thuộc tính hệ thống pm.chess.threads khi đo.
+         */
+        @Volatile var threads: Int = System.getProperty("pm.chess.threads")?.toIntOrNull()
+            ?: minOf(4, maxOf(1, Runtime.getRuntime().availableProcessors() - 2))
         const val START_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
         // ── Sách khai cuộc nhỏ (UCI). Mỗi nước được kiểm tra lại bằng luật cờ khi dùng. ──
@@ -432,8 +438,7 @@ class ChessGame : BoardGame, LeveledEngine {
 
     /** Tìm kiếm bằng [ChessEngine] trên thế hiện tại (gọi trong khóa [lock]). */
     private fun think(lim: SearchLimit, allowed: IntArray?, delta: Int): RootResult {
-        engine.load(startFen, hist)
-        val r = engine.search(lim, allowed, delta)
+        val r = engine.searchSmp(startFen, hist, lim, allowed, delta, threads)
         lastDepth = r.depth; lastNodes = r.nodes
         return r
     }
