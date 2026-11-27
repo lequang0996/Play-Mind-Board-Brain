@@ -1,0 +1,25 @@
+# date: 2026-11-27
+# note: Cờ vua: thử từng tham số tìm kiếm (SP trong ChessEngine.kt), mỗi biến thể 400 ván với bản mặc định, 200 ms/nước, 1 luồng.
+exp ab chess new@rfpm65-vs-new ms=200 props=- n=414  W/D/L=171/78/165  S=0.507 [0.464,0.551]  elo=+5  plies~174  {'CHECKMATE': 311, 'FIFTY': 25, 'MATERIAL': 52, 'NONE': 1, 'REPETITION': 25}
+exp ab chess new@rfpm95-vs-new ms=200 props=- n=414  W/D/L=153/95/166  S=0.484 [0.442,0.527]  elo=-11  plies~181  {'CHECKMATE': 291, 'FIFTY': 18, 'MATERIAL': 66, 'NONE': 10, 'REPETITION': 28, 'STALEMATE': 1}
+exp ab chess new@razb320-vs-new ms=200 props=- n=414  W/D/L=152/81/181  S=0.465 [0.422,0.508]  elo=-24  plies~183  {'CHECKMATE': 308, 'FIFTY': 20, 'MATERIAL': 56, 'NONE': 4, 'REPETITION': 25, 'STALEMATE': 1}
+exp ab chess new@nmpdiv150-vs-new ms=200 props=- n=414  W/D/L=165/80/169  S=0.495 [0.452,0.538]  elo=-3  plies~178  {'CHECKMATE': 309, 'FIFTY': 20, 'MATERIAL': 55, 'NONE': 3, 'REPETITION': 25, 'STALEMATE': 2}
+exp ab chess new@nmpdiv260-vs-new ms=200 props=- n=414  W/D/L=162/82/170  S=0.490 [0.447,0.534]  elo=-7  plies~176  {'CHECKMATE': 301, 'FIFTY': 25, 'MATERIAL': 52, 'NONE': 5, 'REPETITION': 31}
+exp ab chess new@futb90-vs-new ms=200 props=- n=414  W/D/L=153/85/176  S=0.472 [0.429,0.515]  elo=-19  plies~179  {'CHECKMATE': 297, 'FIFTY': 28, 'MATERIAL': 54, 'NONE': 2, 'REPETITION': 32, 'STALEMATE': 1}
+exp ab chess new@futb160-vs-new ms=200 props=- n=414  W/D/L=153/72/189  S=0.457 [0.413,0.500]  elo=-30  plies~174  {'CHECKMATE': 320, 'FIFTY': 17, 'MATERIAL': 54, 'REPETITION': 22, 'STALEMATE': 1}
+exp ab chess new@futd75-vs-new ms=200 props=- n=414  W/D/L=162/85/167  S=0.494 [0.451,0.537]  elo=-4  plies~170  {'CHECKMATE': 297, 'FIFTY': 28, 'MATERIAL': 54, 'NONE': 2, 'REPETITION': 32, 'STALEMATE': 1}
+exp ab chess new@futd130-vs-new ms=200 props=- n=414  W/D/L=178/91/145  S=0.540 [0.497,0.582]  elo=+28  plies~171  {'CHECKMATE': 289, 'FIFTY': 27, 'MATERIAL': 63, 'REPETITION': 34, 'STALEMATE': 1}
+exp ab chess new@hp2500-vs-new ms=200 props=- n=414  W/D/L=182/73/159  S=0.528 [0.484,0.571]  elo=+19  plies~170  {'CHECKMATE': 310, 'FIFTY': 17, 'MATERIAL': 53, 'NONE': 2, 'REPETITION': 31, 'STALEMATE': 1}
+exp ab chess new@hp5000-vs-new ms=200 props=- n=414  W/D/L=173/85/156  S=0.521 [0.478,0.563]  elo=+14  plies~177  {'CHECKMATE': 292, 'FIFTY': 23, 'MATERIAL': 57, 'NONE': 4, 'REPETITION': 37, 'STALEMATE': 1}
+exp ab chess new@seeq20-vs-new ms=200 props=- n=414  W/D/L=158/91/165  S=0.492 [0.449,0.534]  elo=-6  plies~178  {'CHECKMATE': 295, 'FIFTY': 22, 'MATERIAL': 62, 'NONE': 6, 'REPETITION': 28, 'STALEMATE': 1}
+exp ab chess new@seeq45-vs-new ms=200 props=- n=414  W/D/L=164/72/178  S=0.483 [0.439,0.527]  elo=-12  plies~178  {'CHECKMATE': 309, 'FIFTY': 22, 'MATERIAL': 45, 'NONE': 4, 'REPETITION': 33, 'STALEMATE': 1}
+exp ab chess new@seec70-vs-new ms=200 props=- n=414  W/D/L=161/88/165  S=0.495 [0.452,0.538]  elo=-3  plies~180  {'CHECKMATE': 286, 'FIFTY': 19, 'MATERIAL': 60, 'NONE': 8, 'REPETITION': 40, 'STALEMATE': 1}
+exp ab chess new@seec140-vs-new ms=200 props=- n=414  W/D/L=152/90/172  S=0.476 [0.433,0.518]  elo=-17  plies~177  {'CHECKMATE': 301, 'FIFTY': 26, 'MATERIAL': 58, 'NONE': 3, 'REPETITION': 23, 'STALEMATE': 3}
+exp ab chess new@lmrh5000-vs-new ms=200 props=- n=414  W/D/L=169/71/174  S=0.494 [0.450,0.538]  elo=-4  plies~180  {'CHECKMATE': 308, 'FIFTY': 23, 'MATERIAL': 44, 'NONE': 4, 'REPETITION': 35}
+exp ab chess new@lmrh10000-vs-new ms=200 props=- n=414  W/D/L=172/81/161  S=0.513 [0.470,0.557]  elo=+9  plies~173  {'CHECKMATE': 304, 'FIFTY': 21, 'MATERIAL': 59, 'NONE': 1, 'REPETITION': 29}
+exp ab chess new@asp12-vs-new ms=200 props=- n=414  W/D/L=181/74/159  S=0.527 [0.483,0.570]  elo=+18  plies~181  {'CHECKMATE': 304, 'FIFTY': 26, 'MATERIAL': 43, 'NONE': 3, 'REPETITION': 36, 'STALEMATE': 2}
+exp ab chess new@asp26-vs-new ms=200 props=- n=414  W/D/L=161/69/184  S=0.472 [0.428,0.516]  elo=-19  plies~179  {'CHECKMATE': 303, 'FIFTY': 21, 'MATERIAL': 45, 'NONE': 3, 'REPETITION': 42}
+exp ab chess new@sing11-vs-new ms=200 props=- n=414  W/D/L=169/83/162  S=0.508 [0.465,0.552]  elo=+6  plies~176  {'CHECKMATE': 296, 'FIFTY': 23, 'MATERIAL': 58, 'NONE': 2, 'REPETITION': 35}
+exp ab chess new@sing22-vs-new ms=200 props=- n=414  W/D/L=154/97/163  S=0.489 [0.447,0.531]  elo=-8  plies~178  {'CHECKMATE': 284, 'FIFTY': 22, 'MATERIAL': 64, 'NONE': 7, 'REPETITION': 33, 'STALEMATE': 4}
+exp ab chess new@qd130-vs-new ms=200 props=- n=414  W/D/L=156/80/178  S=0.473 [0.430,0.517]  elo=-18  plies~177  {'CHECKMATE': 303, 'FIFTY': 28, 'MATERIAL': 46, 'NONE': 4, 'REPETITION': 31, 'STALEMATE': 2}
+exp ab chess new@qd240-vs-new ms=200 props=- n=414  W/D/L=186/86/142  S=0.553 [0.511,0.596]  elo=+37  plies~178  {'CHECKMATE': 294, 'FIFTY': 26, 'MATERIAL': 55, 'NONE': 4, 'REPETITION': 34, 'STALEMATE': 1}
