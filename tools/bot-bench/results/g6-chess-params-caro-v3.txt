@@ -1,0 +1,6 @@
+# date: 2026-11-27
+# note: Cờ vua: tổ hợp tham số thắng ở g4 (qd240, futd130, asp12, hp2500) và trọng số Texel chess-t2, 1000 ván mỗi dòng. Caro: engine CaroEngine mới so engine cũ ở 1 giây/nước. Cờ tướng: đo lại với Pikafish (sửa tên tệp chạy).
+exp ab chess new@qd240+futd130+asp12-vs-new ms=200 props=- n=1008  W/D/L=418/223/367  S=0.525 [0.498,0.553]  elo=+18  plies~178  {'CHECKMATE': 719, 'FIFTY': 57, 'MATERIAL': 154, 'NONE': 7, 'REPETITION': 66, 'STALEMATE': 5}
+exp ab chess new@qd240+futd130+asp12+hp2500-vs-new ms=200 props=- n=1008  W/D/L=441/200/367  S=0.537 [0.509,0.564]  elo=+26  plies~176  {'CHECKMATE': 732, 'FIFTY': 55, 'MATERIAL': 137, 'NONE': 6, 'REPETITION': 76, 'STALEMATE': 2}
+exp ab chess new@qd300-vs-new ms=200 props=- n=600  W/D/L=250/125/225  S=0.521 [0.485,0.556]  elo=+14  plies~180  {'CHECKMATE': 439, 'FIFTY': 33, 'MATERIAL': 84, 'NONE': 7, 'REPETITION': 36, 'STALEMATE': 1}
+exp ab caro new-vs-old ms=1000 props=- n=408  W/D/L=323/0/85  S=0.792 [0.752,0.831]  elo=+232  plies~36  {'FIVE': 408}
