@@ -9,7 +9,8 @@ import kotlin.random.Random
  * Đo bot cờ vua của app với Stockfish giới hạn sức (UCI_LimitStrength + UCI_Elo), BOT_GUIDE mục 3.5.
  * Stockfish (GPL-3.0) chỉ là engine đo, chạy trong CI, không phát hành cùng app.
  *
- *   bench gauge chess <stockfish> <elo> <games> <ourMs> <sfMs> <seed> [threads]   (xem BenchMain.kt)
+ *   bench gauge chess|xiangqi <engine> <elo> <games> <ourMs> <sfMs> <seed> [threads] [evalFile]   (xem BenchMain.kt)
+ * Cờ tướng đo với Pikafish (GPL-3.0, cũng chỉ chạy trong CI); thế mở đầu = 2 đến 4 nước ngẫu nhiên theo seed.
  * [threads] = số luồng tìm kiếm của Siêu việt (Lazy SMP, như trên điện thoại); mặc định 1.
  * In mỗi ván một dòng "G <i> <màu của bot> <kết quả 1/0.5/0> <số nửa nước> <lý do>" rồi dòng "TOTAL <W> <D> <L>".
  */
@@ -27,18 +28,35 @@ internal val OPENINGS = listOf(
     "e2e4 c7c5 c2c3 g8f6 e4e5 f6d5", "b2b3 e7e5 c1b2 b8c6 e2e3 g8f6",
 )
 
-class Stockfish(path: String, elo: Int) {
+/**
+ * Engine UCI ngoài chạy ở chế độ giới hạn sức (Stockfish cho cờ vua, Pikafish cho cờ tướng). Dừng hẳn nếu engine không có
+ * UCI_Elo hoặc [elo] nằm ngoài khoảng engine hỗ trợ (để không đo nhầm ở sức tối đa).
+ */
+class UciEngine(path: String, elo: Int, evalFile: String? = null) {
     private val p = ProcessBuilder(path).redirectErrorStream(true).start()
     private val w: BufferedWriter = p.outputStream.bufferedWriter()
     private val r: BufferedReader = p.inputStream.bufferedReader()
+    var name = "?"; private set
     init {
-        send("uci"); wait("uciok")
+        send("uci")
+        var eloOpt: String? = null
+        while (true) {
+            val l = r.readLine() ?: error("engine exited")
+            if (l.startsWith("id name ")) name = l.removePrefix("id name ")
+            if (l.startsWith("option name UCI_Elo ")) eloOpt = l
+            if (l.startsWith("uciok")) break
+        }
+        requireNotNull(eloOpt) { "$name không có tùy chọn UCI_Elo" }
+        val mn = Regex("min ([0-9]+)").find(eloOpt)!!.groupValues[1].toInt(); val mx = Regex("max ([0-9]+)").find(eloOpt)!!.groupValues[1].toInt()
+        require(elo in mn..mx) { "$name: UCI_Elo $elo ngoài khoảng $mn..$mx" }
+        System.err.println("# engine $name, UCI_Elo $mn..$mx"); println("# engine $name UCI_Elo=$elo range=$mn..$mx")
+        if (evalFile != null) send("setoption name EvalFile value $evalFile")
         send("setoption name Threads value 1"); send("setoption name Hash value 64")
         send("setoption name UCI_LimitStrength value true"); send("setoption name UCI_Elo value $elo")
         send("isready"); wait("readyok")
     }
     fun send(s: String) { w.write(s); w.newLine(); w.flush() }
-    fun wait(tok: String): String { while (true) { val l = r.readLine() ?: error("stockfish exited"); if (l.startsWith(tok)) return l } }
+    fun wait(tok: String): String { while (true) { val l = r.readLine() ?: error("engine exited"); if (l.startsWith(tok)) return l } }
     fun newGame() { send("ucinewgame"); send("isready"); wait("readyok") }
     fun best(moves: List<String>, ms: Int): String {
         send("position startpos" + if (moves.isEmpty()) "" else " moves " + moves.joinToString(" "))
@@ -60,18 +78,36 @@ fun applyUci(g: ChessGame, s: String): Boolean {
     return m >= 0 && g.play(m)
 }
 
+/** Ô cờ tướng theo ký hiệu UCI của Pikafish: cột a-i, hàng 0-9 (hàng 0 phía Đỏ), giống mã ô của XiangqiGame. */
+private fun xqUci(m: Int): String {
+    val f = XiangqiGame.fromSq(m); val t = XiangqiGame.toSq(m)
+    return "" + ('a' + f % 9) + ('0' + f / 9) + ('a' + t % 9) + ('0' + t / 9)
+}
+private fun xqParse(s: String): Int = XiangqiGame.mk((s[1] - '0') * 9 + (s[0] - 'a'), (s[3] - '0') * 9 + (s[2] - 'a'))
+
 fun gaugeMain(args: List<String>) {
-    require(args.size >= 7 && args[0] == "chess") { "args: chess <stockfish> <elo> <games> <ourMs> <sfMs> <seed>" }
+    require(args.size >= 7 && args[0] in listOf("chess", "xiangqi")) { "args: chess|xiangqi <engine> <elo> <games> <ourMs> <sfMs> <seed> [threads] [evalFile]" }
+    val game = args[0]
     val sfPath = args[1]; val elo = args[2].toInt(); val games = args[3].toInt()
     val ourMs = args[4].toLong(); val sfMs = args[5].toInt(); val seed = args[6].toInt()
-    ChessGame.threads = args.getOrNull(7)?.toInt() ?: 1
-    val sf = Stockfish(sfPath, elo)
+    val threads = args.getOrNull(7)?.toInt() ?: 1
+    ChessGame.threads = threads; XiangqiGame.threads = threads
+    val sf = UciEngine(sfPath, elo, args.getOrNull(8))
     var w = 0; var d = 0; var l = 0
     for (i in 0 until games) {
-        val opening = OPENINGS[((seed + i / 2) % OPENINGS.size + OPENINGS.size) % OPENINGS.size].split(" ")
         val ourWhite = i % 2 == 0
-        val g = ChessGame(); val moves = ArrayList<String>()
-        for (mv in opening) { check(applyUci(g, mv)) { "bad opening move $mv" }; moves.add(mv) }
+        val moves = ArrayList<String>()
+        val g: BoardGame
+        if (game == "chess") {
+            val cg = ChessGame()
+            for (mv in OPENINGS[((seed + i / 2) % OPENINGS.size + OPENINGS.size) % OPENINGS.size].split(" ")) { check(applyUci(cg, mv)) { "bad opening move $mv" }; moves.add(mv) }
+            g = cg
+        } else {
+            val xg = XiangqiGame()
+            val r = Random((seed + i / 2) * 7919L + 3)
+            repeat(2 + r.nextInt(3)) { val ms = xg.legalMoves(); val m = ms[r.nextInt(ms.size)]; xg.play(m); moves.add(xqUci(m)) }
+            g = xg
+        }
         sf.newGame()
         val rnd = Random(seed * 1000 + i)
         while (g.result == Outcome.ONGOING && g.plies < 400) {
@@ -79,15 +115,16 @@ fun gaugeMain(args: List<String>) {
             if (ourTurn) {
                 val m = (g as LeveledEngine).levelMove(BotLevel.SUPREME, ourMs, rnd)
                 check(m >= 0) { "engine returned no move" }
-                moves.add(uciOf(m)); check(g.play(m))
+                moves.add(if (game == "chess") uciOf(m) else xqUci(m)); check(g.play(m))
             } else {
                 val s = sf.best(moves, sfMs)
-                check(applyUci(g, s)) { "illegal stockfish move $s" }
+                if (game == "chess") check(applyUci(g as ChessGame, s)) { "illegal engine move $s" }
+                else check(g.play(xqParse(s))) { "illegal engine move $s" }
                 moves.add(s)
             }
         }
         val score = when {
-            // Luật lặp thế = thua là luật riêng của app; Stockfish không biết luật này nên khi đo tính là hòa như luật FIDE.
+            // Luật lặp thế = thua là luật riêng của app; engine ngoài không biết luật này nên khi đo tính là hòa.
             g.result == Outcome.DRAW || g.result == Outcome.ONGOING || g.reason == EndReason.REPETITION -> 0.5
             (g.result == Outcome.WIN_FIRST) == ourWhite -> 1.0
             else -> 0.0

@@ -4,7 +4,7 @@
 request.txt:
   tag=<tên đợt đo>            (bắt buộc, dùng làm tên tệp results/<tag>.txt)
   note=<mô tả đợt đo>
-  gauge  chess elo=2800 games=40 ms=2000 sfms=2000 shards=2 [threads=1]
+  gauge  chess elo=2800 games=40 ms=2000 sfms=2000 shards=2 [threads=1]   (xiangqi: đo với Pikafish)
   ladder chess 6 5 pairs=100 ms=2000 shards=5 [players=2]
   ab     chess new ref games=200 ms=200 shards=4 [nodes=0]
 Mọi dòng có thể thêm props=k1=v1;k2=v2 (thuộc tính hệ thống cho bộ đo, ví dụ props=pm.level.chess.5=n15000 để thử cấu hình cấp).
@@ -38,7 +38,8 @@ def matrix(path):
             per = max(2, -(-games // (shards * streams)))
             per += per % 2
             for s in range(shards):
-                cmds = [pre + f"gauge {game} SF {kv['elo']} {per} {kv['ms']} {kv.get('sfms', kv['ms'])} {1000 * j + 100 * s + 10 * k + 7} {threads}" for k in range(streams)]
+                eng = "SF" if game == "chess" else "PF"; net = "" if game == "chess" else " PFNET"
+                cmds = [pre + f"gauge {game} {eng} {kv['elo']} {per} {kv['ms']} {kv.get('sfms', kv['ms'])} {1000 * j + 100 * s + 10 * k + 7} {threads}{net}" for k in range(streams)]
                 inc.append(dict(job=j, shard=s, label=f"{j}-gauge-{game}-{kv['elo']}-{s}", cmds="|".join(cmds)))
         elif kind == "ab":
             a, b = pos[2], pos[3]; games = int(kv["games"])
