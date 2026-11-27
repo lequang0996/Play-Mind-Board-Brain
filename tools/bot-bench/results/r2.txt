@@ -1,5 +1,5 @@
 # date: 2026-11-27
-# note: Đợt 2, cấu hình đã chỉnh sau đợt 1 (Siêu việt nghĩ lâu hơn). Siêu việt chạy botMillis ÷ 4 trên PC (k = 4 giả định).
+# note: Đợt 2, cấu hình đã chỉnh sau đợt 1 (Siêu việt nghĩ lâu hơn). Siêu việt chạy botMillis ÷ 4 trên PC (k = 4 giả định). LƯU Ý: cả đợt chạy chồng với tiến trình đợt 1 chưa dừng (22 tiến trình trên 12 luồng): các cấp giới hạn theo nút không bị ảnh hưởng, nhưng Siêu việt (giới hạn theo thời gian) chỉ được khoảng nửa sức tính, nên các cặp Siêu việt vs Thách đấu bị đánh giá thấp. Cờ tướng chưa xong, cờ vua chưa chạy (dừng để viết lại engine).
 quoridor A=1 B=0 ms=1750 n=100  W/D/L=100/0/0  S=1.000 [1.000,1.000]  elo=-  first=1.00 second=1.00  plies~58  {'REPETITION': 17, 'NONE': 83}  13s
 quoridor A=2 B=1 ms=1750 n=100  W/D/L=62/0/38  S=0.620 [0.524,0.716]  elo=85  first=0.54 second=0.70  plies~71  {'NONE': 100}  12s
 quoridor A=3 B=2 ms=1750 n=100  W/D/L=73/0/27  S=0.730 [0.643,0.817]  elo=173  first=0.70 second=0.76  plies~71  {'NONE': 100}  19s

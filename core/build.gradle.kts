@@ -20,3 +20,13 @@ tasks.register<JavaExec>("selfCheck") {
     mainClass.set("com.fws.playmind.core.SelfCheckKt")
 }
 tasks.named("check") { dependsOn("selfCheck") }
+
+// Đo bot với engine ngoài (chỉ dùng trong CI, xem .github/workflows/gauge.yml).
+// Chạy: gradle :core:gauge --args="chess <stockfish> <elo> <games> <ourMs> <sfMs> <seed>"
+tasks.register<JavaExec>("gauge") {
+    group = "verification"
+    description = "Đo bot với engine ngoài"
+    classpath = sourceSets["test"].runtimeClasspath
+    mainClass.set("com.fws.playmind.core.gauge.ChessGaugeKt")
+    jvmArgs("-Xss16m")
+}

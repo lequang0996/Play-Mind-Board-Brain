@@ -1,0 +1,8 @@
+# Yêu cầu đo bot với Stockfish (xem .github/workflows/gauge.yml). Sửa rồi push lên main để chạy.
+tag=chess-baseline-1s
+game=chess
+elos=1600 1900 2200 2500 2800
+shards=2
+games=20
+ourMs=1000
+sfMs=1000

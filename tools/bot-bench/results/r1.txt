@@ -1,5 +1,5 @@
 # date: 2026-11-27
-# note: Đợt 1, cấu hình 7 cấp ban đầu (commit 918e36c, trước khi chỉnh). Siêu việt chạy botMillis ÷ 8 trên PC. Wall Go cặp Siêu việt vs Thách đấu, cờ tướng các cặp trên và cờ vua chưa chạy (dừng sớm để chạy đợt 2).
+# note: Đợt 1, cấu hình 7 cấp ban đầu (commit 918e36c, trước khi chỉnh). Siêu việt chạy botMillis ÷ 8 trên PC. Wall Go cặp Siêu việt vs Thách đấu, cờ tướng các cặp trên và cờ vua chưa chạy (dừng sớm để chạy đợt 2). LƯU Ý: tiến trình đợt 1 không dừng hẳn và chạy chồng lên đợt 2, nên các dòng cờ tướng của đợt này đo khi CPU quá tải (Siêu việt bị thiệt).
 quoridor A=1 B=0 ms=875 n=100  W/D/L=79/0/21  S=0.790 [0.710,0.870]  elo=230  first=0.76 second=0.82  plies~71  {'NONE': 100}  3s
 quoridor A=2 B=1 ms=875 n=100  W/D/L=67/0/33  S=0.670 [0.577,0.763]  elo=123  first=0.62 second=0.72  plies~72  {'NONE': 100}  5s
 quoridor A=3 B=2 ms=875 n=100  W/D/L=60/0/40  S=0.600 [0.503,0.697]  elo=70  first=0.58 second=0.62  plies~71  {'NONE': 99, 'REPETITION': 1}  15s
