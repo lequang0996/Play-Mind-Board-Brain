@@ -1,0 +1,17 @@
+# date: 2026-11-27
+# note: Cờ vua: hiệu chỉnh chuỗi cấp (Thách đấu n15000 đã cho Siêu việt 89%), thử cặp cấp kề nhau. Cờ tướng: trọng số Texel xiangqi-t1 so khởi điểm, đo với Pikafish.
+exp ladder chess 5v4 ms=2000 props=pm.level.chess.5=n15000;pm.level.chess.4=n4000 n=120  W/D/L=80/13/27  S=0.721 [0.646,0.796]  elo=+165  plies~159  {'CHECKMATE': 93, 'FIFTY': 3, 'MATERIAL': 10, 'REPETITION': 14}
+exp ladder chess 5v4 ms=2000 props=pm.level.chess.5=n15000;pm.level.chess.4=n2500 n=120  W/D/L=81/14/25  S=0.733 [0.660,0.807]  elo=+176  plies~153  {'CHECKMATE': 100, 'FIFTY': 5, 'MATERIAL': 9, 'REPETITION': 6}
+exp ladder chess 4v3 ms=2000 props=pm.level.chess.4=n4000;pm.level.chess.3=n1200,p0.05,x20 n=120  W/D/L=72/11/37  S=0.646 [0.564,0.727]  elo=+104  plies~151  {'CHECKMATE': 93, 'FIFTY': 4, 'MATERIAL': 5, 'REPETITION': 16, 'STALEMATE': 2}
+exp ladder chess 4v3 ms=2000 props=pm.level.chess.4=n4000;pm.level.chess.3=n700,p0.05,x20 n=120  W/D/L=88/6/26  S=0.758 [0.684,0.833]  elo=+199  plies~137  {'CHECKMATE': 106, 'FIFTY': 4, 'MATERIAL': 2, 'REPETITION': 8}
+exp ladder chess 3v2 ms=2000 props=pm.level.chess.3=n1200,p0.05,x20;pm.level.chess.2=d3,p0.15,x40 n=120  W/D/L=100/6/14  S=0.858 [0.799,0.918]  elo=+313  plies~117  {'CHECKMATE': 105, 'FIFTY': 2, 'MATERIAL': 4, 'REPETITION': 9}
+exp ladder chess 3v2 ms=2000 props=pm.level.chess.3=n1200,p0.05,x20;pm.level.chess.2=d2,p0.15,x40 n=120  W/D/L=106/5/9  S=0.904 [0.855,0.954]  elo=+390  plies~129  {'CHECKMATE': 109, 'FIFTY': 4, 'MATERIAL': 1, 'REPETITION': 6}
+exp ladder chess 2v1 ms=2000 props=pm.level.chess.2=d3,p0.15,x40;pm.level.chess.1=d2,p0.3,x80 n=120  W/D/L=81/2/37  S=0.683 [0.601,0.766]  elo=+134  plies~110  {'CHECKMATE': 111, 'MATERIAL': 1, 'REPETITION': 7, 'STALEMATE': 1}
+exp ladder chess 2v1 ms=2000 props=pm.level.chess.2=d3,p0.15,x40;pm.level.chess.1=d1,p0.3,x80 n=120  W/D/L=89/4/27  S=0.758 [0.683,0.833]  elo=+199  plies~117  {'CHECKMATE': 110, 'FIFTY': 2, 'REPETITION': 6, 'STALEMATE': 2}
+exp ladder chess 1v0 ms=2000 props=pm.level.chess.1=d2,p0.3,x80;pm.level.chess.0=d1,p0.5,x150 n=120  W/D/L=98/7/15  S=0.846 [0.785,0.907]  elo=+296  plies~106  {'CHECKMATE': 111, 'FIFTY': 2, 'MATERIAL': 2, 'REPETITION': 2, 'STALEMATE': 3}
+exp ab xiangqi new-vs-ref ms=200 props=- n=408  W/D/L=320/9/79  S=0.795 [0.757,0.834]  elo=+236  plies~108  {'CHECKMATE': 291, 'FIFTY': 6, 'NOMOVES': 38, 'NONE': 3, 'REPETITION': 70}
+exp ab chess new@corr32-vs-new ms=200 props=- n=600  W/D/L=279/110/211  S=0.557 [0.521,0.593]  elo=+40  plies~178  {'CHECKMATE': 441, 'FIFTY': 45, 'MATERIAL': 59, 'NONE': 5, 'REPETITION': 49, 'STALEMATE': 1}
+exp ab chess new@corr64-vs-new ms=200 props=- n=600  W/D/L=275/116/209  S=0.555 [0.519,0.591]  elo=+38  plies~179  {'CHECKMATE': 439, 'FIFTY': 62, 'MATERIAL': 47, 'NONE': 6, 'REPETITION': 45, 'STALEMATE': 1}
+exp ab chess new@corr128-vs-new ms=200 props=- n=600  W/D/L=242/106/252  S=0.492 [0.455,0.528]  elo=-6  plies~180  {'CHECKMATE': 451, 'FIFTY': 51, 'MATERIAL': 43, 'NONE': 11, 'REPETITION': 43, 'STALEMATE': 1}
+exp ab xiangqi new@corr32-vs-new ms=200 props=- n=408  W/D/L=162/102/144  S=0.522 [0.480,0.564]  elo=+15  plies~181  {'CHECKMATE': 199, 'FIFTY': 78, 'NOMOVES': 48, 'NONE': 24, 'REPETITION': 59}
+exp ab xiangqi new@corr64-vs-new ms=200 props=- n=408  W/D/L=163/86/159  S=0.505 [0.462,0.548]  elo=+3  plies~177  {'CHECKMATE': 205, 'FIFTY': 66, 'NOMOVES': 46, 'NONE': 20, 'REPETITION': 71}
