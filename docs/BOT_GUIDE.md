@@ -429,9 +429,9 @@ Chỉ làm **một thay đổi mỗi lần** và đo SPRT:
 6. **Tàn cuộc:** bảng tàn cuộc nhỏ (như K+P đối K) và quy tắc hòa lý thuyết.
 7. **Mạng nơ-ron nhỏ (NNUE):** giữ nguyên phần tìm kiếm, chỉ thay `evaluate()` bằng mạng huấn luyện từ dữ liệu tự đấu. Chỉ cần khi mục 1 đến 6 đã hết dư địa.
 
-### 5.3. Cấu hình 7 bot (khởi điểm để thử, phải đo lại theo mục 4.3)
+### 5.3. Cấu hình 7 bot: mẫu khởi điểm (cấu hình đã đo và chốt: mục 13.1)
 
-Các giá trị dưới đây là điểm bắt đầu, **không phải kết quả đo**.
+Các giá trị dưới đây là điểm bắt đầu khi làm một engine mới, **không phải kết quả đo**. Cấu hình đang dùng trong `BotLevels.kt` và tỉ lệ đo được nằm ở mục 13.
 
 | Cấp | Giới hạn tìm kiếm | Nhiễu |
 |---|---|---|
@@ -478,7 +478,7 @@ Stockfish có `UCI_LimitStrength=true` và `UCI_Elo` (mức thấp nhất khoả
 * Ván hòa tính 0,5. Hòa nhiều làm phương sai mỗi ván nhỏ đi (mục 2.2), nên không cần thêm ván so với cờ vua; giữ đúng số ván ở mục 3.4.
 * Cùng khung tìm kiếm như cờ vua (phụ lục A.2), tham số riêng ở bảng A.2.
 
-### 6.3. Cấu hình 7 bot (khởi điểm để thử, phải đo lại)
+### 6.3. Cấu hình 7 bot: mẫu khởi điểm (cấu hình đã đo và chốt: mục 13.1)
 
 | Cấp | Giới hạn tìm kiếm | Nhiễu |
 |---|---|---|
@@ -529,7 +529,7 @@ Pikafish dùng mạng nơ-ron nên giới hạn theo **số nút**, không theo 
 * Lợi thế đi trước rất lớn. Mọi trận đo đều đấu **cặp ván đổi màu**, mở đầu bằng thế cân bằng 2 đến 3 nước ngẫu nhiên hoặc luật hoán đổi (mục 2.5). Báo cáo thêm tỉ lệ điểm riêng khi đi trước và đi sau của từng cặp.
 * Caro hầu như không có hòa nên phương sai mỗi ván lớn nhất (bảng 2.2 chính là trường hợp của caro): kết quả **không** hội tụ nhanh hơn cờ vua, và không được bớt số ván.
 
-### 7.4. Cấu hình 7 bot (khởi điểm để thử, phải đo lại)
+### 7.4. Cấu hình 7 bot: mẫu khởi điểm (cấu hình đã đo và chốt: mục 13.1)
 
 Ở caro, cấp được tạo bằng cách **bật dần module đe dọa**, vì đây là thứ phân biệt người chơi giỏi và yếu.
 
@@ -554,7 +554,7 @@ Một engine Gomocup (như Rapfi) bị giới hạn nút, độ sâu hoặc th�
 * **Engine Siêu việt** (`CaroEngine.kt`, tự làm). Mỗi ô trống, mỗi hướng có khóa màu 10 ô lân cận (5 ô mỗi phía). Bảng `CaroPat` tính sẵn hình cờ theo định nghĩa đệ quy (năm, bốn hở, bốn, ba hở…), nên tự đúng với luật chặn hai đầu và hình gãy. Cửa sổ 5 ô mỗi phía là bắt buộc: với 4 ô, thế `O X X X X _ O` bị nhận nhầm là bốn. Đánh giá và lớp ô (4-4, 4-3, 3-3) cập nhật tăng dần. Tìm kiếm có VCF, phòng VCF, PVS lặp sâu, bảng băm, killer; đối phương có ba hở thì chỉ xét nước chặn và nước đánh bốn. Bàn vô hạn: cửa sổ 32×32 quanh các quân, ngoài cửa sổ coi là trống.
 * **Luật đỡ bốn.** Một hàng bốn có một đầu bị chặn đỡ được bằng **hai** cách: chiếm ô thành năm, hoặc đặt quân ở đầu kia để dãy năm bị chặn hai đầu (`O X X X X _ .` thì đặt vào ô `.`). VCF và nước bắt buộc phải xét cả hai (`defenses()` thử từng ô trên đường), nếu không sẽ báo thắng sai.
 * **A/B trên CI:** engine mới hơn engine cũ +232 Elo ở 1 s/nước (408 ván, 79%).
-* **7 cấp:** từ Giỏi trở lên đạt khoảng (mục 13). Hai cặp dưới cùng bị nén: ở độ sâu 1, nhiễu bão hòa, còn lớp an toàn luôn chặn bốn, nên cấp Dễ vẫn đỡ được đòn đơn giản. Muốn đạt đủ cần thêm công cụ giảm sức riêng cho caro (ví dụ bỏ qua ba hở với một xác suất).
+* **7 cấp:** cả 6 cặp kề và 5 cặp cách hai cấp đều đạt (mục 13). Hai cấp dưới cùng dùng **nhiễu rộng**: với xác suất `p`, bot đi một nước ngẫu nhiên gần quân (delta ≥ `RANDOM_DELTA` trong `Gomoku.kt`), trừ khi đang có nước thắng, nước chặn bắt buộc hoặc VCF. Nhiễu theo delta thường bão hòa ở độ sâu 1 vì lớp an toàn luôn chặn bốn, nên không đủ hạ sức cấp Dễ.
 
 ---
 
@@ -656,7 +656,7 @@ Quoridor **không có engine chuẩn được công nhận rộng rãi**, nên 7
 
 Hàm đánh giá khởi điểm: hiệu số độ dài đường ngắn nhất tới đích (BFS hoặc A*), cộng chênh lệch số tường còn lại. Số nước mỗi lượt rất lớn, nên cần cắt ứng viên (chỉ xét tường gần quân và đường đi tốt nhất của đối phương). Cải tiến từng bước qua SPRT.
 
-### 9.3. Cấu hình 7 bot (khởi điểm để thử, phải đo lại)
+### 9.3. Cấu hình 7 bot: mẫu khởi điểm (cấu hình đã đo và chốt: mục 13.1)
 
 | Cấp | Alpha-beta | Hoặc MCTS (`g ≈ 100`) | Nhiễu |
 |---|---|---|---|
@@ -693,7 +693,7 @@ Wall Go cũng **không có engine chuẩn**, nên 7 bot chỉ đo với nhau. T�
 
 Hợp với MCTS hoặc alpha-beta với hàm đánh giá diện tích vây được. Cải tiến từng bước qua SPRT.
 
-### 10.3. Cấu hình 7 bot (khởi điểm để thử, phải đo lại)
+### 10.3. Cấu hình 7 bot: mẫu khởi điểm (cấu hình đã đo và chốt: mục 13.1)
 
 Dùng cùng bảng với Quoridor (mục 9.3): độ sâu 1 đến 4 cho Dễ đến Giỏi, rồi giới hạn nút hoặc lượt cho Cao thủ và Thách đấu theo công thức ở mục 4.3 (đo `g` riêng cho Wall Go), Siêu việt toàn lực. Số cụ thể phải đo lại riêng cho Wall Go vì độ rộng và độ dài ván khác Quoridor.
 
@@ -701,7 +701,7 @@ Dùng cùng bảng với Quoridor (mục 9.3): độ sâu 1 đến 4 cho Dễ đ
 
 * **Engine Siêu việt (2 người):** negamax PVS đi/hoàn tác trên một bàn, bảng băm Zobrist, killer. Ở nút sát lá, điểm sắp xếp (đánh giá tĩnh của thế con) dùng luôn làm giá trị lá, không đánh giá lại và không cắt nước. Hàm đánh giá nhanh `score2` không cấp phát bộ nhớ. Độ sâu ở 1 s tăng từ 4 lên 5. 3-4 người vẫn dùng paranoid như cũ.
 * **A/B trên CI:** engine mới hơn engine cũ +124 Elo ở 1 s/nước (408 ván, 67%).
-* **7 cấp theo độ sâu và nhiễu** (không đổi theo máy): Siêu việt chỉ duyệt vài nghìn nút mỗi nước vì mỗi nút đánh giá mọi nước con, nên giới hạn nút không phù hợp. Đo trên máy phát triển, 200 ván mỗi cặp: cả 6 cặp kề đều trong khoảng đạt (mục 13).
+* **7 cấp theo độ sâu và nhiễu** (không đổi theo máy): Siêu việt chỉ duyệt vài nghìn nút mỗi nước vì mỗi nút đánh giá mọi nước con, nên giới hạn nút không phù hợp. Kết quả đo trên CI ở mục 13.2.
 
 ---
 
