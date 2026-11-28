@@ -160,8 +160,7 @@ fun ShopScreen(app: PlayMindApp, onBack: () -> Unit) {
                     val vc = runCatching { androidx.core.content.pm.PackageInfoCompat.getLongVersionCode(pkm.getPackageInfo(ctx.packageName, 0)) }.getOrDefault(-1L)
                     "${ctx.packageName} v$vc · installer $installer"
                 }
-                Text("$info
-${billing.diag}", style = MaterialTheme.typography.labelSmall, color = pm.inkSoft)
+                Text(info + "\n" + billing.diag, style = MaterialTheme.typography.labelSmall, color = pm.inkSoft)
             }
             Spacer(Modifier.height(20.dp))
         }
