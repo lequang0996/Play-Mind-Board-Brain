@@ -19,10 +19,14 @@ import kotlin.random.Random
  */
 /** Tham số bot Quoridor (để thử A/B: "ww80+lmr4"). */
 object QP {
-    val NAMES = arrayOf("ww", "tempo", "walls", "rootw", "dag", "lmr", "hist", "race")
-    val DEF = intArrayOf(75, 30, 10, 14, 0, 0, 0, 3000)
+    val NAMES = arrayOf("ww", "tempo", "walls", "rootw", "dag", "lmr", "hist", "race", "wz", "prog")
+    val DEF = intArrayOf(75, 30, 10, 14, 0, 0, 0, 3000, 0, 0)
     const val WW = 0; const val TEMPO = 1; const val WALLS = 2; const val ROOTW = 3; const val DAG = 4; const val LMR = 5
     const val HIST = 6; const val RACE = 7
+    /** Giá trị thêm của mỗi tường còn lại khi đối phương đã HẾT tường (tường cuối ván chặn hiệu quả hơn nhiều). */
+    const val WZ = 8
+    /** > 0: ở gốc, nếu nước tốt nhất không rút ngắn đường về đích mà có nước đi quân rút ngắn kém không quá PROG điểm thì chọn nước đó (chống đi qua đi lại). */
+    const val PROG = 9
     fun parse(spec: String): IntArray {
         val p = DEF.copyOf()
         for (item in spec.split('+').filter { it.isNotEmpty() }) {
@@ -280,6 +284,10 @@ class QuoridorGame(val players: Int = 2) : BoardGame, LeveledEngine {
         if (players == 2) {
             val opp = dists[1 - me]
             var v = (opp - my) * 100 + (wallsLeft[me] - wallsLeft[1 - me]) * prm[QP.WW] + prm[QP.TEMPO]
+            if (prm[QP.WZ] != 0) {
+                if (wallsLeft[1 - me] == 0) v += wallsLeft[me] * prm[QP.WZ]
+                if (wallsLeft[me] == 0) v -= wallsLeft[1 - me] * prm[QP.WZ]
+            }
             // Chạy đua đã ngã ngũ: bên kia hết tường mà mình (đang tới lượt) không chậm hơn -> thắng chắc; ngược lại thì thua chắc.
             if (wallsLeft[1 - me] == 0 && my <= opp) v += prm[QP.RACE]
             else if (wallsLeft[me] == 0 && opp < my) v -= prm[QP.RACE]
@@ -587,6 +595,27 @@ class QuoridorGame(val players: Int = 2) : BoardGame, LeveledEngine {
             lastDepthReached = depth
             if (alpha >= INF - 200 || alpha <= -INF + 200) break
             if (System.nanoTime() > soft) break
+        }
+        // chống đi qua đi lại: nước tốt nhất không tiến về đích mà có nước đi quân tiến về đích gần bằng điểm thì đi nước đó
+        if (prm[QP.PROG] > 0 && lim.timeMs > 0 && players == 2 && completed > 0 && bestScore < INF - 200 && bestScore > -INF + 200) {
+            val goal = goalSide(players, me)
+            val myD = dists[me]
+            fun progress(m: Int) = !isWall(m) && pathLen(m, goal) < myD
+            if (!progress(best)) {
+                aborted = false; nodeLimit = Long.MAX_VALUE
+                deadline = System.nanoTime() + lim.timeMs * 300_000L
+                val thr = bestScore - prm[QP.PROG]
+                for (m in moves) {
+                    if (m == best || !progress(m)) continue
+                    val old = apply(me, m)
+                    path[1] = key(next)
+                    val v = if (repeatedAt(1)) -INF else -ab(next, completed - 1, -thr, -thr + 1, 1)
+                    undo(me, m, old)
+                    if (aborted) break
+                    if (v >= thr) { best = m; break }
+                }
+                aborted = false
+            }
         }
         var near = IntArray(0)
         if (delta > 0 && completed > 0) {

@@ -84,6 +84,25 @@ internal object XQ {
     val PAL = Array(2) { c -> BooleanArray(90) { inPalace(c, it) } }
 }
 
+
+/** Tham số tìm kiếm của engine cờ tướng (giá trị mặc định = cấu hình đang phát hành). Thử A/B: bot-bench "ab xiangqi new@rfpm80 new". */
+object XSP {
+    val NAMES = arrayOf("rfpm", "rfpi", "razb", "razd", "nmpdiv", "sde", "futb", "futd", "hp", "seeq", "seec", "lmrh", "asp", "qd")
+    val DEF = intArrayOf(90, 70, 250, 200, 200, 24, 130, 110, 3500, 30, 100, 7000, 20, 200)
+    const val RFPM = 0; const val RFPI = 1; const val RAZB = 2; const val RAZD = 3; const val NMPDIV = 4; const val SDE = 5
+    const val FUTB = 6; const val FUTD = 7; const val HP = 8; const val SEEQ = 9; const val SEEC = 10; const val LMRH = 11
+    const val ASP = 12; const val QD = 13
+    fun parse(spec: String): IntArray {
+        val p = DEF.copyOf()
+        for (item in spec.split('+').filter { it.isNotEmpty() }) {
+            val i = item.indexOfFirst { it == '-' || it.isDigit() }
+            val k = NAMES.indexOf(item.substring(0, i)); require(k >= 0) { "tham số lạ: $item" }
+            p[k] = item.substring(i).toInt()
+        }
+        return p
+    }
+}
+
 /** Bố cục và giá trị khởi điểm của trọng số đánh giá cờ tướng. */
 internal object XW {
     private var n = 0
@@ -191,6 +210,8 @@ class XiangqiEngine(private val tt: ChessTT) {
     /** Correction history (×256) theo khóa cấu trúc, mỗi bên đi; [corrMax] = biên (điểm), 0 = tắt. */
     private val corr = Array(2) { IntArray(16384) }
     var corrMax = 32
+    /** Tham số tìm kiếm (XSP), để thử A/B: "new@rfpm80+futb120". */
+    var xp: IntArray = XSP.DEF
     private fun corrIdx(): Int = ((skey * -0x61c8864680b583ebL) ushr 50).toInt()
 
     private val bufs = Array(MAXPLY + 2) { IntArray(160) }
@@ -713,7 +734,7 @@ class XiangqiEngine(private val tt: ChessTT) {
             val m = bufs[ply][k]
             if (!inChk) {
                 if (scr[ply][k] < 0) continue
-                if (stand + SEEV[pc[(m shr 7) and 127] and 7] + 200 <= alpha) continue
+                if (stand + SEEV[pc[(m shr 7) and 127] and 7] + xp[XSP.QD] <= alpha) continue
             }
             make(m)
             if (attacked(kingSq[stm xor 1], stm)) { unmake(); continue }
@@ -781,13 +802,13 @@ class XiangqiEngine(private val tt: ChessTT) {
         killers[ply + 1][0] = 0; killers[ply + 1][1] = 0
 
         if (!pv && !inChk && excluded == 0) {
-            if (depth <= 8 && eval - (90 * depth - (if (improving) 70 else 0)) >= beta && eval < MATE - 500) return (eval + beta) / 2
-            if (depth <= 3 && eval + 250 + 200 * depth <= alpha) {
+            if (depth <= 8 && eval - (xp[XSP.RFPM] * depth - (if (improving) xp[XSP.RFPI] else 0)) >= beta && eval < MATE - 500) return (eval + beta) / 2
+            if (depth <= 3 && eval + xp[XSP.RAZB] + xp[XSP.RAZD] * depth <= alpha) {
                 val q = qsearch(alpha, alpha + 1, ply)
                 if (q <= alpha) return q
             }
             if (depth >= 3 && eval >= beta && ply > 0 && curMove[ply - 1] != 0 && attackers(stm) > 0 && beta > -MATE + 500) {
-                val r = 3 + depth / 3 + min(3, (eval - beta) / 200)
+                val r = 3 + depth / 3 + min(3, (eval - beta) / xp[XSP.NMPDIV])
                 curMove[ply] = 0; curPc[ply] = 0
                 makeNull()
                 val s = -search(depth - r, -beta, -beta + 1, ply + 1, !cut)
@@ -806,7 +827,7 @@ class XiangqiEngine(private val tt: ChessTT) {
             val s = search((depth - 1) / 2, sBeta - 1, sBeta, ply, cut)
             excl[ply] = 0
             if (abort) return 0
-            if (s < sBeta) singularExt = if (!pv && s < sBeta - 24) 2 else 1
+            if (s < sBeta) singularExt = if (!pv && s < sBeta - xp[XSP.SDE]) 2 else 1
             else if (sBeta >= beta) return sBeta
             else if (ttS >= beta) singularExt = -1
         }
@@ -831,10 +852,10 @@ class XiangqiEngine(private val tt: ChessTT) {
                 val lmrD = max(0, depth - 1 - LMR[min(depth, 63)][min(legalN + 1, 63)])
                 if (quiet) {
                     if (!inChk && legalN >= (3 + depth * depth) / (if (improving) 1 else 2)) { skipQuiets = true; continue }
-                    if (!inChk && lmrD <= 6 && eval != NONE && eval + 130 + 110 * lmrD <= alpha) { skipQuiets = true; continue }
-                    if (lmrD <= 3 && hscore < -3500 * depth) continue
-                    if (lmrD <= 7 && see(m) < -30 * lmrD * lmrD) continue
-                } else if (depth <= 6 && scr[ply][k] < 0 && see(m) < -100 * depth) continue
+                    if (!inChk && lmrD <= 6 && eval != NONE && eval + xp[XSP.FUTB] + xp[XSP.FUTD] * lmrD <= alpha) { skipQuiets = true; continue }
+                    if (lmrD <= 3 && hscore < -xp[XSP.HP] * depth) continue
+                    if (lmrD <= 7 && see(m) < -xp[XSP.SEEQ] * lmrD * lmrD) continue
+                } else if (depth <= 6 && scr[ply][k] < 0 && see(m) < -xp[XSP.SEEC] * depth) continue
             }
             make(m)
             if (attacked(kingSq[us], stm)) { unmake(); continue }
@@ -857,7 +878,7 @@ class XiangqiEngine(private val tt: ChessTT) {
                     if (gives) r--
                     if (quiet) {
                         if (m == killers[ply][0] || m == killers[ply][1]) r--
-                        r -= hscore / 7000
+                        r -= hscore / xp[XSP.LMRH]
                     }
                     if (ttCapture) r++
                     r = r.coerceIn(0, max(0, newDepth - 1))
@@ -966,7 +987,7 @@ class XiangqiEngine(private val tt: ChessTT) {
             if (helperId > 0 && tt.stop) break
             rootDepth = depth
             nodeLimit = if (depth == 1) Long.MAX_VALUE else nl
-            var window = if (depth >= 4) 20 else INF
+            var window = if (depth >= 4) xp[XSP.ASP] else INF
             var alpha = if (depth >= 4) max(-INF, bestScore - window) else -INF
             var beta = if (depth >= 4) min(INF, bestScore + window) else INF
             var iterBest = -1; var iterScore = -INF
@@ -1046,7 +1067,7 @@ class XiangqiEngine(private val tt: ChessTT) {
         load(board, redToMove, moves)
         if (threads <= 1 || lim.nodes > 0 || lim.depth > 0 || lim.timeMs <= 0) return search(lim, allowed, delta)
         while (helpers.size < threads - 1) helpers.add(XiangqiEngine(tt).also { it.helperId = helpers.size + 1 })
-        for (h in helpers) { h.wMg = wMg; h.wEg = wEg; h.corrMax = corrMax }
+        for (h in helpers) { h.wMg = wMg; h.wEg = wEg; h.corrMax = corrMax; h.xp = xp }
         tt.stop = false
         val ths = (0 until threads - 1).map { k ->
             val h = helpers[k]

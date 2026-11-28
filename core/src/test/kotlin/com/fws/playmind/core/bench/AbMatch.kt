@@ -61,10 +61,12 @@ private class XqP(val threads: Int, ref: Boolean, spec: String = "") : AbPlayer 
             e.wMg = XW.MG.copyOf(); e.wEg = XW.EG.copyOf(); mg.copyInto(XW.MG); eg.copyInto(XW.EG)
         }
         weightsFile(spec, XW.MG.size)?.let { e.wMg = it.first; e.wEg = it.second }
-        // spec: "corr64" (biên correction history), "w:<tag>"; để trống = mặc định của engine
+        // spec: "corr64" (biên correction history), tham số tìm kiếm XSP ("rfpm80+futb120"), "w:<tag>"; để trống = mặc định
+        val rest = ArrayList<String>()
         for (it in stripW(spec).split('+').filter { it.isNotEmpty() }) {
-            require(it.startsWith("corr")) { "tham số lạ: $it" }; e.corrMax = it.removePrefix("corr").toInt()
+            if (it.startsWith("corr")) e.corrMax = it.removePrefix("corr").toInt() else rest.add(it)
         }
+        if (rest.isNotEmpty()) e.xp = XSP.parse(rest.joinToString("+"))
     }
     override fun move(hist: List<Int>, ms: Long, nodes: Long) =
         e.searchSmp(start, true, hist, SearchLimit(timeMs = if (nodes > 0) 0 else ms, nodes = nodes), null, 0, threads).best
