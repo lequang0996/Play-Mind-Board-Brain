@@ -5,11 +5,11 @@ Sinh tự động bởi `python tools/bot-bench/make_reports.py` từ `tools/bot
 
 | Game | Số đợt | Tổng ván | Cặp kề đã đo | Cặp kề đạt | Siêu việt (PM-Elo, mục tiêu 2800) | Siêu việt so với Stockfish |
 |---|---|---|---|---|---|---|
-| [Cờ vua](chess.md) | 8 | 3416 | 6/6 | 6/6 | ~2710 | 2863 (đạt 2800+) |
-| [Cờ tướng](xiangqi.md) | 4 | 3784 | 6/6 | 4/6 | ~3126 | chưa đo |
+| [Cờ vua](chess.md) | 9 | 5552 | 6/6 | 6/6 | ~2865 | 2863 (đạt 2800+) |
+| [Cờ tướng](xiangqi.md) | 5 | 4618 | 6/6 | 5/6 | ~3154 | chưa đo |
 | [Cờ caro](caro.md) | 5 | 4092 | 6/6 | 1/6 | ~1863 | chưa đo |
-| [Quoridor](quoridor.md) | 3 | 3156 | 6/6 | 2/6 | ~2423 | chưa đo |
-| [Wall Go](wallgo.md) | 3 | 3056 | 6/6 | 3/6 | ~2006 | chưa đo |
+| [Quoridor](quoridor.md) | 4 | 4692 | 6/6 | 2/6 | ~2423 | chưa đo |
+| [Wall Go](wallgo.md) | 4 | 3668 | 6/6 | 3/6 | ~2006 | chưa đo |
 | [Cờ vây](go.md) | 0 | 0 | 0/6 | 0/6 | chưa đủ dữ liệu | chưa đo |
 
 ## Lưu ý

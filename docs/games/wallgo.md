@@ -23,7 +23,7 @@ Theo mẫu BOT_GUIDE mục 12.2. Sinh bởi `tools/bot-bench/make_profiles.py`; 
 |---|---|
 | Dễ | độ sâu 1; nhiễu p = 1.0, δ = 700 |
 | Trung bình | độ sâu 1; nhiễu p = 0.9, δ = 400 |
-| Khá | độ sâu 1; nhiễu p = 0.7, δ = 200 |
+| Khá | độ sâu 1; nhiễu p = 0.8, δ = 250 |
 | Giỏi | độ sâu 1 |
 | Cao thủ | độ sâu 2 |
 | Thách đấu | độ sâu 3 |

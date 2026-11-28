@@ -6,8 +6,8 @@ Sinh tự động bởi `tools/bot-bench/make_reports.py` từ `tools/bot-bench/
 
 | Mục | Giá trị |
 |---|---|
-| Số đợt đo | 3 |
-| Tổng số ván đã đấu | 3156 |
+| Số đợt đo | 4 |
+| Tổng số ván đã đấu | 4692 |
 | Cặp kề đạt (kết quả mới nhất) | 2/6 |
 | Nghiệm thu | Chưa đạt (cần đủ 6 cặp kề với đủ số ván, 5 cặp cách hai cấp và đo trên điện thoại thật) |
 
@@ -52,6 +52,17 @@ Nghiệm thu đợt 2: Wall Go và Quoridor (chạy lại phần g10 mất do l�
 | Cao thủ vs Giỏi | 2000 ms | 204 | 103/0/101 | 50,5% | 0.44 / 0.57 | Không đạt (hai cấp quá sát) |
 | Thách đấu vs Cao thủ | 2000 ms | 204 | 137/0/67 | 67,2% | 0.68 / 0.67 | Đạt |
 | Siêu việt vs Thách đấu | 2000 ms | 216 | 171/0/45 | 79,2% | 0.78 / 0.81 | Đạt |
+
+### Đợt g13-accept-3-chess-t3 (2026-11-28)
+
+Nghiệm thu đợt 3: cờ vua với trọng số chess-t3 (toàn bộ chuỗi cấp + Stockfish 2800/3000), cờ tướng (Thách đấu n16000, Cao thủ n3000), Wall Go (Khá), Quoridor (các cấp giữa).
+
+| Cặp | Thời gian Siêu việt (PC) | Số ván | Thắng/Hòa/Thua | Tỉ lệ điểm | Đi trước / đi sau | Kết luận |
+|---|---|---|---|---|---|---|
+| Trung bình vs Dễ | 2000 ms | 408 | 345/0/63 | 84,6% | 0.75 / 0.94 | Không đạt (hai cấp quá sát) |
+| Khá vs Trung bình | 2000 ms | 204 | 145/0/59 | 71,1% | 0.69 / 0.74 | Không đạt (hai cấp quá sát) |
+| Giỏi vs Khá | 2000 ms | 204 | 116/0/88 | 56,9% | 0.49 / 0.65 | Không đạt (hai cấp quá sát) |
+| Cao thủ vs Giỏi | 2000 ms | 204 | 127/0/77 | 62,3% | 0.62 / 0.63 | Cần thêm ván |
 
 ### Đợt r1 (2026-11-27)
 

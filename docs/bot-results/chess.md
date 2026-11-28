@@ -6,8 +6,8 @@ Sinh tự động bởi `tools/bot-bench/make_reports.py` từ `tools/bot-bench/
 
 | Mục | Giá trị |
 |---|---|
-| Số đợt đo | 8 |
-| Tổng số ván đã đấu | 3416 |
+| Số đợt đo | 9 |
+| Tổng số ván đã đấu | 5552 |
 | Cặp kề đạt (kết quả mới nhất) | 6/6 |
 | Nghiệm thu | Đạt (cần đủ 6 cặp kề với đủ số ván, 5 cặp cách hai cấp và đo trên điện thoại thật) |
 
@@ -29,23 +29,23 @@ Neo cấp Dễ = 800 theo thang quy ước của guide (mục 1.2), rồi cộng
 | Cấp | Mục tiêu | Ước lượng | Lệch |
 |---|---|---|---|
 | Dễ | 800 | 800 | (neo) |
-| Trung bình | 1350 | ~1380 | +30 |
-| Khá | 1700 | ~1697 | -3 |
-| Giỏi | 2100 | ~2179 | +79 |
-| Cao thủ | 2300 | 2319 | +19 |
-| Thách đấu | 2500 | 2446 | -54 |
-| Siêu việt | 2800 | ~2710 | -90 |
+| Trung bình | 1350 | ~1440 | +90 |
+| Khá | 1700 | ~1858 | +158 |
+| Giỏi | 2100 | ~2281 | +181 |
+| Cao thủ | 2300 | 2440 | +140 |
+| Thách đấu | 2500 | 2588 | +88 |
+| Siêu việt | 2800 | ~2865 | +65 |
 
 ## Kết quả mới nhất từng cặp kề
 
 | Cặp | Đợt | Số ván (cần) | Thắng/Hòa/Thua | Tỉ lệ điểm | Khoảng tin cậy 95% | Khoảng đạt | Khoảng Elo (mục tiêu) | Kết luận |
 |---|---|---|---|---|---|---|---|---|
-| Trung bình vs Dễ | g11-accept-chess-xiangqi-caro | 408 (400) | 383/23/2 | 96,7% | 95,4%–98,0% | 93,0%–98,0% | ~+580 (550) | Đạt |
-| Khá vs Trung bình | g12-accept-2 | 204 (200) | 169/14/21 | 86,3% | 81,9%–90,7% | 81,0%–95,0% | ~+317 (350) | Đạt |
-| Giỏi vs Khá | g12-accept-2 | 204 (200) | 190/5/9 | 94,4% | 91,4%–97,3% | 85,0%–96,0% | ~+483 (400) | Đạt |
-| Cao thủ vs Giỏi | g11-accept-chess-xiangqi-caro | 204 (200) | 132/18/54 | 69,1% | 63,1%–75,1% | 64,0%–88,0% | +139 (200) | Đạt |
-| Thách đấu vs Cao thủ | g11-accept-chess-xiangqi-caro | 204 (200) | 131/14/59 | 67,6% | 61,5%–73,8% | 64,0%–88,0% | +127 (200) | Đạt |
-| Siêu việt vs Thách đấu | g11-accept-chess-xiangqi-caro | 216 (200) | 160/35/21 | 82,2% | 77,8%–86,5% | 76,0%–93,0% | ~+264 (300) | Đạt |
+| Trung bình vs Dễ | g13-accept-3-chess-t3 | 408 (400) | 391/15/2 | 97,7% | 96,5%–98,8% | 93,0%–98,0% | ~+640 (550) | Đạt |
+| Khá vs Trung bình | g13-accept-3-chess-t3 | 204 (200) | 185/5/14 | 91,9% | 88,3%–95,5% | 81,0%–95,0% | ~+417 (350) | Đạt |
+| Giỏi vs Khá | g13-accept-3-chess-t3 | 204 (200) | 187/2/15 | 92,2% | 88,5%–95,8% | 85,0%–96,0% | ~+423 (400) | Đạt |
+| Cao thủ vs Giỏi | g13-accept-3-chess-t3 | 204 (200) | 139/14/51 | 71,6% | 65,6%–77,5% | 64,0%–88,0% | +159 (200) | Đạt |
+| Thách đấu vs Cao thủ | g13-accept-3-chess-t3 | 204 (200) | 134/18/52 | 70,1% | 64,1%–76,1% | 64,0%–88,0% | +147 (200) | Đạt |
+| Siêu việt vs Thách đấu | g13-accept-3-chess-t3 | 216 (200) | 165/30/21 | 83,3% | 79,0%–87,6% | 76,0%–93,0% | ~+278 (300) | Đạt |
 
 "Sơ bộ" = chưa đủ số ván guide yêu cầu nên kết luận chỉ để tham khảo.
 
@@ -72,4 +72,17 @@ Nghiệm thu đợt 2: Wall Go và Quoridor (chạy lại phần g10 mất do l�
 |---|---|---|---|---|---|---|
 | Khá vs Trung bình | 2000 ms | 204 | 169/14/21 | 86,3% | 0.84 / 0.88 | Đạt |
 | Giỏi vs Khá | 2000 ms | 204 | 190/5/9 | 94,4% | 0.95 / 0.94 | Đạt |
+
+### Đợt g13-accept-3-chess-t3 (2026-11-28)
+
+Nghiệm thu đợt 3: cờ vua với trọng số chess-t3 (toàn bộ chuỗi cấp + Stockfish 2800/3000), cờ tướng (Thách đấu n16000, Cao thủ n3000), Wall Go (Khá), Quoridor (các cấp giữa).
+
+| Cặp | Thời gian Siêu việt (PC) | Số ván | Thắng/Hòa/Thua | Tỉ lệ điểm | Đi trước / đi sau | Kết luận |
+|---|---|---|---|---|---|---|
+| Trung bình vs Dễ | 2000 ms | 408 | 391/15/2 | 97,7% | 0.97 / 0.98 | Đạt |
+| Khá vs Trung bình | 2000 ms | 204 | 185/5/14 | 91,9% | 0.91 / 0.93 | Đạt |
+| Giỏi vs Khá | 2000 ms | 204 | 187/2/15 | 92,2% | 0.95 / 0.89 | Đạt |
+| Cao thủ vs Giỏi | 2000 ms | 204 | 139/14/51 | 71,6% | 0.71 / 0.73 | Đạt |
+| Thách đấu vs Cao thủ | 2000 ms | 204 | 134/18/52 | 70,1% | 0.74 / 0.66 | Đạt |
+| Siêu việt vs Thách đấu | 2000 ms | 216 | 165/30/21 | 83,3% | 0.83 / 0.83 | Đạt |
 
