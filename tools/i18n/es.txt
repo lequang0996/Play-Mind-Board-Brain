@@ -276,3 +276,13 @@ bc_blue|Azul
 bc_red|Rojo
 bc_purple|Morado
 bc_yellow|Amarillo
+game_tangram|Tangram
+game_tangram_desc|Encaja 7 piezas geométricas en la figura gris. 10 figuras por ronda, 3 minutos cada una.
+guide_tangram|Objetivo: usa las 7 piezas (2 triángulos grandes, 1 mediano, 2 pequeños, 1 cuadrado y 1 paralelogramo) para rellenar exactamente la figura gris, sin solapes ni piezas sobrantes.\n• Cada ronda tiene 10 figuras aleatorias, de compactas a llenas de picos. Tienes 3 minutos por figura.\n• Si se acaba el tiempo en cualquier figura, pierdes; completa las 10 para ganar.\n• Arrastra las piezas de la bandeja a la figura. Toca para girar 45° y mantén pulsado el paralelogramo para voltearlo.\n• Si sueltas una pieza cerca de una esquina de la figura o de otra pieza, se ajusta sola.\n• Cualquier disposición que rellene la figura exactamente es válida.\n• Consejo: coloca primero los dos triángulos grandes; ocupan la mitad del área.
+tg_progress|Figura %1$d/%2$d
+tg_success|¡Correcto!
+tg_won|¡Reto completado!
+tg_won_text|Has completado las 10 figuras. Tiempo total %1$s.
+tg_lost|Se acabó el tiempo
+tg_lost_text|No completaste la figura %1$d en 3 minutos.
+tg_hint|Arrastra las piezas a la figura gris. Toca para girar, mantén pulsado para voltear.

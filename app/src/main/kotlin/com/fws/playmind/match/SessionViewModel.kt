@@ -18,6 +18,8 @@ import com.fws.playmind.catalog.Catalog
 import com.fws.playmind.core.MagicSquareGame
 import com.fws.playmind.core.MagicStatus
 import com.fws.playmind.core.SudokuGame
+import com.fws.playmind.core.Tangram
+import com.fws.playmind.core.TangramPuzzle
 import com.fws.playmind.core.SudokuLevel
 import com.fws.playmind.core.SudokuStatus
 import com.fws.playmind.core.QuoridorGame
@@ -98,6 +100,17 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
     var magicSeconds by mutableIntStateOf(0); private set
     private var magicClock: Job? = null
     private var magicDay = -1L
+    // Xếp hình 7 mảnh: 10 hình mỗi lượt, mỗi hình 3 phút
+    /** Các đề đã sinh xong (sinh lần lượt ở nền; đề i hiện khi đã có). */
+    var tangram by mutableStateOf<List<TangramPuzzle>>(emptyList()); private set
+    var tgIndex by mutableIntStateOf(0); private set
+    var tgSeconds by mutableIntStateOf(Tangram.SECONDS_PER_PUZZLE); private set
+    /** Tổng số giây đã dùng cả lượt. */
+    var tgTotal by mutableIntStateOf(0); private set
+    /** Đang hiện "Đúng rồi!" trước khi sang hình kế tiếp. */
+    var tgSolved by mutableStateOf(false); private set
+    private var tgJob: Job? = null
+    private var tgClock: Job? = null
     /** Đồng hồ nước đi: thời điểm (ms, đồng hồ hệ thống) hết giờ của lượt hiện tại và số giây còn lại để hiển thị. */
     var turnDeadline by mutableStateOf(0L); private set
     var turnSecondsLeft by mutableIntStateOf(0); private set
@@ -225,7 +238,9 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         val g = game
         val inf = info
         val sd = sudoku
-        if (phase == Phase.PLAYING && sd != null && inf != null && sd.status == SudokuStatus.PLAYING) {
+        if (phase == Phase.PLAYING && inf != null && inf.id == Catalog.TANGRAM_ID) {
+            wallet.finishMatch(inf.id, MatchOutcome.LOSS, true)
+        } else if (phase == Phase.PLAYING && sd != null && inf != null && sd.status == SudokuStatus.PLAYING) {
             sd.giveUp()
             wallet.finishMatch(inf.id, MatchOutcome.LOSS, true)
         } else if (phase == Phase.PLAYING && g != null && inf != null && g.result == Outcome.ONGOING) {
@@ -257,6 +272,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         game = null; opp = Opp.NONE; oppName = ""; botThinking = false; verifying = false
         sudokuJob?.cancel(); sudokuClock?.cancel(); sudoku = null; sudokuLoading = false; sudokuSeconds = 0; seatNames = emptyList()
         magicClock?.cancel(); saveMagic(); magic = null; magicSeconds = 0
+        tgJob?.cancel(); tgClock?.cancel(); tangram = emptyList(); tgIndex = 0; tgSeconds = Tangram.SECONDS_PER_PUZZLE; tgTotal = 0; tgSolved = false
         inviteCode = ""; replyCode = ""; inviteBusy = false; inviteOpen = false; guestConnected = false
         relayJob?.cancel(); relayJob = null; dropRelayRooms(); relayJoined = false
         rematchAsked = false; oppAskedRematch = false; localEnd = null; remoteEnd = null; finalized = false
@@ -307,7 +323,56 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     /** Bắt đầu game một người đang chọn (Sudoku hoặc Ma phương 7x7). */
-    fun startSolo(): Boolean = if (info?.id == Catalog.MAGIC_ID) startMagic() else startSudoku(Catalog.SUDOKU_LEVEL)
+    fun startSolo(): Boolean = when (info?.id) {
+        Catalog.MAGIC_ID -> startMagic()
+        Catalog.TANGRAM_ID -> startTangram()
+        else -> startSudoku(Catalog.SUDOKU_LEVEL)
+    }
+
+    // ───────────────────────── Xếp hình 7 mảnh ─────────────────────────
+    /** Một lượt: 10 hình ngẫu nhiên tăng dần độ khó, mỗi hình 3 phút; hết giờ ở hình nào là thua, xong cả 10 hình là thắng. */
+    fun startTangram(): Boolean {
+        val inf = info ?: return false
+        if (!wallet.canStart(inf.id)) { notice = Notice.NOT_ENOUGH; return false }
+        teardown()
+        if (wallet.startMatch(inf.id) == StartCost.INSUFFICIENT) { notice = Notice.NOT_ENOUGH; return false }
+        mode = Mode.SOLO; reward = null; finalized = false
+        phase = Phase.PLAYING; tick++
+        val my = ++epoch
+        tgJob = viewModelScope.launch {
+            val rnd = Random(System.nanoTime())
+            for (i in 0 until Tangram.PUZZLES) {
+                val p = withContext(Dispatchers.Default) { Tangram.puzzle(i / (Tangram.PUZZLES - 1.0), rnd) }
+                if (my != epoch) return@launch
+                tangram = tangram + p
+            }
+        }
+        tgClock = viewModelScope.launch {
+            while (true) {
+                delay(1000)
+                if (my != epoch || phase != Phase.PLAYING) break
+                if (tangram.size > tgIndex && !tgSolved) {
+                    tgSeconds--; tgTotal++
+                    if (tgSeconds <= 0) { phase = Phase.OVER; settle(MatchOutcome.LOSS, true); break }
+                }
+            }
+        }
+        return true
+    }
+
+    /** Màn hình báo hình hiện tại đã ghép xong. */
+    fun tangramSolved() {
+        if (phase != Phase.PLAYING || tgSolved) return
+        tgSolved = true
+        val my = epoch
+        viewModelScope.launch {
+            delay(900)
+            if (my != epoch) return@launch
+            tgSolved = false
+            if (tgIndex >= Tangram.PUZZLES - 1) { phase = Phase.OVER; settle(MatchOutcome.WIN, true) }
+            else { tgIndex++; tgSeconds = Tangram.SECONDS_PER_PUZZLE }
+        }
+    }
 
     // ───────────────────────── Ma phương 7x7 (mỗi ngày một đề) ─────────────────────────
     /** Số gợi ý mỗi ngày theo gói: không gói 0, gói tháng 10, gói năm 20. */
@@ -1022,7 +1087,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         val inf = info ?: return
         if (phase != Phase.OVER) return
         if (mode == Mode.LOCAL) { beginMatch(); return }
-        if (mode == Mode.SOLO) { if (inf.id == Catalog.MAGIC_ID) return; startSudoku(option); return }
+        if (mode == Mode.SOLO) { when (inf.id) { Catalog.MAGIC_ID -> {}; Catalog.TANGRAM_ID -> startTangram(); else -> startSudoku(option) }; return }
         if (multi) return                                       // phòng nhiều người: về phòng chờ để tạo ván mới
         if (!wallet.canStart(inf.id, roomMode)) { notice = Notice.NOT_ENOUGH; return }
         if (isOnline && opp == Opp.HUMAN) { rematchAsked = true; transport?.send(Proto.REMATCH); maybeRematch() }

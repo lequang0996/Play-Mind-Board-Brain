@@ -25,7 +25,7 @@ Play Mind: Board & Brain
 Chess, Xiangqi and Gomoku vs the computer, friends nearby or online.
 ```
 
-**Full description** (2843/4000 characters)
+**Full description** (2924/4000 characters)
 
 ```
 Play Mind: Board & Brain is a polished collection of classic board games and brain games, built around four ways to exercise your mind: Puzzle, Intellect, Calculation and Memory.
@@ -38,6 +38,7 @@ AVAILABLE NOW — INTELLECT
 AVAILABLE NOW — PUZZLE
 • Sudoku: one given number per box, and any grid that follows the rules wins.
 • Magic Square 7×7: place 1 to 49 so every row, column and both diagonals add up to 175. A new puzzle every day.
+• Tangram: fill 10 random shapes with the 7 classic pieces, 3 minutes per shape.
 
 AVAILABLE NOW — MEMORY
 • Blind Gomoku: Gomoku with shared stones in four colours. The board never shows whose stone is whose, so you must remember yours.
@@ -86,7 +87,7 @@ Play Mind: Board & Brain
 Cờ vua, cờ tướng, cờ caro: chơi với máy, bạn bè ở gần hoặc online.
 ```
 
-**Mô tả đầy đủ** (2843/4000 ký tự)
+**Mô tả đầy đủ** (2915/4000 ký tự)
 
 ```
 Play Mind: Board & Brain là bộ sưu tập game bàn cờ và trí tuệ được chăm chút kỹ lưỡng, xây dựng quanh bốn cách rèn luyện trí óc: Giải đố, Trí tuệ, Tính toán và Ghi nhớ.
@@ -99,6 +100,7 @@ Play Mind: Board & Brain là bộ sưu tập game bàn cờ và trí tuệ đư�
 ĐÃ CÓ — CHỦ ĐỀ GIẢI ĐỐ
 • Sudoku: mỗi khối chỉ gợi ý một số, mọi cách điền đúng luật đều thắng.
 • Ma phương 7×7: xếp các số 1 đến 49 sao cho mọi hàng, cột và hai đường chéo đều có tổng 175. Mỗi ngày một đề.
+• Xếp hình 7 mảnh: ghép 7 mảnh kín 10 hình ngẫu nhiên, mỗi hình 3 phút.
 
 ĐÃ CÓ — CHỦ ĐỀ GHI NHỚ
 • Cờ caro mù: cờ caro với quân bốn màu dùng chung. Bàn cờ không cho biết quân nào của ai, bạn phải tự nhớ quân của mình.

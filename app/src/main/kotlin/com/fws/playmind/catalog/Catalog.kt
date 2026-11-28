@@ -58,6 +58,8 @@ object Catalog {
 
     /** Ma phương 7x7: mỗi ngày một đề (core MagicSquareGame). Gợi ý mỗi ngày: gói tháng 10 lần, gói năm 20 lần. */
     const val MAGIC_ID = "magic7"
+    /** Xếp hình 7 mảnh (tangram): 10 hình ngẫu nhiên mỗi lượt, mỗi hình 3 phút (core Tangram). */
+    const val TANGRAM_ID = "tangram"
     const val MAGIC_HINTS_MONTHLY = 10
     const val MAGIC_HINTS_YEARLY = 20
 
@@ -94,6 +96,8 @@ object Catalog {
             R.string.side_x, R.string.side_o, 9, { 6000L }, order = 1, minutes = 8, create = { BlindCaroGame() }),
         GameInfo("sudoku", Topic.PUZZLE, R.string.game_sudoku, R.string.game_sudoku_desc, R.string.guide_sudoku,
             R.string.side_white, R.string.side_black, 0, { 0L }, kind = GameKind.SOLO, order = 1, minutes = 10),
+        GameInfo(TANGRAM_ID, Topic.PUZZLE, R.string.game_tangram, R.string.game_tangram_desc, R.string.guide_tangram,
+            R.string.side_white, R.string.side_black, 0, { 0L }, kind = GameKind.SOLO, order = 3, minutes = 30),
         GameInfo(MAGIC_ID, Topic.PUZZLE, R.string.game_magic7, R.string.game_magic7_desc, R.string.guide_magic7,
             R.string.side_white, R.string.side_black, 0, { 0L }, kind = GameKind.SOLO, order = 2, minutes = 30),
     )

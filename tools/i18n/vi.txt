@@ -276,3 +276,13 @@ bc_blue|Xanh
 bc_red|Đỏ
 bc_purple|Tím
 bc_yellow|Vàng
+game_tangram|Xếp hình 7 mảnh
+game_tangram_desc|Ghép 7 mảnh hình học kín hình xám. 10 hình mỗi lượt, mỗi hình 3 phút.
+guide_tangram|Mục tiêu: dùng đủ 7 mảnh (2 tam giác lớn, 1 tam giác vừa, 2 tam giác nhỏ, 1 hình vuông, 1 hình bình hành) ghép kín hình xám, không chồng mảnh, không thừa mảnh.\n• Mỗi lượt có 10 hình ngẫu nhiên, khó dần từ hình gọn tới hình nhiều mỏm. Mỗi hình có 3 phút.\n• Hết 3 phút mà chưa xong một hình bất kỳ là thua; ghép xong cả 10 hình là thắng.\n• Kéo mảnh từ khay dưới lên hình. Chạm để xoay 45°, nhấn giữ hình bình hành để lật.\n• Thả mảnh gần một góc của hình hoặc của mảnh khác thì mảnh tự hít vào cho khít.\n• Mọi cách ghép kín đúng hình đều được tính.\n• Mẹo: đặt hai tam giác lớn trước, chúng chiếm một nửa diện tích.
+tg_progress|Hình %1$d/%2$d
+tg_success|Đúng rồi!
+tg_won|Hoàn thành thử thách!
+tg_won_text|Bạn đã ghép xong cả 10 hình. Tổng thời gian %1$s.
+tg_lost|Hết giờ
+tg_lost_text|Bạn chưa ghép xong hình %1$d trong 3 phút.
+tg_hint|Kéo mảnh vào hình xám. Chạm để xoay, nhấn giữ để lật.

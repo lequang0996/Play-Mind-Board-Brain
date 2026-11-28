@@ -211,6 +211,29 @@ fun main() {
     expect("sudoku: o hien tai hop le khi dien theo loi giai", (0 until 81).none { dz.isWrong(it) } && dz.hint() >= 0 && dz.status == SudokuStatus.WON)
     expect("sudoku: sai nhieu loi van khong thua, chi dem loi", sl.status == SudokuStatus.PLAYING && sl.mistakes == 3)
 
+    // ── Xếp hình 7 mảnh (tangram) ──
+    run {
+        val area = { p: DoubleArray -> var a = 0.0; val n = p.size / 2; for (i in 0 until n) { val j = (i + 1) % n; a += p[2 * i] * p[2 * j + 1] - p[2 * j] * p[2 * i + 1] }; a / 2 }
+        expect("tangram: 7 manh tong dien tich 8, moi goc xoay/lat deu nguoc chieu kim dong ho",
+            (0 until 8).all { r -> listOf(false, true).all { f -> kotlin.math.abs(Tangram.KINDS.sumOf { area(Tangram.shape(it, r, f, 0.0, 0.0)) } - 8.0) < 1e-9 } })
+        val t0 = System.nanoTime()
+        val ses = Tangram.session(kotlin.random.Random(42))
+        val ms = (System.nanoTime() - t0) / 1_000_000
+        println("      tangram: 10 de trong $ms ms, do dac: " + ses.joinToString(" ") { "%.2f".format(it.compactness) })
+        expect("tangram: sinh du 10 de, vua khung, khong chong manh", ses.size == 10 && ses.all { p -> p.width <= 6.61 && p.height <= 6.61 &&
+            p.pieces.indices.all { i -> (i + 1 until 7).none { j -> Tangram.overlap(p.pieces[i].poly, p.pieces[j].poly) } } })
+        expect("tangram: de dau dac hon de cuoi", ses.first().compactness > ses.last().compactness)
+        val pz = ses[3]
+        expect("tangram: ghep dung dap an thi khop", Tangram.coverError(pz.pieces.map { it.poly }, pz) < Tangram.SOLVED_ERROR)
+        val moved = pz.pieces.mapIndexed { i, p -> if (i == 0) Tangram.shape(p.kind, p.rot, p.flip, p.cx + 0.5, p.cy) else p.poly }
+        expect("tangram: lech mot manh thi chua khop", Tangram.coverError(moved, pz) > Tangram.SOLVED_ERROR)
+        expect("tangram: thieu mot manh thi chua khop", Tangram.coverError(pz.pieces.drop(1).map { it.poly }, pz) > Tangram.SOLVED_ERROR)
+        val p0 = pz.pieces[0]; val off = Tangram.shape(p0.kind, p0.rot, p0.flip, p0.cx + 0.15, p0.cy - 0.1)
+        val (dx, dy) = Tangram.snap(off, pz.pieces.flatMap { it.poly.toList() }.toDoubleArray(), 0.3)
+        expect("tangram: hit manh ve dinh gan nhat", kotlin.math.abs(dx + 0.15) < 1e-9 && kotlin.math.abs(dy - 0.1) < 1e-9)
+        expect("tangram: co dinh vien ngoai", pz.outlineVertices.size >= 6)
+    }
+
     // ── Cờ caro mù ──
     run {
         val P = BlindCaroGame.Companion
