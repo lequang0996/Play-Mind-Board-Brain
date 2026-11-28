@@ -1220,9 +1220,24 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         else { finalized = true; verifyJob?.cancel(); verifying = false; wallet.cancelMatch(); notice = Notice.UNVERIFIED }
     }
 
-    /** Kim cương cơ bản khi thắng ván này: thắng máy / Xếp hình 7 mảnh theo cấp (Dễ 0 ... Siêu việt 6), còn lại 1. */
-    fun winBase(inf: GameInfo? = info): Int =
-        if (mode == Mode.BOT || (mode == Mode.SOLO && (inf?.id == Catalog.TANGRAM_ID || inf?.id == Catalog.HEXAGON_ID))) botLevel.coerceIn(0, Catalog.LEVELS - 1) else 1
+    /**
+     * Kim cương khi thắng cấp [level] mà cấp cao nhất đang mở (trước ván này) là [top]: thắng đúng cấp cao nhất +2,
+     * thấp hơn 1 cấp +1, thấp hơn từ 2 cấp trở lên +0. Ví dụ mới cài: thắng Dễ +2; mở Trung bình thì thắng TB +2, Dễ +1;
+     * mở Khá thì Khá +2, TB +1, Dễ +0; cứ thế tới Siêu việt.
+     */
+    fun levelReward(level: Int, top: Int): Int = when (top - level) { 0 -> 2; 1 -> 1; else -> 0 }
+
+    /** Thưởng hiển thị ở phòng chờ cho cấp đang chọn. */
+    fun levelRewardPreview(): Int = info?.let { levelReward(botLevel, prefs.unlockedLevel(it.id)) } ?: 0
+
+    /** Kim cương cơ bản khi thắng ván này: đấu máy / Xếp hình 7 mảnh / Lục giác trí nhớ theo [levelReward], còn lại 1. */
+    fun winBase(inf: GameInfo? = info): Int {
+        val leveled = mode == Mode.BOT || (mode == Mode.SOLO && (inf?.id == Catalog.TANGRAM_ID || inf?.id == Catalog.HEXAGON_ID))
+        if (!leveled || inf == null) return 1
+        // ván thắng vừa mở cấp mới (unlockedNow) thì cấp cao nhất trước ván là cấp thấp hơn một bậc
+        val top = prefs.unlockedLevel(inf.id) - (if (unlockedNow >= 0) 1 else 0)
+        return levelReward(botLevel.coerceIn(0, Catalog.LEVELS - 1), top)
+    }
 
     private fun settle(out: MatchOutcome, valid: Boolean) {
         if (finalized) return

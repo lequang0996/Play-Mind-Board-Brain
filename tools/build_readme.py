@@ -38,7 +38,7 @@ PLAY YOUR WAY
 DAILY DIAMONDS
 • Check in every day for +1 diamond.
 • Every game gives you one free play per day. After that, each game costs 1 diamond.
-• Beat the computer for diamonds by level (Easy +0, Medium +1, Good +2 ... Supreme +6); other wins give +1. Win 3 in a row in one game for +2 more, and 5 in a row for +3 more.
+• Beat the computer for diamonds: +2 at your highest unlocked level, +1 one level below, +0 lower; other wins give +1. Win 3 in a row in one game for +2 more, and 5 in a row for +3 more.
 • Keep a check-in streak above 7 days with more than 10 diamonds and your daily check-in is worth +2.
 • Diamonds are virtual, cannot be bought and have no cash value.
 

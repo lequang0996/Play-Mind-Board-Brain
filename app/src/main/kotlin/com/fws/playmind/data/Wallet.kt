@@ -274,8 +274,8 @@ class WalletRepo(private val ctx: Context) {
      * và với ván online thì hai máy đã đối chiếu cùng kết quả).
      */
     /**
-     * Chốt ván. [base] = kim cương cơ bản khi thắng: thắng máy (và Xếp hình 7 mảnh) theo cấp vừa thắng
-     * (Dễ 0, Trung bình 1, Khá 2, Giỏi 3, Cao thủ 4, Thách đấu 5, Siêu việt 6); các ván khác 1.
+     * Chốt ván. [base] = kim cương cơ bản khi thắng: thắng máy (và Xếp hình 7 mảnh, Lục giác trí nhớ) theo khoảng cách tới cấp cao nhất đã mở
+     * (đúng cấp đó 2, thấp hơn 1 cấp 1, thấp hơn nữa 0; SessionViewModel.levelReward); các ván khác 1.
      * Chuỗi thắng chỉ tính các ván thắng có thưởng (base > 0).
      */
     fun finishMatch(gameId: String, outcome: MatchOutcome, valid: Boolean, base: Int = 1): Reward {
