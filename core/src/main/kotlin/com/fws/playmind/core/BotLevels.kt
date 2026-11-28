@@ -57,21 +57,26 @@ object BotLevels {
     // Mọi cấp giới hạn nút đều thỏa node_limit <= 0,5 × botMillis × nps điện thoại.
 
     // Cờ vua (mục 5.3). Điểm: centipawn.
+    // Hiệu chỉnh 11/2026 trên CI (ladder có props, xem tools/bot-bench/results/g5, g7, g9): SV-TĐ(n15000) 89%,
+    // TĐ-CT(n4000) 72%, CT-Giỏi(n700) 76%, Giỏi-Khá(d2 p0.4) 87%; hai cấp dưới chờ nghiệm thu.
     val chess = listOf(
-        d(1, 0.50, 150), d(3, 0.30, 80), d(5, 0.15, 40),
-        n(10_000, 0.05, 20), n(40_000), n(120_000), top(),
+        d(1, 1.0, 500), d(1, 0.60, 200), d(2, 0.40, 120),
+        n(700, 0.05, 20), n(4_000), n(15_000), top(),
     )
 
     // Cờ tướng (mục 6.3). Cùng khung với cờ vua, điểm theo thang quân cờ tướng.
+    // Hiệu chỉnh 11/2026 (g7, g9): SV-TĐ n8000 khoảng 85% (n6000 88%, n20000 78%); các cấp dưới theo cùng khung với cờ vua.
     val xiangqi = listOf(
-        d(1, 0.50, 180), d(3, 0.30, 100), d(5, 0.15, 50),
-        n(20_000, 0.05, 25), n(60_000), n(180_000), top(),
+        d(1, 1.0, 600), d(1, 0.60, 250), d(2, 0.40, 150),
+        n(400, 0.05, 25), n(1_500), n(8_000), top(),
     )
 
     // Cờ caro (mục 7.4). extra = độ sâu VCF tối đa (0 = tắt); phòng VCF bật từ Giỏi (CaroEngine.levelSearch).
+    // Hiệu chỉnh 11/2026 (g7, g9 và máy phát triển): SV-TĐ(n4000) khoảng 80%, TĐ-CT 72%, CT-Giỏi 78%, Giỏi-Khá 84%.
+    // Hai cặp dưới cùng bị nén (Khá-TB 67%, TB-Dễ 76%): nhiễu ở độ sâu 1 bão hòa và lớp an toàn luôn chặn bốn.
     val caro = listOf(
-        d(1, 0.45, 3_000, 0), d(2, 0.25, 1_500, 0), d(4, 0.10, 600, 5),
-        n(8_000, 0.03, 200, 12), n(25_000, 0.0, 0, 24), n(70_000, 0.0, 0, 24), top(24),
+        d(1, 1.0, 20_000, 0), d(1, 0.40, 2_000, 0), d(1, 0.10, 600, 3),
+        n(250, 0.03, 200, 12), n(1_000, 0.0, 0, 24), n(4_000, 0.0, 0, 24), top(24),
     )
 
     // Quoridor (mục 9.3), alpha-beta. Điểm: 100 = một bước đường đi. Thang sức của Quoridor rất nén: tìm sâu thêm cho ít Elo
