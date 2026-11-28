@@ -5,11 +5,6 @@
 #   ab     <game> <A> <B> games=<số ván> ms=<ms/nước> shards=<số máy> [nodes=<giới hạn nút>]   (A, B: new | smpN | ref | old; thêm @spec, ví dụ new@corr64)
 #   Mọi dòng thêm được props=k1=v1;k2=v2 (thuộc tính hệ thống, ví dụ pm.level.chess.5=n15000 để thử cấu hình cấp).
 # Cấp: 0 Dễ, 1 Trung bình, 2 Khá, 3 Giỏi, 4 Cao thủ, 5 Thách đấu, 6 Siêu việt.
-tag=g17-quoridor-low-levels
-note=Quoridor: Khá p0.5, Trung bình p0.75, Dễ p0.97 (sau g15: Giỏi-Khá 83,8%). Đo lại các cặp có ba cấp dưới.
-ladder quoridor 3 2 pairs=100 ms=2000 shards=1
-ladder quoridor 2 1 pairs=100 ms=2000 shards=1
-ladder quoridor 1 0 pairs=200 ms=2000 shards=1
-ladder quoridor 4 2 pairs=50 ms=2000 shards=1
-ladder quoridor 3 1 pairs=50 ms=2000 shards=1
-ladder quoridor 2 0 pairs=50 ms=2000 shards=1
+tag=g18-chess-kha-de
+note=Cờ vua Khá vs Dễ đo lại với 400 ván (g16: 95,6% trên 102 ván, g13: 98,0%).
+ladder chess 2 0 pairs=200 ms=2000 shards=2
