@@ -45,6 +45,8 @@
     <string name="game_chess_desc">O clássico jogo de reis e estratégia.</string>
     <string name="game_go">Go</string>
     <string name="game_go_desc">O antigo jogo de território. Cerque mais do tabuleiro que o oponente.</string>
+    <string name="game_magic7">Quadrado mágico 7×7</string>
+    <string name="game_magic7_desc">Coloque os números de 1 a 49 para que cada linha, coluna e as duas diagonais somem 175. Um desafio novo por dia.</string>
     <string name="game_quoridor">Quoridor</string>
     <string name="game_quoridor_desc">Corra até o lado oposto e levante muros para barrar os rivais.</string>
     <string name="game_sudoku">Sudoku</string>
@@ -69,6 +71,7 @@
     <string name="guide_go">Objetivo: controlar mais do tabuleiro que o oponente. As pretas começam.\n• Captura: um grupo de pedras sem pontos vazios adjacentes (sem liberdades) é retirado.\n• Proibido: não pode jogar se o seu grupo ficar sem liberdades (a não ser que capture) nem repetir uma posição anterior.\n• Fim: quando o oponente passa e não resta nada útil, toque em Encerrar partida para contar os pontos.\n• Pontuação: por área - suas pedras mais as regiões vazias que só você cerca. As brancas recebem 7,5 de komi. Pedras mortas não saem sozinhas: capture-as antes de passar.\n• Toque numa interseção para ver a pedra e pressione Colocar pedra.</string>
     <string name="guide_levels">• Fácil: para iniciantes. A máquina olha só uma ou duas jogadas e muitas vezes joga ao acaso; conhecer as regras basta para vencer.\n• Médio: evita erros óbvios, mas ainda erra bastante. Jogue com um plano.\n• Bom: conhece táticas básicas. Calcule algumas jogadas à frente e não deixe fraquezas.\n• Forte: raramente erra e planeja. Você precisa de uma estratégia clara para vencer.\n• Mestre: sólido, pouquíssimos erros. Só jogadores experientes vencem com frequência.\n• Desafiante: quase nunca comete erros táticos. Vencê-lo é motivo de orgulho.\n• Supremo: a máquina com força total. No xadrez joga como um motor de 2800 Elo (escala de motores CCRL): quase imbatível para humanos.\n• Cada nível é claramente mais forte que o anterior: o nível de cima vence a maioria das partidas (de 65% a 98%).\n• Desafie sua mente: até onde você chega? Comece no Fácil, conquiste cada nível e alcance o Supremo.</string>
     <string name="guide_levels_title">Os 7 níveis da máquina</string>
+    <string name="guide_magic7">Objetivo: preencha o tabuleiro 7×7 com os números de 1 a 49, cada um uma única vez, de modo que cada linha, cada coluna e as duas diagonais principais somem 175.\n• Desafio: um por dia, começando com um número dado em uma casa. Sempre tem solução e qualquer arranjo dentro das regras vence.\n• Colocar: toque numa casa e depois num número. Escolher um número que já está no tabuleiro move-o para a casa selecionada.\n• Somas: a coluna da direita mostra a soma de cada linha, a linha de baixo a de cada coluna e a barra superior as duas diagonais. Verde: 7 casas preenchidas e exatamente 175. Vermelho: acima de 175, ou cheia mas errada.\n• Dicas: 10 por dia no plano mensal e 20 por dia no plano anual. Casas com dica ficam bloqueadas.\n• Sair no meio não custa nada: volte no mesmo dia para continuar. Depois de resolver, o próximo desafio chega amanhã.\n• Dica: 175 = 7 × 25, então 25 fica no meio entre 1 e 49. Tente colocar pares que somam 50 (1 + 49, 2 + 48...) simétricos em relação ao centro.</string>
     <string name="guide_quoridor">Objetivo: ser o primeiro a chegar ao lado oposto do tabuleiro.\n• Mover: ande uma casa para cima, baixo, esquerda ou direita. Se houver um peão rival ao lado, salte-o, ou ande na diagonal se atrás houver um muro ou a borda.\n• Muros: em vez de mover, você pode colocar um muro de duas casas. Muros não podem se sobrepor nem se cruzar, e você nunca pode fechar todos os caminhos até uma meta.\n• Muros: 10 por jogador com 2 jogadores, 5 com 4 jogadores.\n• Construir: escolha Muro, toque perto do cruzamento onde ele vai para ver (verde = permitido) e pressione Colocar muro.\n• Repetição: com 2 jogadores, mover o peão para uma posição já vista faz perder; com 4 jogadores esse lance não é permitido.</string>
     <string name="guide_sudoku">Objetivo: preencha todas as casas para que cada linha, coluna e bloco 3×3 contenha de 1 a 9 uma única vez.\n• Inserir: toque numa casa e depois num número. Números errados ficam vermelhos; corrija-os com Apagar.\n• Notas: ative o lápis para anotar pequenos números candidatos (em vermelho).\n• Apagar limpa a casa selecionada. Cada bloco 3×3 começa com um só número (9 no total), por isso qualquer grelha que siga as regras vence.</string>
     <string name="guide_wallgo">Objetivo: terminar com mais território que os rivais.\n• Preparação: em turnos, coloque suas pedras em casas vazias (4 cada com 2 jogadores, 3 com 3 jogadores, 2 com 4 jogadores).\n• Sua vez: escolha uma das suas pedras e mova-a 0, 1 ou 2 casas para cima, baixo, esquerda ou direita. Ela não atravessa muros nem outras pedras.\n• Muro: depois de mover, você DEVE colocar um muro em um lado livre da casa onde parou.\n• Território: quando cada área cercada tiver pedras de um só jogador, a partida termina. Você pontua as casas das áreas que contêm só as suas pedras.\n• Empates: vence a maior área única; senão, empate. Quem não puder mover perde a vez.</string>
@@ -108,6 +111,15 @@
     <string name="local_no_reward">Partidas no mesmo aparelho não dão diamantes nem gastam partidas.</string>
     <string name="manage_sub">Gerenciar assinatura</string>
     <string name="menu">Menu</string>
+    <string name="mg_continue">Continuar</string>
+    <string name="mg_daily_note">Um desafio por dia. Você pode sair e continuar mais tarde no mesmo dia.</string>
+    <string name="mg_done_today">Você já resolveu o desafio de hoje. Um novo chega amanhã.</string>
+    <string name="mg_hint_n">Dica (%d)</string>
+    <string name="mg_hints_left">Restam %1$d/%2$d dicas hoje.</string>
+    <string name="mg_hints_plan">Dicas: 10 por dia no plano mensal e 20 por dia no plano anual.</string>
+    <string name="mg_progress">Desafio de hoje em andamento: %d/49 casas.</string>
+    <string name="mg_won">Quadrado mágico concluído!</string>
+    <string name="mg_won_text">Tempo %1$s · %2$d dicas. Um novo quadrado mágico chega amanhã.</string>
     <string name="minutes_n">~%d min</string>
     <string name="multi_bot_fill">Os lugares vazios são jogados pelo computador no início. Quem sair, desistir ou ficar sem tempo é substituído pelo computador.</string>
     <string name="multi_continues">Você foi eliminado, mas a partida continua para os outros. Se você for o anfitrião, sair encerra a sala para todos.</string>
@@ -126,6 +138,8 @@
     <string name="notice_conn_lost">A conexão foi perdida. A partida terminou.</string>
     <string name="notice_host_left">O anfitrião saiu da sala.</string>
     <string name="notice_kicked">O anfitrião removeu você da sala.</string>
+    <string name="notice_magic_done">Você já resolveu o quadrado mágico de hoje. Volte amanhã para um novo desafio.</string>
+    <string name="notice_no_hints">Você usou todas as dicas de hoje. O plano mensal dá 10 dicas por dia e o anual 20.</string>
     <string name="notice_not_enough">Você precisa de 1 diamante para jogar. Ganhe um com o check-in diário, vencendo partidas ou na loja.</string>
     <string name="notice_opp_left">Seu adversário saiu da sala.</string>
     <string name="notice_permission">É necessária permissão para encontrar jogadores por perto. Você pode permitir nas configurações do app.</string>

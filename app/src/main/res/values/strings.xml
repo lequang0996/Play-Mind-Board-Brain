@@ -46,6 +46,8 @@
     <string name="game_chess_desc">The classic game of kings and strategy.</string>
     <string name="game_go">Go</string>
     <string name="game_go_desc">The ancient game of territory. Surround more of the board than your opponent.</string>
+    <string name="game_magic7">Magic Square 7×7</string>
+    <string name="game_magic7_desc">Place the numbers 1 to 49 so every row, column and both diagonals add up to 175. A new puzzle every day.</string>
     <string name="game_quoridor">Quoridor</string>
     <string name="game_quoridor_desc">Race to the far side while building walls to block your rivals.</string>
     <string name="game_sudoku">Sudoku</string>
@@ -70,6 +72,7 @@
     <string name="guide_go">Goal: control more of the board than your opponent. Black moves first.\n• Capture: a group of stones with no empty point next to it (no liberties) is removed from the board.\n• Forbidden: you may not play a move that leaves your own group with no liberties (unless it captures), and you may not repeat an earlier board position.\n• Ending: when your opponent passes and nothing useful is left, tap End game to score the position.\n• Scoring: by area - your stones plus the empty regions only you border. White receives 7.5 komi. Dead stones are not removed automatically, so capture them before you pass.\n• Tap an intersection to preview a stone, then press Place stone.</string>
     <string name="guide_levels">• Easy: for newcomers. The computer looks only one or two moves ahead and often plays at random; knowing the rules is enough to win.\n• Medium: avoids obvious blunders but still makes many mistakes. Play with a plan.\n• Good: knows basic tactics. Calculate a few moves ahead and leave no weaknesses.\n• Strong: rarely errs and plans ahead. You need a clear strategy to win.\n• Master: solid, very few mistakes. Only experienced players win regularly.\n• Challenger: almost never makes a tactical mistake. Beating it is something to be proud of.\n• Supreme: the computer at full strength. In chess it plays like a 2800 Elo engine (CCRL engine rating scale): nearly unbeatable for humans.\n• Each level is clearly stronger than the one below: the higher level wins most games (about 65% to 98%).\n• Challenge your mind: how far can you climb? Start at Easy, conquer each level and reach Supreme.</string>
     <string name="guide_levels_title">7 computer levels</string>
+    <string name="guide_magic7">Goal: fill the 7×7 board with the numbers 1 to 49, each exactly once, so that every row, every column and both main diagonals add up to 175.\n• Puzzle: one puzzle per day, starting with one given number in one cell. It always has a solution, and any arrangement that follows the rules wins.\n• Placing: tap a cell, then tap a number. Picking a number already on the board moves it to the selected cell.\n• Sums: the right column shows each row\'s sum, the bottom row each column\'s sum, and the top bar both diagonals. Green: 7 cells filled and exactly 175. Red: over 175, or full but wrong.\n• Hints: 10 per day with the monthly plan, 20 per day with the yearly plan. Hinted cells are locked.\n• Leaving midway costs nothing: come back the same day to continue. Once solved, the next puzzle arrives tomorrow.\n• Tip: 175 = 7 × 25, so 25 sits halfway between 1 and 49. Try placing pairs that add up to 50 (1 + 49, 2 + 48...) symmetrically around the center.</string>
     <string name="guide_quoridor">Goal: be the first to reach the opposite side of the board.\n• Move: step one square up, down, left or right. If an opponent\'s pawn is next to you, jump over it, or step diagonally if a wall or the edge is behind it.\n• Walls: instead of moving you may place a wall two squares long. Walls cannot overlap or cross, and you may never block every path to a goal.\n• Walls left: 10 each with 2 players, 5 each with 4 players.\n• Build: choose Wall, tap near the crossing where it goes to preview it (green = allowed), then press Place wall.\n• Repetition: in 2-player games, a pawn move that recreates an earlier position loses; in 4-player games such a move is not allowed.</string>
     <string name="guide_sudoku">Goal: fill every empty square so each row, column and 3×3 box contains the digits 1 to 9 once.\n• Entering: tap a square, then a number. Wrong numbers show in red; fix them with Erase.\n• Notes: switch on the pencil to jot small candidate numbers (shown in red) in a square.\n• Erase clears the selected square. Each 3×3 box starts with only one given number (9 in total), so any grid that follows the rules wins.</string>
     <string name="guide_wallgo">Goal: end the game with more territory than your rivals.\n• Setup: take turns placing your stones on empty squares (4 each with 2 players, 3 with 3 players, 2 with 4 players).\n• Your turn: choose one of your stones and move it 0, 1 or 2 squares up, down, left or right. It cannot pass through walls or other stones.\n• Wall: after moving you MUST place a wall on one free side of the square you stand on.\n• Territory: when every walled-off area holds stones of only one player, the game ends. You score the squares of the areas that contain only your stones.\n• Ties: the larger single area wins; otherwise it is a draw. A player who cannot move skips the turn.</string>
@@ -109,6 +112,15 @@
     <string name="local_no_reward">Same-device games give no diamonds and use no plays.</string>
     <string name="manage_sub">Manage subscription</string>
     <string name="menu">Menu</string>
+    <string name="mg_continue">Continue</string>
+    <string name="mg_daily_note">One puzzle per day. You can leave and continue later the same day.</string>
+    <string name="mg_done_today">You have solved today\'s puzzle. A new one arrives tomorrow.</string>
+    <string name="mg_hint_n">Hint (%d)</string>
+    <string name="mg_hints_left">%1$d/%2$d hints left today.</string>
+    <string name="mg_hints_plan">Hints: 10 per day with the monthly plan, 20 per day with the yearly plan.</string>
+    <string name="mg_progress">Today\'s puzzle in progress: %d/49 cells.</string>
+    <string name="mg_won">Magic square complete!</string>
+    <string name="mg_won_text">Time %1$s · %2$d hints. A new magic square arrives tomorrow.</string>
     <string name="minutes_n">~%d min</string>
     <string name="multi_bot_fill">Empty seats are played by the computer when the game starts. Players who leave, resign or run out of time are replaced by the computer.</string>
     <string name="multi_continues">You are out, but the game continues for the others. If you are the host, leaving ends the room for everyone.</string>
@@ -127,6 +139,8 @@
     <string name="notice_conn_lost">The connection was lost. The game ended.</string>
     <string name="notice_host_left">The host left the room.</string>
     <string name="notice_kicked">The host removed you from the room.</string>
+    <string name="notice_magic_done">You have already solved today\'s magic square. Come back tomorrow for a new puzzle.</string>
+    <string name="notice_no_hints">You have used all of today\'s hints. The monthly plan gives 10 hints per day, the yearly plan 20.</string>
     <string name="notice_not_enough">You need 1 diamond to play. Check in daily, win games or get more in the shop.</string>
     <string name="notice_opp_left">Your opponent left the room.</string>
     <string name="notice_permission">Permission is needed to find players nearby. You can allow it in the app settings.</string>

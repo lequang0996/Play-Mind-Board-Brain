@@ -45,6 +45,8 @@
     <string name="game_chess_desc">经典的王者策略游戏。</string>
     <string name="game_go">围棋</string>
     <string name="game_go_desc">古老的围地游戏，围住比对手更多的地盘。</string>
+    <string name="game_magic7">七阶幻方</string>
+    <string name="game_magic7_desc">把 1 到 49 填入棋盘，使每行、每列和两条对角线的和都是 175。每天一题。</string>
     <string name="game_quoridor">步步为营</string>
     <string name="game_quoridor_desc">抢先抵达对岸，并用围墙拦住对手。</string>
     <string name="game_sudoku">数独</string>
@@ -69,6 +71,7 @@
     <string name="guide_go">目标：比对手控制更多的棋盘。黑先行。\n• 提子：没有相邻空点（无气）的棋块会被提走。\n• 禁着：不能下让自己的棋块无气的子（提子除外），也不能重复之前出现过的局面。\n• 结束：对手停着且已无有效着法时，点按“结束对局”进行计分。\n• 计分：数子法——你的棋子加上只与你相邻的空地。白棋贴 7.5 目。死子不会自动提走，停着前请先提掉。\n• 点按交叉点预览落子，再按“落子”。</string>
     <string name="guide_levels">• 简单：适合新手。电脑只看一两步，经常随意落子；懂规则就能赢。\n• 中等：能避开明显失误，但仍常犯错。下棋要有目的。\n• 良好：懂基本战术。需要提前算几步，不留破绽。\n• 优秀：很少出错，有短期计划。需要清晰的策略才能取胜。\n• 高手：下得稳健，极少失误。只有经验丰富的玩家才能稳定取胜。\n• 挑战者：几乎不犯战术错误。能赢下这一级值得骄傲。\n• 超凡：电脑全力以赴。国际象棋中相当于 2800 等级分的引擎（CCRL 引擎等级分）：人类几乎无法战胜。\n• 每一级都明显强于下一级：高一级赢下大多数对局（约 65% 到 98%）。\n• 挑战你的智慧：你能攀登到哪一级？从简单开始，逐级征服，直达超凡。</string>
     <string name="guide_levels_title">电脑的 7 个难度</string>
+    <string name="guide_magic7">目标：把 1 到 49 填入 7×7 棋盘，每个数恰好用一次，使每行、每列和两条主对角线的和都等于 175。\n• 题目：每天一题，开局时某一格已给出一个数。题目一定有解，任何符合规则的填法都算获胜。\n• 填数：点一格再点数字。选择棋盘上已有的数字时，它会移到当前格。\n• 和：右侧一列显示每行的和，下方一行显示每列的和，顶部显示两条对角线的和。绿色：7 格已满且正好 175；红色：超过 175，或已满但不对。\n• 提示：月度方案每天 10 次，年度方案每天 20 次。被提示的格子会锁定。\n• 中途退出不会有损失：当天回来可以继续。解完后，第二天才有新题。\n• 窍门：175 = 7 × 25，25 正好在 1 和 49 中间。可以尝试把和为 50 的数对（1 + 49、2 + 48……）关于中心对称放置。</string>
     <string name="guide_quoridor">目标：第一个抵达棋盘对面一侧。\n• 移动：向上下左右走一格。若对手的棋子紧邻，可跳过它；若其后有墙或边缘，则可斜着走一格。\n• 围墙：可以不移动，改为放一堵两格长的墙。墙不能重叠或交叉，也不能把通往终点的路全部堵死。\n• 墙的数量：2 人时每人 10 堵，4 人时每人 5 堵。\n• 放墙：选择“墙”，点按想放置处附近的交点预览（绿色 = 可放），再按“放墙”。\n• 重复局面：2 人对战时，走棋重现之前的局面即判负；4 人对战时不允许这样走。</string>
     <string name="guide_sudoku">目标：填满所有空格，使每行、每列、每个 3×3 宫都恰好含有 1 到 9。\n• 填数：点按方格，再点数字。错误的数字显示为红色，可用擦除修正。\n• 笔记：打开铅笔，可在格内记下红色的小候选数。\n• 擦除可清空所选方格。每个 3×3 宫只给出 1 个数字（共 9 个），任何符合规则的填法都算获胜。</string>
     <string name="guide_wallgo">目标：以比对手更多的领地结束游戏。\n• 布子：轮流把棋子放到空格上（2 人每人 4 枚，3 人每人 3 枚，4 人每人 2 枚）。\n• 行动：选一枚自己的棋子，向上下左右移动 0、1 或 2 格，不能穿过墙或其他棋子。\n• 筑墙：移动后必须在所站格子的一条空闲边上放一堵墙。\n• 领地：当每个被墙隔开的区域都只剩一位玩家的棋子时游戏结束，你的得分是只含你棋子的区域的格数。\n• 平局：单个最大区域更大者胜，否则为平局。无法行动的玩家跳过回合。</string>
@@ -108,6 +111,15 @@
     <string name="local_no_reward">同机对战不奖励钻石，也不消耗次数。</string>
     <string name="manage_sub">管理订阅</string>
     <string name="menu">菜单</string>
+    <string name="mg_continue">继续</string>
+    <string name="mg_daily_note">每天一题。中途退出后，当天仍可继续。</string>
+    <string name="mg_done_today">你已解完今天的题目，新题明天开放。</string>
+    <string name="mg_hint_n">提示 (%d)</string>
+    <string name="mg_hints_left">今天还剩 %1$d/%2$d 次提示。</string>
+    <string name="mg_hints_plan">提示：月度方案每天 10 次，年度方案每天 20 次。</string>
+    <string name="mg_progress">今天的题目进行中：%d/49 格。</string>
+    <string name="mg_won">幻方完成！</string>
+    <string name="mg_won_text">用时 %1$s · 提示 %2$d 次。明天会有新的幻方。</string>
     <string name="minutes_n">约 %d 分钟</string>
     <string name="multi_bot_fill">开始时空座位由电脑代打。离开、认输或超时的玩家将由电脑接替。</string>
     <string name="multi_continues">你已出局，但其他人的对局仍在继续。若你是房主，离开会结束所有人的房间。</string>
@@ -126,6 +138,8 @@
     <string name="notice_conn_lost">连接已断开，对局结束。</string>
     <string name="notice_host_left">房主已离开房间。</string>
     <string name="notice_kicked">房主已将你移出房间。</string>
+    <string name="notice_magic_done">你已解完今天的幻方，明天再来挑战新题吧。</string>
+    <string name="notice_no_hints">今天的提示已用完。月度方案每天 10 次提示，年度方案每天 20 次。</string>
     <string name="notice_not_enough">需要 1 颗钻石才能游戏。每天签到、获胜或在商店获取钻石。</string>
     <string name="notice_opp_left">对手已离开房间。</string>
     <string name="notice_permission">需要权限才能查找附近的玩家，你可以在系统设置中允许。</string>

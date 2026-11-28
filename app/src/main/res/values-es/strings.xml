@@ -45,6 +45,8 @@
     <string name="game_chess_desc">El clásico juego de reyes y estrategia.</string>
     <string name="game_go">Go</string>
     <string name="game_go_desc">El antiguo juego de territorio. Rodea más tablero que tu rival.</string>
+    <string name="game_magic7">Cuadrado mágico 7×7</string>
+    <string name="game_magic7_desc">Coloca los números del 1 al 49 para que cada fila, columna y ambas diagonales sumen 175. Un reto nuevo cada día.</string>
     <string name="game_quoridor">Quoridor</string>
     <string name="game_quoridor_desc">Corre al lado opuesto y levanta muros para frenar a tus rivales.</string>
     <string name="game_sudoku">Sudoku</string>
@@ -69,6 +71,7 @@
     <string name="guide_go">Objetivo: controlar más tablero que tu rival. Las negras juegan primero.\n• Captura: un grupo de piedras sin puntos vacíos adyacentes (sin libertades) se retira.\n• Prohibido: no puedes jugar si tu grupo queda sin libertades (salvo que captures) ni repetir una posición anterior.\n• Final: cuando tu rival pasa y no queda nada útil, toca Terminar partida para contar los puntos.\n• Puntuación: por área: tus piedras más las zonas vacías que solo tú rodeas. Las blancas reciben 7,5 de komi. Las piedras muertas no se retiran solas: captúralas antes de pasar.\n• Toca una intersección para ver la piedra y pulsa Colocar piedra.</string>
     <string name="guide_levels">• Fácil: para principiantes. La máquina mira solo una o dos jugadas y a menudo juega al azar; basta con conocer las reglas para ganar.\n• Medio: evita errores obvios pero aún falla mucho. Juega con un plan.\n• Bueno: conoce la táctica básica. Calcula unas jugadas por delante y no dejes debilidades.\n• Fuerte: rara vez se equivoca y planifica. Necesitas una estrategia clara para ganar.\n• Maestro: sólido, muy pocos errores. Solo jugadores con experiencia ganan con regularidad.\n• Retador: casi nunca comete errores tácticos. Ganarle es motivo de orgullo.\n• Supremo: la máquina a plena fuerza. En ajedrez juega como un motor de 2800 Elo (escala de motores CCRL): casi imbatible para un humano.\n• Cada nivel es claramente más fuerte que el anterior: el nivel superior gana la mayoría de las partidas (entre 65% y 98%).\n• Desafía tu mente: ¿hasta dónde llegarás? Empieza en Fácil, conquista cada nivel y alcanza el Supremo.</string>
     <string name="guide_levels_title">Los 7 niveles de la máquina</string>
+    <string name="guide_magic7">Objetivo: rellena el tablero 7×7 con los números del 1 al 49, cada uno una sola vez, de modo que cada fila, cada columna y las dos diagonales principales sumen 175.\n• Reto: uno por día, que empieza con un número dado en una casilla. Siempre tiene solución y cualquier disposición que cumpla las reglas gana.\n• Colocar: toca una casilla y luego un número. Si eliges un número que ya está en el tablero, se mueve a la casilla seleccionada.\n• Sumas: la columna derecha muestra la suma de cada fila, la fila inferior la de cada columna y la barra superior las dos diagonales. Verde: 7 casillas llenas y exactamente 175. Rojo: más de 175, o llena pero incorrecta.\n• Pistas: 10 al día con el plan mensual y 20 al día con el plan anual. Las casillas con pista quedan bloqueadas.\n• Salir a mitad no cuesta nada: vuelve el mismo día para continuar. Cuando lo resuelvas, el siguiente reto llega mañana.\n• Consejo: 175 = 7 × 25, así que 25 está a medio camino entre 1 y 49. Prueba a colocar parejas que sumen 50 (1 + 49, 2 + 48...) de forma simétrica respecto al centro.</string>
     <string name="guide_quoridor">Objetivo: ser el primero en llegar al lado opuesto del tablero.\n• Mover: avanza una casilla arriba, abajo, izquierda o derecha. Si hay un peón rival al lado, sáltalo, o muévete en diagonal si detrás hay un muro o el borde.\n• Muros: en vez de mover puedes colocar un muro de dos casillas. No pueden solaparse ni cruzarse, y nunca puedes cerrar todos los caminos a una meta.\n• Muros: 10 por jugador con 2 jugadores, 5 con 4 jugadores.\n• Construir: elige Muro, toca cerca del cruce donde va para verlo (verde = permitido) y pulsa Colocar muro.\n• Repetición: con 2 jugadores, mover el peón a una posición ya vista hace perder; con 4 jugadores esa jugada no está permitida.</string>
     <string name="guide_sudoku">Objetivo: rellena todas las casillas para que cada fila, columna y bloque 3×3 contenga del 1 al 9 una sola vez.\n• Introducir: toca una casilla y luego un número. Los números erróneos salen en rojo; corrígelos con Borrar.\n• Notas: activa el lápiz para anotar números candidatos pequeños (en rojo).\n• Borrar vacía la casilla seleccionada. Cada bloque 3×3 empieza con un solo número (9 en total), así que gana cualquier cuadrícula que cumpla las reglas.</string>
     <string name="guide_wallgo">Objetivo: terminar con más territorio que tus rivales.\n• Preparación: por turnos, coloca tus piedras en casillas vacías (4 cada uno con 2 jugadores, 3 con 3 jugadores, 2 con 4 jugadores).\n• Tu turno: elige una de tus piedras y muévela 0, 1 o 2 casillas arriba, abajo, izquierda o derecha. No puede atravesar muros ni otras piedras.\n• Muro: tras mover, DEBES colocar un muro en un lado libre de la casilla donde te quedas.\n• Territorio: cuando cada zona cercada tenga piedras de un solo jugador, la partida termina. Puntúas las casillas de las zonas que solo contienen tus piedras.\n• Empates: gana la zona única más grande; si no, hay empate. Quien no pueda mover pierde el turno.</string>
@@ -108,6 +111,15 @@
     <string name="local_no_reward">Las partidas en un solo dispositivo no dan diamantes ni gastan partidas.</string>
     <string name="manage_sub">Gestionar suscripción</string>
     <string name="menu">Menú</string>
+    <string name="mg_continue">Continuar</string>
+    <string name="mg_daily_note">Un reto por día. Puedes salir y continuar más tarde el mismo día.</string>
+    <string name="mg_done_today">Ya has resuelto el reto de hoy. Mañana habrá uno nuevo.</string>
+    <string name="mg_hint_n">Pista (%d)</string>
+    <string name="mg_hints_left">Te quedan %1$d/%2$d pistas hoy.</string>
+    <string name="mg_hints_plan">Pistas: 10 al día con el plan mensual y 20 al día con el plan anual.</string>
+    <string name="mg_progress">Reto de hoy en curso: %d/49 casillas.</string>
+    <string name="mg_won">¡Cuadrado mágico completado!</string>
+    <string name="mg_won_text">Tiempo %1$s · %2$d pistas. Mañana llegará un nuevo cuadrado mágico.</string>
     <string name="minutes_n">~%d min</string>
     <string name="multi_bot_fill">Los asientos libres los juega el ordenador al empezar. Quien abandone, se rinda o agote su tiempo será sustituido por el ordenador.</string>
     <string name="multi_continues">Has quedado fuera, pero la partida sigue para los demás. Si eres el anfitrión, al salir se cierra la sala para todos.</string>
@@ -126,6 +138,8 @@
     <string name="notice_conn_lost">Se perdió la conexión. La partida terminó.</string>
     <string name="notice_host_left">El anfitrión salió de la sala.</string>
     <string name="notice_kicked">El anfitrión te expulsó de la sala.</string>
+    <string name="notice_magic_done">Ya has resuelto el cuadrado mágico de hoy. Vuelve mañana para un reto nuevo.</string>
+    <string name="notice_no_hints">Has usado todas las pistas de hoy. El plan mensual da 10 pistas al día y el anual 20.</string>
     <string name="notice_not_enough">Necesitas 1 diamante para jugar. Consíguelo con la asistencia diaria, ganando partidas o en la tienda.</string>
     <string name="notice_opp_left">Tu rival salió de la sala.</string>
     <string name="notice_permission">Se necesita permiso para buscar jugadores cercanos. Puedes concederlo en los ajustes de la app.</string>

@@ -250,3 +250,17 @@ invite_scan_hint|Bạn bè chọn Qua internet, Vào phòng rồi quét mã này
 notice_room_taken|Phòng đã có người vào trước hoặc đã đóng.
 room_cost|Mỗi ván: mỗi người -1 kim cương, người thắng +1 kim cương.
 room_cost_plan|Gói của bạn: chơi với bạn bè không mất kim cương.
+game_magic7|Ma phương 7×7
+game_magic7_desc|Xếp các số 1 đến 49 sao cho mọi hàng, cột và hai đường chéo đều có tổng 175. Mỗi ngày một đề.
+guide_magic7|Mục tiêu: điền các số từ 1 đến 49 vào bàn 7×7, mỗi số đúng một lần, sao cho tổng của mỗi hàng, mỗi cột và hai đường chéo chính đều bằng 175.\n• Đề: mỗi ngày một đề, bắt đầu với một số cho sẵn ở một ô. Đề luôn có lời giải; mọi cách điền đúng luật đều thắng.\n• Điền số: chạm một ô rồi chạm số. Chọn một số đã có trên bàn thì số đó được chuyển sang ô đang chọn.\n• Tổng: cột bên phải là tổng từng hàng, hàng dưới là tổng từng cột, thanh trên là tổng hai đường chéo. Màu xanh: đủ 7 ô và đúng 175; màu đỏ: vượt 175 hoặc đủ ô mà sai.\n• Gợi ý: gói tháng 10 lần mỗi ngày, gói năm 20 lần mỗi ngày. Ô được gợi ý bị khóa.\n• Thoát ra giữa chừng không mất gì: vào lại trong ngày để giải tiếp. Giải xong thì sang ngày hôm sau mới có đề mới.\n• Mẹo: 175 = 7 × 25, nên số 25 ở giữa 1 và 49. Thử ghép các cặp có tổng 50 (1 + 49, 2 + 48...) đối xứng qua tâm bàn.
+mg_hint_n|Gợi ý (%d)
+mg_won|Hoàn thành ma phương!
+mg_won_text|Thời gian %1$s · %2$d gợi ý. Ma phương mới sẽ có vào ngày mai.
+mg_done_today|Bạn đã giải xong đề hôm nay. Đề mới sẽ có vào ngày mai.
+mg_progress|Đề hôm nay đang giải dở: %d/49 ô.
+mg_daily_note|Mỗi ngày một đề. Thoát ra giữa chừng vẫn giải tiếp được trong ngày.
+mg_hints_plan|Gợi ý: gói tháng 10 lần mỗi ngày, gói năm 20 lần mỗi ngày.
+mg_hints_left|Hôm nay còn %1$d/%2$d gợi ý.
+mg_continue|Giải tiếp
+notice_magic_done|Bạn đã giải xong ma phương hôm nay. Hãy quay lại vào ngày mai để nhận đề mới.
+notice_no_hints|Bạn đã hết gợi ý hôm nay. Gói tháng có 10 gợi ý mỗi ngày, gói năm có 20 gợi ý mỗi ngày.

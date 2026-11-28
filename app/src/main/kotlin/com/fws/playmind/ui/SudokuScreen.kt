@@ -204,7 +204,7 @@ private fun SudokuBoard(g: SudokuGame, sel: Int, tick: Int, side: androidx.compo
 }
 
 @Composable
-private fun ToolButton(icon: ImageVector, label: String, onClick: () -> Unit, modifier: Modifier = Modifier, active: Boolean = false, enabled: Boolean = true) {
+internal fun ToolButton(icon: ImageVector, label: String, onClick: () -> Unit, modifier: Modifier = Modifier, active: Boolean = false, enabled: Boolean = true) {
     val shape = RoundedCornerShape(18.dp)
     val src = rememberPress()
     Row(

@@ -70,6 +70,18 @@ fun DrawScope.drawSudokuArt(tm: TextMeasurer, ox: Float, oy: Float, s: Float) {
     }
 }
 
+/** Tranh minh hoạ Ma phương: lưới 3x3 viên gỗ (ma phương Lạc Thư, mọi hàng / cột / chéo cùng tổng 15). */
+fun DrawScope.drawMagicArt(tm: TextMeasurer, ox: Float, oy: Float, s: Float) {
+    val digits = intArrayOf(4, 9, 2, 3, 5, 7, 8, 1, 6)
+    val t = s * .29f; val gap = s * .03f; val x0 = ox + (s - 3 * t - 2 * gap) / 2f; val y0 = oy + (s - 3 * t - 2 * gap) / 2f
+    for (i in 0 until 9) {
+        val p = Offset(x0 + (i % 3) * (t + gap), y0 + (i / 3) * (t + gap))
+        val center = i == 4
+        drawWoodCell(p, t, tone = if (center) .45f else 0f)
+        centerText(tm, digits[i].toString(), p + Offset(t / 2f, t / 2f), t * .58f, if (center) Color(0xFFC8372D) else Color(0xFF2A2218))
+    }
+}
+
 /** Tranh minh hoạ Wall Go: bàn lưới có tường màu và hai quân. */
 fun DrawScope.drawWallGoArt(ox: Float, oy: Float, s: Float) {
     val b = s * .86f; val x0 = ox + s * .07f; val y0 = oy + s * .10f

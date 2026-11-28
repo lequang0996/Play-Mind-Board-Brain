@@ -15,6 +15,8 @@ import com.fws.playmind.core.BotLevel
 import com.fws.playmind.core.GoGame
 import com.fws.playmind.core.LeveledEngine
 import com.fws.playmind.catalog.Catalog
+import com.fws.playmind.core.MagicSquareGame
+import com.fws.playmind.core.MagicStatus
 import com.fws.playmind.core.SudokuGame
 import com.fws.playmind.core.SudokuLevel
 import com.fws.playmind.core.SudokuStatus
@@ -30,6 +32,7 @@ import com.fws.playmind.core.Outcome
 import com.fws.playmind.core.movesHash
 import com.fws.playmind.data.MatchOutcome
 import com.fws.playmind.data.Reward
+import com.fws.playmind.data.Plan
 import com.fws.playmind.data.StartCost
 import com.fws.playmind.net.FoundRoom
 import com.fws.playmind.net.LinkState
@@ -51,7 +54,7 @@ import kotlin.random.Random
 enum class Mode { NONE, BOT, LOCAL, SOLO, HOST_NEARBY, HOST_NET, JOIN_NEARBY, JOIN_NET }
 enum class Phase { IDLE, ROOM, PLAYING, OVER }
 enum class Opp { NONE, HUMAN, COMPUTER, HIDDEN_BOT }
-enum class Notice { NONE, NOT_ENOUGH, PERMISSION, CONN_LOST, OPP_LEFT, KICKED, BAD_CODE, CONN_FAILED, UNVERIFIED, HOST_LEFT, ROOM_TAKEN }
+enum class Notice { NONE, NOT_ENOUGH, PERMISSION, CONN_LOST, OPP_LEFT, KICKED, BAD_CODE, CONN_FAILED, UNVERIFIED, HOST_LEFT, ROOM_TAKEN, MAGIC_DONE, NO_HINTS }
 
 /**
  * Điều phối toàn bộ một phiên chơi: phòng chờ → ván đấu → kết quả. Dùng chung cho 3 chế độ:
@@ -89,6 +92,12 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
     var sudokuTick by mutableIntStateOf(0); private set
     private var sudokuJob: Job? = null
     private var sudokuClock: Job? = null
+    // Ma phương 7x7 (game một người, mỗi ngày một đề)
+    var magic by mutableStateOf<MagicSquareGame?>(null); private set
+    var magicTick by mutableIntStateOf(0); private set
+    var magicSeconds by mutableIntStateOf(0); private set
+    private var magicClock: Job? = null
+    private var magicDay = -1L
     /** Đồng hồ nước đi: thời điểm (ms, đồng hồ hệ thống) hết giờ của lượt hiện tại và số giây còn lại để hiển thị. */
     var turnDeadline by mutableStateOf(0L); private set
     var turnSecondsLeft by mutableIntStateOf(0); private set
@@ -247,6 +256,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         botSeats.clear(); multi = false; roster = emptyList(); eliminated = false; eliminatedReason = EndReason.NONE
         game = null; opp = Opp.NONE; oppName = ""; botThinking = false; verifying = false
         sudokuJob?.cancel(); sudokuClock?.cancel(); sudoku = null; sudokuLoading = false; sudokuSeconds = 0; seatNames = emptyList()
+        magicClock?.cancel(); saveMagic(); magic = null; magicSeconds = 0
         inviteCode = ""; replyCode = ""; inviteBusy = false; inviteOpen = false; guestConnected = false
         relayJob?.cancel(); relayJob = null; dropRelayRooms(); relayJoined = false
         rematchAsked = false; oppAskedRematch = false; localEnd = null; remoteEnd = null; finalized = false
@@ -294,6 +304,86 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
             // game một người: không giới hạn thời gian
         }
         return true
+    }
+
+    /** Bắt đầu game một người đang chọn (Sudoku hoặc Ma phương 7x7). */
+    fun startSolo(): Boolean = if (info?.id == Catalog.MAGIC_ID) startMagic() else startSudoku(Catalog.SUDOKU_LEVEL)
+
+    // ───────────────────────── Ma phương 7x7 (mỗi ngày một đề) ─────────────────────────
+    /** Số gợi ý mỗi ngày theo gói: không gói 0, gói tháng 10, gói năm 20. */
+    fun magicHintAllowance(): Int = when (wallet.currentPlan()) {
+        Plan.MONTHLY -> Catalog.MAGIC_HINTS_MONTHLY; Plan.YEARLY -> Catalog.MAGIC_HINTS_YEARLY; else -> 0
+    }
+
+    private fun magicHintsUsedToday(): Int =
+        magic?.hintsUsed ?: if (prefs.magicDay == wallet.today()) prefs.magicData?.let { MagicSquareGame.decode(it)?.hintsUsed } ?: 0 else 0
+
+    fun magicHintsLeft(): Int = (magicHintAllowance() - magicHintsUsedToday()).coerceAtLeast(0)
+
+    /** Đã giải xong đề hôm nay (phải chờ sang ngày mới có đề mới). */
+    fun magicSolvedToday(): Boolean = prefs.magicDay == wallet.today() && prefs.magicSolved
+
+    /** Đã mở (đã trả lượt) đề hôm nay: vào lại không tốn thêm. */
+    fun magicOpenedToday(): Boolean = prefs.magicDay == wallet.today() && prefs.magicPaid
+
+    /** Số ô đã điền của đề hôm nay đang giải dở (0 nếu chưa mở). */
+    fun magicProgressToday(): Int =
+        if (prefs.magicDay == wallet.today()) prefs.magicData?.let { MagicSquareGame.decode(it)?.filledCount() } ?: 0 else 0
+
+    fun startMagic(): Boolean {
+        val inf = info ?: return false
+        val day = wallet.today()
+        if (magicSolvedToday()) { notice = Notice.MAGIC_DONE; return false }
+        val sameDay = prefs.magicDay == day
+        val paid = sameDay && prefs.magicPaid
+        if (!paid && !wallet.canStart(inf.id)) { notice = Notice.NOT_ENOUGH; return false }
+        teardown()
+        if (!paid) {
+            if (wallet.startMatch(inf.id) == StartCost.INSUFFICIENT) { notice = Notice.NOT_ENOUGH; return false }
+            // đề giữ nguyên tới hết ngày: thoát giữa chừng không tính thua, vào lại giải tiếp
+            wallet.cancelMatch()
+        }
+        val g = (if (sameDay) prefs.magicData?.let { MagicSquareGame.decode(it) } else null)
+            ?.takeIf { it.status == MagicStatus.PLAYING } ?: MagicSquareGame.daily(day)
+        magicDay = day
+        magic = g; magicSeconds = if (sameDay) prefs.magicSeconds else 0
+        saveMagic()
+        mode = Mode.SOLO; reward = null; finalized = false
+        phase = Phase.PLAYING; tick++; magicTick++
+        magicClock = viewModelScope.launch {
+            while (true) {
+                delay(1000)
+                if (magic?.status == MagicStatus.PLAYING) { magicSeconds++; if (magicSeconds % 10 == 0) saveMagic() }
+            }
+        }
+        return true
+    }
+
+    private fun saveMagic() {
+        val g = magic ?: return
+        if (magicDay < 0) return
+        prefs.magicSave(magicDay, g.encode(), magicSeconds, g.status == MagicStatus.WON, true)
+    }
+
+    /** Mọi thao tác trên bàn Ma phương đi qua đây: vẽ lại, lưu ván, chốt kết quả khi thắng. */
+    fun magicEdit(block: (MagicSquareGame) -> Unit) {
+        val g = magic ?: return
+        if (phase != Phase.PLAYING) return
+        block(g)
+        magicTick++
+        saveMagic()
+        if (g.status == MagicStatus.WON) {
+            phase = Phase.OVER
+            settle(MatchOutcome.WIN, true)
+        }
+    }
+
+    /** Gợi ý một ô (ưu tiên ô đang chọn). Trả về ô được gợi ý hoặc -1 (hết lượt gợi ý / không gợi ý được). */
+    fun magicHint(selected: Int): Int {
+        if (magicHintsLeft() <= 0) { notice = Notice.NO_HINTS; return -1 }
+        var cell = -1
+        magicEdit { cell = it.hint(selected, Random) }
+        return cell
     }
 
     /** Mọi thao tác trên bàn Sudoku đi qua đây để bàn được vẽ lại và kết quả được chốt. */
@@ -932,7 +1022,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         val inf = info ?: return
         if (phase != Phase.OVER) return
         if (mode == Mode.LOCAL) { beginMatch(); return }
-        if (mode == Mode.SOLO) { startSudoku(option); return }
+        if (mode == Mode.SOLO) { if (inf.id == Catalog.MAGIC_ID) return; startSudoku(option); return }
         if (multi) return                                       // phòng nhiều người: về phòng chờ để tạo ván mới
         if (!wallet.canStart(inf.id, roomMode)) { notice = Notice.NOT_ENOUGH; return }
         if (isOnline && opp == Opp.HUMAN) { rematchAsked = true; transport?.send(Proto.REMATCH); maybeRematch() }

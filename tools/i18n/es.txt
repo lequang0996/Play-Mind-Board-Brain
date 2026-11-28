@@ -250,3 +250,17 @@ invite_scan_hint|Tus amigos eligen Por internet, Unirse a sala y escanean este c
 notice_room_taken|Otra persona entró primero en esta sala o ya se cerró.
 room_cost|Cada partida: cada jugador paga 1 diamante y el ganador recibe +1.
 room_cost_plan|Tu plan: jugar con amigos no cuesta diamantes.
+game_magic7|Cuadrado mágico 7×7
+game_magic7_desc|Coloca los números del 1 al 49 para que cada fila, columna y ambas diagonales sumen 175. Un reto nuevo cada día.
+guide_magic7|Objetivo: rellena el tablero 7×7 con los números del 1 al 49, cada uno una sola vez, de modo que cada fila, cada columna y las dos diagonales principales sumen 175.\n• Reto: uno por día, que empieza con un número dado en una casilla. Siempre tiene solución y cualquier disposición que cumpla las reglas gana.\n• Colocar: toca una casilla y luego un número. Si eliges un número que ya está en el tablero, se mueve a la casilla seleccionada.\n• Sumas: la columna derecha muestra la suma de cada fila, la fila inferior la de cada columna y la barra superior las dos diagonales. Verde: 7 casillas llenas y exactamente 175. Rojo: más de 175, o llena pero incorrecta.\n• Pistas: 10 al día con el plan mensual y 20 al día con el plan anual. Las casillas con pista quedan bloqueadas.\n• Salir a mitad no cuesta nada: vuelve el mismo día para continuar. Cuando lo resuelvas, el siguiente reto llega mañana.\n• Consejo: 175 = 7 × 25, así que 25 está a medio camino entre 1 y 49. Prueba a colocar parejas que sumen 50 (1 + 49, 2 + 48...) de forma simétrica respecto al centro.
+mg_hint_n|Pista (%d)
+mg_won|¡Cuadrado mágico completado!
+mg_won_text|Tiempo %1$s · %2$d pistas. Mañana llegará un nuevo cuadrado mágico.
+mg_done_today|Ya has resuelto el reto de hoy. Mañana habrá uno nuevo.
+mg_progress|Reto de hoy en curso: %d/49 casillas.
+mg_daily_note|Un reto por día. Puedes salir y continuar más tarde el mismo día.
+mg_hints_plan|Pistas: 10 al día con el plan mensual y 20 al día con el plan anual.
+mg_hints_left|Te quedan %1$d/%2$d pistas hoy.
+mg_continue|Continuar
+notice_magic_done|Ya has resuelto el cuadrado mágico de hoy. Vuelve mañana para un reto nuevo.
+notice_no_hints|Has usado todas las pistas de hoy. El plan mensual da 10 pistas al día y el anual 20.

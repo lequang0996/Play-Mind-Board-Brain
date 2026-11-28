@@ -250,3 +250,17 @@ invite_scan_hint|Seus amigos escolhem Pela internet, Entrar na sala e escaneiam 
 notice_room_taken|Outra pessoa entrou primeiro nesta sala ou ela já foi fechada.
 room_cost|Cada partida: cada jogador paga 1 diamante e o vencedor ganha +1.
 room_cost_plan|Seu plano: jogar com amigos não custa diamantes.
+game_magic7|Quadrado mágico 7×7
+game_magic7_desc|Coloque os números de 1 a 49 para que cada linha, coluna e as duas diagonais somem 175. Um desafio novo por dia.
+guide_magic7|Objetivo: preencha o tabuleiro 7×7 com os números de 1 a 49, cada um uma única vez, de modo que cada linha, cada coluna e as duas diagonais principais somem 175.\n• Desafio: um por dia, começando com um número dado em uma casa. Sempre tem solução e qualquer arranjo dentro das regras vence.\n• Colocar: toque numa casa e depois num número. Escolher um número que já está no tabuleiro move-o para a casa selecionada.\n• Somas: a coluna da direita mostra a soma de cada linha, a linha de baixo a de cada coluna e a barra superior as duas diagonais. Verde: 7 casas preenchidas e exatamente 175. Vermelho: acima de 175, ou cheia mas errada.\n• Dicas: 10 por dia no plano mensal e 20 por dia no plano anual. Casas com dica ficam bloqueadas.\n• Sair no meio não custa nada: volte no mesmo dia para continuar. Depois de resolver, o próximo desafio chega amanhã.\n• Dica: 175 = 7 × 25, então 25 fica no meio entre 1 e 49. Tente colocar pares que somam 50 (1 + 49, 2 + 48...) simétricos em relação ao centro.
+mg_hint_n|Dica (%d)
+mg_won|Quadrado mágico concluído!
+mg_won_text|Tempo %1$s · %2$d dicas. Um novo quadrado mágico chega amanhã.
+mg_done_today|Você já resolveu o desafio de hoje. Um novo chega amanhã.
+mg_progress|Desafio de hoje em andamento: %d/49 casas.
+mg_daily_note|Um desafio por dia. Você pode sair e continuar mais tarde no mesmo dia.
+mg_hints_plan|Dicas: 10 por dia no plano mensal e 20 por dia no plano anual.
+mg_hints_left|Restam %1$d/%2$d dicas hoje.
+mg_continue|Continuar
+notice_magic_done|Você já resolveu o quadrado mágico de hoje. Volte amanhã para um novo desafio.
+notice_no_hints|Você usou todas as dicas de hoje. O plano mensal dá 10 dicas por dia e o anual 20.

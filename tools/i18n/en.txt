@@ -250,3 +250,17 @@ invite_scan_hint|Friends choose Over the internet, Join room, then scan this cod
 notice_room_taken|Someone else joined this room first, or it has closed.
 room_cost|Each game: every player pays 1 diamond, the winner gets +1.
 room_cost_plan|Your plan: playing with friends costs no diamonds.
+game_magic7|Magic Square 7×7
+game_magic7_desc|Place the numbers 1 to 49 so every row, column and both diagonals add up to 175. A new puzzle every day.
+guide_magic7|Goal: fill the 7×7 board with the numbers 1 to 49, each exactly once, so that every row, every column and both main diagonals add up to 175.\n• Puzzle: one puzzle per day, starting with one given number in one cell. It always has a solution, and any arrangement that follows the rules wins.\n• Placing: tap a cell, then tap a number. Picking a number already on the board moves it to the selected cell.\n• Sums: the right column shows each row's sum, the bottom row each column's sum, and the top bar both diagonals. Green: 7 cells filled and exactly 175. Red: over 175, or full but wrong.\n• Hints: 10 per day with the monthly plan, 20 per day with the yearly plan. Hinted cells are locked.\n• Leaving midway costs nothing: come back the same day to continue. Once solved, the next puzzle arrives tomorrow.\n• Tip: 175 = 7 × 25, so 25 sits halfway between 1 and 49. Try placing pairs that add up to 50 (1 + 49, 2 + 48...) symmetrically around the center.
+mg_hint_n|Hint (%d)
+mg_won|Magic square complete!
+mg_won_text|Time %1$s · %2$d hints. A new magic square arrives tomorrow.
+mg_done_today|You have solved today's puzzle. A new one arrives tomorrow.
+mg_progress|Today's puzzle in progress: %d/49 cells.
+mg_daily_note|One puzzle per day. You can leave and continue later the same day.
+mg_hints_plan|Hints: 10 per day with the monthly plan, 20 per day with the yearly plan.
+mg_hints_left|%1$d/%2$d hints left today.
+mg_continue|Continue
+notice_magic_done|You have already solved today's magic square. Come back tomorrow for a new puzzle.
+notice_no_hints|You have used all of today's hints. The monthly plan gives 10 hints per day, the yearly plan 20.

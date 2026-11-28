@@ -211,6 +211,43 @@ fun main() {
     expect("sudoku: o hien tai hop le khi dien theo loi giai", (0 until 81).none { dz.isWrong(it) } && dz.hint() >= 0 && dz.status == SudokuStatus.WON)
     expect("sudoku: sai nhieu loi van khong thua, chi dem loi", sl.status == SudokuStatus.PLAYING && sl.mistakes == 3)
 
+    // ── Ma phương 7x7 ──
+    run {
+        val mr = kotlin.random.Random(5)
+        // mọi (ô, số) đều có lời giải trong họ toàn chéo
+        var allOk = true
+        for (cell in 0 until 49) for (v in 1..49) {
+            val sol = MagicSquareGame.solve(listOf(cell to v), emptyList(), mr)
+            if (sol == null || sol[cell] != v || !MagicSquareGame.isMagic(sol)) allOk = false
+        }
+        expect("magic: moi o, moi so cho san deu co loi giai (49x49)", allOk)
+        expect("magic: de theo ngay co dinh va hop le", (0L until 30L).all { d -> val a = MagicSquareGame.daily(20000 + d); val b = MagicSquareGame.daily(20000 + d); a.givenCell == b.givenCell && a.givenValue == b.givenValue && a.cells[a.givenCell] == a.givenValue })
+        expect("magic: tu choi bang sai luat", !MagicSquareGame.isMagic(IntArray(49) { it + 1 }))
+        // điền theo một lời giải → thắng; chuyển số sang ô khác; không sửa ô cho sẵn
+        val mg = MagicSquareGame.daily(20500)
+        val sol = MagicSquareGame.solve(listOf(mg.givenCell to mg.givenValue), emptyList(), mr)!!
+        val free = (0 until 49).filter { it != mg.givenCell }
+        expect("magic: khong sua o cho san", !mg.place(mg.givenCell, if (mg.givenValue == 1) 2 else 1) && !mg.erase(mg.givenCell))
+        mg.place(free[0], sol[free[1]]); mg.place(free[1], sol[free[1]])
+        expect("magic: dat lai so da dung thi chuyen o", mg.cells[free[0]] == 0 && mg.cells[free[1]] == sol[free[1]])
+        for (i in free) mg.place(i, sol[i])
+        expect("magic: dien du theo loi giai thi thang", mg.status == MagicStatus.WON && mg.rowSum(3) == 175 && mg.diagSum(1) == 175)
+        // lời giải khác (đổi vai L1/L2, hoán vị khác) cũng được chấp nhận
+        val alt = MagicSquareGame.solve(listOf(mg.givenCell to mg.givenValue), emptyList(), kotlin.random.Random(77))!!
+        val mg2 = MagicSquareGame(mg.givenCell, mg.givenValue)
+        for (i in free) mg2.place(i, alt[i])
+        expect("magic: chap nhan moi loi giai dung luat", mg2.status == MagicStatus.WON)
+        // gợi ý: giữ ô khóa, thắng sau đủ gợi ý; lưu / khôi phục
+        val mh = MagicSquareGame.daily(20600)
+        mh.place((mh.givenCell + 1) % 49, if (mh.givenValue == 49) 48 else mh.givenValue + 1)
+        var hints = 0
+        while (mh.status == MagicStatus.PLAYING && hints < 60) { if (mh.hint(-1, mr) < 0) break; hints++ }
+        expect("magic: goi y dan toi loi giai ($hints goi y)", mh.status == MagicStatus.WON && hints <= 48 && mh.hintsUsed == hints)
+        val ms = MagicSquareGame.daily(20700); ms.place((ms.givenCell + 3) % 49, 7.let { if (it == ms.givenValue) 8 else it }); ms.hint(-1, mr)
+        val back = MagicSquareGame.decode(ms.encode())
+        expect("magic: luu va khoi phuc van", back != null && back.cells.contentEquals(ms.cells) && back.locked.contentEquals(ms.locked) && back.hintsUsed == 1)
+    }
+
     // ── Wall Go ──
     expect("wallgo: thu tu dat quan 2/3/4 nguoi", (2..4).all { p -> val o = WallGoGame.setupOrder(p); (0 until p).all { q -> o.count { it == q } == WallGoGame.stonesPerPlayer(p) } })
     val wgw = WallGoGame(2)

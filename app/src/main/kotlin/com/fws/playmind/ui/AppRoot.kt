@@ -116,7 +116,7 @@ fun AppRoot(app: PlayMindApp, vm: SessionViewModel, update: UpdateManager) {
             is Screen.TopicList -> TopicScreen(app, s.topic, { pop() }) { vm.open(it); push(Screen.Lobby(it.id)) }
             is Screen.Lobby -> LobbyScreen(app, vm, Catalog.byId(s.gameId), { pop() }, { push(Screen.Room) }, { push(Screen.Guide(s.gameId)) })
             Screen.Room -> RoomScreen(vm) { exitSession() }
-            Screen.Play -> vm.info?.let { if (it.kind == GameKind.SOLO) SudokuScreen(app, vm, it) { exitSession() } else GameScreen(app, vm, it) { exitSession() } }
+            Screen.Play -> vm.info?.let { if (it.id == Catalog.MAGIC_ID) MagicScreen(app, vm, it) { exitSession() } else if (it.kind == GameKind.SOLO) SudokuScreen(app, vm, it) { exitSession() } else GameScreen(app, vm, it) { exitSession() } }
             Screen.Settings -> SettingsScreen(app, { pop() }, { push(Screen.Guide(null)) }, { push(Screen.Shop) })
             Screen.Shop -> ShopScreen(app) { pop() }
             is Screen.Guide -> GuideScreen({ pop() }, s.gameId)
@@ -140,6 +140,8 @@ fun AppRoot(app: PlayMindApp, vm: SessionViewModel, update: UpdateManager) {
             Notice.UNVERIFIED -> R.string.notice_unverified
             Notice.HOST_LEFT -> R.string.notice_host_left
             Notice.ROOM_TAKEN -> R.string.notice_room_taken
+            Notice.MAGIC_DONE -> R.string.notice_magic_done
+            Notice.NO_HINTS -> R.string.notice_no_hints
             Notice.NONE -> R.string.empty
         }
         if (n == Notice.NOT_ENOUGH) {

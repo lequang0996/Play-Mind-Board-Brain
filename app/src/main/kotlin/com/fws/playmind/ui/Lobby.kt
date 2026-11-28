@@ -187,6 +187,9 @@ fun LobbyScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onBack: 
         else { pending = action; askNearby = true }
     }
     val solo = info.kind == GameKind.SOLO
+    val magic = info.id == Catalog.MAGIC_ID
+    val magicDone = magic && vm.magicSolvedToday()
+    val magicOpened = magic && vm.magicOpenedToday()
     val hasOptions = info.options.isNotEmpty()
     val optIndex = info.options.indexOf(vm.option).coerceAtLeast(0)
     val onlineOk = !solo
@@ -212,7 +215,7 @@ fun LobbyScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onBack: 
                         Modifier.clip(RoundedCornerShape(6.dp)).clickable(onClick = onGuide).padding(vertical = 2.dp),
                         style = MaterialTheme.typography.labelLarge, color = pm.gold, textDecoration = TextDecoration.Underline,
                     )
-                    if (!app.wallet.noDiamonds()) Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    if (!app.wallet.noDiamonds() && !magicOpened) Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                         if (free > 0) {
                             Icon(Ic.Check, null, Modifier.size(16.dp), tint = pm.good)
                             Text(if (free == Int.MAX_VALUE) stringResource(R.string.free_unlimited) else stringResource(R.string.free_left_n, free), style = MaterialTheme.typography.labelMedium, color = pm.good)
@@ -243,10 +246,24 @@ fun LobbyScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onBack: 
                     SectionTitle(stringResource(R.string.bot_level))
                     LevelPicker(vm.botLevel, app.prefs.unlockedLevel(info.id)) { vm.selectLevel(it) }
                 }
+                if (magic) {
+                    // mỗi ngày một đề: trạng thái hôm nay và số gợi ý theo gói
+                    val text = when {
+                        magicDone -> stringResource(R.string.mg_done_today)
+                        magicOpened -> stringResource(R.string.mg_progress, vm.magicProgressToday())
+                        else -> stringResource(R.string.mg_daily_note)
+                    }
+                    Text(text, style = MaterialTheme.typography.bodySmall, color = if (magicDone) pm.good else pm.inkSoft)
+                    val allowance = vm.magicHintAllowance()
+                    Text(
+                        if (allowance == 0) stringResource(R.string.mg_hints_plan) else stringResource(R.string.mg_hints_left, vm.magicHintsLeft(), allowance),
+                        style = MaterialTheme.typography.bodySmall, color = pm.gold,
+                    )
+                }
                 GoldButton(
-                    stringResource(R.string.start),
-                    { if (solo) vm.startSudoku(Catalog.SUDOKU_LEVEL) else vm.startVsComputer() },
-                    Modifier.fillMaxWidth(), if (solo) Ic.Play else Ic.Computer,
+                    stringResource(if (magicOpened && !magicDone) R.string.mg_continue else R.string.start),
+                    { if (solo) vm.startSolo() else vm.startVsComputer() },
+                    Modifier.fillMaxWidth(), if (solo) Ic.Play else Ic.Computer, enabled = !magicDone,
                 )
             }
 

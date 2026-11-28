@@ -19,7 +19,7 @@ enum class Topic(@StringRes val title: Int, val color: Color) {
     MEMORY(R.string.topic_memory, Color(0xFFFF6B8B)),
 }
 
-/** DUEL = hai bên đấu (có phòng online); SOLO = một người giải đố (Sudoku). */
+/** DUEL = hai bên đấu (có phòng online); SOLO = một người giải đố (Sudoku, Ma phương 7x7). */
 enum class GameKind { DUEL, SOLO }
 
 /** Tùy chọn trước ván: NONE, PLAYERS (số người chơi) hoặc BOARD (cỡ bàn). */
@@ -55,6 +55,11 @@ object Catalog {
     /** Sudoku chỉ có một chế độ chuẩn: bàn 9x9 gồm 9 khối 3x3, mỗi hàng/cột/khối đủ 1-9 và đề luôn có đúng một lời giải. */
     const val SUDOKU_LEVEL = 1   // SudokuLevel.MEDIUM
 
+    /** Ma phương 7x7: mỗi ngày một đề (core MagicSquareGame). Gợi ý mỗi ngày: gói tháng 10 lần, gói năm 20 lần. */
+    const val MAGIC_ID = "magic7"
+    const val MAGIC_HINTS_MONTHLY = 10
+    const val MAGIC_HINTS_YEARLY = 20
+
     /**
      * 7 mức thời gian tối đa mỗi nước (giây), dùng chung cho MỌI game: chơi với máy theo cấp bot Dễ → Siêu việt,
      * chơi với người thì người chơi (chủ phòng) chọn một trong 7 mức. Hết giờ mà chưa đi thì người đang đến lượt bị xử thua.
@@ -83,8 +88,10 @@ object Catalog {
             create = { n -> WallGoGame(n) }),
         GameInfo("caro", Topic.MIND, R.string.game_caro, R.string.game_caro_desc, R.string.guide_caro,
             R.string.stone_black, R.string.stone_white, 9, { 6000L }, order = 1, minutes = 5, create = { GomokuGame() }),
-        GameInfo("sudoku", Topic.MATH, R.string.game_sudoku, R.string.game_sudoku_desc, R.string.guide_sudoku,
+        GameInfo("sudoku", Topic.PUZZLE, R.string.game_sudoku, R.string.game_sudoku_desc, R.string.guide_sudoku,
             R.string.side_white, R.string.side_black, 0, { 0L }, kind = GameKind.SOLO, order = 1, minutes = 10),
+        GameInfo(MAGIC_ID, Topic.PUZZLE, R.string.game_magic7, R.string.game_magic7_desc, R.string.guide_magic7,
+            R.string.side_white, R.string.side_black, 0, { 0L }, kind = GameKind.SOLO, order = 2, minutes = 30),
     )
 
     fun byId(id: String) = games.first { it.id == id }
