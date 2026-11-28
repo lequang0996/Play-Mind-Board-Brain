@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -147,6 +148,20 @@ fun ShopScreen(app: PlayMindApp, onBack: () -> Unit) {
                     GemPack(5, price(BillingManager.GEMS_5), ready(BillingManager.GEMS_5), false, { billing.buy(activity, BillingManager.GEMS_5) }, Modifier.weight(1f))
                     GemPack(30, price(BillingManager.GEMS_30), ready(BillingManager.GEMS_30), true, { billing.buy(activity, BillingManager.GEMS_30) }, Modifier.weight(1f))
                 }
+            }
+            // Chưa lấy được đủ sản phẩm: hiện thông tin kỹ thuật để biết Google Play từ chối vì sao
+            if (offers.size < 4) {
+                val info = remember {
+                    val pkm = ctx.packageManager
+                    val installer = runCatching {
+                        if (android.os.Build.VERSION.SDK_INT >= 30) pkm.getInstallSourceInfo(ctx.packageName).installingPackageName
+                        else @Suppress("DEPRECATION") pkm.getInstallerPackageName(ctx.packageName)
+                    }.getOrNull() ?: "?"
+                    val vc = runCatching { androidx.core.content.pm.PackageInfoCompat.getLongVersionCode(pkm.getPackageInfo(ctx.packageName, 0)) }.getOrDefault(-1L)
+                    "${ctx.packageName} v$vc · installer $installer"
+                }
+                Text("$info
+${billing.diag}", style = MaterialTheme.typography.labelSmall, color = pm.inkSoft)
             }
             Spacer(Modifier.height(20.dp))
         }

@@ -50,6 +50,13 @@ class BillingManager(private val app: Application, private val wallet: WalletRep
     var offers by mutableStateOf<Map<String, Offer>>(emptyMap()); private set
     var connected by mutableStateOf(false); private set
     var event by mutableStateOf<BillingEvent?>(null); private set
+    /** Chẩn đoán kỹ thuật khi chưa lấy được sản phẩm (mã lỗi Google Play), hiện nhỏ ở cuối màn hình Cửa hàng. */
+    var diag by mutableStateOf("billing: connecting"); private set
+    private val diagParts = java.util.concurrent.ConcurrentHashMap<String, String>()
+    private fun setDiag(key: String, v: String?) {
+        if (v == null) diagParts.remove(key) else diagParts[key] = v
+        diag = diagParts.entries.sortedBy { it.key }.joinToString(" · ") { it.value }
+    }
     fun consumeEvent() { event = null }
 
     private val client: BillingClient = BillingClient.newBuilder(app)
@@ -64,8 +71,9 @@ class BillingManager(private val app: Application, private val wallet: WalletRep
             override fun onBillingSetupFinished(r: BillingResult) {
                 if (r.responseCode != BillingClient.BillingResponseCode.OK)
                     android.util.Log.w("PMBilling", "kết nối Google Play Billing lỗi ${r.responseCode}: ${r.debugMessage}")
+                setDiag("0", if (r.responseCode == BillingClient.BillingResponseCode.OK) null else "setup ${r.responseCode} ${r.debugMessage}")
                 if (r.responseCode == BillingClient.BillingResponseCode.OK) {
-                    connected = true
+                    connected = true; setDiag("0", null)
                     loadProducts(); refresh()
                 }
             }
@@ -81,8 +89,11 @@ class BillingManager(private val app: Application, private val wallet: WalletRep
             client.queryProductDetailsAsync(params) { res, result ->
                 if (res.responseCode != BillingClient.BillingResponseCode.OK) {
                     android.util.Log.w("PMBilling", "queryProductDetails($type) lỗi ${res.responseCode}: ${res.debugMessage}")
+                    setDiag(type, "$type ${res.responseCode} ${res.debugMessage}")
                     return@queryProductDetailsAsync
                 }
+                val miss = result.unfetchedProductList.joinToString(",") { "${it.productId}:${it.statusCode}" }
+                setDiag(type, "$type ok ${result.productDetailsList.size}" + (if (miss.isNotEmpty()) " miss $miss" else ""))
                 // Mã Play không trả về: chưa kích hoạt, sai mã, hoặc bản cài không phải từ kênh thử nghiệm của Play
                 result.unfetchedProductList.forEach {
                     android.util.Log.w("PMBilling", "không lấy được sản phẩm ${it.productId} (status ${it.statusCode})")
