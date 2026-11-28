@@ -15,9 +15,13 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
 
 /** Màu bốn bên của Wall Go và Quoridor (đỏ, xanh dương, xanh lá, vàng) theo bộ quân trong ảnh tham chiếu. */
-internal val PlayerColors = listOf(Color(0xFFE5483D), Color(0xFF3C7DF0), Color(0xFF2FB36A), Color(0xFFF2C230))
+/** Màu ghế: 4 màu đầu dùng cho Quoridor / Wall Go; Lãnh địa đồng cỏ (tối đa 8 người) dùng cả 8. */
+internal val PlayerColors = listOf(
+    Color(0xFFE5483D), Color(0xFF3C7DF0), Color(0xFF2FB36A), Color(0xFFF2C230),
+    Color(0xFF9B59D0), Color(0xFFFF8A3D), Color(0xFF1FB5B0), Color(0xFFEC6FAE),
+)
 
-internal fun playerColor(seat: Int): Color = PlayerColors[Math.floorMod(seat, 4)]
+internal fun playerColor(seat: Int): Color = PlayerColors[Math.floorMod(seat, PlayerColors.size)]
 
 /** Quân gỗ tiện dạng chốt: thân trụ bo tròn + đầu tròn, có bóng đổ và điểm sáng. [c] là tâm đáy-thân; [r] là bán kính đầu. */
 fun DrawScope.drawPawn(c: Offset, r: Float, color: Color) {

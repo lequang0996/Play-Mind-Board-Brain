@@ -19,6 +19,7 @@ AVAILABLE NOW — PUZZLE
 • Magic Square 7×7: place 1 to 49 so every row, column and both diagonals add up to 175. A new puzzle every day.
 • Tangram: fill 10 random shapes per round, 3 minutes each, across 7 levels from 4 to 10 pieces.
 • Word Blocks: build 7 English words on a theme (countries, animals, fruits, ...) from wooden letter blocks in 10 minutes.
+• Meadow Realm: 2-8 players lay grass tiles on a 30×30 meadow; the largest square of territory wins.
 
 AVAILABLE NOW — MEMORY
 • Blind Gomoku: Gomoku with shared stones in four colours. The board never shows whose stone is whose, so you must remember yours.
@@ -65,6 +66,7 @@ VI = dict(
 • Ma phương 7×7: xếp các số 1 đến 49 sao cho mọi hàng, cột và hai đường chéo đều có tổng 175. Mỗi ngày một đề.
 • Xếp hình Tangram: ghép kín 10 hình ngẫu nhiên mỗi lượt, mỗi hình 3 phút, 7 cấp từ 4 đến 10 mảnh.
 • Khối gỗ ghép chữ: ghép 7 từ tiếng Anh cùng chủ đề (quốc gia, con vật, trái cây, ...) từ các khối gỗ chữ cái trong 10 phút.
+• Lãnh địa đồng cỏ: 2-8 người đặt mảnh gạch cỏ trên đồng cỏ 30×30, hình vuông lãnh thổ lớn nhất thắng.
 
 ĐÃ CÓ — CHỦ ĐỀ GHI NHỚ
 • Cờ caro mù: cờ caro với quân bốn màu dùng chung. Bàn cờ không cho biết quân nào của ai, bạn phải tự nhớ quân của mình.

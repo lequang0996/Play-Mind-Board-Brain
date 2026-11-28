@@ -55,6 +55,7 @@ import com.fws.playmind.core.GoGame
 import com.fws.playmind.core.Outcome
 import com.fws.playmind.core.QuoridorGame
 import com.fws.playmind.core.WallGoGame
+import com.fws.playmind.core.MeadowGame
 import com.fws.playmind.match.Mode
 import com.fws.playmind.match.Opp
 import com.fws.playmind.match.Phase
@@ -81,6 +82,7 @@ private fun seatInfo(vm: SessionViewModel, seat: Int): String? {
     @Suppress("UNUSED_VARIABLE") val t = vm.tick
     return when (val g = vm.game) {
         is WallGoGame -> stringResource(R.string.st_cells, g.territory()[seat])
+        is MeadowGame -> stringResource(R.string.md_points, g.points(seat))
         is QuoridorGame -> stringResource(R.string.st_walls, g.wallsOf(seat))
         is GoGame -> stringResource(R.string.st_captured, g.capturedBy(seat))
         else -> null
@@ -152,6 +154,7 @@ private fun PlayerBar(info: GameInfo, seat: Int, name: String, label: String, ac
 /** Dải người chơi gọn cho ván 3-4 người: mỗi ghế một ô, ô của người đang đi sáng viền vàng. */
 @Composable
 private fun SeatStrip(vm: SessionViewModel, info: GameInfo, turn: Int, over: Boolean) {
+    if (vm.playerCount > 4) { SeatGrid(vm, info, turn, over); return }
     Row(Modifier.fillMaxWidth().padding(horizontal = 18.dp, vertical = 6.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         for (seat in 0 until vm.playerCount) {
             val active = !over && turn == seat
@@ -165,6 +168,31 @@ private fun SeatStrip(vm: SessionViewModel, info: GameInfo, turn: Int, over: Boo
                 Text(seatName(vm, info, seat), style = MaterialTheme.typography.labelMedium, color = pm.ink, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 Text(seatInfo(vm, seat) ?: sideLabel(info, seat), style = MaterialTheme.typography.labelSmall, color = if (active) pm.gold else pm.inkSoft, maxLines = 1)
             }
+        }
+    }
+}
+
+/** Dải ghế gọn cho ván 5-8 người: 2 hàng, mỗi ô một huy hiệu nhỏ, tên và dòng thông tin. */
+@Composable
+private fun SeatGrid(vm: SessionViewModel, info: GameInfo, turn: Int, over: Boolean) {
+    Column(Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 4.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
+        for (row in (0 until vm.playerCount).chunked(4)) Row(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+            for (seat in row) {
+                val active = !over && turn == seat
+                val shape = RoundedCornerShape(12.dp)
+                Row(
+                    Modifier.weight(1f).clip(shape).background(if (active) pm.goldSoft else pm.surface)
+                        .border(if (active) 1.5.dp else 1.dp, if (active) pm.goldBright else pm.outline, shape).padding(horizontal = 4.dp, vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(3.dp),
+                ) {
+                    SideBadge(info.id, seat, Modifier.size(18.dp))
+                    Column(Modifier.weight(1f)) {
+                        Text(seatName(vm, info, seat), style = MaterialTheme.typography.labelSmall, color = pm.ink, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                        Text(seatInfo(vm, seat) ?: "", style = MaterialTheme.typography.labelSmall, color = if (active) pm.gold else pm.inkSoft, maxLines = 1)
+                    }
+                }
+            }
+            repeat(4 - row.size) { Spacer(Modifier.weight(1f)) }
         }
     }
 }
@@ -208,6 +236,7 @@ fun GameScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onExit: (
                 "go" -> GoBoardView(vm)
                 "quoridor" -> QuoridorBoardView(vm)
                 "wallgo" -> WallGoBoardView(vm)
+                "meadow" -> MeadowBoardView(vm)
                 "blindcaro" -> BlindCaroBoardView(vm, Modifier.fillMaxSize())
                 else -> GomokuBoardView(vm, Modifier.fillMaxSize())   // bàn vô hạn: lấp đầy khoảng trống, kéo/thu phóng được
             }
@@ -261,7 +290,7 @@ private fun ResultDialog(app: PlayMindApp, vm: SessionViewModel, info: GameInfo,
     val out = vm.myOutcome()
     val draw = out == com.fws.playmind.data.MatchOutcome.DRAW
     val win = out == com.fws.playmind.data.MatchOutcome.WIN
-    val winnerSeat = when (g) { is WallGoGame -> g.winner; is QuoridorGame -> g.winner; else -> if (g.result == Outcome.WIN_FIRST) 0 else if (g.result == Outcome.WIN_SECOND) 1 else -1 }
+    val winnerSeat = when (g) { is WallGoGame -> g.winner; is QuoridorGame -> g.winner; is MeadowGame -> g.winner; else -> if (g.result == Outcome.WIN_FIRST) 0 else if (g.result == Outcome.WIN_SECOND) 1 else -1 }
     val title = when {
         local && winnerSeat >= 0 -> stringResource(R.string.winner_is, seatName(vm, info, winnerSeat))
         draw -> stringResource(R.string.result_draw)
@@ -294,6 +323,7 @@ private fun ResultDialog(app: PlayMindApp, vm: SessionViewModel, info: GameInfo,
             }
             // Bảng điểm cuối ván
             if (g is WallGoGame && g.reason == EndReason.TERRITORY) FinalScores(vm, info, g.finalScores.toList())
+            if (g is MeadowGame && g.reason == EndReason.TERRITORY) FinalScores(vm, info, g.finalPoints.toList(), R.string.md_points)
             if (g is GoGame && g.reason == EndReason.TERRITORY) {
                 Text(stringResource(R.string.go_score, g.finalBlack, g.finalWhite, "%.1f".format(GoGame.KOMI)), style = MaterialTheme.typography.bodyMedium, color = pm.ink, textAlign = TextAlign.Center)
             }
@@ -329,13 +359,13 @@ private fun ResultDialog(app: PlayMindApp, vm: SessionViewModel, info: GameInfo,
 }
 
 @Composable
-private fun FinalScores(vm: SessionViewModel, info: GameInfo, scores: List<Int>) {
+private fun FinalScores(vm: SessionViewModel, info: GameInfo, scores: List<Int>, label: Int = R.string.st_cells) {
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(6.dp)) {
         scores.forEachIndexed { seat, pts ->
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 SideBadge(info.id, seat, Modifier.size(26.dp))
                 Text(seatName(vm, info, seat), Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium, color = pm.ink, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                Text(stringResource(R.string.st_cells, pts), style = MaterialTheme.typography.labelLarge, color = pm.gold)
+                Text(stringResource(label, pts), style = MaterialTheme.typography.labelLarge, color = pm.gold)
             }
         }
     }

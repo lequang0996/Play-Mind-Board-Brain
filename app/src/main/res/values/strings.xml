@@ -57,6 +57,8 @@
     <string name="game_go_desc">The ancient game of territory. Surround more of the board than your opponent.</string>
     <string name="game_magic7">Magic Square 7×7</string>
     <string name="game_magic7_desc">Place the numbers 1 to 49 so every row, column and both diagonals add up to 175. A new puzzle every day.</string>
+    <string name="game_meadow">Meadow Realm</string>
+    <string name="game_meadow_desc">2-8 players claim a 30×30 meadow with grass tiles. The largest square of territory wins.</string>
     <string name="game_quoridor">Quoridor</string>
     <string name="game_quoridor_desc">Race to the far side while building walls to block your rivals.</string>
     <string name="game_sudoku">Sudoku</string>
@@ -87,6 +89,7 @@
     <string name="guide_levels">• Easy: for newcomers. The computer looks only one or two moves ahead and often plays at random; knowing the rules is enough to win.\n• Medium: avoids obvious blunders but still makes many mistakes. Play with a plan.\n• Good: knows basic tactics. Calculate a few moves ahead and leave no weaknesses.\n• Strong: rarely errs and plans ahead. You need a clear strategy to win.\n• Master: solid, very few mistakes. Only experienced players win regularly.\n• Challenger: almost never makes a tactical mistake. Beating it is something to be proud of.\n• Supreme: the computer at full strength. In chess it plays like a 2800 Elo engine (CCRL engine rating scale): nearly unbeatable for humans.\n• Each level is clearly stronger than the one below: the higher level wins most games (about 65% to 98%).\n• Challenge your mind: how far can you climb? Start at Easy, conquer each level and reach Supreme.</string>
     <string name="guide_levels_title">7 computer levels</string>
     <string name="guide_magic7">Goal: fill the 7×7 board with the numbers 1 to 49, each exactly once, so that every row, every column and both main diagonals add up to 175.\n• Puzzle: one puzzle per day, starting with one given number in one cell. It always has a solution, and any arrangement that follows the rules wins.\n• Placing: tap a cell, then tap a number. Picking a number already on the board moves it to the selected cell.\n• Sums: the right column shows each row\'s sum, the bottom row each column\'s sum, and the top bar both diagonals. Green: 7 cells filled and exactly 175. Red: over 175, or full but wrong.\n• Hints: 10 per day with the monthly plan, 20 per day with the yearly plan. Hinted cells are locked.\n• Leaving midway costs nothing: come back the same day to continue. Once solved, the next puzzle arrives tomorrow.\n• Tip: 175 = 7 × 25, so 25 sits halfway between 1 and 49. Try placing pairs that add up to 50 (1 + 49, 2 + 48...) symmetrically around the center.</string>
+    <string name="guide_meadow">Goal: after 9 rounds, own the largest square of territory. Score: 2×2 = 1, 3×3 = 2, … 8×8 = 7 (ties are broken by total cells). Only the winner earns diamonds.\n• The 30×30 board has special cells. 96 grass tiles (1 to 6 cells) come in a fixed queue that everyone can see.\n• Start: in turn, each player places a 1×1 base cell on an empty cell (not next to anyone else). Everyone starts with 1 tile-swap coupon and 2 Pieces.\n• Each turn take the next tile in the queue. Spend a coupon to pick 1 of the next 5 tiles instead; the next player continues after the tile you picked, and skipped tiles only come back when the rest are used up.\n• You have 2 minutes to place the tile (using a coupon restarts the clock). Rotate by 90° or flip as you like.\n• A new tile must touch an edge of your territory (in round 1, your base), may not overlap, may not leave the board, may not touch an edge of an opponent\'s territory and may not touch a stone. An illegal placement or running out of time loses the tile.\n• Surround all 4 sides of a special cell with your territory and it becomes yours: Coupon (+1 coupon), Piece (+2 Pieces, FW icon), Stone (place 1 stone on any empty cell; stones can\'t be captured and tiles can\'t touch them), Steal (take 1 opponent tile and place it in your territory).\n• On your turn: buy a coupon for 1 Piece, or clear a stone for 1 Piece.\n• After round 9, leftover Pieces automatically buy single 1×1 cells (1 Piece each) to fill gaps, favouring a larger square.\n• Against the computer the default is 8 players (you and 7 bots), with 7 levels from Easy to Supreme.</string>
     <string name="guide_quoridor">Goal: be the first to reach the opposite side of the board.\n• Move: step one square up, down, left or right. If an opponent\'s pawn is next to you, jump over it, or step diagonally if a wall or the edge is behind it.\n• Walls: instead of moving you may place a wall two squares long. Walls cannot overlap or cross, and you may never block every path to a goal.\n• Walls left: 10 each with 2 players, 5 each with 4 players.\n• Build: choose Wall, tap near the crossing where it goes to preview it (green = allowed), then press Place wall.\n• Repetition: in 2-player games, a pawn move that recreates an earlier position loses; in 4-player games such a move is not allowed.</string>
     <string name="guide_sudoku">Goal: fill every empty square so each row, column and 3×3 box contains the digits 1 to 9 once.\n• Entering: tap a square, then a number. Wrong numbers show in red; fix them with Erase.\n• Notes: switch on the pencil to jot small candidate numbers (shown in red) in a square.\n• Erase clears the selected square. Each 3×3 box starts with only one given number (9 in total), so any grid that follows the rules wins.</string>
     <string name="guide_tangram">Goal: use all 7 pieces (2 large triangles, 1 medium triangle, 2 small triangles, 1 square, 1 parallelogram) to fill the grey shape exactly, with no overlaps and no pieces left over.\n• Each round has 10 random shapes, from compact to spiky. You have 3 minutes per shape.\n• If time runs out on any shape you lose; finish all 10 to win.\n• Drag pieces from the tray onto the shape. Tap to rotate 45°, long-press the parallelogram to flip it.\n• Drop a piece near a corner of the shape or of another piece and it snaps into place.\n• Any arrangement that fills the shape exactly counts.\n• Tip: place the two large triangles first; they cover half the area.\n• 7 levels by number of pieces: Easy 4, Medium 5, Good 6, Strong 7 (the classic set), Master 8, Challenger 9, Supreme 10. Finish all 10 shapes of a level to unlock the next.</string>
@@ -127,6 +130,28 @@
     <string name="licenses">Open-source licenses</string>
     <string name="local_no_reward">Same-device games give no diamonds and use no plays.</string>
     <string name="manage_sub">Manage subscription</string>
+    <string name="md_buy_coupon">Buy coupon (1 Piece)</string>
+    <string name="md_clear_stone">Clear stone (1 Piece)</string>
+    <string name="md_discard">Discard</string>
+    <string name="md_flip">Flip</string>
+    <string name="md_place">Place</string>
+    <string name="md_place_base">Place base</string>
+    <string name="md_place_stone">Place stone</string>
+    <string name="md_points">%d pts</string>
+    <string name="md_prompt_base">Tap an empty cell to place your 1×1 base.</string>
+    <string name="md_prompt_clear">Tap a stone to clear it (costs 1 Piece).</string>
+    <string name="md_prompt_first">Round 1: the tile must touch your base. Tap or drag on the board to move it.</string>
+    <string name="md_prompt_place">Tap or drag on the board to move the tile; green is legal, red is not.</string>
+    <string name="md_prompt_steal">You may steal 1 tile: tap an opponent\'s tile, then Steal this tile.</string>
+    <string name="md_prompt_steal_place">Place the stolen tile in your territory.</string>
+    <string name="md_prompt_stone">You may place 1 stone: tap an empty cell, then Place stone.</string>
+    <string name="md_rotate">Rotate</string>
+    <string name="md_round">Round %1$d/%2$d</string>
+    <string name="md_skip">Skip</string>
+    <string name="md_steal_this">Steal this tile</string>
+    <string name="md_use_coupon">Use tile-swap coupon</string>
+    <string name="md_use_coupon_text">Spend 1 coupon to take tile %1$d in the queue instead of the current one? The clock restarts.</string>
+    <string name="md_watch">Waiting for the other players…</string>
     <string name="menu">Menu</string>
     <string name="mg_continue">Continue</string>
     <string name="mg_daily_note">One puzzle per day. You can leave and continue later the same day.</string>

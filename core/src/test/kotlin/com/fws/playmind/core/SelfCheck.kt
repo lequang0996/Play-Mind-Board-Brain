@@ -237,6 +237,53 @@ fun main() {
         expect("tangram: de 10 manh ghep dung thi khop", Tangram.coverError(hard[9].pieces.map { it.poly }, hard[9]) < Tangram.SOLVED_ERROR)
     }
 
+    // ── Lãnh địa đồng cỏ ──
+    run {
+        expect("meadow: 96 manh, 21 o dac biet", MeadowGame.ORDER.size == 96 && MeadowGame.SPECIAL_CELLS.size == 21)
+        expect("meadow: so huong X=1, I5=2, F=8, O=1", MeadowGame.ORIENTS[18].size == 1 && MeadowGame.ORIENTS[10].size == 2 && MeadowGame.ORIENTS[9].size == 8 && MeadowGame.ORIENTS[5].size == 1)
+        val g = MeadowGame(2)
+        g.play(MeadowGame.BASE + 0 * 30 + 0); g.play(MeadowGame.BASE + 0 * 30 + 3)
+        expect("meadow: het pha o nen sang vong 1", g.phase == MeadowPhase.TURN && g.round == 1 && g.turn == 0)
+        // người 0 đặt ô đơn sát ô (2,0) chạm đất người 1 ở (3,0): sai luật
+        expect("meadow: khong duoc cham canh dat doi thu", !g.canPlace(0, intArrayOf(2)) && g.canPlace(0, intArrayOf(1)))
+        expect("meadow: phai cham dat minh", !g.canPlace(0, intArrayOf(30 * 5 + 5)))
+        // hình vuông lớn nhất
+        val h = MeadowGame(2)
+        for (y in 10 until 14) for (x in 10 until 14) h.owner[y * 30 + x] = 1
+        h.owner[10 * 30 + 9] = 1
+        expect("meadow: hinh vuong 4x4 = 3 diem", h.largestSquare(1) == 4 && h.points(1) == 3)
+        // chiếm ô đặc biệt: ô Piece (18, 11)
+        val k = MeadowGame(2)
+        k.play(MeadowGame.BASE + 11 * 30 + 17); k.play(MeadowGame.BASE + 0)
+        for (c in intArrayOf(10 * 30 + 17, 10 * 30 + 18, 10 * 30 + 19, 11 * 30 + 19, 12 * 30 + 17)) k.owner[c] = 0
+        val before = k.pieces[0]
+        // đặt ô đơn (18, 12) sẽ bao kín (18, 11) — cần mảnh ô đơn ở đầu hàng chờ
+        k.queue.add(0, 0)
+        val ok = k.play(MeadowGame.place(0, 12 * 30 + 18))
+        expect("meadow: bao kin o Piece thi nhan Piece", ok && k.owner[11 * 30 + 18] == 0 && k.pieces[0] == before + MeadowGame.PIECE_GAIN)
+        // ván 8 bot trọn vẹn: không treo, mọi nước hợp lệ, kết thúc có điểm
+        val t0 = System.nanoTime()
+        val lv = BotLevel.entries
+        val w = IntArray(7); val pts = IntArray(7)
+        var illegal = 0; var games = 0
+        for (seed in 0 until 3) {
+            val gm = MeadowGame(7)
+            val r = kotlin.random.Random(seed)
+            var guard = 0
+            while (!gm.over && guard++ < 3000) {
+                val m = gm.levelMove(lv[gm.turn], 300, r)
+                if (!gm.play(m)) { illegal++; gm.play(MeadowGame.DISCARD) }
+            }
+            games++
+            if (gm.winner >= 0) w[gm.winner]++
+            for (p in 0 until 7) pts[p] += gm.finalPoints[p]
+        }
+        val ms = (System.nanoTime() - t0) / 1_000_000
+        println("      meadow: 3 van 7 bot (De..Sieu viet) trong $ms ms, thang theo cap ${w.toList()}, diem ${pts.toList()}")
+        expect("meadow: van bot ket thuc, khong nuoc sai", illegal == 0 && games == 3)
+        expect("meadow: Sieu viet + Thach dau diem cao hon De + TB", pts[6] + pts[5] > pts[0] + pts[1])
+    }
+
     // ── Khối gỗ ghép chữ ──
     run {
         val okLists = WordBlocks.THEMES.all { th -> th.words.size >= 25 && th.words.all { Regex("[A-Z]{3,8}").matches(it) } }

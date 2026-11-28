@@ -340,3 +340,28 @@ wb_not_answer|On the theme, but not one of this puzzle's answers
 wb_hint|Hint
 wb_theme_label|Theme
 wb_plan_perks|Monthly plan: answer boxes show each word's length. Yearly plan: plus 2 hints per round, each places one word for you.
+game_meadow|Meadow Realm
+game_meadow_desc|2-8 players claim a 30×30 meadow with grass tiles. The largest square of territory wins.
+guide_meadow|Goal: after 9 rounds, own the largest square of territory. Score: 2×2 = 1, 3×3 = 2, … 8×8 = 7 (ties are broken by total cells). Only the winner earns diamonds.\n• The 30×30 board has special cells. 96 grass tiles (1 to 6 cells) come in a fixed queue that everyone can see.\n• Start: in turn, each player places a 1×1 base cell on an empty cell (not next to anyone else). Everyone starts with 1 tile-swap coupon and 2 Pieces.\n• Each turn take the next tile in the queue. Spend a coupon to pick 1 of the next 5 tiles instead; the next player continues after the tile you picked, and skipped tiles only come back when the rest are used up.\n• You have 2 minutes to place the tile (using a coupon restarts the clock). Rotate by 90° or flip as you like.\n• A new tile must touch an edge of your territory (in round 1, your base), may not overlap, may not leave the board, may not touch an edge of an opponent's territory and may not touch a stone. An illegal placement or running out of time loses the tile.\n• Surround all 4 sides of a special cell with your territory and it becomes yours: Coupon (+1 coupon), Piece (+2 Pieces, FW icon), Stone (place 1 stone on any empty cell; stones can't be captured and tiles can't touch them), Steal (take 1 opponent tile and place it in your territory).\n• On your turn: buy a coupon for 1 Piece, or clear a stone for 1 Piece.\n• After round 9, leftover Pieces automatically buy single 1×1 cells (1 Piece each) to fill gaps, favouring a larger square.\n• Against the computer the default is 8 players (you and 7 bots), with 7 levels from Easy to Supreme.
+md_round|Round %1$d/%2$d
+md_points|%d pts
+md_buy_coupon|Buy coupon (1 Piece)
+md_clear_stone|Clear stone (1 Piece)
+md_place_base|Place base
+md_place_stone|Place stone
+md_skip|Skip
+md_steal_this|Steal this tile
+md_rotate|Rotate
+md_flip|Flip
+md_discard|Discard
+md_place|Place
+md_use_coupon|Use tile-swap coupon
+md_use_coupon_text|Spend 1 coupon to take tile %1$d in the queue instead of the current one? The clock restarts.
+md_watch|Waiting for the other players…
+md_prompt_clear|Tap a stone to clear it (costs 1 Piece).
+md_prompt_base|Tap an empty cell to place your 1×1 base.
+md_prompt_stone|You may place 1 stone: tap an empty cell, then Place stone.
+md_prompt_steal|You may steal 1 tile: tap an opponent's tile, then Steal this tile.
+md_prompt_steal_place|Place the stolen tile in your territory.
+md_prompt_first|Round 1: the tile must touch your base. Tap or drag on the board to move it.
+md_prompt_place|Tap or drag on the board to move the tile; green is legal, red is not.

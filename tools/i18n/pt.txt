@@ -340,3 +340,28 @@ wb_not_answer|É do tema, mas não é uma resposta deste desafio
 wb_hint|Dica
 wb_theme_label|Tema
 wb_plan_perks|Plano mensal: as caixas mostram o tamanho de cada palavra. Plano anual: mais 2 dicas por rodada, cada uma coloca uma palavra.
+game_meadow|Reino da campina
+game_meadow_desc|De 2 a 8 jogadores conquistam uma campina 30×30 com peças de grama. Vence o maior quadrado de território.
+guide_meadow|Objetivo: após 9 rodadas, ter o maior quadrado de território. Pontos: 2×2 = 1, 3×3 = 2, … 8×8 = 7 (empate decidido pelo total de casas). Só o vencedor ganha diamantes.\n• O tabuleiro 30×30 tem casas especiais. As 96 peças de grama (de 1 a 6 casas) seguem uma fila fixa que todos veem.\n• Início: em turnos, cada jogador coloca sua base 1×1 numa casa vazia (não ao lado de outro). Todos começam com 1 cupom de troca e 2 Pieces.\n• Em cada turno pegue a próxima peça da fila. Gaste um cupom para escolher 1 das 5 próximas; o próximo jogador continua depois da peça escolhida e as puladas só voltam quando as demais acabarem.\n• Você tem 2 minutos para colocar a peça (usar cupom reinicia o relógio). Gire 90° ou vire à vontade.\n• A peça deve tocar uma borda do seu território (na rodada 1, sua base), sem sobrepor, sem sair do tabuleiro, sem tocar a borda do território rival e sem tocar pedras. Jogada ilegal ou fim do tempo faz perder a peça.\n• Cerque os 4 lados de uma casa especial com seu território e ela passa a ser sua: Cupom (+1 cupom), Piece (+2 Pieces, ícone FW), Pedra (coloque 1 pedra em qualquer casa vazia; pedras não podem ser capturadas e peças não podem tocá-las), Roubo (tire 1 peça de um rival e coloque no seu território).\n• No seu turno: compre um cupom por 1 Piece ou remova uma pedra por 1 Piece.\n• Após a rodada 9, os Pieces que sobrarem compram automaticamente casas 1×1 (1 Piece cada) para preencher lacunas, priorizando um quadrado maior.\n• Contra o computador o padrão é 8 jogadores (você e 7 bots), com 7 níveis de Fácil a Supremo.
+md_round|Rodada %1$d/%2$d
+md_points|%d pts
+md_buy_coupon|Comprar cupom (1 Piece)
+md_clear_stone|Remover pedra (1 Piece)
+md_place_base|Colocar base
+md_place_stone|Colocar pedra
+md_skip|Pular
+md_steal_this|Roubar esta peça
+md_rotate|Girar
+md_flip|Virar
+md_discard|Descartar
+md_place|Colocar
+md_use_coupon|Usar cupom de troca
+md_use_coupon_text|Gastar 1 cupom para pegar a peça %1$d da fila no lugar da atual? O relógio reinicia.
+md_watch|Aguardando os outros jogadores…
+md_prompt_clear|Toque numa pedra para removê-la (custa 1 Piece).
+md_prompt_base|Toque numa casa vazia para colocar sua base 1×1.
+md_prompt_stone|Você pode colocar 1 pedra: toque numa casa vazia e depois em Colocar pedra.
+md_prompt_steal|Você pode roubar 1 peça: toque numa peça rival e depois em Roubar esta peça.
+md_prompt_steal_place|Coloque a peça roubada no seu território.
+md_prompt_first|Rodada 1: a peça deve tocar sua base. Toque ou arraste no tabuleiro para movê-la.
+md_prompt_place|Toque ou arraste no tabuleiro para mover a peça; verde é válido, vermelho não.

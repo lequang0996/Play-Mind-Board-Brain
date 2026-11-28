@@ -56,6 +56,8 @@
     <string name="game_go_desc">O antigo jogo de território. Cerque mais do tabuleiro que o oponente.</string>
     <string name="game_magic7">Quadrado mágico 7×7</string>
     <string name="game_magic7_desc">Coloque os números de 1 a 49 para que cada linha, coluna e as duas diagonais somem 175. Um desafio novo por dia.</string>
+    <string name="game_meadow">Reino da campina</string>
+    <string name="game_meadow_desc">De 2 a 8 jogadores conquistam uma campina 30×30 com peças de grama. Vence o maior quadrado de território.</string>
     <string name="game_quoridor">Quoridor</string>
     <string name="game_quoridor_desc">Corra até o lado oposto e levante muros para barrar os rivais.</string>
     <string name="game_sudoku">Sudoku</string>
@@ -86,6 +88,7 @@
     <string name="guide_levels">• Fácil: para iniciantes. A máquina olha só uma ou duas jogadas e muitas vezes joga ao acaso; conhecer as regras basta para vencer.\n• Médio: evita erros óbvios, mas ainda erra bastante. Jogue com um plano.\n• Bom: conhece táticas básicas. Calcule algumas jogadas à frente e não deixe fraquezas.\n• Forte: raramente erra e planeja. Você precisa de uma estratégia clara para vencer.\n• Mestre: sólido, pouquíssimos erros. Só jogadores experientes vencem com frequência.\n• Desafiante: quase nunca comete erros táticos. Vencê-lo é motivo de orgulho.\n• Supremo: a máquina com força total. No xadrez joga como um motor de 2800 Elo (escala de motores CCRL): quase imbatível para humanos.\n• Cada nível é claramente mais forte que o anterior: o nível de cima vence a maioria das partidas (de 65% a 98%).\n• Desafie sua mente: até onde você chega? Comece no Fácil, conquiste cada nível e alcance o Supremo.</string>
     <string name="guide_levels_title">Os 7 níveis da máquina</string>
     <string name="guide_magic7">Objetivo: preencha o tabuleiro 7×7 com os números de 1 a 49, cada um uma única vez, de modo que cada linha, cada coluna e as duas diagonais principais somem 175.\n• Desafio: um por dia, começando com um número dado em uma casa. Sempre tem solução e qualquer arranjo dentro das regras vence.\n• Colocar: toque numa casa e depois num número. Escolher um número que já está no tabuleiro move-o para a casa selecionada.\n• Somas: a coluna da direita mostra a soma de cada linha, a linha de baixo a de cada coluna e a barra superior as duas diagonais. Verde: 7 casas preenchidas e exatamente 175. Vermelho: acima de 175, ou cheia mas errada.\n• Dicas: 10 por dia no plano mensal e 20 por dia no plano anual. Casas com dica ficam bloqueadas.\n• Sair no meio não custa nada: volte no mesmo dia para continuar. Depois de resolver, o próximo desafio chega amanhã.\n• Dica: 175 = 7 × 25, então 25 fica no meio entre 1 e 49. Tente colocar pares que somam 50 (1 + 49, 2 + 48...) simétricos em relação ao centro.</string>
+    <string name="guide_meadow">Objetivo: após 9 rodadas, ter o maior quadrado de território. Pontos: 2×2 = 1, 3×3 = 2, … 8×8 = 7 (empate decidido pelo total de casas). Só o vencedor ganha diamantes.\n• O tabuleiro 30×30 tem casas especiais. As 96 peças de grama (de 1 a 6 casas) seguem uma fila fixa que todos veem.\n• Início: em turnos, cada jogador coloca sua base 1×1 numa casa vazia (não ao lado de outro). Todos começam com 1 cupom de troca e 2 Pieces.\n• Em cada turno pegue a próxima peça da fila. Gaste um cupom para escolher 1 das 5 próximas; o próximo jogador continua depois da peça escolhida e as puladas só voltam quando as demais acabarem.\n• Você tem 2 minutos para colocar a peça (usar cupom reinicia o relógio). Gire 90° ou vire à vontade.\n• A peça deve tocar uma borda do seu território (na rodada 1, sua base), sem sobrepor, sem sair do tabuleiro, sem tocar a borda do território rival e sem tocar pedras. Jogada ilegal ou fim do tempo faz perder a peça.\n• Cerque os 4 lados de uma casa especial com seu território e ela passa a ser sua: Cupom (+1 cupom), Piece (+2 Pieces, ícone FW), Pedra (coloque 1 pedra em qualquer casa vazia; pedras não podem ser capturadas e peças não podem tocá-las), Roubo (tire 1 peça de um rival e coloque no seu território).\n• No seu turno: compre um cupom por 1 Piece ou remova uma pedra por 1 Piece.\n• Após a rodada 9, os Pieces que sobrarem compram automaticamente casas 1×1 (1 Piece cada) para preencher lacunas, priorizando um quadrado maior.\n• Contra o computador o padrão é 8 jogadores (você e 7 bots), com 7 níveis de Fácil a Supremo.</string>
     <string name="guide_quoridor">Objetivo: ser o primeiro a chegar ao lado oposto do tabuleiro.\n• Mover: ande uma casa para cima, baixo, esquerda ou direita. Se houver um peão rival ao lado, salte-o, ou ande na diagonal se atrás houver um muro ou a borda.\n• Muros: em vez de mover, você pode colocar um muro de duas casas. Muros não podem se sobrepor nem se cruzar, e você nunca pode fechar todos os caminhos até uma meta.\n• Muros: 10 por jogador com 2 jogadores, 5 com 4 jogadores.\n• Construir: escolha Muro, toque perto do cruzamento onde ele vai para ver (verde = permitido) e pressione Colocar muro.\n• Repetição: com 2 jogadores, mover o peão para uma posição já vista faz perder; com 4 jogadores esse lance não é permitido.</string>
     <string name="guide_sudoku">Objetivo: preencha todas as casas para que cada linha, coluna e bloco 3×3 contenha de 1 a 9 uma única vez.\n• Inserir: toque numa casa e depois num número. Números errados ficam vermelhos; corrija-os com Apagar.\n• Notas: ative o lápis para anotar pequenos números candidatos (em vermelho).\n• Apagar limpa a casa selecionada. Cada bloco 3×3 começa com um só número (9 no total), por isso qualquer grelha que siga as regras vence.</string>
     <string name="guide_tangram">Objetivo: use as 7 peças (2 triângulos grandes, 1 médio, 2 pequenos, 1 quadrado e 1 paralelogramo) para preencher exatamente a figura cinza, sem sobreposição e sem sobrar peças.\n• Cada rodada tem 10 figuras aleatórias, das compactas às cheias de pontas. Você tem 3 minutos por figura.\n• Se o tempo acabar em qualquer figura, você perde; complete as 10 para vencer.\n• Arraste as peças da bandeja para a figura. Toque para girar 45° e mantenha pressionado o paralelogramo para virá-lo.\n• Solte uma peça perto de um canto da figura ou de outra peça e ela se encaixa sozinha.\n• Qualquer arranjo que preencha a figura exatamente vale.\n• Dica: coloque primeiro os dois triângulos grandes; eles ocupam metade da área.\n• 7 níveis pelo número de peças: Fácil 4, Médio 5, Bom 6, Forte 7 (o jogo clássico), Mestre 8, Desafiante 9, Supremo 10. Complete as 10 figuras de um nível para desbloquear o próximo.</string>
@@ -126,6 +129,28 @@
     <string name="licenses">Licenças de código aberto</string>
     <string name="local_no_reward">Partidas no mesmo aparelho não dão diamantes nem gastam partidas.</string>
     <string name="manage_sub">Gerenciar assinatura</string>
+    <string name="md_buy_coupon">Comprar cupom (1 Piece)</string>
+    <string name="md_clear_stone">Remover pedra (1 Piece)</string>
+    <string name="md_discard">Descartar</string>
+    <string name="md_flip">Virar</string>
+    <string name="md_place">Colocar</string>
+    <string name="md_place_base">Colocar base</string>
+    <string name="md_place_stone">Colocar pedra</string>
+    <string name="md_points">%d pts</string>
+    <string name="md_prompt_base">Toque numa casa vazia para colocar sua base 1×1.</string>
+    <string name="md_prompt_clear">Toque numa pedra para removê-la (custa 1 Piece).</string>
+    <string name="md_prompt_first">Rodada 1: a peça deve tocar sua base. Toque ou arraste no tabuleiro para movê-la.</string>
+    <string name="md_prompt_place">Toque ou arraste no tabuleiro para mover a peça; verde é válido, vermelho não.</string>
+    <string name="md_prompt_steal">Você pode roubar 1 peça: toque numa peça rival e depois em Roubar esta peça.</string>
+    <string name="md_prompt_steal_place">Coloque a peça roubada no seu território.</string>
+    <string name="md_prompt_stone">Você pode colocar 1 pedra: toque numa casa vazia e depois em Colocar pedra.</string>
+    <string name="md_rotate">Girar</string>
+    <string name="md_round">Rodada %1$d/%2$d</string>
+    <string name="md_skip">Pular</string>
+    <string name="md_steal_this">Roubar esta peça</string>
+    <string name="md_use_coupon">Usar cupom de troca</string>
+    <string name="md_use_coupon_text">Gastar 1 cupom para pegar a peça %1$d da fila no lugar da atual? O relógio reinicia.</string>
+    <string name="md_watch">Aguardando os outros jogadores…</string>
     <string name="menu">Menu</string>
     <string name="mg_continue">Continuar</string>
     <string name="mg_daily_note">Um desafio por dia. Você pode sair e continuar mais tarde no mesmo dia.</string>

@@ -343,6 +343,7 @@ fun GameArt(gameId: String, modifier: Modifier = Modifier) {
             "blindcaro" -> drawBlindCaroArt(ox, oy, s)
             "tangram" -> drawTangramArt(ox, oy, s)
             "wordblocks" -> drawWordBlocksArt(tm, ox, oy, s)
+            "meadow" -> drawMeadowArt(ox, oy, s)
             else -> {
                 drawCaroPiece(Offset(ox + s * .66f, oy + s * .64f), s * .62f, false)
                 drawCaroPiece(Offset(ox + s * .36f, oy + s * .36f), s * .66f, true)

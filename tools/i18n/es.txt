@@ -340,3 +340,28 @@ wb_not_answer|Es del tema, pero no es una respuesta de este reto
 wb_hint|Pista
 wb_theme_label|Tema
 wb_plan_perks|Plan mensual: las casillas muestran la longitud de cada palabra. Plan anual: además 2 pistas por partida, cada una coloca una palabra.
+game_meadow|Reino de la pradera
+game_meadow_desc|De 2 a 8 jugadores conquistan una pradera de 30×30 con losetas de césped. Gana el mayor cuadrado de territorio.
+guide_meadow|Objetivo: tras 9 rondas, tener el mayor cuadrado de territorio. Puntos: 2×2 = 1, 3×3 = 2, … 8×8 = 7 (el empate se decide por el total de casillas). Solo el ganador recibe diamantes.\n• El tablero de 30×30 tiene casillas especiales. Las 96 losetas de césped (de 1 a 6 casillas) siguen una cola fija que todos ven.\n• Inicio: por turnos, cada jugador coloca su base 1×1 en una casilla vacía (no junto a otro). Todos empiezan con 1 cupón de cambio y 2 Pieces.\n• Cada turno toma la siguiente loseta de la cola. Gasta un cupón para elegir 1 de las 5 siguientes; el siguiente jugador continúa tras la loseta elegida y las saltadas solo vuelven cuando se acaben las demás.\n• Tienes 2 minutos para colocarla (usar un cupón reinicia el reloj). Gira 90° o voltea a tu gusto.\n• La loseta debe tocar un borde de tu territorio (en la ronda 1, tu base), sin solaparse, sin salirse, sin tocar el borde del territorio rival y sin tocar piedras. Si es ilegal o se acaba el tiempo, la pierdes.\n• Rodea los 4 lados de una casilla especial con tu territorio y será tuya: Cupón (+1 cupón), Piece (+2 Pieces, icono FW), Piedra (coloca 1 piedra en cualquier casilla vacía; no se puede capturar y las losetas no pueden tocarla), Robo (quita 1 loseta a un rival y colócala en tu territorio).\n• En tu turno: compra un cupón por 1 Piece o retira una piedra por 1 Piece.\n• Tras la ronda 9, los Pieces sobrantes compran automáticamente casillas sueltas 1×1 (1 Piece cada una) para rellenar huecos, priorizando un cuadrado mayor.\n• Contra la máquina la partida es de 8 jugadores por defecto (tú y 7 bots), con 7 niveles de Fácil a Supremo.
+md_round|Ronda %1$d/%2$d
+md_points|%d pts
+md_buy_coupon|Comprar cupón (1 Piece)
+md_clear_stone|Retirar piedra (1 Piece)
+md_place_base|Colocar base
+md_place_stone|Colocar piedra
+md_skip|Omitir
+md_steal_this|Robar esta loseta
+md_rotate|Girar
+md_flip|Voltear
+md_discard|Descartar
+md_place|Colocar
+md_use_coupon|Usar cupón de cambio
+md_use_coupon_text|¿Gastar 1 cupón para tomar la loseta %1$d de la cola en lugar de la actual? El reloj se reinicia.
+md_watch|Esperando a los demás jugadores…
+md_prompt_clear|Toca una piedra para retirarla (cuesta 1 Piece).
+md_prompt_base|Toca una casilla vacía para colocar tu base 1×1.
+md_prompt_stone|Puedes colocar 1 piedra: toca una casilla vacía y luego Colocar piedra.
+md_prompt_steal|Puedes robar 1 loseta: toca una loseta rival y luego Robar esta loseta.
+md_prompt_steal_place|Coloca la loseta robada en tu territorio.
+md_prompt_first|Ronda 1: la loseta debe tocar tu base. Toca o arrastra en el tablero para moverla.
+md_prompt_place|Toca o arrastra en el tablero para mover la loseta; verde es legal, rojo no.

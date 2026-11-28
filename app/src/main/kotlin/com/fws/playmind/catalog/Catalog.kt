@@ -8,6 +8,7 @@ import com.fws.playmind.core.BoardGame
 import com.fws.playmind.core.ChessGame
 import com.fws.playmind.core.GoGame
 import com.fws.playmind.core.GomokuGame
+import com.fws.playmind.core.MeadowGame
 import com.fws.playmind.core.QuoridorGame
 import com.fws.playmind.core.WallGoGame
 import com.fws.playmind.core.XiangqiGame
@@ -80,6 +81,9 @@ object Catalog {
     const val TANGRAM_ID = "tangram"
     /** Khối gỗ ghép chữ: ghép 7 từ tiếng Anh cùng chủ đề trong 10 phút (core WordBlocks). */
     const val WORDS_ID = "wordblocks"
+    /** Lãnh địa đồng cỏ: 2-8 người, bàn 30×30, 9 vòng đặt mảnh cỏ (core MeadowGame). Mỗi lượt đặt mảnh tối đa 2 phút. */
+    const val MEADOW_ID = "meadow"
+    const val MEADOW_MOVE_SECONDS = 120
     const val MAGIC_HINTS_MONTHLY = 10
     const val MAGIC_HINTS_YEARLY = 20
 
@@ -127,6 +131,11 @@ object Catalog {
         GameInfo(MAGIC_ID, Topic.PUZZLE, R.string.game_magic7, R.string.game_magic7_desc, R.string.guide_magic7,
             R.string.side_white, R.string.side_black, 0, { 0L }, kind = GameKind.SOLO, order = 2, minutes = 30,
             popularity = 20, contentTags = listOf(Tag.SOLO, Tag.NUMBERS, Tag.DAILY)),
+        // Trí tuệ: Lãnh địa đồng cỏ, 2-8 người (chơi với máy mặc định 8 người: bạn và 7 máy)
+        GameInfo(MEADOW_ID, Topic.MIND, R.string.game_meadow, R.string.game_meadow_desc, R.string.guide_meadow,
+            R.string.side_red, R.string.side_blue, 10, { 3000L },
+            optionKind = OptionKind.PLAYERS, options = listOf(2, 3, 4, 5, 6, 7, 8), defaultOption = 8, order = 7, minutes = 30,
+            create = { n -> MeadowGame(n) }, popularity = 3, contentTags = listOf(Tag.DUEL, Tag.PARTY, Tag.BOARD, Tag.STRATEGY, Tag.SHAPES)),
         // Trí tuệ: ghép 7 từ tiếng Anh cùng chủ đề từ các khối gỗ chữ cái, 10 phút
         GameInfo(WORDS_ID, Topic.MIND, R.string.game_wordblocks, R.string.game_wordblocks_desc, R.string.guide_wordblocks,
             R.string.side_white, R.string.side_black, 0, { 0L }, kind = GameKind.SOLO, order = 0, minutes = 10,

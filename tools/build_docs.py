@@ -318,6 +318,28 @@ GAMES = {
 <ul><li>Chạm một ô rồi chạm số. Bàn phím số cho biết mỗi số còn thiếu bao nhiêu lần.</li>
 <li>Bút chì để ghi chú số có thể điền; Xóa để xóa ô; Hoàn tác để lùi thao tác vừa làm; Gợi ý để điền đúng một ô.</li></ul>
 <h2>Mẹo</h2><ul><li>Vì gợi ý rất ít, hãy bắt đầu ở nơi hàng, cột và khối có nhiều ô đã điền nhất, và dùng ghi chú để theo dõi các số có thể điền.</li></ul>"""),
+"meadow": dict(
+  en_name="Meadow Realm", vi_name="Lãnh địa đồng cỏ",
+  en_intro="A territory game for 2 to 8 players on a 30×30 meadow. Place grass tiles from a public queue; the largest square of territory wins.",
+  vi_intro="Trò chơi chiếm đất cho 2 đến 8 người trên đồng cỏ 30×30. Đặt mảnh gạch cỏ từ hàng chờ công khai; ai có hình vuông lãnh thổ lớn nhất thắng.",
+  en_body="""
+<h2>Rules</h2>
+<ul><li>Each player places a 1×1 base, then plays 9 rounds. Each turn you take the next of 96 grass tiles (1 to 6 cells) from a fixed, public queue. A tile-swap coupon lets you pick 1 of the next 5 tiles instead; skipped tiles go to the back of the queue.</li>
+<li>A tile must touch your territory along an edge, must not overlap, leave the board, touch an opponent's territory or touch a stone. You have 2 minutes; an illegal placement or time-out loses the tile.</li>
+<li>Surround all 4 sides of a special cell to claim it: Coupon (+1 coupon), Piece (+2 Pieces), Stone (place a stone anywhere empty), Steal (take an opponent's tile and place it in your territory). On your turn, 1 Piece buys a coupon or clears a stone.</li>
+<li>After round 9, leftover Pieces buy single cells automatically. Score: largest all-yours square, 2×2 = 1 point up to 8×8 = 7. Only the winner earns diamonds.</li></ul>
+<h2>Using the app</h2>
+<ul><li>Tap or drag on the board to move the tile (green = legal, red = not), use Rotate and Flip, then Place. Tap tiles 2 to 5 in the queue to spend a coupon.</li></ul>
+<h2>Tips</h2><ul><li>Plan one big square early and keep its area free of opponents: a single enemy cell next to it blocks that side.</li></ul>""",
+  vi_body="""
+<h2>Luật</h2>
+<ul><li>Mỗi người đặt một ô nền 1×1, rồi chơi 9 vòng. Mỗi lượt lấy mảnh kế tiếp trong 96 mảnh gạch cỏ (1 đến 6 ô) theo hàng chờ cố định, công khai. Phiếu đổi gạch cho chọn 1 trong 5 mảnh tới; các mảnh bị bỏ qua về cuối hàng chờ.</li>
+<li>Mảnh phải chạm cạnh lãnh thổ của mình, không chồng, không tràn bàn, không chạm cạnh lãnh thổ đối thủ, không chạm đá. Có 2 phút; đặt sai hoặc hết giờ thì mất mảnh.</li>
+<li>Bao kín 4 cạnh một ô đặc biệt để chiếm: Phiếu (+1 phiếu), Piece (+2 Piece), Đá (đặt một viên đá lên ô trống bất kỳ), Cướp (lấy một mảnh của đối thủ đặt vào lãnh thổ mình). Trong lượt, 1 Piece mua một phiếu hoặc dọn một viên đá.</li>
+<li>Sau vòng 9, Piece còn lại tự mua ô lẻ. Điểm: hình vuông toàn đất của mình lớn nhất, 2×2 = 1 điểm đến 8×8 = 7. Chỉ người về nhất nhận kim cương.</li></ul>
+<h2>Dùng trong app</h2>
+<ul><li>Chạm hoặc kéo trên bàn để dời mảnh (xanh = hợp lệ, đỏ = sai luật), dùng Xoay và Lật, rồi bấm Đặt. Chạm mảnh 2 đến 5 trong hàng chờ để dùng phiếu.</li></ul>
+<h2>Mẹo</h2><ul><li>Sớm nhắm một hình vuông lớn và giữ vùng đó sạch đối thủ: chỉ một ô của đối thủ sát bên là chặn mất cạnh đó.</li></ul>"""),
 "wordblocks": dict(
   en_name="Word Blocks", vi_name="Khối gỗ ghép chữ",
   en_intro="A single-player word game: build 7 English words on one theme from shuffled wooden letter blocks within 10 minutes.",
@@ -424,8 +446,8 @@ for gid, g in GAMES.items():
 # ───────────────────────── Trang chủ ─────────────────────────
 index_body = f"""
 <h1>{APP}</h1>
-{bi("<p class='muted'>A collection of board and brain games for Android: Gomoku, Wall Go, Quoridor, Chess, Xiangqi, Go, Sudoku, Magic Square 7×7, Tangram, Word Blocks and Blind Gomoku. Every two-or-more-player game has seven computer levels, from Easy to Supreme.</p>",
-    "<p class='muted'>Bộ sưu tập game bàn cờ và trí tuệ cho Android: Cờ caro, Wall Go, Quoridor, Cờ vua, Cờ tướng, Cờ vây, Sudoku, Ma phương 7×7, Xếp hình Tangram, Khối gỗ ghép chữ và Cờ caro mù. Mọi game từ 2 người trở lên đều có 7 cấp độ máy, từ Dễ đến Siêu việt.</p>")}
+{bi("<p class='muted'>A collection of board and brain games for Android: Gomoku, Wall Go, Quoridor, Chess, Xiangqi, Go, Sudoku, Magic Square 7×7, Tangram, Word Blocks, Meadow Realm and Blind Gomoku. Every two-or-more-player game has seven computer levels, from Easy to Supreme.</p>",
+    "<p class='muted'>Bộ sưu tập game bàn cờ và trí tuệ cho Android: Cờ caro, Wall Go, Quoridor, Cờ vua, Cờ tướng, Cờ vây, Sudoku, Ma phương 7×7, Xếp hình Tangram, Khối gỗ ghép chữ, Lãnh địa đồng cỏ và Cờ caro mù. Mọi game từ 2 người trở lên đều có 7 cấp độ máy, từ Dễ đến Siêu việt.</p>")}
 <div class="topics"><span style="background:#14937a"><span data-l="en">Puzzle</span><span data-l="vi">Giải đố</span></span><span style="background:#5348c9"><span data-l="en">Intellect</span><span data-l="vi">Trí tuệ</span></span><span style="background:#c27a0a"><span data-l="en">Calculation</span><span data-l="vi">Tính toán</span></span><span style="background:#c93e6b"><span data-l="en">Memory</span><span data-l="vi">Ghi nhớ</span></span></div>
 <h2><span data-l="en">How to play</span><span data-l="vi">Hướng dẫn chơi</span></h2>
 <div class="grid">
@@ -436,6 +458,7 @@ index_body = f"""
 <a href="how-to-play/quoridor.html"><div class="card"><b>Quoridor</b><span class="muted" data-l="en">Race to the far side and block with walls.</span><span class="muted" data-l="vi">Chạy về cạnh đối diện và chặn bằng tường.</span></div></a>
 <a href="how-to-play/wallgo.html"><div class="card"><b>Wall Go</b><span class="muted" data-l="en">Move, build a wall, claim territory.</span><span class="muted" data-l="vi">Đi quân, xây tường, chiếm lãnh thổ.</span></div></a>
 <a href="how-to-play/sudoku.html"><div class="card"><b>Sudoku</b><span class="muted" data-l="en">One given per box, any valid grid wins.</span><span class="muted" data-l="vi">Mỗi khối một gợi ý, điền đúng luật là thắng.</span></div></a>
+<a href="how-to-play/meadow.html"><div class="card"><b><span data-l="en">Meadow Realm</span><span data-l="vi">Lãnh địa đồng cỏ</span></b><span class="muted" data-l="en">2-8 players, 30×30 meadow, biggest square wins.</span><span class="muted" data-l="vi">2-8 người, đồng cỏ 30×30, hình vuông lớn nhất thắng.</span></div></a>
 <a href="how-to-play/wordblocks.html"><div class="card"><b><span data-l="en">Word Blocks</span><span data-l="vi">Khối gỗ ghép chữ</span></b><span class="muted" data-l="en">7 English words on one theme in 10 minutes.</span><span class="muted" data-l="vi">7 từ tiếng Anh cùng chủ đề trong 10 phút.</span></div></a>
 <a href="how-to-play/tangram.html"><div class="card"><b><span data-l="en">Tangram</span><span data-l="vi">Xếp hình Tangram</span></b><span class="muted" data-l="en">7 levels, 4 to 10 pieces, 10 shapes per round.</span><span class="muted" data-l="vi">7 cấp, 4 đến 10 mảnh, mỗi lượt 10 hình.</span></div></a>
 <a href="how-to-play/blindcaro.html"><div class="card"><b><span data-l="en">Blind Gomoku</span><span data-l="vi">Cờ caro mù</span></b><span class="muted" data-l="en">Shared four-colour stones: remember which are yours.</span><span class="muted" data-l="vi">Quân bốn màu dùng chung: nhớ quân nào của mình.</span></div></a>

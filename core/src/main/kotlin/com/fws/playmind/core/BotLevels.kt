@@ -102,9 +102,16 @@ object BotLevels {
         n(0, extra = 800), n(0, extra = 3_200), n(0, extra = 12_000), top(),
     )
 
+    // Lãnh địa đồng cỏ (2-8 người): bot đánh giá một lớp (MeadowBot). noiseP = xác suất đặt ngẫu nhiên ở Dễ/TB/Khá;
+    // tính năng theo cấp: Khá tính ô đặc biệt, Cao thủ dùng phiếu đổi gạch, Thách đấu cản người dẫn đầu, Siêu việt nhìn mảnh kế tiếp.
+    val meadow = listOf(
+        d(1, 0.60), d(1, 0.35), d(1, 0.15),
+        d(1), d(1), d(1), top(),
+    )
+
     fun of(gameId: String): List<LevelConfig> = when (gameId) {
         "chess" -> chess; "xiangqi" -> xiangqi; "caro" -> caro
-        "quoridor" -> quoridor; "wallgo" -> wallgo; "go" -> go
+        "quoridor" -> quoridor; "wallgo" -> wallgo; "go" -> go; "meadow" -> meadow
         else -> chess
     }
 

@@ -56,6 +56,8 @@
     <string name="game_go_desc">古老的围地游戏，围住比对手更多的地盘。</string>
     <string name="game_magic7">七阶幻方</string>
     <string name="game_magic7_desc">把 1 到 49 填入棋盘，使每行、每列和两条对角线的和都是 175。每天一题。</string>
+    <string name="game_meadow">草原领地</string>
+    <string name="game_meadow_desc">2-8 人用草地块抢占 30×30 草原，领地中最大的正方形获胜。</string>
     <string name="game_quoridor">步步为营</string>
     <string name="game_quoridor_desc">抢先抵达对岸，并用围墙拦住对手。</string>
     <string name="game_sudoku">数独</string>
@@ -86,6 +88,7 @@
     <string name="guide_levels">• 简单：适合新手。电脑只看一两步，经常随意落子；懂规则就能赢。\n• 中等：能避开明显失误，但仍常犯错。下棋要有目的。\n• 良好：懂基本战术。需要提前算几步，不留破绽。\n• 优秀：很少出错，有短期计划。需要清晰的策略才能取胜。\n• 高手：下得稳健，极少失误。只有经验丰富的玩家才能稳定取胜。\n• 挑战者：几乎不犯战术错误。能赢下这一级值得骄傲。\n• 超凡：电脑全力以赴。国际象棋中相当于 2800 等级分的引擎（CCRL 引擎等级分）：人类几乎无法战胜。\n• 每一级都明显强于下一级：高一级赢下大多数对局（约 65% 到 98%）。\n• 挑战你的智慧：你能攀登到哪一级？从简单开始，逐级征服，直达超凡。</string>
     <string name="guide_levels_title">电脑的 7 个难度</string>
     <string name="guide_magic7">目标：把 1 到 49 填入 7×7 棋盘，每个数恰好用一次，使每行、每列和两条主对角线的和都等于 175。\n• 题目：每天一题，开局时某一格已给出一个数。题目一定有解，任何符合规则的填法都算获胜。\n• 填数：点一格再点数字。选择棋盘上已有的数字时，它会移到当前格。\n• 和：右侧一列显示每行的和，下方一行显示每列的和，顶部显示两条对角线的和。绿色：7 格已满且正好 175；红色：超过 175，或已满但不对。\n• 提示：月度方案每天 10 次，年度方案每天 20 次。被提示的格子会锁定。\n• 中途退出不会有损失：当天回来可以继续。解完后，第二天才有新题。\n• 窍门：175 = 7 × 25，25 正好在 1 和 49 中间。可以尝试把和为 50 的数对（1 + 49、2 + 48……）关于中心对称放置。</string>
+    <string name="guide_meadow">目标：9 轮后拥有最大的正方形领地。计分：2×2 = 1，3×3 = 2，…… 8×8 = 7（同分比较总格数）。只有第一名获得钻石。\n• 30×30 棋盘上有特殊格。96 块草地块（1 到 6 格）按固定公开的顺序排队。\n• 开局：每人依次把 1×1 基地放在空格上（不能紧挨别人）。每人有 1 张换块券和 2 个 Piece。\n• 每回合拿队列中的下一块。可用 1 张券改选接下来 5 块中的 1 块；下一位玩家从你所选那块之后继续拿，被跳过的块要等其余块用完才会回来。\n• 放置限时 2 分钟（用券后计时重来）。可任意旋转 90° 或翻转。\n• 新块必须与自己的领地有边相接（第 1 轮为基地），不能重叠、不能出界、不能与对手领地边相接、不能接触石头。违规或超时则该块作废。\n• 用自己的领地围住特殊格的四条边，该格归你并触发效果：换块券（+1 张券）、Piece（+2 个 Piece，FW 图标）、石头（在任意空格放 1 块石头；石头不能被占领，草地块不能接触石头）、抢夺（拿走对手 1 块并放进你的领地）。\n• 在自己的回合：花 1 个 Piece 买券，或花 1 个 Piece 清除 1 块石头。\n• 第 9 轮后，剩余 Piece 自动购买 1×1 单格（每格 1 个 Piece）填补空隙，优先扩大正方形。\n• 人机对战默认 8 人（你和 7 个电脑），电脑有简单到超凡 7 个等级。</string>
     <string name="guide_quoridor">目标：第一个抵达棋盘对面一侧。\n• 移动：向上下左右走一格。若对手的棋子紧邻，可跳过它；若其后有墙或边缘，则可斜着走一格。\n• 围墙：可以不移动，改为放一堵两格长的墙。墙不能重叠或交叉，也不能把通往终点的路全部堵死。\n• 墙的数量：2 人时每人 10 堵，4 人时每人 5 堵。\n• 放墙：选择“墙”，点按想放置处附近的交点预览（绿色 = 可放），再按“放墙”。\n• 重复局面：2 人对战时，走棋重现之前的局面即判负；4 人对战时不允许这样走。</string>
     <string name="guide_sudoku">目标：填满所有空格，使每行、每列、每个 3×3 宫都恰好含有 1 到 9。\n• 填数：点按方格，再点数字。错误的数字显示为红色，可用擦除修正。\n• 笔记：打开铅笔，可在格内记下红色的小候选数。\n• 擦除可清空所选方格。每个 3×3 宫只给出 1 个数字（共 9 个），任何符合规则的填法都算获胜。</string>
     <string name="guide_tangram">目标：用全部 7 块拼板（2 个大三角形、1 个中三角形、2 个小三角形、1 个正方形、1 个平行四边形）恰好拼满灰色图形，不重叠、不剩余。\n• 每轮 10 个随机图形，从紧凑到多棱角逐渐变难。每个图形 3 分钟。\n• 任何一个图形 3 分钟内未完成即失败；完成全部 10 个即成功。\n• 从下方拼板区拖动拼板到图形上。点击旋转 45°，长按平行四边形可翻面。\n• 拼板放在图形或其他拼板的角附近时会自动吸附。\n• 任何恰好拼满图形的拼法都算正确。\n• 窍门：先放两个大三角形，它们占一半面积。\n• 按拼板数量分 7 个等级：简单 4 块、普通 5、良好 6、优秀 7（经典七巧板）、高手 8、挑战 9、超凡 10 块。完成某一等级的 10 个图形即可解锁下一级。</string>
@@ -126,6 +129,28 @@
     <string name="licenses">开源许可</string>
     <string name="local_no_reward">同机对战不奖励钻石，也不消耗次数。</string>
     <string name="manage_sub">管理订阅</string>
+    <string name="md_buy_coupon">买券（1 Piece）</string>
+    <string name="md_clear_stone">清石（1 Piece）</string>
+    <string name="md_discard">弃块</string>
+    <string name="md_flip">翻转</string>
+    <string name="md_place">放置</string>
+    <string name="md_place_base">放置基地</string>
+    <string name="md_place_stone">放置石头</string>
+    <string name="md_points">%d 分</string>
+    <string name="md_prompt_base">点击一个空格放置你的 1×1 基地。</string>
+    <string name="md_prompt_clear">点击一块石头将其清除（花 1 个 Piece）。</string>
+    <string name="md_prompt_first">第 1 轮：块必须与你的基地相接。在棋盘上点击或拖动来移动块。</string>
+    <string name="md_prompt_place">在棋盘上点击或拖动来移动块；绿色合法，红色违规。</string>
+    <string name="md_prompt_steal">你可以抢 1 块：点击对手的一块后按“抢这块”。</string>
+    <string name="md_prompt_steal_place">把抢来的块放进你的领地。</string>
+    <string name="md_prompt_stone">你可以放 1 块石头：点击空格后按“放置石头”。</string>
+    <string name="md_rotate">旋转</string>
+    <string name="md_round">第 %1$d/%2$d 轮</string>
+    <string name="md_skip">跳过</string>
+    <string name="md_steal_this">抢这块</string>
+    <string name="md_use_coupon">使用换块券</string>
+    <string name="md_use_coupon_text">花 1 张券改拿队列中的第 %1$d 块？计时将重新开始。</string>
+    <string name="md_watch">等待其他玩家……</string>
     <string name="menu">菜单</string>
     <string name="mg_continue">继续</string>
     <string name="mg_daily_note">每天一题。中途退出后，当天仍可继续。</string>
