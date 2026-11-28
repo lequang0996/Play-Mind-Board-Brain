@@ -245,6 +245,11 @@ fun LobbyScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onBack: 
                 if (!solo) {
                     SectionTitle(stringResource(R.string.bot_level))
                     LevelPicker(vm.botLevel, app.prefs.unlockedLevel(info.id)) { vm.selectLevel(it) }
+                } else if (info.id == Catalog.TANGRAM_ID) {
+                    // Xếp hình 7 mảnh: 7 cấp theo số mảnh (Dễ 4 mảnh ... Siêu việt 10 mảnh), xong cấp nào mở cấp kế tiếp
+                    SectionTitle(stringResource(R.string.tg_level))
+                    LevelPicker(vm.botLevel, app.prefs.unlockedLevel(info.id)) { vm.selectLevel(it) }
+                    Text(stringResource(R.string.tg_pieces_n, com.fws.playmind.core.Tangram.kindsFor(vm.botLevel).size), style = MaterialTheme.typography.bodySmall, color = pm.gold)
                 }
                 if (magic) {
                     // mỗi ngày một đề: trạng thái hôm nay và số gợi ý theo gói

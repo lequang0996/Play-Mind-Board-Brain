@@ -319,12 +319,12 @@ GAMES = {
 <li>Bút chì để ghi chú số có thể điền; Xóa để xóa ô; Hoàn tác để lùi thao tác vừa làm; Gợi ý để điền đúng một ô.</li></ul>
 <h2>Mẹo</h2><ul><li>Vì gợi ý rất ít, hãy bắt đầu ở nơi hàng, cột và khối có nhiều ô đã điền nhất, và dùng ghi chú để theo dõi các số có thể điền.</li></ul>"""),
 "tangram": dict(
-  en_name="Tangram", vi_name="Xếp hình 7 mảnh",
-  en_intro="A single-player shape puzzle with the 7 classic tangram pieces. Each round has 10 random shapes and 3 minutes per shape.",
-  vi_intro="Trò chơi ghép hình một người với 7 mảnh tangram cổ điển. Mỗi lượt có 10 hình ngẫu nhiên, mỗi hình 3 phút.",
+  en_name="Tangram", vi_name="Xếp hình Tangram",
+  en_intro="A single-player shape puzzle with tangram pieces. Seven levels from 4 pieces (Easy) to 10 pieces (Supreme); each round has 10 random shapes and 3 minutes per shape.",
+  vi_intro="Trò chơi ghép hình một người với các mảnh tangram. 7 cấp từ 4 mảnh (Dễ) đến 10 mảnh (Siêu việt); mỗi lượt có 10 hình ngẫu nhiên, mỗi hình 3 phút.",
   en_body="""
 <h2>Rules</h2>
-<ul><li>Use all 7 pieces (2 large triangles, 1 medium triangle, 2 small triangles, 1 square, 1 parallelogram) to fill the grey shape exactly, with no overlaps.</li>
+<ul><li>Use all the pieces of your level to fill the grey shape exactly, with no overlaps. Levels: Easy 4 pieces, Medium 5, Good 6, Strong 7 (the classic set: 2 large triangles, 1 medium, 2 small, 1 square, 1 parallelogram), Master 8, Challenger 9, Supreme 10. Finish a level to unlock the next.</li>
 <li>Each round shows 10 shapes, generated at random and getting harder: from compact shapes to spiky ones. Every shape can be solved.</li>
 <li>You have 3 minutes per shape. If time runs out on any shape you lose the round; finish all 10 to win. Any arrangement that fills the shape counts.</li></ul>
 <h2>Using the app</h2>
@@ -332,7 +332,7 @@ GAMES = {
 <h2>Tips</h2><ul><li>Place the two large triangles first: together they cover half of the shape.</li></ul>""",
   vi_body="""
 <h2>Luật</h2>
-<ul><li>Dùng đủ 7 mảnh (2 tam giác lớn, 1 tam giác vừa, 2 tam giác nhỏ, 1 hình vuông, 1 hình bình hành) ghép kín hình xám, không chồng mảnh.</li>
+<ul><li>Dùng đủ các mảnh của cấp đang chơi ghép kín hình xám, không chồng mảnh. Cấp: Dễ 4 mảnh, Trung bình 5, Khá 6, Giỏi 7 (bộ cổ điển: 2 tam giác lớn, 1 vừa, 2 nhỏ, 1 vuông, 1 bình hành), Cao thủ 8, Thách đấu 9, Siêu việt 10. Hoàn thành một cấp để mở cấp kế tiếp.</li>
 <li>Mỗi lượt có 10 hình, sinh ngẫu nhiên và khó dần: từ hình gọn tới hình nhiều mỏm. Hình nào cũng giải được.</li>
 <li>Mỗi hình có 3 phút. Hết giờ ở bất kỳ hình nào là thua lượt; ghép xong cả 10 hình là thắng. Mọi cách ghép kín đúng hình đều được tính.</li></ul>
 <h2>Dùng trong app</h2>
@@ -403,7 +403,7 @@ for gid, g in GAMES.items():
 index_body = f"""
 <h1>{APP}</h1>
 {bi("<p class='muted'>A collection of board and brain games for Android: Gomoku, Wall Go, Quoridor, Chess, Xiangqi, Go, Sudoku, Magic Square 7×7, Tangram and Blind Gomoku. Every two-or-more-player game has seven computer levels, from Easy to Supreme.</p>",
-    "<p class='muted'>Bộ sưu tập game bàn cờ và trí tuệ cho Android: Cờ caro, Wall Go, Quoridor, Cờ vua, Cờ tướng, Cờ vây, Sudoku, Ma phương 7×7, Xếp hình 7 mảnh và Cờ caro mù. Mọi game từ 2 người trở lên đều có 7 cấp độ máy, từ Dễ đến Siêu việt.</p>")}
+    "<p class='muted'>Bộ sưu tập game bàn cờ và trí tuệ cho Android: Cờ caro, Wall Go, Quoridor, Cờ vua, Cờ tướng, Cờ vây, Sudoku, Ma phương 7×7, Xếp hình Tangram và Cờ caro mù. Mọi game từ 2 người trở lên đều có 7 cấp độ máy, từ Dễ đến Siêu việt.</p>")}
 <div class="topics"><span style="background:#14937a"><span data-l="en">Puzzle</span><span data-l="vi">Giải đố</span></span><span style="background:#5348c9"><span data-l="en">Intellect</span><span data-l="vi">Trí tuệ</span></span><span style="background:#c27a0a"><span data-l="en">Calculation</span><span data-l="vi">Tính toán</span></span><span style="background:#c93e6b"><span data-l="en">Memory</span><span data-l="vi">Ghi nhớ</span></span></div>
 <h2><span data-l="en">How to play</span><span data-l="vi">Hướng dẫn chơi</span></h2>
 <div class="grid">
@@ -414,7 +414,7 @@ index_body = f"""
 <a href="how-to-play/quoridor.html"><div class="card"><b>Quoridor</b><span class="muted" data-l="en">Race to the far side and block with walls.</span><span class="muted" data-l="vi">Chạy về cạnh đối diện và chặn bằng tường.</span></div></a>
 <a href="how-to-play/wallgo.html"><div class="card"><b>Wall Go</b><span class="muted" data-l="en">Move, build a wall, claim territory.</span><span class="muted" data-l="vi">Đi quân, xây tường, chiếm lãnh thổ.</span></div></a>
 <a href="how-to-play/sudoku.html"><div class="card"><b>Sudoku</b><span class="muted" data-l="en">One given per box, any valid grid wins.</span><span class="muted" data-l="vi">Mỗi khối một gợi ý, điền đúng luật là thắng.</span></div></a>
-<a href="how-to-play/tangram.html"><div class="card"><b><span data-l="en">Tangram</span><span data-l="vi">Xếp hình 7 mảnh</span></b><span class="muted" data-l="en">10 random shapes, 3 minutes each.</span><span class="muted" data-l="vi">10 hình ngẫu nhiên, mỗi hình 3 phút.</span></div></a>
+<a href="how-to-play/tangram.html"><div class="card"><b><span data-l="en">Tangram</span><span data-l="vi">Xếp hình Tangram</span></b><span class="muted" data-l="en">7 levels, 4 to 10 pieces, 10 shapes per round.</span><span class="muted" data-l="vi">7 cấp, 4 đến 10 mảnh, mỗi lượt 10 hình.</span></div></a>
 <a href="how-to-play/blindcaro.html"><div class="card"><b><span data-l="en">Blind Gomoku</span><span data-l="vi">Cờ caro mù</span></b><span class="muted" data-l="en">Shared four-colour stones: remember which are yours.</span><span class="muted" data-l="vi">Quân bốn màu dùng chung: nhớ quân nào của mình.</span></div></a>
 <a href="how-to-play/magic7.html"><div class="card"><b><span data-l="en">Magic Square 7×7</span><span data-l="vi">Ma phương 7×7</span></b><span class="muted" data-l="en">Rows, columns and diagonals all sum to 175. Daily puzzle.</span><span class="muted" data-l="vi">Hàng, cột, đường chéo đều có tổng 175. Mỗi ngày một đề.</span></div></a>
 </div>

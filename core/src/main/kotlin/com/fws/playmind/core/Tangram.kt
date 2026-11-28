@@ -25,8 +25,28 @@ object Tangram {
     const val PUZZLES = 10
     const val SECONDS_PER_PUZZLE = 180
 
-    /** Loại mảnh theo thứ tự: 0, 1 lớn; 2 vừa; 3, 4 nhỏ; 5 vuông; 6 bình hành. */
+    /** Bộ 7 mảnh cổ điển theo loại: 0 tam giác lớn, 1 tam giác vừa, 2 tam giác nhỏ, 3 vuông, 4 bình hành. */
     val KINDS = intArrayOf(0, 0, 1, 2, 2, 3, 4)
+    /** Diện tích từng loại mảnh. */
+    val AREA = doubleArrayOf(2.0, 1.0, 0.5, 1.0, 1.0)
+
+    /**
+     * Bộ mảnh của 7 cấp (Dễ → Siêu việt): 4, 5, 6, 7 (bộ cổ điển), 8, 9, 10 mảnh.
+     * Cấp trên bộ cổ điển thêm lần lượt tam giác nhỏ, tam giác vừa, hình vuông.
+     */
+    val LEVEL_KINDS: List<IntArray> = listOf(
+        intArrayOf(0, 1, 2, 3),
+        intArrayOf(0, 0, 1, 2, 3),
+        intArrayOf(0, 0, 1, 2, 2, 3),
+        intArrayOf(0, 0, 1, 2, 2, 3, 4),
+        intArrayOf(0, 0, 1, 2, 2, 3, 4, 2),
+        intArrayOf(0, 0, 1, 2, 2, 3, 4, 2, 1),
+        intArrayOf(0, 0, 1, 2, 2, 3, 4, 2, 1, 3),
+    )
+    fun kindsFor(level: Int): IntArray = LEVEL_KINDS[level.coerceIn(0, LEVEL_KINDS.size - 1)]
+
+    /** Khung tối đa của hình theo số mảnh (diện tích lớn thì khung lớn hơn). */
+    fun maxSizeFor(kinds: IntArray): Double = 6.6 * kotlin.math.sqrt(kinds.sumOf { AREA[it] } / 8.0).coerceAtLeast(0.8)
 
     /** Đa giác gốc (ngược chiều kim đồng hồ) của từng loại. */
     private val BASE: Array<DoubleArray> = arrayOf(
@@ -106,11 +126,11 @@ object Tangram {
      * Ghép ngẫu nhiên đủ 7 mảnh (null nếu bị kẹt). Mỗi mảnh thử nhiều chỗ áp cạnh hợp lệ; với xác suất [greed] chọn chỗ làm
      * bao lồi nhỏ nhất (hình gọn, dễ), còn lại chọn ngẫu nhiên (hình nhiều mỏm, khó).
      */
-    private fun randomArrangement(rnd: Random, greed: Double): List<Placement>? {
-        val order = KINDS.toMutableList().also { it.shuffle(rnd) }
+    private fun randomArrangement(rnd: Random, greed: Double, kinds: IntArray): List<Placement>? {
+        val order = kinds.toMutableList().also { it.shuffle(rnd) }
         val placed = ArrayList<Placement>()
         placed.add(Placement(order[0], rnd.nextInt(8), order[0] == 4 && rnd.nextBoolean(), 0.0, 0.0))
-        for (idx in 1 until PIECES) {
+        for (idx in 1 until order.size) {
             val kind = order[idx]
             val cands = ArrayList<Placement>()
             for (attempt in 0 until 160) {
@@ -196,16 +216,16 @@ object Tangram {
      * Sinh [PUZZLES] đề tăng dần độ khó: mỗi đề chọn trong nhiều cách ghép ngẫu nhiên theo độ "đặc" (đề đầu đặc nhất).
      * Hình vừa khung [maxSize] × [maxSize] đơn vị.
      */
-    fun session(rnd: Random, maxSize: Double = 6.6): List<TangramPuzzle> = List(PUZZLES) { i -> puzzle(i / (PUZZLES - 1.0), rnd, maxSize) }
+    fun session(rnd: Random, level: Int = 3): List<TangramPuzzle> = List(PUZZLES) { i -> puzzle(i / (PUZZLES - 1.0), rnd, kindsFor(level)) }
 
     /** Một đề với độ khó [difficulty] từ 0 (dễ) đến 1 (khó). */
-    fun puzzle(difficulty: Double, rnd: Random, maxSize: Double = 6.6): TangramPuzzle {
+    fun puzzle(difficulty: Double, rnd: Random, kinds: IntArray = KINDS, maxSize: Double = maxSizeFor(kinds)): TangramPuzzle {
         val cands = ArrayList<TangramPuzzle>()
         var tries = 0
         // dễ: gần như luôn chọn chỗ gọn nhất; khó: phần lớn ngẫu nhiên
         val greed = 0.97 - 0.75 * difficulty
         while (cands.size < 40 && tries++ < 2000) {
-            val a = randomArrangement(rnd, greed) ?: continue
+            val a = randomArrangement(rnd, greed, kinds) ?: continue
             val pz = TangramPuzzle(a)
             if (pz.width > maxSize || pz.height > maxSize) continue
             cands.add(pz)
@@ -271,7 +291,7 @@ class TangramPuzzle(raw: List<Tangram.Placement>) {
     val minX: Double; val maxX: Double; val minY: Double; val maxY: Double
     val width: Double get() = maxX - minX
     val height: Double get() = maxY - minY
-    /** Diện tích (8) / diện tích bao lồi: 1 = rất đặc (dễ), nhỏ = nhiều mỏm (khó). */
+    /** Diện tích các mảnh / diện tích bao lồi: 1 = rất đặc (dễ), nhỏ = nhiều mỏm (khó). */
     val compactness: Double
 
     init {
@@ -281,7 +301,7 @@ class TangramPuzzle(raw: List<Tangram.Placement>) {
         pieces = raw.map { Tangram.Placement(it.kind, it.rot, it.flip, it.cx - ox, it.cy - oy) }
         minX = xs.min() - ox; maxX = xs.max() - ox; minY = ys.min() - oy; maxY = ys.max() - oy
         val pts = pieces.flatMap { p -> (0 until p.poly.size / 2).map { p.poly[2 * it] to p.poly[2 * it + 1] } }
-        compactness = 8.0 / Tangram.hull(pts)
+        compactness = raw.sumOf { Tangram.AREA[it.kind] } / Tangram.hull(pts)
     }
 
     /** Đỉnh nằm trên đường viền ngoài của hình (dùng làm điểm hít khi kéo mảnh), dạng x0, y0, x1, y1... */

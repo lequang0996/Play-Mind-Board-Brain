@@ -336,13 +336,14 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         if (!wallet.canStart(inf.id)) { notice = Notice.NOT_ENOUGH; return false }
         teardown()
         if (wallet.startMatch(inf.id) == StartCost.INSUFFICIENT) { notice = Notice.NOT_ENOUGH; return false }
-        mode = Mode.SOLO; reward = null; finalized = false
+        mode = Mode.SOLO; reward = null; finalized = false; unlockedNow = -1
         phase = Phase.PLAYING; tick++
         val my = ++epoch
+        val kinds = Tangram.kindsFor(botLevel)
         tgJob = viewModelScope.launch {
             val rnd = Random(System.nanoTime())
             for (i in 0 until Tangram.PUZZLES) {
-                val p = withContext(Dispatchers.Default) { Tangram.puzzle(i / (Tangram.PUZZLES - 1.0), rnd) }
+                val p = withContext(Dispatchers.Default) { Tangram.puzzle(i / (Tangram.PUZZLES - 1.0), rnd, kinds) }
                 if (my != epoch) return@launch
                 tangram = tangram + p
             }
@@ -369,7 +370,13 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
             delay(900)
             if (my != epoch) return@launch
             tgSolved = false
-            if (tgIndex >= Tangram.PUZZLES - 1) { phase = Phase.OVER; settle(MatchOutcome.WIN, true) }
+            if (tgIndex >= Tangram.PUZZLES - 1) {
+                phase = Phase.OVER
+                // xong cấp L thì mở khóa cấp L + 1
+                val inf = info
+                if (inf != null && botLevel < Catalog.LEVELS - 1 && prefs.unlockLevel(inf.id, botLevel + 1)) unlockedNow = botLevel + 1
+                settle(MatchOutcome.WIN, true)
+            }
             else { tgIndex++; tgSeconds = Tangram.SECONDS_PER_PUZZLE }
         }
     }

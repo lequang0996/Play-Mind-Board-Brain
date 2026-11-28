@@ -232,6 +232,9 @@ fun main() {
         val (dx, dy) = Tangram.snap(off, pz.pieces.flatMap { it.poly.toList() }.toDoubleArray(), 0.3)
         expect("tangram: hit manh ve dinh gan nhat", kotlin.math.abs(dx + 0.15) < 1e-9 && kotlin.math.abs(dy - 0.1) < 1e-9)
         expect("tangram: co dinh vien ngoai", pz.outlineVertices.size >= 6)
+        val easy = Tangram.session(kotlin.random.Random(5), 0); val hard = Tangram.session(kotlin.random.Random(5), 6)
+        expect("tangram: cap De 4 manh, Sieu viet 10 manh", easy.all { it.pieces.size == 4 } && hard.all { it.pieces.size == 10 })
+        expect("tangram: de 10 manh ghep dung thi khop", Tangram.coverError(hard[9].pieces.map { it.poly }, hard[9]) < Tangram.SOLVED_ERROR)
     }
 
     // ── Cờ caro mù ──

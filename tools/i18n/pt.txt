@@ -277,8 +277,8 @@ bc_red|Vermelho
 bc_purple|Roxo
 bc_yellow|Amarelo
 game_tangram|Tangram
-game_tangram_desc|Encaixe 7 peças geométricas na figura cinza. 10 figuras por rodada, 3 minutos cada.
-guide_tangram|Objetivo: use as 7 peças (2 triângulos grandes, 1 médio, 2 pequenos, 1 quadrado e 1 paralelogramo) para preencher exatamente a figura cinza, sem sobreposição e sem sobrar peças.\n• Cada rodada tem 10 figuras aleatórias, das compactas às cheias de pontas. Você tem 3 minutos por figura.\n• Se o tempo acabar em qualquer figura, você perde; complete as 10 para vencer.\n• Arraste as peças da bandeja para a figura. Toque para girar 45° e mantenha pressionado o paralelogramo para virá-lo.\n• Solte uma peça perto de um canto da figura ou de outra peça e ela se encaixa sozinha.\n• Qualquer arranjo que preencha a figura exatamente vale.\n• Dica: coloque primeiro os dois triângulos grandes; eles ocupam metade da área.
+game_tangram_desc|Encaixe peças geométricas na figura cinza. 7 níveis de 4 a 10 peças, 10 figuras por rodada, 3 minutos cada.
+guide_tangram|Objetivo: use as 7 peças (2 triângulos grandes, 1 médio, 2 pequenos, 1 quadrado e 1 paralelogramo) para preencher exatamente a figura cinza, sem sobreposição e sem sobrar peças.\n• Cada rodada tem 10 figuras aleatórias, das compactas às cheias de pontas. Você tem 3 minutos por figura.\n• Se o tempo acabar em qualquer figura, você perde; complete as 10 para vencer.\n• Arraste as peças da bandeja para a figura. Toque para girar 45° e mantenha pressionado o paralelogramo para virá-lo.\n• Solte uma peça perto de um canto da figura ou de outra peça e ela se encaixa sozinha.\n• Qualquer arranjo que preencha a figura exatamente vale.\n• Dica: coloque primeiro os dois triângulos grandes; eles ocupam metade da área.\n• 7 níveis pelo número de peças: Fácil 4, Médio 5, Bom 6, Forte 7 (o jogo clássico), Mestre 8, Desafiante 9, Supremo 10. Complete as 10 figuras de um nível para desbloquear o próximo.
 tg_progress|Figura %1$d/%2$d
 tg_success|Correto!
 tg_won|Desafio concluído!
@@ -286,3 +286,5 @@ tg_won_text|Você completou as 10 figuras. Tempo total %1$s.
 tg_lost|Tempo esgotado
 tg_lost_text|A figura %1$d não foi concluída em 3 minutos.
 tg_hint|Arraste as peças para a figura cinza. Toque para girar, mantenha pressionado para virar.
+tg_level|Nível
+tg_pieces_n|%d peças por figura

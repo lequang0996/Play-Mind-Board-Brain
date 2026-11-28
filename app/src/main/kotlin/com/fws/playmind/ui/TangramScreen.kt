@@ -54,9 +54,10 @@ import com.fws.playmind.match.Phase
 import com.fws.playmind.match.SessionViewModel
 import kotlin.math.min
 
-/** Màu 7 mảnh: lớn, lớn, vừa, nhỏ, nhỏ, vuông, bình hành. */
+/** Màu từng mảnh (tối đa 10 mảnh ở cấp Siêu việt). */
 private val TgColors = listOf(
     Color(0xFF2EBF6B), Color(0xFFF5B82E), Color(0xFF8E5BD6), Color(0xFFE94B5B), Color(0xFFF08BB0), Color(0xFF29B6E0), Color(0xFF3F7DE8),
+    Color(0xFFFF8A3D), Color(0xFF14A38B), Color(0xFFB0794A),
 )
 private val TgShadow = Color(0xFF6E7380)
 
@@ -142,6 +143,7 @@ fun TangramScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onExit
             dismiss = stringResource(R.string.back_to_lobby), onDismiss = onExit,
             tone = if (won) DialogTone.GEM else DialogTone.WARN, icon = if (won) Ic.Trophy else Ic.Hourglass,
             body = {
+                if (vm.unlockedNow >= 0) Text(stringResource(R.string.level_unlocked, levelName(vm.unlockedNow)), style = MaterialTheme.typography.labelLarge, color = pm.gold)
                 if (reward != null && reward.diamonds > 0) {
                     Row(
                         Modifier.clip(RoundedCornerShape(50)).background(pm.surfaceHigh).border(1.dp, pm.goldBright.copy(alpha = .7f), RoundedCornerShape(50)).padding(horizontal = 16.dp, vertical = 8.dp),
@@ -174,19 +176,22 @@ private fun TangramBoard(vm: SessionViewModel, puzzle: TangramPuzzle, puzzleInde
     var h by remember { mutableFloatStateOf(0f) }
     var dragging by remember(puzzleIndex) { mutableIntStateOf(-1) }
 
-    // thế giới -> màn hình: gốc = tâm hình (ở 32% chiều cao), khay 7 mảnh ở phần dưới
-    val sc = if (w > 0) min(w / 9.2f, h / 13.6f) else 1f
-    val ox = w / 2f; val oy = h * .32f
+    // thế giới -> màn hình: gốc = tâm hình (ở 30% chiều cao), khay mảnh ở phần dưới (2 hàng)
+    val kinds = remember(puzzleIndex) { puzzle.pieces.map { it.kind }.sorted().toIntArray() }
+    val n = kinds.size
+    val cols = (n + 1) / 2
+    val ext = maxOf(puzzle.width, puzzle.height, 5.0).toFloat()
+    val sc = if (w > 0) minOf(w / (ext + 2.4f), h * .55f / (ext + 1.0f), w / (cols * 2.35f)) else 1f
+    val ox = w / 2f; val oy = h * .30f
     fun toWorld(o: Offset) = ((o.x - ox) / sc).toDouble() to ((o.y - oy) / sc).toDouble()
 
     if (pieces.isEmpty() && w > 0) {
-        // khay: 4 mảnh hàng trên, 3 mảnh hàng dưới
-        val rowY = doubleArrayOf((h * .70f - oy) / sc.toDouble(), (h * .88f - oy) / sc.toDouble())
-        val order = listOf(0, 1, 2, 5, 3, 6, 4)
-        for ((slot, i) in order.withIndex()) {
-            val row = if (slot < 4) 0 else 1; val col = if (slot < 4) slot else slot - 4; val cols = if (row == 0) 4 else 3
-            val sx = (w * (col + .5f) / cols - ox) / sc
-            pieces.add(TgPiece(i, Tangram.KINDS[i], 0, false, sx.toDouble(), rowY[row]))
+        // khay: hàng trên các mảnh lớn trước, hàng dưới phần còn lại
+        val rowY = doubleArrayOf((h * .71f - oy) / sc.toDouble(), (h * .89f - oy) / sc.toDouble())
+        for (i in 0 until n) {
+            val row = if (i < cols) 0 else 1; val col = if (i < cols) i else i - cols; val inRow = if (row == 0) cols else n - cols
+            val sx = (w * (col + .5f) / inRow - ox) / sc
+            pieces.add(TgPiece(i, kinds[i], 0, false, sx.toDouble(), rowY[row]))
         }
     }
 
