@@ -499,7 +499,7 @@ Pikafish dùng mạng nơ-ron nên giới hạn theo **số nút**, không theo 
 ### 6.5. Trạng thái 11/2026
 
 * **Engine Siêu việt** (`XiangqiEngine.kt`, tự làm): danh sách quân và bảng nước đi tính sẵn, cùng khung tìm kiếm với cờ vua (PVS, Lazy SMP, null move, LMR, singular, SEE, history các loại, correction history), đánh giá tuyến tính 711 tham số tinh chỉnh Texel trên khoảng 3,1 triệu thế tự đấu (đợt `xiangqi-t1`). Luật app: hết nước là thua, lặp thế thì bên vừa đi thua.
-* **A/B trên CI:** engine mới hơn engine cũ +267 Elo (240 ván, 1 s/nước); trọng số tinh chỉnh hơn trọng số khởi điểm +236 (408 ván). Correction history chỉ +15 (không có ý nghĩa thống kê), vẫn giữ mức 32.
+* **A/B trên CI:** engine mới hơn engine cũ +267 Elo (240 ván, 1 s/nước); trọng số tinh chỉnh hơn trọng số khởi điểm +236 (408 ván). Correction history chỉ +15 (không có ý nghĩa thống kê), vẫn giữ mức 32. Tham số tìm kiếm `object XSP` (g21, 408 ván mỗi biến thể): rfpm80+rfpi60 −9, futb120+futd130 −4, hp2500 −8, asp12+qd240 +14, đều trong sai số nên giữ mặc định. Trọng số Texel đợt 2 `xiangqi-t2` (4,38 triệu thế, sai số 0,1225 → 0,1193): +30 Elo (g22, 408 ván, khoảng tin cậy chạm 50%), đang đo thêm 400 ván (g24).
 * **Đối chiếu Pikafish:** bản phát hành 2026 không có `UCI_Elo` / `UCI_LimitStrength`, nên chỉ giới hạn được theo số nút mỗi nước (dòng `gauge xiangqi nodes=...`). Với 20.000 nút/nước, Pikafish vẫn thắng áp đảo (ta 12,5%, 20 ván): Siêu việt còn cách xa engine NNUE hàng đầu. Đây là số đo báo cáo, không phải điều kiện đạt.
 
 ---
@@ -677,6 +677,7 @@ Lưu ý cho cột MCTS: Dễ, Trung bình, Khá chỉ cách nhau ×4 đến ×5 
 * **Thang sức nén ở trên:** tìm sâu thêm cho ít Elo (Siêu việt 2 s hơn n300 khoảng 79–81%, hơn n1000 khoảng 75%). Nhiễu có delta từ 2 bước đường đi trở lên làm bot đi lòng vòng, rồi thua vì luật lặp thế của app.
 * **Công cụ giảm sức riêng: "quên tường"** (`extra` = % số nước chỉ xét đi quân; lớp an toàn vẫn chặn khi đối phương còn một bước). Đo trên máy (200 cặp, so với `d1`): quên 40% gần như không yếu đi, 60% → 64,5%, 80% → 84%. Gặp đối thủ mạnh (n300) thì gần như không có tác dụng (quên 90% chỉ đưa tỉ lệ từ 68,5% lên 72%), nên Cao thủ dùng thêm nhiễu nhỏ. Nhiễu đặt lên tường còn hại hơn không đặt tường (cấp quên 95% thắng cấp quên 80% có nhiễu), vì vậy các cấp dưới quên tường hoàn toàn và chỉ có nhiễu nhỏ (delta 100) trên nước đi quân. Chuỗi cấp ở mục 13.1 đạt cả 5 cặp kề dưới Siêu việt và 3 cặp cách hai cấp trên máy với 3 bộ seed; xác nhận trên CI ở đợt `g15` (cấp trên) và `g17` (ba cấp dưới sau khi chỉnh Khá p0.5, Trung bình p0.75, Dễ p0.97): cả 6 cặp kề đạt.
 * **Engine v3 (28/11/2026):** xem lại các ván Siêu việt thua bot tìm sâu 1 thấy hai lỗi lặp lại: (1) tiêu hết 10 tường trong khoảng 20 nước đầu, mỗi tường chỉ thêm khoảng 1,4 bước cho đối phương, trong khi đối phương giữ tường tới cuối ván thì mỗi tường thêm khoảng 2,7 bước; (2) khi đã hết tường mà đối phương còn nhiều, mọi nước đi quân có điểm như nhau (đối phương đằng nào cũng chặn lại) nên bot đi qua đi lại giữa hai ô hàng chục nước. Sửa: tăng giá trị tường còn giữ (`ww` 75 → 110), cộng thêm `wz` = 150 điểm cho mỗi tường còn lại khi đối phương đã hết tường, và ở gốc (chỉ Siêu việt) chọn nước đi quân tiến về đích nếu nó kém nước tốt nhất không quá `prog` = 20 điểm. A/B trên máy (thế mở đầu đa dạng): vòng 1 `wz150+prog20` 65% (120 ván, 300 ms/nước), vòng 2 thêm `ww110` 70,8% (120 ván), vòng 3 các biến thể quanh đó đều trong sai số; kiểm lại ở 1000 ms/nước: 87,5% so với engine cũ (40 ván). Chuỗi cấp đo lại ở đợt `g22`.
+* **Đo lại chuỗi với engine v3 (g22, 2 s/nước):** 6 cặp kề TB–Dễ 94,1%, Khá–TB 88,2%, Giỏi–Khá 88,7%, CT–Giỏi 78,2%, TĐ–CT 92,1%, SV–TĐ 88,4%; 5 cặp cách hai cấp 99,0% / 100% / 98,0% / 94,4% / 92,6%. Engine v3 làm mạnh cả các cấp dùng chung hàm đánh giá, nên Siêu việt vs Cao thủ từ 73% lên 92,6% (đạt). Còn một cặp vượt trần: Thách đấu vs Cao thủ 92,1% (trần 88%), đang thử làm mạnh Cao thủ ở g24 (hai biến thể: p0.10 x150 e25 và p0.05 x100 e10).
 * **Hạn chế trước engine v3:** Siêu việt chỉ thắng Cao thủ khoảng 73% (cần ≥ 80% cho cặp cách hai cấp), dù thắng Thách đấu 80% và Thách đấu thắng Cao thủ 77%. Đo trên máy ở 300 ms/nước, Siêu việt thắng mọi biến thể Cao thủ tìm sâu 1 (không nhiễu, nhiễu p0.2 đến p0.6, quên tường 0 đến 60%) chỉ 72–78%: làm Cao thủ yếu đi không giúp được. Đây là điểm yếu của engine Siêu việt trước lối chơi nông, cần cải thiện engine (đánh giá thế đua về đích, đặt tường phòng thủ) chứ không phải cấu hình cấp.
 
 ---
@@ -856,7 +857,7 @@ Tỉ lệ điểm đo được (khoảng 200 ván; 400 ván cho Trung bình vs D
 | Cờ tướng | 96,9% (g12) | 87,3% (g12) | 90,7% (g12) | 68,4% (g13) | 73,5% (g13) | 83,6% (g13) |
 | Cờ caro | 94,1% (g11) | 84,3% (g12) | 89,2% (g12) | 81,4% (g11) | 72,1% (g11) | 76,9% (g11) |
 | Cờ vây 19×19 | chưa đo | chưa đo | chưa đo | chưa đo | chưa đo | chưa đo |
-| Quoridor | 96,0% (g17) | 87,7% (g17) | 92,6% (g17) | 77,5% (g15) | 77,0% (g15) | 80,1% (g15) |
+| Quoridor (engine v3) | 94,1% (g22) | 88,2% (g22) | 88,7% (g22) | 78,2% (g22) | 92,1% (g22) ✗ đang chỉnh (g24) | 88,4% (g22) |
 | Wall Go | 93,3% (g12) | 91,7% (g15) | 88,0% (g15, 408 ván) | 81,9% (g12) | 86,5% (g12) | 89,8% (g12) |
 
 Cặp cách hai cấp, mức tối thiểu ghi dưới tên cặp:
@@ -866,7 +867,7 @@ Cặp cách hai cấp, mức tối thiểu ghi dưới tên cặp:
 | Cờ vua | 99,3% (g18, 408 ván) | 96,1% (g16) | 100% (g16) | 89,7% (g16) | 95,8% (g16) |
 | Cờ tướng | 98,0% (g12) | 95,1% (g12) | 98,0% (g15) | 93,1% (g13) | 94,4% (g13) |
 | Cờ caro | 100% (g11) | 98,0% (g12) | 96,1% (g12) | 87,3% (g11) | 97,2% (g11) |
-| Quoridor | 98,0% (g17) | 100% (g17) | 96,1% (g17) | 75,5% (g15) | 73,1% (g15) ✗, hạn chế đã biết (mục 9.4) |
+| Quoridor (engine v3) | 99,0% (g22) | 100% (g22) | 98,0% (g22) | 94,4% (g22) | 92,6% (g22) |
 | Wall Go | 100% (g12) | 99,0% (g13) | 99,0% (g13) | 98,0% (g12) | 96,3% (g12) |
 
 ### 13.3. Các hạng mục còn lại
@@ -877,7 +878,7 @@ Cặp cách hai cấp, mức tối thiểu ghi dưới tên cặp:
 | Cờ tướng | đạt | đạt | đạt | đạt (g12, g13) | chưa | chưa | chưa | tự làm; Pikafish 20k nút: 12,5% | còn phần đo trên điện thoại |
 | Cờ caro | đạt | đạt (VCF, phòng VCF) | đạt | đạt (g11, g12) | chưa | chưa | chưa | tự làm; +232 Elo so với engine cũ | còn phần đo trên điện thoại |
 | Cờ vây 19×19 | đạt | chưa | chưa | chưa | chưa | chưa | chưa | KataGo (mục 8.3a) | chưa xong |
-| Quoridor | đạt | đạt | đạt | đạt, trừ Siêu việt vs Cao thủ 73% (mục 9.4) | chưa | chưa | chưa | tự làm; không hơn engine cũ (mục 9.4) | còn hạn chế ở cấp trên và phần đo trên điện thoại |
+| Quoridor | đạt | đạt | đạt | đạt (engine v3, g22) | chưa | chưa | chưa | tự làm; engine v3 +340 Elo so với engine cũ (mục 9.4) | còn cặp Thách đấu vs Cao thủ (g24) và phần đo trên điện thoại |
 | Wall Go | đạt | đạt | đạt | đạt (g12, g13, g15) | chưa | chưa | chưa | tự làm; +124 Elo so với engine cũ | còn phần đo trên điện thoại |
 | *(game mới)* | | | | | | | | | |
 
