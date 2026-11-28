@@ -69,13 +69,14 @@ Cờ vua, cờ tướng, Quoridor 2 người: nước tạo lại thế đã có
 
 Gói đăng ký, kim cương và quảng cáo: xem [`MONETIZATION.md`](MONETIZATION.md). Giao diện và phông chữ: [`DESIGN.md`](DESIGN.md).
 
-## 5. Cơ chế chống gian lận (mức 1)
-* Ví kim cương/thống kê mã hóa **AES-256-GCM**, khóa nằm trong **Android Keystore**; sửa file là giải mã thất bại → ví về trạng thái ban đầu.
-* Bộ đếm phụ (`wallet.ctr`) chống khôi phục file cũ. Auto Backup chỉ sao lưu một tệp nhỏ `pm_marks.xml` (số lượt miễn phí đã dùng); ví và khóa không bao giờ được sao lưu. Bản sao ví có chữ ký nằm ở Google Block Store để chống "gỡ app cài lại là có lượt miễn phí" (xem `MONETIZATION.md`).
-* Đồng hồ đáng tin (`elapsedRealtime`) phát hiện chỉnh giờ để lấy thêm điểm danh/lượt miễn phí.
-* Ván đang chơi dở khi app bị tắt được tính là thua (chuỗi thắng về 0).
-* Online: mọi nước đi được engine kiểm tra ở cả hai máy; ván thắng chỉ được thưởng khi hai máy đối chiếu cùng kết quả (băm danh sách nước đi).
-* Môi trường: phát hiện root/debugger/Frida/Xposed → **tạm dừng nhận kim cương thưởng**, game vẫn chơi bình thường.
-* R8 làm rối mã.
+## 5. Cơ chế chống gian lận (mức 2)
+* **Ví:** kim cương / thống kê mã hóa **AES-256-GCM**, khóa nằm trong **Android Keystore**; sửa file là giải mã thất bại → ví về trạng thái ban đầu. Bộ đếm phụ (`wallet.ctr`) chống khôi phục file cũ. Auto Backup chỉ sao lưu `pm_marks.xml` (số lượt miễn phí đã dùng); ví và khóa không bao giờ được sao lưu. Bản sao ví có chữ ký ở Google Block Store chống "gỡ app cài lại là có lượt miễn phí" (xem `MONETIZATION.md`).
+* **Sửa bộ nhớ** (GameGuardian...): `WalletRepo` giữ bản sao số kim cương đã che bằng khóa ngẫu nhiên kèm mã kiểm tra. Số trong bộ nhớ lệch bản sao → dùng lại giá trị đúng và tạm dừng thưởng trong lần chạy đó.
+* **Chỉnh giờ:** `NetTime` lấy giờ chuẩn từ header `Date` của máy chủ Google, neo vào `elapsedRealtime`; khi offline thì dùng đồng hồ máy có phát hiện nhảy giờ. Ngày điểm danh / lượt miễn phí ghi ở "tương lai" không mở thêm lượt.
+* **Giả lập thanh toán** (Lucky Patcher, "freedom"): `PurchaseCheck` kiểm tra chữ ký giao dịch bằng khóa công khai RSA của app và tên gói; giao dịch giả bị bỏ qua. Cần biến `PLAY_LICENSE_KEY` (GitHub → Settings → Secrets and variables → Actions → Variables), lấy ở Play Console → Kiếm tiền bằng Play → Thiết lập kiếm tiền → Cấp phép. Kim cương chỉ được cộng sau khi Google Play tiêu thụ giao dịch thành công.
+* **Sửa app rồi ký lại:** `Integrity` so chứng chỉ ký với danh sách hợp lệ (khóa tải lên lấy từ keystore trên CI + khóa ký của Google Play). Bật khi có biến `PLAY_CERT_SHA256` (Play Console → Kiểm tra và phát hành → Thiết lập → Tính toàn vẹn của ứng dụng → Chứng chỉ khóa ký ứng dụng, dòng SHA-256).
+* **Môi trường:** root (su, Magisk, KernelSU), debugger, tiến trình bị theo dõi, thư viện hook (Frida, Xposed, LSPosed, Riru, Zygisk, Substrate), app nhân bản / không gian ảo, bản build test-keys → **tạm dừng nhận kim cương thưởng** (thắng ván, chuỗi thắng, điểm danh), game và mua hàng vẫn bình thường.
+* **Ván đấu:** ván dở khi app bị tắt tính là thua; online mọi nước đi được engine kiểm tra ở cả hai máy, ván thắng chỉ được thưởng khi hai máy đối chiếu cùng kết quả (băm danh sách nước đi); đầu hàng / thoát quá sớm không được thưởng.
+* **R8:** làm rối mã, dồn các lớp vào một gói, bỏ mọi lệnh Logcat ở bản phát hành.
 
-Giới hạn: không có server nên người dùng root + công cụ hook chuyên dụng vẫn có thể can thiệp; mục tiêu là nâng chi phí gian lận.
+Giới hạn: app không có máy chủ riêng, nên người có root và công cụ hook chuyên dụng vẫn có thể can thiệp vào chính máy của họ (ví dụ khôi phục cả thư mục dữ liệu). Mục tiêu là nâng chi phí gian lận và giữ kim cương thưởng không bị lạm dụng. Bước tiếp theo nếu cần mạnh hơn: Play Integrity API kèm Cloud Function giải mã token (cần gói Firebase Blaze), và lưu ví trên máy chủ.
