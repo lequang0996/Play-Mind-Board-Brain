@@ -65,6 +65,10 @@ class Prefs(ctx: Context) {
     val magicSolved: Boolean get() = sp.getBoolean("mg_done", false)
     /** Đã trả lượt / kim cương cho đề của ngày [magicDay]. */
     val magicPaid: Boolean get() = sp.getBoolean("mg_paid", false)
+    /** Đã xem hướng dẫn nhanh của Khối gỗ ghép chữ (tự mở ở lượt đầu tiên). */
+    var wordsIntroSeen: Boolean
+        get() = sp.getBoolean("wb_intro", false)
+        set(v) = sp.edit().putBoolean("wb_intro", v).apply()
 
     fun magicSave(day: Long, data: String, seconds: Int, solved: Boolean, paid: Boolean) {
         sp.edit().putLong("mg_day", day).putString("mg_data", data).putInt("mg_sec", seconds)

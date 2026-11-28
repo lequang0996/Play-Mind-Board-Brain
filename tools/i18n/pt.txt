@@ -290,10 +290,10 @@ tg_level|Nível
 tg_pieces_n|%d peças por figura
 game_wordblocks|Blocos de palavras
 game_wordblocks_desc|Forme 7 palavras em inglês de um tema com blocos de madeira em 10 minutos.
-guide_wordblocks|Objetivo: em 10 minutos, forme 7 palavras em inglês do tema dado (por exemplo Países: JAPAN, BRAZIL, ...) com blocos de madeira com letras.\n• Os blocos são exatamente as letras das 7 palavras, embaralhadas. Cada bloco pode ser usado uma vez.\n• Toque num bloco para adicionar a letra à palavra atual e toque de novo para removê-la. Apagar remove a última letra e Limpar remove a palavra inteira.\n• Toque em Formar para enviar a palavra. Vale qualquer palavra do tema com pelo menos 3 letras.\n• Se os blocos restantes não formarem mais palavras, toque numa palavra formada para devolver os blocos.\n• Forme as 7 palavras para vencer; se os 10 minutos acabarem você perde e as palavras da resposta aparecem.\n• Dica: procure primeiro letras raras como Q, Z, J e X; geralmente pertencem a uma só palavra.
+guide_wordblocks|Objetivo: em 10 minutos, forme 7 palavras em inglês do tema dado (por exemplo Países: JAPAN, BRAZIL, ...) com blocos de madeira com letras.\n• Os blocos são exatamente as letras das 7 palavras, embaralhadas. Cada bloco pode ser usado uma vez.\n• Toque num bloco para adicionar a letra à palavra atual e toque de novo para removê-la. Apagar remove a última letra e Limpar remove a palavra inteira.\n• Toque em Formar para enviar a palavra. Vale qualquer palavra do tema com pelo menos 3 letras.\n• Se os blocos restantes não formarem mais palavras, toque numa palavra formada para devolver os blocos.\n• Forme as 7 palavras para vencer; se os 10 minutos acabarem você perde e as palavras da resposta aparecem.\n• Dica: procure primeiro letras raras como Q, Z, J e X; geralmente pertencem a uma só palavra.\n• Cada caixa de resposta mostra quantas letras a palavra tem; toque no botão ? durante o jogo para rever como jogar.
 wb_theme|Tema: %s
 wb_found|%1$d/%2$d palavras
-wb_tap_hint|Toque nos blocos de madeira para formar uma palavra
+wb_tap_hint|Toque nos blocos um a um para formar uma palavra e toque em Formar
 wb_back|Apagar
 wb_clear|Limpar
 wb_submit|Formar
@@ -336,3 +336,7 @@ tag_countdown|Contagem regressiva
 tag_time_short|≤ 10 min
 tag_time_mid|10–20 min
 tag_time_long|> 20 min
+wb_goal|Use os blocos de madeira abaixo para formar 7 palavras em inglês deste tema. Cada caixa de resposta mostra quantas letras a palavra tem.
+wb_letters_n|%d letras
+wb_howto_title|Como jogar
+wb_howto|1. Os blocos de madeira abaixo são as letras de 7 palavras em inglês do tema “%1$s”, embaralhadas.\n2. Toque nos blocos um a um para formar uma palavra (por exemplo, tema Cidades: toque P, A, R, I, S). Toque de novo num bloco para retirá-lo.\n3. Toque em Formar. Uma palavra correta vai para uma caixa de resposta. Cada caixa mostra quantas letras a palavra tem.\n4. Cada bloco pode ser usado uma vez. Forme as 7 palavras em 10 minutos para vencer.\n5. Travou? Toque numa palavra formada para devolver os blocos e tente outra combinação.

@@ -290,10 +290,10 @@ tg_level|Cấp độ
 tg_pieces_n|%d mảnh mỗi hình
 game_wordblocks|Khối gỗ ghép chữ
 game_wordblocks_desc|Ghép 7 từ tiếng Anh cùng chủ đề từ các khối gỗ chữ cái trong 10 phút.
-guide_wordblocks|Mục tiêu: trong 10 phút, ghép đủ 7 từ tiếng Anh thuộc chủ đề được cho (ví dụ Quốc gia: JAPAN, BRAZIL, ...) từ các khối gỗ chữ cái.\n• Các khối gỗ đúng bằng chữ cái của 7 từ, đã xáo trộn. Mỗi khối chỉ dùng một lần.\n• Chạm khối để thêm chữ vào từ đang ghép, chạm lại để gỡ chữ đó. Nút Xóa chữ bỏ chữ cuối, Xóa hết bỏ cả từ.\n• Bấm Ghép để nộp từ. Mọi từ thuộc chủ đề, dài ít nhất 3 chữ cái, đều được tính.\n• Nếu thấy các khối còn lại không ghép được nữa, chạm một từ đã ghép để trả các khối về.\n• Ghép đủ 7 từ là thắng; hết 10 phút là thua và hiện các từ đáp án.\n• Mẹo: tìm chữ hiếm như Q, Z, J, X trước, chúng thường chỉ thuộc một từ.
+guide_wordblocks|Mục tiêu: trong 10 phút, ghép đủ 7 từ tiếng Anh thuộc chủ đề được cho (ví dụ Quốc gia: JAPAN, BRAZIL, ...) từ các khối gỗ chữ cái.\n• Các khối gỗ đúng bằng chữ cái của 7 từ, đã xáo trộn. Mỗi khối chỉ dùng một lần.\n• Chạm khối để thêm chữ vào từ đang ghép, chạm lại để gỡ chữ đó. Nút Xóa chữ bỏ chữ cuối, Xóa hết bỏ cả từ.\n• Bấm Ghép để nộp từ. Mọi từ thuộc chủ đề, dài ít nhất 3 chữ cái, đều được tính.\n• Nếu thấy các khối còn lại không ghép được nữa, chạm một từ đã ghép để trả các khối về.\n• Ghép đủ 7 từ là thắng; hết 10 phút là thua và hiện các từ đáp án.\n• Mẹo: tìm chữ hiếm như Q, Z, J, X trước, chúng thường chỉ thuộc một từ.\n• Mỗi ô đáp án ghi số chữ cái của một từ cần tìm; bấm nút ? trong màn chơi để xem lại cách chơi.
 wb_theme|Chủ đề: %s
 wb_found|Đã ghép %1$d/%2$d từ
-wb_tap_hint|Chạm các khối gỗ để ghép chữ
+wb_tap_hint|Chạm lần lượt các khối để ghép một từ, rồi bấm Ghép
 wb_back|Xóa chữ
 wb_clear|Xóa hết
 wb_submit|Ghép
@@ -336,3 +336,7 @@ tag_countdown|Đếm ngược
 tag_time_short|≤ 10 phút
 tag_time_mid|10–20 phút
 tag_time_long|> 20 phút
+wb_goal|Ghép các khối gỗ bên dưới thành 7 từ tiếng Anh thuộc chủ đề này. Mỗi ô đáp án ghi số chữ cái của một từ.
+wb_letters_n|%d chữ
+wb_howto_title|Cách chơi
+wb_howto|1. Các khối gỗ bên dưới là chữ cái của 7 từ tiếng Anh thuộc chủ đề „%1$s“, đã bị xáo trộn.\n2. Chạm lần lượt từng khối để ghép một từ (ví dụ chủ đề Thành phố: chạm P, A, R, I, S). Chạm lại khối để gỡ chữ.\n3. Bấm Ghép. Từ đúng sẽ vào một ô đáp án. Mỗi ô ghi số chữ cái của từ cần tìm.\n4. Mỗi khối chỉ dùng một lần. Ghép đủ 7 từ trong 10 phút để thắng.\n5. Bí? Chạm một từ đã ghép để trả các khối về rồi thử cách khác.

@@ -112,12 +112,23 @@ fun WordBlocksScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onE
     @Suppress("UNUSED_VARIABLE") val dep = vm.wbTick
     var feedback by remember { mutableStateOf<WordBlocksGame.Submit?>(null) }
     var feedbackId by remember { mutableIntStateOf(0) }
+    // hướng dẫn nhanh: tự mở ở lượt đầu tiên, sau đó mở bằng nút "?"
+    var showHelp by remember { mutableStateOf(!app.prefs.wordsIntroSeen) }
+    // ô đáp án: ô k ghi số chữ cái của đáp án k; từ ghép được xếp vào ô cùng độ dài còn trống (không có thì ô trống bất kỳ)
+    val slotOf = IntArray(WordBlocks.WORDS) { -1 }   // ô -> chỉ số trong g.found
+    for ((fi, f) in g.found.withIndex()) {
+        val k = (0 until WordBlocks.WORDS).firstOrNull { slotOf[it] < 0 && g.answers[it].length == f.first.length }
+            ?: (0 until WordBlocks.WORDS).firstOrNull { slotOf[it] < 0 } ?: continue
+        slotOf[k] = fi
+    }
     LaunchedEffect(feedbackId) { if (feedbackId > 0) { delay(1600); feedback = null } }
 
     Column(Modifier.fillMaxSize()) {
-        TopBar(stringResource(info.name), { if (over) onExit() else confirmLeave = true })
+        TopBar(stringResource(info.name), { if (over) onExit() else confirmLeave = true }) {
+            PmIconButton(Ic.Help, stringResource(R.string.wb_howto_title), { showHelp = true })
+        }
         Row(Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 4.dp), horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)) {
-            WbChip { Icon(Ic.Book, null, Modifier.size(16.dp), tint = pm.gold); Text(stringResource(R.string.wb_theme, stringResource(themeName(g.theme.id))), style = MaterialTheme.typography.titleSmall, color = pm.ink, maxLines = 1, overflow = TextOverflow.Ellipsis) }
+            WbChip { Icon(Ic.Check, null, Modifier.size(16.dp), tint = pm.gold); Text(stringResource(R.string.wb_found, g.found.size, WordBlocks.WORDS), style = MaterialTheme.typography.titleSmall, color = pm.ink) }
             WbChip {
                 Icon(Ic.Hourglass, null, Modifier.size(16.dp), tint = if (vm.wbSeconds <= 60) pm.danger else pm.gold)
                 Text(fmt(vm.wbSeconds), style = MaterialTheme.typography.titleSmall, color = if (vm.wbSeconds <= 60) pm.danger else pm.ink)
@@ -127,7 +138,15 @@ fun WordBlocksScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onE
             Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()).padding(horizontal = 14.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            Text(stringResource(R.string.wb_found, g.found.size, WordBlocks.WORDS), style = MaterialTheme.typography.labelLarge, color = pm.inkSoft)
+            // nhiệm vụ: nói rõ phải tìm gì
+            Column(
+                Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(info.topic.color.copy(alpha = .14f))
+                    .border(1.dp, info.topic.color.copy(alpha = .45f), RoundedCornerShape(16.dp)).padding(horizontal = 14.dp, vertical = 10.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp),
+            ) {
+                Text(stringResource(R.string.wb_theme, stringResource(themeName(g.theme.id))), style = MaterialTheme.typography.titleMedium, color = pm.ink)
+                Text(stringResource(R.string.wb_goal), style = MaterialTheme.typography.bodySmall, color = pm.inkSoft)
+            }
             // kết quả lần bấm Ghép gần nhất (hiện cả khi từ bị từ chối và các chữ vẫn còn trong ô ghép)
             val fb = feedbackText(feedback)
             if (fb != null) Text(
@@ -141,7 +160,10 @@ fun WordBlocksScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onE
             for (r in 0 until 4) Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 for (c in 0 until 2) {
                     val k = r * 2 + c
-                    if (k < WordBlocks.WORDS) AnswerBar(k, g.found.getOrNull(k)?.first, Modifier.weight(1f), enabled = !over) { vm.wordsEdit { it.unfind(k) } }
+                    if (k < WordBlocks.WORDS) {
+                        val fi = slotOf[k]
+                        AnswerBar(k, g.found.getOrNull(fi)?.first, g.answers[k].length, Modifier.weight(1f), enabled = !over) { vm.wordsEdit { it.unfind(fi) } }
+                    }
                     else Spacer(Modifier.weight(1f))
                 }
             }
@@ -208,6 +230,11 @@ fun WordBlocksScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onE
             },
         )
     }
+    if (showHelp && !over) PmDialog(
+        title = stringResource(R.string.wb_howto_title), text = stringResource(R.string.wb_howto, stringResource(themeName(g.theme.id))),
+        confirm = stringResource(R.string.ok), onConfirm = { showHelp = false; app.prefs.wordsIntroSeen = true },
+        tone = DialogTone.INFO, icon = Ic.Help,
+    )
     if (confirmLeave) SimpleDialog(stringResource(R.string.leave_game), stringResource(R.string.leave_confirm), stringResource(R.string.leave), { confirmLeave = false; onExit() }, stringResource(R.string.cancel), { confirmLeave = false }, tone = DialogTone.WARN)
 }
 
@@ -221,7 +248,7 @@ private fun feedbackText(r: WordBlocksGame.Submit?): Int? = when (r) {
 
 /** Thanh đáp án thứ [k]: đã ghép thì hiện từ trên nền màu, chưa thì để trống; chạm thanh đã ghép để trả từ về khối. */
 @Composable
-private fun AnswerBar(k: Int, word: String?, modifier: Modifier, enabled: Boolean, onClick: () -> Unit) {
+private fun AnswerBar(k: Int, word: String?, letters: Int, modifier: Modifier, enabled: Boolean, onClick: () -> Unit) {
     val shape = RoundedCornerShape(10.dp)
     val color = WbBars[k % WbBars.size]
     Box(
@@ -231,11 +258,15 @@ private fun AnswerBar(k: Int, word: String?, modifier: Modifier, enabled: Boolea
             .then(if (word != null && enabled) Modifier.clickable(onClick = onClick) else Modifier),
         contentAlignment = Alignment.Center,
     ) {
-        Text(
-            word ?: "· · ·",
-            style = TextStyle(fontFamily = WbFont, fontWeight = FontWeight.Bold, fontSize = 20.sp, letterSpacing = 2.sp, color = if (word != null) WbInk else pm.outline),
+        if (word != null) Text(
+            word,
+            style = TextStyle(fontFamily = WbFont, fontWeight = FontWeight.Bold, fontSize = 20.sp, letterSpacing = 2.sp, color = WbInk),
             maxLines = 1,
-        )
+        ) else Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            // ô trống: gạch dưới theo số chữ cái + "5 chữ"
+            Text(List(letters) { "_" }.joinToString(" "), style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 16.sp, color = pm.inkSoft), maxLines = 1)
+            Text(stringResource(R.string.wb_letters_n, letters), style = MaterialTheme.typography.labelSmall, color = pm.inkSoft)
+        }
     }
 }
 
