@@ -1,0 +1,9 @@
+# date: 2026-11-28
+# note: Quoridor sau g22: 10/11 cặp đạt, chỉ Thách đấu vs Cao thủ 92% (trần 88%). Thử mạnh Cao thủ lên (A: p0.10 x150 e25; B: p0.05 x100 e10), đo lại 5v4, 4v3, 6v4. Cờ tướng: thêm 400 ván A/B xiangqi-t2 (g22: +30 Elo, khoảng tin cậy chạm 50%).
+exp ladder quoridor 5v4 ms=2000 props=pm.level.quoridor.4=d1,p0.10,x150,e25 n=216  W/D/L=178/0/38  S=0.824 [0.773,0.875]  elo=+268  plies~63  {'NONE': 216}
+exp ladder quoridor 4v3 ms=2000 props=pm.level.quoridor.4=d1,p0.10,x150,e25 n=216  W/D/L=178/0/38  S=0.824 [0.773,0.875]  elo=+268  plies~52  {'NONE': 216}
+exp ladder quoridor 6v4 ms=2000 props=pm.level.quoridor.4=d1,p0.10,x150,e25 n=108  W/D/L=97/0/11  S=0.898 [0.841,0.955]  elo=+378  plies~50  {'NONE': 108}
+exp ladder quoridor 5v4 ms=2000 props=pm.level.quoridor.4=d1,p0.05,x100,e10 n=216  W/D/L=174/0/42  S=0.806 [0.753,0.858]  elo=+247  plies~64  {'NONE': 216}
+exp ladder quoridor 4v3 ms=2000 props=pm.level.quoridor.4=d1,p0.05,x100,e10 n=216  W/D/L=196/0/20  S=0.907 [0.869,0.946]  elo=+396  plies~55  {'NONE': 216}
+exp ladder quoridor 6v4 ms=2000 props=pm.level.quoridor.4=d1,p0.05,x100,e10 n=108  W/D/L=97/0/11  S=0.898 [0.841,0.955]  elo=+378  plies~48  {'NONE': 108}
+exp ab xiangqi new@w:xiangqi-t2-vs-new ms=1000 props=- n=408  W/D/L=214/33/161  S=0.565 [0.519,0.611]  elo=+45  plies~150  {'CHECKMATE': 244, 'FIFTY': 26, 'NOMOVES': 56, 'NONE': 7, 'REPETITION': 75}
