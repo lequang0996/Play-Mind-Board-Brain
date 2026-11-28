@@ -5,38 +5,44 @@
 #   ab     <game> <A> <B> games=<số ván> ms=<ms/nước> shards=<số máy> [nodes=<giới hạn nút>]   (A, B: new | smpN | ref | old; thêm @spec, ví dụ new@corr64)
 #   Mọi dòng thêm được props=k1=v1;k2=v2 (thuộc tính hệ thống, ví dụ pm.level.chess.5=n15000 để thử cấu hình cấp).
 # Cấp: 0 Dễ, 1 Trung bình, 2 Khá, 3 Giỏi, 4 Cao thủ, 5 Thách đấu, 6 Siêu việt.
-tag=g11-accept-chess-xiangqi-caro
-note=Nghiệm thu 7 cấp cờ vua, cờ tướng, caro (caro: nhiễu rộng cho Trung bình và Dễ) với cấu hình đã chốt trong BotLevels.kt (6 cặp kề, 5 cặp cách hai cấp). Cờ vua dùng trọng số chess-t2.
-ladder chess 6 5 pairs=100 ms=2000 shards=4
-ladder chess 5 4 pairs=100 ms=2000 shards=2
-ladder chess 4 3 pairs=100 ms=2000 shards=2
+tag=g12-accept-2
+note=Nghiệm thu đợt 2: Wall Go và Quoridor (chạy lại phần g10 mất do lỗi commit), các cặp cờ vua / cờ tướng / caro sau khi chỉnh cấp Khá, Giỏi, Dễ; thử trọng số chess-t3.
+ab chess new@w:chess-t3 new games=1000 ms=200 shards=6
 ladder chess 3 2 pairs=100 ms=2000 shards=2
 ladder chess 2 1 pairs=100 ms=2000 shards=2
-ladder chess 1 0 pairs=200 ms=2000 shards=2
-ladder chess 6 4 pairs=50 ms=2000 shards=2
-ladder chess 5 3 pairs=50 ms=2000 shards=1
-ladder chess 4 2 pairs=50 ms=2000 shards=1
 ladder chess 3 1 pairs=50 ms=2000 shards=1
-ladder chess 2 0 pairs=50 ms=2000 shards=1
-ladder xiangqi 6 5 pairs=100 ms=2000 shards=4
-ladder xiangqi 5 4 pairs=100 ms=2000 shards=2
+ladder chess 4 2 pairs=50 ms=2000 shards=1
 ladder xiangqi 4 3 pairs=100 ms=2000 shards=2
 ladder xiangqi 3 2 pairs=100 ms=2000 shards=2
 ladder xiangqi 2 1 pairs=100 ms=2000 shards=2
 ladder xiangqi 1 0 pairs=200 ms=2000 shards=2
-ladder xiangqi 6 4 pairs=50 ms=2000 shards=2
 ladder xiangqi 5 3 pairs=50 ms=2000 shards=1
 ladder xiangqi 4 2 pairs=50 ms=2000 shards=1
 ladder xiangqi 3 1 pairs=50 ms=2000 shards=1
 ladder xiangqi 2 0 pairs=50 ms=2000 shards=1
-ladder caro 6 5 pairs=100 ms=2000 shards=4
-ladder caro 5 4 pairs=100 ms=2000 shards=2
-ladder caro 4 3 pairs=100 ms=2000 shards=2
 ladder caro 3 2 pairs=100 ms=2000 shards=2
 ladder caro 2 1 pairs=100 ms=2000 shards=2
-ladder caro 1 0 pairs=200 ms=2000 shards=2
-ladder caro 6 4 pairs=50 ms=2000 shards=2
-ladder caro 5 3 pairs=50 ms=2000 shards=1
 ladder caro 4 2 pairs=50 ms=2000 shards=1
 ladder caro 3 1 pairs=50 ms=2000 shards=1
-ladder caro 2 0 pairs=50 ms=2000 shards=1
+ladder wallgo 6 5 pairs=100 ms=2000 shards=4
+ladder wallgo 5 4 pairs=100 ms=2000 shards=2
+ladder wallgo 4 3 pairs=100 ms=2000 shards=2
+ladder wallgo 3 2 pairs=100 ms=2000 shards=2
+ladder wallgo 2 1 pairs=100 ms=2000 shards=2
+ladder wallgo 1 0 pairs=200 ms=2000 shards=2
+ladder wallgo 6 4 pairs=50 ms=2000 shards=2
+ladder wallgo 5 3 pairs=50 ms=2000 shards=1
+ladder wallgo 4 2 pairs=50 ms=2000 shards=1
+ladder wallgo 3 1 pairs=50 ms=2000 shards=1
+ladder wallgo 2 0 pairs=50 ms=2000 shards=1
+ladder quoridor 6 5 pairs=100 ms=2000 shards=4
+ladder quoridor 5 4 pairs=100 ms=2000 shards=2
+ladder quoridor 4 3 pairs=100 ms=2000 shards=2
+ladder quoridor 3 2 pairs=100 ms=2000 shards=2
+ladder quoridor 2 1 pairs=100 ms=2000 shards=2
+ladder quoridor 1 0 pairs=200 ms=2000 shards=2
+ladder quoridor 6 4 pairs=50 ms=2000 shards=2
+ladder quoridor 5 3 pairs=50 ms=2000 shards=1
+ladder quoridor 4 2 pairs=50 ms=2000 shards=1
+ladder quoridor 3 1 pairs=50 ms=2000 shards=1
+ladder quoridor 2 0 pairs=50 ms=2000 shards=1
