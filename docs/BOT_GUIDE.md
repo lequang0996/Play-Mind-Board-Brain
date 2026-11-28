@@ -923,6 +923,35 @@ Công thức cao thấp dùng cùng lệnh (`ladder hilo ...`): A được 1 đi
 chính sách cược (ngưỡng theo phần pot kỳ vọng, chưa mô hình hóa đối thủ chọn cửa nào). Việc tiếp theo: ước lượng cửa đối thủ
 từ thẻ ngửa, cược theo vị trí và kích cỡ pot, rồi chia lại 7 cấp.
 
+### 13.6. Siêu việt so với chuẩn cờ vua
+
+Yêu cầu (11/2026): Siêu việt của mọi game 2+ người có 7 cấp phải **ngang sức Siêu việt cờ vua (khoảng 2800)**, không chỉ
+hơn các cấp dưới đúng khoảng. Cờ vua đạt: Stockfish `UCI_Elo` 2800 được 58,3% (chess-t4). Cách đo cho từng loại game:
+
+- Có engine chuẩn: cờ tướng đấu Pikafish ở mức tương đương 2800 (Pikafish không có `UCI_Elo`, nên dò số nút cho tới khi
+  quy ra 2800), chỉnh tới khoảng 50%; cờ vây làm tương tự với KataGo sau g25.
+- Không có engine chuẩn (caro và caro mù, Quoridor, Wall Go, Cờ cối xay, Công thức cao thấp, Lãnh địa đồng cỏ, Lục giác
+  trí nhớ): (1) tổng Elo từ Dễ lên Siêu việt (cộng Elo của 6 cặp kề, đối chiếu cặp cách hai cấp) phải bằng của cờ vua trong
+  khoảng ±150 Elo; (2) Siêu việt đấu chính nó với ngân sách thời gian gấp 8 (`-Dpm.ladder.msB`, bot tham chiếu cố định):
+  thua không quá 150 Elo (tỉ lệ điểm ≥ 30%) mới coi là đã ở mức trần của engine.
+
+| Game | Tổng Elo Dễ → Siêu việt | Lệch so với cờ vua | Siêu việt vs tham chiếu ×8 thời gian | Siêu việt so với chuẩn cờ vua |
+|---|---|---|---|---|
+| Cờ vua | 1877 (g16) | chuẩn | không cần | đạt (Stockfish 2800: 58,3%) |
+| Cờ tướng | 1923 (trọng số cũ; đo lại g26) | +46 | chờ g27 | chưa: Pikafish 20k nút 12,5% (trọng số cũ) |
+| Cờ caro (và caro mù) | 1770 (g11, g12) | −107 | chờ g27 | chờ g27 |
+| Quoridor | 2031 (g22, g24) | +154 ✗ | chờ g27 | chờ g27 |
+| Wall Go | 2184 (g12-g15) | +307 ✗ | chờ g27 | chưa: dải cấp rộng hơn cờ vua |
+| Cờ vây | chưa (g25) | | | chờ g25, g27 |
+| Cờ cối xay | chờ g26 | | chờ g27 | chờ g26, g27 |
+| Công thức cao thấp | chờ g26 | | chờ g27 | chưa: cấp trên gần như ngang nhau |
+| Lãnh địa đồng cỏ | chờ g26 | | chờ g27 | chưa: cấp trên gần như ngang nhau |
+| Lục giác trí nhớ | chờ g26 | | không áp dụng (không có ngân sách thời gian) | chờ g26 |
+
+Kế hoạch g27 (đẩy sau khi g26 bắt đầu chạy): `ladder <game> 6 6 ... props=pm.ladder.msB=<8 × ms>` cho caro, Quoridor,
+Wall Go, Cờ cối xay, Công thức cao thấp, Lãnh địa đồng cỏ; `gauge xiangqi` ở vài mức nút Pikafish (5k, 10k, 40k) để dò
+mức tương đương 2800; cờ vây theo kết quả g25.
+
 ---
 
 ## Phụ lục A: kỹ thuật nền đã dùng trong dự án

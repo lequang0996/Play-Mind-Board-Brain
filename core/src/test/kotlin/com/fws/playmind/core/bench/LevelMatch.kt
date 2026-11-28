@@ -18,6 +18,8 @@ fun ladderMain(args: List<String>) {
     if (game == "hexagon") { hexLadder(a, b, pairs, seed0); return }
     if (game == "meadow" || game == "hilo") { multiLadder(game, a, b, pairs, ms, seed0, players); return }
     ChessGame.threads = 1   // đo cấp: 1 luồng (nhiều tiến trình chạy song song trên một máy)
+    // -Dpm.ladder.msB=<ms>: ngân sách riêng cho bên B (bot tham chiếu, ví dụ "6 6" với B gấp 8 lần thời gian: Siêu việt có ở mức trần không)
+    val msB = System.getProperty("pm.ladder.msB")?.toLong() ?: ms
     var w = 0; var d = 0; var l = 0
     for (i in 0 until pairs) {
         val seed = seed0 + i
@@ -27,7 +29,7 @@ fun ladderMain(args: List<String>) {
             var guard = 0
             while (g.result == Outcome.ONGOING && guard++ < 1200) {
                 val aTurn = (g.turn == 0) == aFirst
-                val mv = (g as LeveledEngine).levelMove(BotLevel.of(if (aTurn) a else b), ms, rnd)
+                val mv = (g as LeveledEngine).levelMove(BotLevel.of(if (aTurn) a else b), if (aTurn) ms else msB, rnd)
                 if (mv < 0 || !g.play(mv)) { g.forfeit(g.turn, EndReason.RESIGN); break }
             }
             val sA = when (g.result) {
@@ -80,8 +82,9 @@ private fun multiLadder(game: String, a: Int, b: Int, pairs: Int, ms: Long, seed
             val rnd = Random(seed * 2 + (if (aFirst) 0 else 1))
             fun isA(p: Int) = (p % 2 == 0) == aFirst
             var guard = 0
+            val msB = System.getProperty("pm.ladder.msB")?.toLong() ?: ms
             while (g.result == Outcome.ONGOING && guard++ < 5000) {
-                val mv = (g as LeveledEngine).levelMove(BotLevel.of(if (isA(g.turn)) a else b), ms, rnd)
+                val mv = (g as LeveledEngine).levelMove(BotLevel.of(if (isA(g.turn)) a else b), if (isA(g.turn)) ms else msB, rnd)
                 if (mv < 0 || !g.play(mv)) { g.play((g as AutoOnTimeout).timeoutMove()) || break }
             }
             // Công thức cao thấp: người còn chip cuối cùng thắng; Lãnh địa: điểm hình vuông rồi diện tích
