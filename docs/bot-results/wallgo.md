@@ -6,8 +6,8 @@ Sinh tự động bởi `tools/bot-bench/make_reports.py` từ `tools/bot-bench/
 
 | Mục | Giá trị |
 |---|---|
-| Số đợt đo | 2 |
-| Tổng số ván đã đấu | 1100 |
+| Số đợt đo | 3 |
+| Tổng số ván đã đấu | 3056 |
 | Cặp kề đạt (kết quả mới nhất) | 3/6 |
 | Nghiệm thu | Chưa đạt (cần đủ 6 cặp kề với đủ số ván, 5 cặp cách hai cấp và đo trên điện thoại thật) |
 
@@ -39,6 +39,19 @@ Neo cấp Dễ = 800 theo thang quy ước của guide (mục 1.2), rồi cộng
 "Sơ bộ" = chưa đủ số ván guide yêu cầu nên kết luận chỉ để tham khảo.
 
 ## Lịch sử các đợt đo
+
+### Đợt g12-accept-2 (2026-11-28)
+
+Nghiệm thu đợt 2: Wall Go và Quoridor (chạy lại phần g10 mất do lỗi commit), các cặp cờ vua / cờ tướng / caro sau khi chỉnh cấp Khá, Giỏi, Dễ; thử trọng số chess-t3.
+
+| Cặp | Thời gian Siêu việt (PC) | Số ván | Thắng/Hòa/Thua | Tỉ lệ điểm | Đi trước / đi sau | Kết luận |
+|---|---|---|---|---|---|---|
+| Trung bình vs Dễ | 2000 ms | 408 | 378/5/25 | 93,3% | 0.95 / 0.91 | Đạt |
+| Khá vs Trung bình | 2000 ms | 204 | 181/1/22 | 89,0% | 0.87 / 0.91 | Đạt |
+| Giỏi vs Khá | 2000 ms | 204 | 161/3/40 | 79,7% | 0.76 / 0.83 | Cần thêm ván |
+| Cao thủ vs Giỏi | 2000 ms | 204 | 166/2/36 | 81,9% | 0.85 / 0.78 | Đạt |
+| Thách đấu vs Cao thủ | 2000 ms | 204 | 176/1/27 | 86,5% | 0.86 / 0.87 | Đạt |
+| Siêu việt vs Thách đấu | 2000 ms | 216 | 194/0/22 | 89,8% | 0.88 / 0.92 | Đạt |
 
 ### Đợt r1 (2026-11-27)
 

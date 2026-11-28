@@ -6,8 +6,8 @@ Sinh tự động bởi `tools/bot-bench/make_reports.py` từ `tools/bot-bench/
 
 | Mục | Giá trị |
 |---|---|
-| Số đợt đo | 4 |
-| Tổng số ván đã đấu | 3480 |
+| Số đợt đo | 5 |
+| Tổng số ván đã đấu | 4092 |
 | Cặp kề đạt (kết quả mới nhất) | 1/6 |
 | Nghiệm thu | Chưa đạt (cần đủ 6 cặp kề với đủ số ván, 5 cặp cách hai cấp và đo trên điện thoại thật) |
 
@@ -52,6 +52,15 @@ Nghiệm thu 7 cấp cờ vua, cờ tướng, caro (caro: nhiễu rộng cho Tru
 | Cao thủ vs Giỏi | 2000 ms | 204 | 166/0/38 | 81,4% | 0.90 / 0.73 | Đạt |
 | Thách đấu vs Cao thủ | 2000 ms | 204 | 147/0/57 | 72,1% | 0.85 / 0.59 | Đạt |
 | Siêu việt vs Thách đấu | 2000 ms | 216 | 166/0/50 | 76,9% | 0.90 / 0.64 | Đạt |
+
+### Đợt g12-accept-2 (2026-11-28)
+
+Nghiệm thu đợt 2: Wall Go và Quoridor (chạy lại phần g10 mất do lỗi commit), các cặp cờ vua / cờ tướng / caro sau khi chỉnh cấp Khá, Giỏi, Dễ; thử trọng số chess-t3.
+
+| Cặp | Thời gian Siêu việt (PC) | Số ván | Thắng/Hòa/Thua | Tỉ lệ điểm | Đi trước / đi sau | Kết luận |
+|---|---|---|---|---|---|---|
+| Khá vs Trung bình | 2000 ms | 204 | 172/0/32 | 84,3% | 0.93 / 0.75 | Đạt |
+| Giỏi vs Khá | 2000 ms | 204 | 182/0/22 | 89,2% | 0.93 / 0.85 | Đạt |
 
 ### Đợt g9-chess-t2-gauge-chains (2026-11-28)
 
