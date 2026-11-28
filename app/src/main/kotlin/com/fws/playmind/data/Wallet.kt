@@ -42,12 +42,16 @@ sealed interface CheckIn {
 
 /**
  * Luật kim cương:
- *  - Điểm danh mỗi ngày +1. Điểm danh liên tục 30 ngày thì mỗi lần tiếp theo +2 (gói tháng/năm: +4).
+ *  - Điểm danh mỗi ngày +1. Điểm danh liên tục 30 ngày thì mỗi lần tiếp theo +2 (gói tháng: +4). Gói năm không dùng kim cương.
  *  - Mỗi game 1 lượt chơi miễn phí/ngày (gói tháng: 3, gói năm: không giới hạn). Hết lượt: mỗi ván tốn 1 kim cương.
- *  - Thắng +1. Thắng liên tiếp 5 ván trong một game +2, 10 ván +3 (rồi tính lại từ 0).
+ *  - Thắng +1. Thắng liên tiếp 3 ván trong một game +2, 5 ván +3 (rồi tính lại từ 0).
  *  - Thua / hòa / thoát giữa ván / mất kết nối: chuỗi thắng về 0.
  * Không có mức trần kim cương.
  */
+/** Chuỗi thắng: thắng liên tiếp [STREAK_1] ván +2 kim cương, [STREAK_2] ván +3 (rồi tính lại từ 0). */
+const val STREAK_1 = 3
+const val STREAK_2 = 5
+
 class WalletRepo(private val ctx: Context) {
     private val store = SecureStore(ctx)
     private val backup = BlockStoreBackup(ctx)
@@ -193,7 +197,7 @@ class WalletRepo(private val ctx: Context) {
         val st = _state.value; val day = today()
         if (st.lastCheckInDay == day || noDiamonds()) return CheckIn.Already
         val streak = if (st.lastCheckInDay == day - 1) st.streakDays + 1 else 1
-        // Điểm danh +1; sau 30 ngày liên tục, mỗi lần tiếp theo +2 (gói tháng/năm: +4)
+        // Điểm danh +1; sau 30 ngày liên tục, mỗi lần tiếp theo +2 (gói tháng: +4; gói năm không điểm danh)
         val reward = if (streak > 30) (if (currentPlan() != Plan.NONE) 4 else 2) else 1
         commit(st.copy(diamonds = st.diamonds + reward, streakDays = streak, lastCheckInDay = day))
         return CheckIn.Done(reward, streak)
@@ -239,14 +243,14 @@ class WalletRepo(private val ctx: Context) {
                 if (valid) ws += 1                                   // gói năm: chỉ giữ thống kê, không có kim cương
             } else if (valid && rewardsAllowed) {
                 ws += 1; gained = 1
-                if (ws == 5) bonus = 2 else if (ws == 10) { bonus = 3; ws = 0 }
+                if (ws == STREAK_1) bonus = 2 else if (ws == STREAK_2) { bonus = 3; ws = 0 }
                 gained += bonus
             } else if (!rewardsAllowed) blocked = true
             else -> ws = 0
         }
         val idx = when (outcome) { MatchOutcome.WIN -> 0; MatchOutcome.LOSS -> 1; MatchOutcome.DRAW -> 2 }
         commit(st.copy(diamonds = d + gained, winStreak = st.winStreak + (gameId to ws), stats = bump(st.stats, gameId, idx), pending = ""))
-        return Reward(gained, bonus, if (ws == 0 && bonus == 3) 10 else ws, blocked)
+        return Reward(gained, bonus, if (ws == 0 && bonus == 3) STREAK_2 else ws, blocked)
     }
 
     /** Ván bị hủy không do lỗi người chơi (vd. đối thủ thoát sớm): trả lại trạng thái, không tính thắng/thua. */

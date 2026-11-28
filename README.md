@@ -25,7 +25,7 @@ Play Mind: Board & Brain
 Chess, Xiangqi and Gomoku vs the computer, friends nearby or online.
 ```
 
-**Full description** (2494/4000 characters)
+**Full description** (2493/4000 characters)
 
 ```
 Play Mind: Board & Brain is a polished collection of classic board games and brain games, built around four ways to exercise your mind: Puzzle, Intellect, Calculation and Memory.
@@ -45,7 +45,7 @@ PLAY YOUR WAY
 DAILY DIAMONDS
 • Check in every day for +1 diamond.
 • Every game gives you one free play per day. After that, each game costs 1 diamond.
-• Win a game for +1 diamond. Win 5 in a row in one game for +2 more, and 10 in a row for +3 more.
+• Win a game for +1 diamond. Win 3 in a row in one game for +2 more, and 5 in a row for +3 more.
 • Keep a check-in streak above 7 days with more than 10 diamonds and your daily check-in is worth +2.
 • Diamonds are virtual, cannot be bought and have no cash value.
 
@@ -79,7 +79,7 @@ Play Mind: Board & Brain
 Cờ vua, cờ tướng, cờ caro: chơi với máy, bạn bè ở gần hoặc online.
 ```
 
-**Mô tả đầy đủ** (2512/4000 ký tự)
+**Mô tả đầy đủ** (2511/4000 ký tự)
 
 ```
 Play Mind: Board & Brain là bộ sưu tập game bàn cờ và trí tuệ được chăm chút kỹ lưỡng, xây dựng quanh bốn cách rèn luyện trí óc: Giải đố, Trí tuệ, Tính toán và Ghi nhớ.
@@ -99,7 +99,7 @@ CHƠI THEO CÁCH CỦA BẠN
 KIM CƯƠNG MỖI NGÀY
 • Điểm danh mỗi ngày để nhận +1 kim cương.
 • Mỗi game có một ván chơi miễn phí mỗi ngày. Sau đó mỗi ván tốn 1 kim cương.
-• Thắng một ván được +1 kim cương. Thắng liên tiếp 5 ván ở một game được thêm +2, thắng liên tiếp 10 ván được thêm +3.
+• Thắng một ván được +1 kim cương. Thắng liên tiếp 3 ván ở một game được thêm +2, thắng liên tiếp 5 ván được thêm +3.
 • Duy trì điểm danh liên tục trên 7 ngày và có hơn 10 kim cương thì mỗi lần điểm danh được +2.
 • Kim cương là vật phẩm ảo, không thể mua và không có giá trị quy đổi thành tiền.
 

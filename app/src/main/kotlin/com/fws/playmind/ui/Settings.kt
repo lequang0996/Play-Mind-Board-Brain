@@ -243,7 +243,24 @@ fun GuideScreen(onBack: () -> Unit, focusGame: String?) {
                     }
                 }
             }
+            LevelsCard()
             Spacer(Modifier.height(20.dp))
+        }
+    }
+}
+
+/** Mô tả 7 cấp độ máy (chung cho mọi game) và lời mời thử thách. */
+@Composable
+private fun LevelsCard() {
+    SurfaceCard(Modifier.fillMaxWidth()) {
+        Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                Box(Modifier.size(40.dp).clip(CircleShape).background(pm.goldSoft).border(1.dp, pm.goldBright.copy(alpha = .6f), CircleShape), contentAlignment = Alignment.Center) {
+                    Icon(Ic.Trophy, null, Modifier.size(20.dp), tint = pm.gold)
+                }
+                Text(stringResource(R.string.guide_levels_title), style = MaterialTheme.typography.headlineSmall, color = pm.ink)
+            }
+            GuideBody(stringResource(R.string.guide_levels))
         }
     }
 }

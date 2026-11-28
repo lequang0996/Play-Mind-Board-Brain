@@ -350,8 +350,8 @@ index_body = f"""
 <h2><span data-l="en">Using the app</span><span data-l="vi">Cách dùng ứng dụng</span></h2>
 {bi('''<div class="card"><ul>
 <li><b>Daily diamonds:</b> check in every day for +1 diamond. Each game gives 1 free play per day, then costs 1 diamond. A win gives +1 diamond.</li>
-<li><b>Win streaks:</b> 5 wins in a row in one game give +2 diamonds; 10 in a row give +3.</li>
-<li><b>Loyalty bonus:</b> after a 30-day check-in streak, each next check-in gives +2 diamonds (monthly and yearly plans: +4).</li>
+<li><b>Win streaks:</b> 3 wins in a row in one game give +2 diamonds; 5 in a row give +3.</li>
+<li><b>Loyalty bonus:</b> after a 30-day check-in streak, each next check-in gives +2 diamonds (monthly plan: +4; the yearly plan has no diamonds).</li>
 <li><b>Computer levels:</b> seven levels per game, from Easy to Supreme. Only Easy is open at first; beating a level unlocks the next. Your time per move grows with the level, up to 1 hour at Supreme; against people the host picks one of the same seven times. The yearly plan unlocks every level and removes diamonds entirely.</li>
 <li><b>Repetition:</b> in Chess, Xiangqi and 2-player Quoridor, a move that recreates an earlier position loses.</li>
 <li><b>Play modes:</b> against the computer, with a friend nearby (Google Nearby Connections, no internet), or online (WebRTC) by exchanging a room code or QR.</li>
@@ -359,8 +359,8 @@ index_body = f"""
 <li>Diamonds are virtual, cannot be bought and have no cash value.</li></ul></div>''',
 '''<div class="card"><ul>
 <li><b>Kim cương mỗi ngày:</b> điểm danh mỗi ngày +1 kim cương. Mỗi game có 1 ván miễn phí/ngày, sau đó tốn 1 kim cương mỗi ván. Thắng được +1 kim cương.</li>
-<li><b>Chuỗi thắng:</b> thắng liên tiếp 5 ván ở một game được +2 kim cương, 10 ván được +3.</li>
-<li><b>Thưởng gắn bó:</b> điểm danh liên tục 30 ngày thì mỗi lần điểm danh tiếp theo +2 kim cương (gói tháng, gói năm: +4).</li>
+<li><b>Chuỗi thắng:</b> thắng liên tiếp 3 ván ở một game được +2 kim cương, 5 ván được +3.</li>
+<li><b>Thưởng gắn bó:</b> điểm danh liên tục 30 ngày thì mỗi lần điểm danh tiếp theo +2 kim cương (gói tháng: +4; gói năm không dùng kim cương).</li>
 <li><b>Cấp độ máy:</b> mỗi game có 7 cấp từ Dễ đến Siêu việt. Lúc đầu chỉ mở cấp Dễ; thắng một cấp sẽ mở cấp kế tiếp. Thời gian mỗi nước tăng theo cấp, tối đa 1 giờ ở cấp Siêu việt; chơi với người thì chủ phòng chọn một trong 7 mức đó. Gói năm mở mọi cấp và bỏ hẳn kim cương.</li>
 <li><b>Lặp thế:</b> ở Cờ vua, Cờ tướng và Quoridor 2 người, nước đi tạo lại một thế cờ đã có sẽ bị xử thua.</li>
 <li><b>Chế độ chơi:</b> với máy, với bạn ở gần (Google Nearby Connections, không cần internet) hoặc online (WebRTC) bằng cách trao đổi mã phòng/QR.</li>
