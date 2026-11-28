@@ -24,7 +24,7 @@ Chỉ một đợt chạy và một đợt chờ tại một thời điểm (nh�
 | `ab chess new@qd240 new games=1000 ms=200 shards=6 [nodes=N]` | So hai biến thể engine Siêu việt (thử một thay đổi, mục 2.6). |
 
 Mọi dòng thêm được `props=k1=v1;k2=v2` (thuộc tính hệ thống). Ví dụ `props=pm.level.chess.5=n15000;pm.level.chess.4=n4000`
-để thử cấu hình cấp mà không sửa mã (cú pháp giá trị: `d<độ sâu>` hoặc `n<số nút>`, thêm `,p<xác suất nhiễu>,x<delta>,e<extra>`; xem `BotLevels.override`).
+để thử cấu hình cấp mà không sửa mã (cú pháp giá trị: `d<độ sâu>` hoặc `n<số nút>`, thêm `,p<xác suất nhiễu>,x<delta>,e<extra>`; xem `BotLevels.override`). Các mục không ghi giữ nguyên giá trị của cấp đó: muốn bỏ nhiễu phải ghi rõ `p0,x0`.
 Dòng `ladder` có `props` và mọi dòng `ab` là **thử nghiệm**: kết quả ghi dòng `exp ...` riêng, không vào báo cáo nghiệm thu.
 
 ### Người chơi của dòng `ab`

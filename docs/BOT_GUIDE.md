@@ -451,9 +451,9 @@ Stockfish có `UCI_LimitStrength=true` và `UCI_Elo` (mức thấp nhất khoả
 
 ### 5.5. Trạng thái 11/2026
 
-* **Engine Siêu việt** (`ChessEngine.kt`, tự làm, alpha-beta): bitboard với magic, PVS lặp sâu dần có cửa sổ hẹp, Lazy SMP, bảng băm dùng chung, null move, reverse futility, razoring, futility, late move pruning, cắt tỉa theo SEE và history, LMR, singular extension, internal iterative reduction, killer, countermove, history, continuation history, capture history, correction history theo cấu trúc tốt. Đánh giá tuyến tính 545 tham số (tapered), tinh chỉnh Texel trên khoảng 1,5 triệu thế tự đấu sinh trên CI (workflow `tune.yml`, đợt `chess-t2`). Tham số tìm kiếm nằm ở `object SP`, mỗi giá trị đã qua A/B trên CI.
-* **Các bước đã đo trên CI** (A/B 200 ms/nước, 1 luồng): trọng số Texel đầu tiên +73 Elo; correction history +40; tổ hợp tham số tìm kiếm `qd240 futd130 asp12 hp2500` +26; trọng số `chess-t2` +112 (1008 ván). Lazy SMP 3 luồng hơn 1 luồng +119 Elo ở 1 s/nước.
-* **Đối chiếu Stockfish 17.1** (biên dịch trên CI, `UCI_LimitStrength`, 1 luồng; ta 3 luồng; cả hai 2 s/nước; đợt `g9`): `UCI_Elo` 2800 → 54,4% (80 ván, ước tính 2830); `UCI_Elo` 3000 → 40% (40 ván, ước tính 2930). **`UCI_Elo` của Stockfish được neo theo thang CCRL (danh sách xếp hạng engine), không phải FIDE**: "ngang `UCI_Elo` 2800" nghĩa là ngang Stockfish ở mức giới hạn đó trên thang CCRL, không phải ngang kỳ thủ FIDE 2800. Số đo ở thời gian của máy CI (4 vCPU); trên điện thoại, Siêu việt mạnh hay yếu hơn theo hệ số `k` (mục 3.2).
+* **Engine Siêu việt** (`ChessEngine.kt`, tự làm, alpha-beta): bitboard với magic, PVS lặp sâu dần có cửa sổ hẹp, Lazy SMP, bảng băm dùng chung, null move, reverse futility, razoring, futility, late move pruning, cắt tỉa theo SEE và history, LMR, singular extension, internal iterative reduction, killer, countermove, history, continuation history, capture history, correction history theo cấu trúc tốt. Đánh giá tuyến tính 545 tham số (tapered), tinh chỉnh Texel trên khoảng 1,5 triệu thế tự đấu sinh trên CI (workflow `tune.yml`, đợt `chess-t2`, rồi `chess-t3` tinh chỉnh tiếp). Tham số tìm kiếm nằm ở `object SP`, mỗi giá trị đã qua A/B trên CI.
+* **Các bước đã đo trên CI** (A/B 200 ms/nước, 1 luồng): trọng số Texel đầu tiên +73 Elo; correction history +40; tổ hợp tham số tìm kiếm `qd240 futd130 asp12 hp2500` +26; trọng số `chess-t2` +112 (1008 ván); trọng số `chess-t3` +64 (1008 ván, đang dùng). Lazy SMP 3 luồng hơn 1 luồng +119 Elo ở 1 s/nước.
+* **Đối chiếu Stockfish 17.1** (biên dịch trên CI, `UCI_LimitStrength`, 1 luồng; ta 3 luồng; cả hai 2 s/nước). Đợt `g13`, trọng số `chess-t3`: `UCI_Elo` 2800 → **62,5%** (120 ván, +43 =64 −13, ước tính 2889); `UCI_Elo` 3000 → 36,7% (60 ván, ước tính 2905). Đợt `g9` (trọng số `chess-t2`): 2800 → 54,4% (80 ván), 3000 → 40% (40 ván). **Điều kiện đạt (≥ 50% trước `UCI_Elo` 2800, ≥ 40 ván, 2 s/nước) đã thỏa.** **`UCI_Elo` của Stockfish được neo theo thang CCRL (danh sách xếp hạng engine), không phải FIDE**: "ngang `UCI_Elo` 2800" nghĩa là ngang Stockfish ở mức giới hạn đó trên thang CCRL, không phải ngang kỳ thủ FIDE 2800. Số đo ở thời gian của máy CI (4 vCPU); trên điện thoại, Siêu việt mạnh hay yếu hơn theo hệ số `k` (mục 3.2).
 
 ---
 
@@ -674,7 +674,8 @@ Lưu ý cho cột MCTS: Dễ, Trung bình, Khá chỉ cách nhau ×4 đến ×5 
 
 * **Engine Siêu việt:** alpha-beta PVS, bảng băm Zobrist, killer cho 2 người; paranoid cho 4 người. Tham số ở `object QP` (thử A/B được bằng `new@...`).
 * **Các thử nghiệm không có lợi** (A/B với thế mở đầu đa dạng, 240 ván mỗi biến thể, đều quanh 50% so với engine cũ): tường ứng viên chặn mọi đường ngắn nhất, LMR, history, tăng hoặc giảm số tường ứng viên, đổi trọng số tường. Mặc định giữ cách chọn tường cũ. **Bài học đo:** thế mở đầu chỉ gồm 2 nước đi quân cho ra khoảng 9 thế khác nhau, bot giới hạn nút chơi lại y hệt, và kết quả A/B lệch tới 25 điểm phần trăm. Bộ đo giờ dùng 4 nước đi quân cộng mỗi bên một tường ngẫu nhiên.
-* **Thang sức nén:** tìm sâu thêm cho ít Elo (Siêu việt 2 s hơn n300 khoảng 81%, hơn n1000 khoảng 75%). Nhiễu có delta từ 2 bước đường đi trở lên làm bot đi lòng vòng, rồi thua vì luật lặp thế của app, nên kết quả gần như ngẫu nhiên. Vì vậy các cấp dưới bị nén (mục 13).
+* **Thang sức nén ở trên:** tìm sâu thêm cho ít Elo (Siêu việt 2 s hơn n300 khoảng 79–81%, hơn n1000 khoảng 75%). Nhiễu có delta từ 2 bước đường đi trở lên làm bot đi lòng vòng, rồi thua vì luật lặp thế của app.
+* **Công cụ giảm sức riêng: "quên tường"** (`extra` = % số nước chỉ xét đi quân; lớp an toàn vẫn chặn khi đối phương còn một bước). Đo trên máy (200 cặp, so với `d1`): quên 40% gần như không yếu đi, 60% → 64,5%, 80% → 84%. Gặp đối thủ mạnh (n300) thì gần như không có tác dụng (quên 90% chỉ đưa tỉ lệ từ 68,5% lên 72%), nên Cao thủ dùng thêm nhiễu nhỏ. Nhiễu đặt lên tường còn hại hơn không đặt tường (cấp quên 95% thắng cấp quên 80% có nhiễu), vì vậy các cấp dưới quên tường hoàn toàn và chỉ có nhiễu nhỏ (delta 100) trên nước đi quân. Chuỗi cấp ở mục 13.1 đạt cả 5 cặp kề dưới Siêu việt và 3 cặp cách hai cấp trên máy với 3 bộ seed; xác nhận trên CI ở đợt `g15`.
 
 ---
 
@@ -828,42 +829,54 @@ Kết quả 5 cặp cách hai cấp + 3 cặp smoke: ...
 
 ## 13. Bảng theo dõi
 
-Mỗi lần chốt cấu hình hoặc đo xong một cặp, cập nhật bảng cùng commit. **Tất cả để trống**: dự án làm lại từ đầu và không dùng kết quả đo cũ.
+Mỗi lần chốt cấu hình hoặc đo xong một cặp, cập nhật bảng cùng commit. Số liệu dưới đây đo trên GitHub Actions (mục 3.3), 11/2026. Kết quả từng ván nằm ở `tools/bot-bench/results/<đợt>.txt`, báo cáo ở `docs/bot-results/`.
 
 ### 13.1. Cấu hình đã chốt
 
+Cú pháp: `d<độ sâu>` / `n<số nút>`, `p` xác suất nhiễu, `x` delta (đơn vị điểm của engine), `e` tham số riêng (caro: độ sâu VCF; Quoridor: % nước "quên tường"). Siêu việt: toàn lực trong `botMillis`. Nguồn: `core/src/main/kotlin/com/fws/playmind/core/BotLevels.kt`.
+
 | Game | Dễ | Trung bình | Khá | Giỏi | Cao thủ | Thách đấu | Siêu việt |
 |---|---|---|---|---|---|---|---|
-| Cờ vua | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt |
-| Cờ tướng | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt |
-| Cờ caro | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt |
+| Cờ vua | d1 p1.0 x500 | d1 p0.6 x200 | d2 p0.5 x150 | n700 p0.05 x20 | n4000 | n15000 | toàn lực, 3 luồng |
+| Cờ tướng | d1 p0.9 x450 | d1 p0.6 x250 | d2 p0.5 x180 | n300 p0.05 x25 | n3000 | n16000 | toàn lực, 3 luồng |
+| Cờ caro | d1, nhiễu rộng p0.5 | d1, nhiễu rộng p0.15 | d1 p0.2 x800 e3 | n250 p0.03 x200 e12 | n1000 e24 | n4000 e24 | toàn lực e24 |
 | Cờ vây 19×19 | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt |
-| Quoridor | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt |
-| Wall Go | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt |
+| Quoridor | d1 p0.95 x100 e100 | d1 p0.7 x100 e100 | d1 p0.42 x100 e100 | d1 e80 | d1 p0.2 x150 e40 | n300 | toàn lực |
+| Wall Go | d1 p1.0 x700 | d1 p0.9 x400 | d1 p0.8 x250 | d1 | d2 | d3 | toàn lực |
 
 ### 13.2. Tỉ lệ điểm của cấp cao trong 6 cặp kề nhau
 
-Ghi tỉ lệ điểm đo được (200 ván; 400 ván cho Trung bình vs Dễ). Dưới tên cặp là khoảng đạt.
+Tỉ lệ điểm đo được (khoảng 200 ván; 400 ván cho Trung bình vs Dễ), trong ngoặc là đợt đo. Dưới tên cặp là khoảng đạt. Dấu ✗ là chưa đạt.
 
 | Game | Trung bình vs Dễ (93–98%) | Khá vs Trung bình (81–95%) | Giỏi vs Khá (85–96%) | Cao thủ vs Giỏi (64–88%) | Thách đấu vs Cao thủ (64–88%) | Siêu việt vs Thách đấu (76–93%) |
 |---|---|---|---|---|---|---|
-| Cờ vua | chưa đo | chưa đo | chưa đo | chưa đo | chưa đo | chưa đo |
-| Cờ tướng | chưa đo | chưa đo | chưa đo | chưa đo | chưa đo | chưa đo |
-| Cờ caro | chưa đo | chưa đo | chưa đo | chưa đo | chưa đo | chưa đo |
+| Cờ vua | 97,7% (g13) | 91,9% (g13) | 92,2% (g13) | 71,6% (g13) | 70,1% (g13) | 83,3% (g13) |
+| Cờ tướng | 96,9% (g12) | 87,3% (g12) | 90,7% (g12) | 68,4% (g13) | 73,5% (g13) | 83,6% (g13) |
+| Cờ caro | 94,1% (g11) | 84,3% (g12) | 89,2% (g12) | 81,4% (g11) | 72,1% (g11) | 76,9% (g11) |
 | Cờ vây 19×19 | chưa đo | chưa đo | chưa đo | chưa đo | chưa đo | chưa đo |
-| Quoridor | chưa đo | chưa đo | chưa đo | chưa đo | chưa đo | chưa đo |
-| Wall Go | chưa đo | chưa đo | chưa đo | chưa đo | chưa đo | chưa đo |
+| Quoridor | chờ g15 | chờ g15 | chờ g15 | chờ g15 | chờ g15 | chờ g15 |
+| Wall Go | 93,3% (g12) | 86,0% (g13) | 83,8% (g13) ✗, đo lại ở g15 | 81,9% (g12) | 86,5% (g12) | 89,8% (g12) |
+
+Cặp cách hai cấp, mức tối thiểu ghi dưới tên cặp:
+
+| Game | Khá vs Dễ (≥ 97%) | Giỏi vs Trung bình (≥ 94%) | Cao thủ vs Khá (≥ 88%) | Thách đấu vs Giỏi (≥ 70%) | Siêu việt vs Cao thủ (≥ 80%) |
+|---|---|---|---|---|---|
+| Cờ vua | 98,0% (g13) | 99,0% (g13) | 100% (g13) | 84,8% (g13) | 95,8% (g13) |
+| Cờ tướng | 98,0% (g12) | 95,1% (g12) | 92,2% (g12), đo lại ở g15 | 93,1% (g13) | 94,4% (g13) |
+| Cờ caro | 100% (g11) | 98,0% (g12) | 96,1% (g12) | 87,3% (g11) | 97,2% (g11) |
+| Quoridor | chờ g15 | chờ g15 | chờ g15 | chờ g15 | chờ g15 |
+| Wall Go | 100% (g12) | 99,0% (g13) | 99,0% (g13) | 98,0% (g12) | 96,3% (g12) |
 
 ### 13.3. Các hạng mục còn lại
 
-| Game | Luật | Cổng chiến thuật | Bộ thế không được sai (7 cấp) | Khoảng cách tối thiểu (5 cặp + 3 smoke) | 1000 ván tự đấu | `k` đã đo | Điện thoại (p99, RAM, nóng máy) | Nguồn bot (engine nền / tự làm) | Kết luận |
+| Game | Luật | Cổng chiến thuật | Bộ thế không được sai (7 cấp) | Khoảng cách tối thiểu | 1000 ván tự đấu | `k` đã đo | Điện thoại (p99, RAM, nóng máy) | Nguồn bot | Kết luận |
 |---|---|---|---|---|---|---|---|---|---|
-| Cờ vua | chưa | chưa | chưa | chưa | chưa | chưa | chưa | chưa | chưa xong |
-| Cờ tướng | chưa | chưa | chưa | chưa | chưa | chưa | chưa | chưa | chưa xong |
-| Cờ caro | chưa | chưa | chưa | chưa | chưa | chưa | chưa | chưa | chưa xong |
-| Cờ vây 19×19 | chưa | chưa | chưa | chưa | chưa | chưa | chưa | chưa | chưa xong |
-| Quoridor | chưa | chưa | chưa | chưa | chưa | chưa | chưa | chưa | chưa xong |
-| Wall Go | chưa | chưa | chưa | chưa | chưa | chưa | chưa | chưa | chưa xong |
+| Cờ vua | đạt (`SelfCheck`) | đạt (`SelfCheck`) | đạt (lớp an toàn) | đạt (g13) | chưa | chưa | chưa | tự làm; Stockfish `UCI_Elo` 2800: 62,5% | còn phần đo trên điện thoại |
+| Cờ tướng | đạt | đạt | đạt | đạt (g12, g13) | chưa | chưa | chưa | tự làm; Pikafish 20k nút: 12,5% | còn phần đo trên điện thoại |
+| Cờ caro | đạt | đạt (VCF, phòng VCF) | đạt | đạt (g11, g12) | chưa | chưa | chưa | tự làm; +232 Elo so với engine cũ | còn phần đo trên điện thoại |
+| Cờ vây 19×19 | đạt | chưa | chưa | chưa | chưa | chưa | chưa | KataGo (mục 8.3a) | chưa xong |
+| Quoridor | đạt | đạt | đạt | chờ g15 | chưa | chưa | chưa | tự làm; không hơn engine cũ (mục 9.4) | chờ g15 |
+| Wall Go | đạt | đạt | đạt | đạt, trừ Giỏi–Khá (chờ g15) | chưa | chưa | chưa | tự làm; +124 Elo so với engine cũ | chờ g15 |
 | *(game mới)* | | | | | | | | | |
 
 ---

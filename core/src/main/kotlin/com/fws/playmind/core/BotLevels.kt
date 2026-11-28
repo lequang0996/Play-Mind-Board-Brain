@@ -57,23 +57,22 @@ object BotLevels {
     // Mọi cấp giới hạn nút đều thỏa node_limit <= 0,5 × botMillis × nps điện thoại.
 
     // Cờ vua (mục 5.3). Điểm: centipawn.
-    // Hiệu chỉnh 11/2026 trên CI (ladder có props, xem tools/bot-bench/results/g5, g7, g9): SV-TĐ(n15000) 89%,
-    // TĐ-CT(n4000) 72%, CT-Giỏi(n700) 76%, Giỏi-Khá(d2 p0.4) 87%; hai cấp dưới chờ nghiệm thu.
+    // Nghiệm thu 11/2026 trên CI (g13, trọng số chess-t3): SV-TĐ 83%, TĐ-CT 70%, CT-Giỏi 72%, Giỏi-Khá 92%, Khá-TB 92%,
+    // TB-Dễ 98%; cả 5 cặp cách hai cấp đạt (BOT_GUIDE mục 13).
     val chess = listOf(
         d(1, 1.0, 500), d(1, 0.60, 200), d(2, 0.50, 150),
         n(700, 0.05, 20), n(4_000), n(15_000), top(),
     )
 
     // Cờ tướng (mục 6.3). Cùng khung với cờ vua, điểm theo thang quân cờ tướng.
-    // Hiệu chỉnh 11/2026 (g7, g9): SV-TĐ n8000 khoảng 85% (n6000 88%, n20000 78%); các cấp dưới theo cùng khung với cờ vua.
+    // Nghiệm thu 11/2026 trên CI (g12, g13): SV-TĐ 84%, TĐ-CT 74%, CT-Giỏi 68%, Giỏi-Khá 91%, Khá-TB 87%, TB-Dễ 97%.
     val xiangqi = listOf(
         d(1, 0.90, 450), d(1, 0.60, 250), d(2, 0.50, 180),
         n(300, 0.05, 25), n(3_000), n(16_000), top(),
     )
 
     // Cờ caro (mục 7.4). extra = độ sâu VCF tối đa (0 = tắt); phòng VCF bật từ Giỏi (CaroEngine.levelSearch).
-    // Hiệu chỉnh 11/2026 (g7, g9 và máy phát triển): SV-TĐ(n4000) khoảng 80%, TĐ-CT 72%, CT-Giỏi 78%, Giỏi-Khá 84%,
-    // Khá-TB 90%, TB-Dễ 94%. delta >= GomokuGame.RANDOM_DELTA = nhiễu rộng (đi ngẫu nhiên quanh quân với xác suất p).
+    // Nghiệm thu 11/2026 trên CI (g11, g12): SV-TĐ 77%, TĐ-CT 72%, CT-Giỏi 81%, Giỏi-Khá 89%, Khá-TB 84%, TB-Dễ 94%. delta >= GomokuGame.RANDOM_DELTA = nhiễu rộng (đi ngẫu nhiên quanh quân với xác suất p).
     val caro = listOf(
         d(1, 0.50, 20_000, 0), d(1, 0.15, 20_000, 0), d(1, 0.20, 800, 3),
         n(250, 0.03, 200, 12), n(1_000, 0.0, 0, 24), n(4_000, 0.0, 0, 24), top(24),
@@ -89,8 +88,8 @@ object BotLevels {
     )
 
     // Wall Go (mục 10.3), alpha-beta. Điểm: 100 = một ô lãnh thổ. Một nút rất nặng (đánh giá mọi nước con), Siêu việt
-    // chỉ duyệt vài nghìn nút mỗi nước, nên các cấp dùng độ sâu (không đổi theo máy). Đo 11/2026 (200 ván mỗi cặp, máy phát triển):
-    // SV-TĐ 83%, TĐ-CT 83%, CT-Giỏi 79%, Giỏi-Khá 86%, Khá-TB 90%, TB-Dễ 96%: cả 6 cặp trong khoảng đạt (mục 1.3).
+    // chỉ duyệt vài nghìn nút mỗi nước, nên các cấp dùng độ sâu (không đổi theo máy). Nghiệm thu 11/2026 trên CI (g12, g13):
+    // SV-TĐ 90%, TĐ-CT 87%, CT-Giỏi 82%, Giỏi-Khá 84% (đo lại g15), Khá-TB 86%, TB-Dễ 93%.
     val wallgo = listOf(
         d(1, 1.0, 700), d(1, 0.9, 400), d(1, 0.8, 250),
         d(1), d(2), d(3), top(),
