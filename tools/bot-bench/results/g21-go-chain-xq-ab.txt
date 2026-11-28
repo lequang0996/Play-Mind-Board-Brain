@@ -1,0 +1,12 @@
+# date: 2026-11-28
+# note: Cờ vây KataGo (sửa cấu hình: thiếu resignThreshold làm KataGo thoát ngay, cả trong app): 6 cặp kề, Siêu việt cố định 800 lượt b10. Cờ tướng: A/B tham số tìm kiếm XSP so với mặc định.
+exp ladder go 1v0 ms=60000 props=pm.kata.6=b10,v800 n=48  W/D/L=48/0/0  S=1.000 [1.000,1.000]  elo=-  plies~452  {'TERRITORY': 48}
+exp ladder go 2v1 ms=60000 props=pm.kata.6=b10,v800 n=48  W/D/L=48/0/0  S=1.000 [1.000,1.000]  elo=-  plies~431  {'TERRITORY': 48}
+exp ladder go 3v2 ms=60000 props=pm.kata.6=b10,v800 n=48  W/D/L=48/0/0  S=1.000 [1.000,1.000]  elo=-  plies~393  {'TERRITORY': 48}
+exp ladder go 4v3 ms=60000 props=pm.kata.6=b10,v800 n=54  W/D/L=53/0/1  S=0.981 [0.945,1.018]  elo=-  plies~313  {'TERRITORY': 54}
+exp ladder go 5v4 ms=60000 props=pm.kata.6=b10,v800 n=48  W/D/L=46/0/2  S=0.958 [0.901,1.015]  elo=+545  plies~305  {'TERRITORY': 48}
+exp ladder go 6v5 ms=60000 props=pm.kata.6=b10,v800 n=36  W/D/L=23/0/13  S=0.639 [0.480,0.798]  elo=+99  plies~321  {'TERRITORY': 36}
+exp ab xiangqi new@rfpm80+rfpi60-vs-new ms=1000 props=- n=408  W/D/L=128/142/138  S=0.488 [0.449,0.527]  elo=-9  plies~207  {'CHECKMATE': 156, 'FIFTY': 111, 'NOMOVES': 56, 'NONE': 31, 'REPETITION': 54}
+exp ab xiangqi new@futb120+futd130-vs-new ms=1000 props=- n=408  W/D/L=139/125/144  S=0.494 [0.453,0.534]  elo=-4  plies~196  {'CHECKMATE': 165, 'FIFTY': 107, 'NOMOVES': 46, 'NONE': 18, 'REPETITION': 72}
+exp ab xiangqi new@hp2500-vs-new ms=1000 props=- n=408  W/D/L=133/133/142  S=0.489 [0.449,0.529]  elo=-8  plies~202  {'CHECKMATE': 184, 'FIFTY': 114, 'NOMOVES': 51, 'NONE': 19, 'REPETITION': 40}
+exp ab xiangqi new@asp12+qd240-vs-new ms=1000 props=- n=408  W/D/L=137/150/121  S=0.520 [0.481,0.558]  elo=+14  plies~205  {'CHECKMATE': 156, 'FIFTY': 119, 'NOMOVES': 43, 'NONE': 31, 'REPETITION': 59}
