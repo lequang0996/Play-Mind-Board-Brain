@@ -326,17 +326,19 @@ GAMES = {
 <h2>Rules</h2>
 <ul><li>Each round picks a random theme (countries, animals, fruits, colours, sports, jobs, the human body, vegetables, instruments, kitchen, weather, clothes, transport, space or cities).</li>
 <li>The blocks are exactly the letters of 7 words on that theme, shuffled. Each block can be used once.</li>
-<li>Any English word on the theme with at least 3 letters counts. Build 7 words within 10 minutes to win; otherwise the answer words are shown.</li></ul>
+<li>Every puzzle has exactly one solution: only one set of 7 theme words uses up all the blocks, and only those 7 words are accepted.</li>
+<li>Build the 7 words within 10 minutes to win; otherwise the answer words are shown.</li></ul>
 <h2>Using the app</h2>
-<ul><li>Tap blocks to spell a word, tap a block again to take it back, then press Submit. Tap a word you already built to return its blocks.</li></ul>
+<ul><li>Tap blocks to spell a word, tap a block again to take it back, then press Submit. The ? button shows how to play.</li></ul>
 <h2>Tips</h2><ul><li>Start with rare letters such as Q, Z, J and X: they usually belong to a single word.</li></ul>""",
   vi_body="""
 <h2>Luật</h2>
 <ul><li>Mỗi lượt chọn ngẫu nhiên một chủ đề (quốc gia, con vật, trái cây, màu sắc, thể thao, nghề nghiệp, cơ thể người, rau củ, nhạc cụ, nhà bếp, thời tiết, quần áo, phương tiện, vũ trụ hoặc thành phố).</li>
 <li>Các khối gỗ đúng bằng chữ cái của 7 từ thuộc chủ đề, đã xáo trộn. Mỗi khối chỉ dùng một lần.</li>
-<li>Mọi từ tiếng Anh thuộc chủ đề, dài ít nhất 3 chữ cái, đều được tính. Ghép đủ 7 từ trong 10 phút là thắng; hết giờ thì hiện các từ đáp án.</li></ul>
+<li>Mỗi đề có đúng một lời giải: trong chủ đề chỉ có duy nhất một bộ 7 từ dùng vừa hết các khối, và chỉ 7 từ đó được nhận.</li>
+<li>Ghép đủ 7 từ trong 10 phút là thắng; hết giờ thì hiện các từ đáp án.</li></ul>
 <h2>Dùng trong app</h2>
-<ul><li>Chạm các khối để ghép chữ, chạm lại một khối để gỡ, rồi bấm Ghép. Chạm một từ đã ghép để trả các khối về.</li></ul>
+<ul><li>Chạm các khối để ghép chữ, chạm lại một khối để gỡ, rồi bấm Ghép. Nút ? hiện cách chơi.</li></ul>
 <h2>Mẹo</h2><ul><li>Bắt đầu từ chữ hiếm như Q, Z, J, X: chúng thường chỉ thuộc một từ.</li></ul>"""),
 "tangram": dict(
   en_name="Tangram", vi_name="Xếp hình Tangram",

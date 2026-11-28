@@ -90,7 +90,7 @@
     <string name="guide_sudoku">Mục tiêu: điền mọi ô trống sao cho mỗi hàng, mỗi cột và mỗi khối 3×3 chứa các số từ 1 đến 9, mỗi số một lần.\n• Điền số: chạm một ô rồi chạm số. Số sai hiện màu đỏ, hãy dùng Xóa để sửa.\n• Ghi chú: bật bút chì để ghi các số có thể điền nhỏ (màu đỏ) trong ô.\n• Xóa: xóa ô đang chọn. Mỗi khối 3×3 chỉ gợi ý sẵn 1 số (cả bàn 9 số), nên mọi cách điền đúng luật đều thắng.</string>
     <string name="guide_tangram">Mục tiêu: dùng đủ 7 mảnh (2 tam giác lớn, 1 tam giác vừa, 2 tam giác nhỏ, 1 hình vuông, 1 hình bình hành) ghép kín hình xám, không chồng mảnh, không thừa mảnh.\n• Mỗi lượt có 10 hình ngẫu nhiên, khó dần từ hình gọn tới hình nhiều mỏm. Mỗi hình có 3 phút.\n• Hết 3 phút mà chưa xong một hình bất kỳ là thua; ghép xong cả 10 hình là thắng.\n• Kéo mảnh từ khay dưới lên hình. Chạm để xoay 45°, nhấn giữ hình bình hành để lật.\n• Thả mảnh gần một góc của hình hoặc của mảnh khác thì mảnh tự hít vào cho khít.\n• Mọi cách ghép kín đúng hình đều được tính.\n• Mẹo: đặt hai tam giác lớn trước, chúng chiếm một nửa diện tích.\n• 7 cấp độ theo số mảnh: Dễ 4 mảnh, Trung bình 5, Khá 6, Giỏi 7 (bộ cổ điển), Cao thủ 8, Thách đấu 9, Siêu việt 10 mảnh. Hoàn thành 10 hình của một cấp để mở cấp kế tiếp.</string>
     <string name="guide_wallgo">Mục tiêu: kết thúc ván với nhiều lãnh thổ hơn các đối thủ.\n• Đặt quân: lần lượt đặt quân lên ô trống (2 người: mỗi người 4 quân, 3 người: 3 quân, 4 người: 2 quân).\n• Lượt đi: chọn một quân của mình rồi đi 0, 1 hoặc 2 ô lên, xuống, trái, phải. Không đi xuyên tường hay quân khác.\n• Tường: sau khi đi, BẮT BUỘC đặt một bức tường lên một cạnh còn trống của ô bạn đang đứng.\n• Lãnh thổ: khi mọi vùng bị tường ngăn chỉ còn quân của một người, ván kết thúc. Bạn ghi điểm bằng số ô của các vùng chỉ có quân của bạn.\n• Hòa điểm: vùng đơn lớn hơn thắng; nếu vẫn bằng thì hòa. Người không còn nước đi sẽ bị bỏ lượt.</string>
-    <string name="guide_wordblocks">Mục tiêu: trong 10 phút, ghép đủ 7 từ tiếng Anh thuộc chủ đề được cho (ví dụ Quốc gia: JAPAN, BRAZIL, ...) từ các khối gỗ chữ cái.\n• Các khối gỗ đúng bằng chữ cái của 7 từ, đã xáo trộn. Mỗi khối chỉ dùng một lần.\n• Chạm khối để thêm chữ vào từ đang ghép, chạm lại để gỡ chữ đó. Nút Xóa chữ bỏ chữ cuối, Xóa hết bỏ cả từ.\n• Bấm Ghép để nộp từ. Mọi từ thuộc chủ đề, dài ít nhất 3 chữ cái, đều được tính.\n• Nếu thấy các khối còn lại không ghép được nữa, chạm một từ đã ghép để trả các khối về.\n• Ghép đủ 7 từ là thắng; hết 10 phút là thua và hiện các từ đáp án.\n• Mẹo: tìm chữ hiếm như Q, Z, J, X trước, chúng thường chỉ thuộc một từ.\n• Mỗi ô đáp án ghi số chữ cái của một từ cần tìm; bấm nút ? trong màn chơi để xem lại cách chơi.</string>
+    <string name="guide_wordblocks">Mục tiêu: trong 10 phút, ghép đủ 7 từ tiếng Anh thuộc chủ đề được cho (ví dụ Thành phố: PARIS, VIENNA, ...) từ các khối gỗ chữ cái.\n• Các khối gỗ đúng bằng chữ cái của 7 từ đáp án, đã xáo trộn. Mỗi khối chỉ dùng một lần.\n• Mỗi đề có đúng một lời giải: trong chủ đề chỉ có duy nhất một bộ 7 từ dùng vừa hết các khối. Chỉ 7 từ đó được nhận; từ đúng chủ đề nhưng không thuộc đáp án sẽ bị từ chối.\n• Chạm khối để thêm chữ vào từ đang ghép, chạm lại để gỡ chữ đó. Nút Xóa chữ bỏ chữ cuối, Xóa hết bỏ cả từ. Bấm Ghép để nộp từ.\n• Ghép đủ 7 từ là thắng; hết 10 phút là thua và hiện các từ đáp án.\n• Bấm nút ? trong màn chơi để xem lại cách chơi.\n• Mẹo: tìm chữ hiếm như Q, Z, J, X, V trước, chúng thường chỉ thuộc một từ.</string>
     <string name="guide_xiangqi">Mục tiêu: chiếu bí tướng đối phương. Bên Đỏ đi trước.\n• Tướng và sĩ chỉ đi trong cung. Hai tướng không được đối mặt nhau trên cùng một cột khi không có quân cản.\n• Tượng đi chéo hai ô, không qua sông và bị cản nếu có quân ở giữa đường.\n• Mã đi hình chữ L nhưng bị cản nếu có quân sát chân. Xe đi thẳng.\n• Pháo đi thẳng và ăn quân bằng cách nhảy qua đúng một quân. Tốt đi tới, qua sông thì được đi ngang.\n• Bên hết nước đi hợp lệ là thua. Trong app này, nước đi tạo lại một thế cờ đã có thì bên vừa đi bị xử thua.</string>
     <string name="how_to_play">Cách chơi</string>
     <string name="how_to_use">Hướng dẫn sử dụng</string>
@@ -303,12 +303,12 @@
     <string name="wb_clear">Xóa hết</string>
     <string name="wb_dup">Bạn đã ghép từ này rồi</string>
     <string name="wb_found">Đã ghép %1$d/%2$d từ</string>
-    <string name="wb_goal">Ghép các khối gỗ bên dưới thành 7 từ tiếng Anh thuộc chủ đề này. Mỗi ô đáp án ghi số chữ cái của một từ.</string>
-    <string name="wb_howto">1. Các khối gỗ bên dưới là chữ cái của 7 từ tiếng Anh thuộc chủ đề „%1$s“, đã bị xáo trộn.\n2. Chạm lần lượt từng khối để ghép một từ (ví dụ chủ đề Thành phố: chạm P, A, R, I, S). Chạm lại khối để gỡ chữ.\n3. Bấm Ghép. Từ đúng sẽ vào một ô đáp án. Mỗi ô ghi số chữ cái của từ cần tìm.\n4. Mỗi khối chỉ dùng một lần. Ghép đủ 7 từ trong 10 phút để thắng.\n5. Bí? Chạm một từ đã ghép để trả các khối về rồi thử cách khác.</string>
+    <string name="wb_goal">Ghép các khối gỗ bên dưới thành 7 từ tiếng Anh thuộc chủ đề này.</string>
+    <string name="wb_howto">1. Các khối gỗ bên dưới là chữ cái của 7 từ tiếng Anh thuộc chủ đề „%1$s“, đã bị xáo trộn.\n2. Chạm lần lượt từng khối để ghép một từ (ví dụ chủ đề Thành phố: chạm P, A, R, I, S). Chạm lại khối để gỡ chữ.\n3. Bấm Ghép. Từ đúng sẽ vào một ô đáp án.\n4. Mỗi khối chỉ dùng một lần. Ghép đủ 7 từ trong 10 phút để thắng.\n5. Mỗi đề chỉ có đúng một bộ 7 từ dùng vừa hết các khối. Từ đúng chủ đề nhưng không thuộc bộ đó sẽ không được nhận.</string>
     <string name="wb_howto_title">Cách chơi</string>
-    <string name="wb_letters_n">%d chữ</string>
     <string name="wb_lost">Hết giờ</string>
     <string name="wb_lost_text">Các từ đáp án: %1$s</string>
+    <string name="wb_not_answer">Đúng chủ đề nhưng không phải đáp án của đề này</string>
     <string name="wb_not_theme">Từ này không thuộc chủ đề</string>
     <string name="wb_ok">Chính xác!</string>
     <string name="wb_short">Từ cần ít nhất 3 chữ cái</string>
@@ -330,7 +330,6 @@
     <string name="wb_theme_transport">Phương tiện</string>
     <string name="wb_theme_vegetables">Rau củ</string>
     <string name="wb_theme_weather">Thời tiết</string>
-    <string name="wb_unfind_hint">Chạm một từ đã ghép để trả các khối về.</string>
     <string name="wb_won">Hoàn thành!</string>
     <string name="wb_won_text">Bạn đã ghép đủ 7 từ trong %1$s.</string>
     <string name="wg_hint_dest">Chạm ô đang sáng để đi (chạm lại quân để đứng yên).</string>

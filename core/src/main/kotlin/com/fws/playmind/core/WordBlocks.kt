@@ -5,8 +5,7 @@ import kotlin.random.Random
 /**
  * Khối gỗ ghép chữ: một chủ đề (quốc gia, con vật, ...) và các khối gỗ chữ A-Z xáo trộn, đúng bằng chữ cái của 7 từ
  * tiếng Anh thuộc chủ đề. Người chơi có 10 phút để ghép đủ 7 từ, mỗi khối chỉ dùng một lần.
- * Mọi từ thuộc chủ đề ghép được từ các khối còn lại đều được tính (không bắt buộc đúng 7 từ đã chọn khi sinh đề);
- * nếu đi lạc, người chơi có thể trả một từ đã ghép về lại các khối.
+ * Mỗi đề có đúng MỘT lời giải: trong chủ đề chỉ có duy nhất một bộ 7 từ dùng vừa hết các khối, và game chỉ nhận 7 từ đó.
  */
 object WordBlocks {
     const val WORDS = 7
@@ -84,26 +83,63 @@ object WordBlocks {
 
     /**
      * Sinh một đề: chọn chủ đề ngẫu nhiên, 7 từ khác nhau (ưu tiên 4-7 chữ cái, tổng 30-42 chữ cái như ví dụ quốc gia),
-     * rồi xáo trộn toàn bộ chữ cái thành các khối gỗ.
+     * rồi xáo trộn toàn bộ chữ cái thành các khối gỗ. Chỉ nhận bộ 7 từ là cách DUY NHẤT trong chủ đề dùng vừa hết các khối
+     * ([countSolutions] == 1); không thì bốc lại.
      */
     fun generate(rnd: Random, themeId: String? = null): WordBlocksGame {
-        val th = if (themeId != null) theme(themeId) else THEMES[rnd.nextInt(THEMES.size)]
-        val pool = th.words.filter { it.length in 4..7 }.ifEmpty { th.words.toList() }
-        var pick: List<String> = pool.shuffled(rnd).take(WORDS)
-        for (attempt in 0 until 200) {
-            val p = pool.shuffled(rnd).take(WORDS)
-            pick = p
-            if (p.sumOf { it.length } in 30..42) break
+        var fallback: WordBlocksGame? = null
+        for (attempt in 0 until 400) {
+            val th = if (themeId != null) theme(themeId) else THEMES[rnd.nextInt(THEMES.size)]
+            val pool = th.words.filter { it.length in 4..7 }.ifEmpty { th.words.toList() }
+            val pick = pool.shuffled(rnd).take(WORDS)
+            if (pick.sumOf { it.length } !in 30..42) continue
+            val letters = pick.joinToString("").toCharArray()
+            letters.shuffle(rnd)
+            val g = WordBlocksGame(th, pick, letters)
+            if (countSolutions(th, letters, 2) == 1) return g
+            if (fallback == null) fallback = g
         }
-        val letters = pick.joinToString("").toCharArray()
-        letters.shuffle(rnd)
-        return WordBlocksGame(th, pick, letters)
+        return fallback ?: generate(rnd, themeId)
+    }
+
+    /**
+     * Đếm số bộ [WORDS] từ khác nhau của chủ đề dùng vừa hết đúng các chữ cái [letters] (dừng khi đạt [limit]).
+     * Chỉ xét các từ ghép được từ [letters]; duyệt tổ hợp theo chỉ số tăng dần, cắt nhánh khi thiếu chữ.
+     */
+    fun countSolutions(th: Theme, letters: CharArray, limit: Int = 2): Int {
+        val have = IntArray(26); for (c in letters) have[c - 'A']++
+        val cand = th.words.map { w -> IntArray(26).also { for (c in w) it[c - 'A']++ } to w.length }
+            .filter { (cnt, _) -> (0 until 26).all { cnt[it] <= have[it] } }
+            .sortedByDescending { it.second }
+        var found = 0
+        val left = have.copyOf()
+        fun rec(start: Int, picked: Int, remaining: Int) {
+            if (found >= limit) return
+            if (picked == WORDS) { if (remaining == 0) found++; return }
+            val need = WORDS - picked
+            for (i in start until cand.size) {
+                if (cand.size - i < need) return
+                val (cnt, len) = cand[i]
+                // từ dài nhất còn lại không đủ lấp số chữ còn thiếu thì dừng (cand xếp dài -> ngắn)
+                if (len * need < remaining) return
+                if (len > remaining) continue
+                var ok = true
+                for (k in 0 until 26) if (cnt[k] > left[k]) { ok = false; break }
+                if (!ok) continue
+                for (k in 0 until 26) left[k] -= cnt[k]
+                rec(i + 1, picked + 1, remaining - len)
+                for (k in 0 until 26) left[k] += cnt[k]
+                if (found >= limit) return
+            }
+        }
+        rec(0, 0, letters.size)
+        return found
     }
 }
 
 /** Trạng thái một ván Khối gỗ ghép chữ. */
 class WordBlocksGame(val theme: WordBlocks.Theme, val answers: List<String>, val blocks: CharArray) {
-    enum class Submit { OK, TOO_SHORT, NOT_IN_THEME, DUPLICATE, EMPTY }
+    enum class Submit { OK, TOO_SHORT, NOT_IN_THEME, NOT_ANSWER, DUPLICATE, EMPTY }
 
     /** Khối đang nằm trong một từ đã ghép hoặc trong từ đang ghép. */
     val used = BooleanArray(blocks.size)
@@ -134,6 +170,8 @@ class WordBlocksGame(val theme: WordBlocks.Theme, val answers: List<String>, val
         if (w.length < WordBlocks.MIN_LEN) return Submit.TOO_SHORT
         if (found.any { it.first == w }) return Submit.DUPLICATE
         if (w !in theme.words) return Submit.NOT_IN_THEME
+        // đề chỉ có một lời giải: từ đúng chủ đề nhưng không thuộc 7 đáp án sẽ làm các khối còn lại không ghép hết được
+        if (w !in answers) return Submit.NOT_ANSWER
         found.add(w to current.toIntArray()); current.clear()
         return Submit.OK
     }

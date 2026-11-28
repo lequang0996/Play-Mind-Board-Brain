@@ -100,7 +100,7 @@ private fun WoodBlock(ch: Char, size: Dp, modifier: Modifier = Modifier, dim: Bo
 
 /**
  * Màn hình Khối gỗ ghép chữ: chủ đề + đồng hồ 10 phút ở trên, 7 thanh đáp án, từ đang ghép, rồi các khối gỗ.
- * Chạm khối để thêm chữ (chạm lại để gỡ), "Ghép" để nộp từ, chạm một thanh đáp án để trả từ đó về các khối.
+ * Chạm khối để thêm chữ (chạm lại để gỡ), "Ghép" để nộp từ. Đề chỉ có một lời giải nên chỉ 7 từ đáp án được nhận.
  */
 @Composable
 fun WordBlocksScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onExit: () -> Unit) {
@@ -114,13 +114,7 @@ fun WordBlocksScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onE
     var feedbackId by remember { mutableIntStateOf(0) }
     // hướng dẫn nhanh: tự mở ở lượt đầu tiên, sau đó mở bằng nút "?"
     var showHelp by remember { mutableStateOf(!app.prefs.wordsIntroSeen) }
-    // ô đáp án: ô k ghi số chữ cái của đáp án k; từ ghép được xếp vào ô cùng độ dài còn trống (không có thì ô trống bất kỳ)
-    val slotOf = IntArray(WordBlocks.WORDS) { -1 }   // ô -> chỉ số trong g.found
-    for ((fi, f) in g.found.withIndex()) {
-        val k = (0 until WordBlocks.WORDS).firstOrNull { slotOf[it] < 0 && g.answers[it].length == f.first.length }
-            ?: (0 until WordBlocks.WORDS).firstOrNull { slotOf[it] < 0 } ?: continue
-        slotOf[k] = fi
-    }
+
     LaunchedEffect(feedbackId) { if (feedbackId > 0) { delay(1600); feedback = null } }
 
     Column(Modifier.fillMaxSize()) {
@@ -160,10 +154,8 @@ fun WordBlocksScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onE
             for (r in 0 until 4) Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 for (c in 0 until 2) {
                     val k = r * 2 + c
-                    if (k < WordBlocks.WORDS) {
-                        val fi = slotOf[k]
-                        AnswerBar(k, g.found.getOrNull(fi)?.first, g.answers[k].length, Modifier.weight(1f), enabled = !over) { vm.wordsEdit { it.unfind(fi) } }
-                    }
+                    // ô đáp án không ghi độ dài từ (tăng độ khó): từ ghép đúng lấp lần lượt các ô
+                    if (k < WordBlocks.WORDS) AnswerBar(k, g.found.getOrNull(k)?.first, Modifier.weight(1f))
                     else Spacer(Modifier.weight(1f))
                 }
             }
@@ -203,7 +195,6 @@ fun WordBlocksScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onE
                     }
                 }
             }
-            Text(stringResource(R.string.wb_unfind_hint), style = MaterialTheme.typography.labelSmall, color = pm.inkSoft)
             Spacer(Modifier.height(8.dp))
         }
     }
@@ -241,32 +232,28 @@ fun WordBlocksScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onE
 private fun feedbackText(r: WordBlocksGame.Submit?): Int? = when (r) {
     WordBlocksGame.Submit.OK -> R.string.wb_ok
     WordBlocksGame.Submit.NOT_IN_THEME -> R.string.wb_not_theme
+    WordBlocksGame.Submit.NOT_ANSWER -> R.string.wb_not_answer
     WordBlocksGame.Submit.DUPLICATE -> R.string.wb_dup
     WordBlocksGame.Submit.TOO_SHORT -> R.string.wb_short
     else -> null
 }
 
-/** Thanh đáp án thứ [k]: đã ghép thì hiện từ trên nền màu, chưa thì để trống; chạm thanh đã ghép để trả từ về khối. */
+/** Thanh đáp án thứ [k]: đã ghép thì hiện từ trên nền màu, chưa thì để trống (không lộ độ dài từ). */
 @Composable
-private fun AnswerBar(k: Int, word: String?, letters: Int, modifier: Modifier, enabled: Boolean, onClick: () -> Unit) {
+private fun AnswerBar(k: Int, word: String?, modifier: Modifier) {
     val shape = RoundedCornerShape(10.dp)
     val color = WbBars[k % WbBars.size]
     Box(
         modifier.height(40.dp).clip(shape)
             .background(if (word != null) color else pm.surface.copy(alpha = .6f))
-            .border(1.dp, if (word != null) color.copy(alpha = .9f) else pm.outline, shape)
-            .then(if (word != null && enabled) Modifier.clickable(onClick = onClick) else Modifier),
+            .border(1.dp, if (word != null) color.copy(alpha = .9f) else pm.outline, shape),
         contentAlignment = Alignment.Center,
     ) {
-        if (word != null) Text(
-            word,
-            style = TextStyle(fontFamily = WbFont, fontWeight = FontWeight.Bold, fontSize = 20.sp, letterSpacing = 2.sp, color = WbInk),
+        Text(
+            word ?: "?",
+            style = TextStyle(fontFamily = WbFont, fontWeight = FontWeight.Bold, fontSize = 20.sp, letterSpacing = 2.sp, color = if (word != null) WbInk else pm.outline),
             maxLines = 1,
-        ) else Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            // ô trống: gạch dưới theo số chữ cái + "5 chữ"
-            Text(List(letters) { "_" }.joinToString(" "), style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 16.sp, color = pm.inkSoft), maxLines = 1)
-            Text(stringResource(R.string.wb_letters_n, letters), style = MaterialTheme.typography.labelSmall, color = pm.inkSoft)
-        }
+        )
     }
 }
 

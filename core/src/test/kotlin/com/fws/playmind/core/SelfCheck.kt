@@ -263,6 +263,17 @@ fun main() {
         expect("wordblocks: ghep du 7 tu thi xong, het khoi", g.solved && g.used.all { it })
         val sizes = (0 until 50).map { WordBlocks.generate(kotlin.random.Random(it)).blocks.size }
         expect("wordblocks: so khoi trong khoang 21-56", sizes.all { it in 21..56 })
+        // đề trong ảnh người chơi gửi (Thành phố, 42 khối): duy nhất PARIS VIENNA ATHENS TORONTO HAVANA MILAN HAMBURG
+        val shot = "RARREAMUNBAAPAOTVGIAAOSLVHSAHTHINENMNONNTI".toCharArray()
+        expect("wordblocks: de mau Thanh pho co dung 1 loi giai", WordBlocks.countSolutions(WordBlocks.theme("cities"), shot, 5) == 1)
+        val g3 = WordBlocksGame(WordBlocks.theme("cities"), "PARIS VIENNA ATHENS TORONTO HAVANA MILAN HAMBURG".split(" "), shot)
+        for (ch in "HANOI") { val i = g3.blocks.indices.first { !g3.used[it] && g3.blocks[it] == ch }; g3.tap(i) }
+        expect("wordblocks: HANOI dung chu de nhung khong phai dap an", g3.submit() == WordBlocksGame.Submit.NOT_ANSWER)
+        val t0 = System.nanoTime()
+        val many = (0 until 60).map { WordBlocks.generate(kotlin.random.Random(1000 + it)) }
+        val ms = (System.nanoTime() - t0) / 1_000_000
+        println("      wordblocks: 60 de trong $ms ms")
+        expect("wordblocks: moi de sinh ra co dung 1 loi giai", many.all { WordBlocks.countSolutions(it.theme, it.blocks, 2) == 1 })
     }
 
     // ── Cờ caro mù ──
