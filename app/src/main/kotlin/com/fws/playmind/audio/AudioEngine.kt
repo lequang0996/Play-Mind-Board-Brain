@@ -76,14 +76,14 @@ class AudioEngine(ctx: Context) {
         try {
             track.play()
             while (true) {
-                val target = if (musicWanted) (if (calm) 0.8f else 1.0f) else 0f
-                if (target == 0f && gain < 0.002f) break          // đã tắt hẳn: dừng luồng, refresh() sẽ bật lại
+                val target = if (musicWanted) (if (calm) LOUD * 0.85f else LOUD) else 0f
+                if (target == 0f && gain < 0.005f) break          // đã tắt hẳn: dừng luồng, refresh() sẽ bật lại
                 music.calm = calm
                 music.render(l, r, CHUNK)
                 // âm lượng thay đổi mượt (khoảng 1,5 s) để bật / tắt không bị giật
                 for (i in 0 until CHUNK) {
-                    out[2 * i] = (l[i] * gain).coerceIn(-1f, 1f).times(32000f).toInt().toShort()
-                    out[2 * i + 1] = (r[i] * gain).coerceIn(-1f, 1f).times(32000f).toInt().toShort()
+                    out[2 * i] = pcm(l[i] * gain)
+                    out[2 * i + 1] = pcm(r[i] * gain)
                 }
                 gain += (target - gain) * 0.008f
                 if (abs(target - gain) < 0.001f) gain = target
@@ -98,7 +98,16 @@ class AudioEngine(ctx: Context) {
         if (musicWanted) ensureThread()      // được bật lại đúng lúc luồng vừa thoát
     }
 
+    /** Giới hạn mềm: đỉnh lớn được nén lại thay vì bị cắt gây rè. */
+    private fun pcm(x: Float): Short {
+        val a = abs(x)
+        val y = if (a <= 0.6f) x else (0.6f + (a - 0.6f) / (1f + (a - 0.6f) * 2.5f)) * (if (x < 0) -1f else 1f)
+        return (y.coerceIn(-1f, 1f) * 32000f).toInt().toShort()
+    }
+
     internal companion object {
+        /** Âm lượng tổng của nhạc (đỉnh khoảng 0,7 thang đầy, RMS khoảng -18 dBFS). */
+        const val LOUD = 2.6f
         const val SR = 44100
         const val CHUNK = 512
         private const val TN = 4096
