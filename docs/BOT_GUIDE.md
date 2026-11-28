@@ -849,7 +849,9 @@ Cú pháp: `d<độ sâu>` / `n<số nút>`, `p` xác suất nhiễu, `x` delta 
 | Cờ tướng | d1 p0.9 x450 | d1 p0.6 x250 | d2 p0.5 x180 | n300 p0.05 x25 | n3000 | n16000 | toàn lực, 3 luồng |
 | Cờ caro | d1, nhiễu rộng p0.5 | d1, nhiễu rộng p0.15 | d1 p0.2 x800 e3 | n250 p0.03 x200 e12 | n1000 e24 | n4000 e24 | toàn lực e24 |
 | Cờ vây 19×19 | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt |
-| Quoridor | d1 p0.97 x100 e100 | d1 p0.75 x100 e100 | d1 p0.5 x100 e100 | d1 e80 | d1 p0.2 x150 e40 | n300 | toàn lực |
+| Quoridor | d1 p0.97 x100 e100 | d1 p0.75 x100 e100 | d1 p0.5 x100 e100 | d1 e80 | d1 p0.1 x150 e25 (g24) | n300 | toàn lực |
+| Cờ cối xay (khởi điểm, chờ g26) | d1 p0.9 x300 | d1 p0.5 x150 | d2 p0.3 x80 | d3 | d4 | n60000 | toàn lực |
+| Lục giác trí nhớ (nhớ đúng / tìm / nhớ bộ đã gọi) | 45% / 34 s / 35% | 60% / 30 s / 60% | 72% / 22 s / 70% | 82% / 16 s / 80% | 86% / 13,5 s / 85% | 90% / 11,5 s / 90% | 93% / 10 s / 95% |
 | Wall Go | d1 p1.0 x700 | d1 p0.9 x400 | d1 p0.8 x250 | d1 | d2 | d3 | toàn lực |
 | Công thức cao thấp (tạm) | MC 4 mẫu p0.7 | MC 8 p0.4 | MC 16 p0.2 | MC 40 p0.08 | MC 100 p0.03 | MC 200 | MC 400 |
 | Lãnh địa đồng cỏ (tạm) | d1 p0.75 | d1 p0.45 | d1 p0.25 | d1 p0.15 | d1 p0.08 | d1 p0.03 | toàn lực (một lớp) |
@@ -864,7 +866,7 @@ Tỉ lệ điểm đo được (khoảng 200 ván; 400 ván cho Trung bình vs D
 | Cờ tướng | 96,9% (g12) | 87,3% (g12) | 90,7% (g12) | 68,4% (g13) | 73,5% (g13) | 83,6% (g13) |
 | Cờ caro | 94,1% (g11) | 84,3% (g12) | 89,2% (g12) | 81,4% (g11) | 72,1% (g11) | 76,9% (g11) |
 | Cờ vây 19×19 | chưa đo | chưa đo | chưa đo | chưa đo | chưa đo | chưa đo |
-| Quoridor (engine v3) | 94,1% (g22) | 88,2% (g22) | 88,7% (g22) | 78,2% (g22) | 92,1% (g22) ✗ đang chỉnh (g24) | 88,4% (g22) |
+| Quoridor (engine v3) | 94,1% (g22) | 88,2% (g22) | 88,7% (g22) | 78,2% (g22) | 82,4% (g24, Cao thủ mới) | 88,4% (g22) |
 | Wall Go | 93,3% (g12) | 91,7% (g15) | 88,0% (g15, 408 ván) | 81,9% (g12) | 86,5% (g12) | 89,8% (g12) |
 | Công thức cao thấp (8 người, máy tính) | 95,0% | 93,3% | 78,3% | 66,7% ✗ | 48,3% ✗ | 55,0% ✗ |
 | Lãnh địa đồng cỏ (8 người, máy tính) | 74,0% ✗ | 93,0% | 49,5% ✗ | 60,5% ✗ | 55,0% ✗ | 53,0% ✗ |
@@ -884,16 +886,26 @@ Cặp cách hai cấp, mức tối thiểu ghi dưới tên cặp:
 | Game | Luật | Cổng chiến thuật | Bộ thế không được sai (7 cấp) | Khoảng cách tối thiểu | 1000 ván tự đấu | `k` đã đo | Điện thoại (p99, RAM, nóng máy) | Nguồn bot | Kết luận |
 |---|---|---|---|---|---|---|---|---|---|
 | Cờ vua | đạt (`SelfCheck`) | đạt (`SelfCheck`) | đạt (lớp an toàn) | đạt (g16, g18) | chưa | chưa | chưa | tự làm; Stockfish `UCI_Elo` 2800: 58,3% (chess-t4) | còn phần đo trên điện thoại |
-| Cờ tướng | đạt | đạt | đạt | đạt (g12, g13) | chưa | chưa | chưa | tự làm; Pikafish 20k nút: 12,5% | còn phần đo trên điện thoại |
+| Cờ tướng | đạt | đạt | đạt | đạt (g12, g13); đo lại với trọng số xiangqi-t2 ở g26 | chưa | chưa | chưa | tự làm; trọng số xiangqi-t2 +38 Elo (g22 + g24, 816 ván); Pikafish 20k nút: 12,5% (trọng số cũ) | chờ g26, còn phần đo trên điện thoại |
 | Cờ caro | đạt | đạt (VCF, phòng VCF) | đạt | đạt (g11, g12) | chưa | chưa | chưa | tự làm; +232 Elo so với engine cũ | còn phần đo trên điện thoại |
 | Cờ vây 19×19 | đạt | chưa | chưa | chưa | chưa | chưa | chưa | KataGo (mục 8.3a) | chưa xong |
-| Quoridor | đạt | đạt | đạt | đạt (engine v3, g22) | chưa | chưa | chưa | tự làm; engine v3 +340 Elo so với engine cũ (mục 9.4) | còn cặp Thách đấu vs Cao thủ (g24) và phần đo trên điện thoại |
+| Quoridor | đạt | đạt | đạt | đạt (engine v3, g22) | chưa | chưa | chưa | tự làm; engine v3 +340 Elo so với engine cũ (mục 9.4) | còn phần đo trên điện thoại |
 | Wall Go | đạt | đạt | đạt | đạt (g12, g13, g15) | chưa | chưa | chưa | tự làm; +124 Elo so với engine cũ | còn phần đo trên điện thoại |
-| Công thức cao thấp | đạt (`SelfCheck`) | chưa | chưa | chưa | chưa | chưa | chưa | tự làm, Monte Carlo trên thẻ chưa thấy | chưa xong: Cao thủ trở lên gần như ngang nhau (mục 13.4) |
-| Lãnh địa đồng cỏ | đạt (`SelfCheck`) | chưa | chưa | chưa | chưa | chưa | chưa | tự làm, đánh giá một lớp | chưa xong: cấp Khá trở lên gần như ngang nhau, cần bot có tìm kiếm (mục 13.4) |
+| Công thức cao thấp | đạt (`SelfCheck`) | chưa | chưa | chưa | chưa | chưa | chưa | tự làm, Monte Carlo trên thẻ chưa thấy | chưa xong: Cao thủ trở lên gần như ngang nhau (mục 13.5) |
+| Lãnh địa đồng cỏ | đạt (`SelfCheck`) | chưa | chưa | chưa | chưa | chưa | chưa | tự làm, đánh giá một lớp | chưa xong: cấp Khá trở lên gần như ngang nhau, cần bot có tìm kiếm (mục 13.5) |
+| Cờ cối xay | đạt (`SelfCheck`) | chưa | chưa | chờ g26 | chưa | chưa | chưa | tự làm, alpha-beta + TT + tìm tiếp nước ăn quân | chờ g26 |
+| Lục giác trí nhớ | đạt (`SelfCheck`) | không áp dụng | không áp dụng | đạt trên máy (150 cặp), chờ g26 | chưa | không áp dụng | không áp dụng | tự làm, mô phỏng trí nhớ và tốc độ | chờ g26 |
 | *(game mới)* | | | | | | | | | |
 
-### 13.4. Lãnh địa đồng cỏ: đo nhiều người
+### 13.4. Chuẩn chung: cờ vua
+
+Mọi game từ 2 người trở lên có 7 cấp đều đo trên GitHub Actions và dùng **chung một thang với cờ vua**: cấp cao phải đạt
+cùng khoảng tỉ lệ điểm với cấp thấp liền kề như cờ vua (bảng 13.2) và cùng mức tối thiểu ở các cặp cách hai cấp. Vì tỉ lệ
+điểm quy ra cùng một khoảng cách Elo (mục 2), một người thắng được cấp Giỏi ở cờ vua sẽ thấy cấp Giỏi ở mọi game khác khó
+tương đương. Game nhiều người (Công thức cao thấp, Lãnh địa đồng cỏ) đo nửa ghế mỗi cấp (mục 13.5) nên 50% vẫn là ngang
+sức. Lục giác trí nhớ (bấm chuông thời gian thực) đo bằng mô phỏng bot đấu bot cùng mã với app.
+
+### 13.5. Lãnh địa đồng cỏ: đo nhiều người
 
 `ladder meadow <A> <B> <cặp> <ms> <seed> <số người>`: nửa ghế cấp A, nửa ghế cấp B xen kẽ, đổi ghế ở ván thứ hai của cặp.
 A được 1 điểm khi ghế A tốt nhất hơn ghế B tốt nhất (điểm hình vuông, rồi diện tích), nên hai cấp ngang nhau cho 50% và
