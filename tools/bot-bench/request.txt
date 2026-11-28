@@ -5,21 +5,28 @@
 #   ab     <game> <A> <B> games=<số ván> ms=<ms/nước> shards=<số máy> [nodes=<giới hạn nút>]   (A, B: new | smpN | ref | old; thêm @spec, ví dụ new@corr64)
 #   Mọi dòng thêm được props=k1=v1;k2=v2 (thuộc tính hệ thống, ví dụ pm.level.chess.5=n15000 để thử cấu hình cấp).
 # Cấp: 0 Dễ, 1 Trung bình, 2 Khá, 3 Giỏi, 4 Cao thủ, 5 Thách đấu, 6 Siêu việt.
-tag=g9-chess-t2-gauge-chains
-note=Cờ vua: trọng số chess-t2 đấu Stockfish 2800 (80 ván) và 3000 (40 ván), 3 luồng; ứng viên cấp Khá. Cờ tướng (Thách đấu n8000) và caro (Thách đấu n4000): chuỗi cấp dưới.
-gauge chess elo=2800 games=80 ms=2000 sfms=2000 shards=4 threads=3
-gauge chess elo=3000 games=40 ms=2000 sfms=2000 shards=2 threads=3
-ladder chess 3 2 pairs=60 ms=2000 shards=2 props=pm.level.chess.3=n700,p0.05,x20;pm.level.chess.2=d2,p0.4,x120
-ladder chess 3 2 pairs=60 ms=2000 shards=2 props=pm.level.chess.3=n700,p0.05,x20;pm.level.chess.2=d1,p0.1,x30
-ladder chess 2 1 pairs=60 ms=2000 shards=2 props=pm.level.chess.2=d2,p0.4,x120;pm.level.chess.1=d1,p0.5,x150
-ladder chess 2 1 pairs=60 ms=2000 shards=2 props=pm.level.chess.2=d1,p0.1,x30;pm.level.chess.1=d1,p0.5,x150
-ladder xiangqi 5 4 pairs=60 ms=2000 shards=2 props=pm.level.xiangqi.5=n8000;pm.level.xiangqi.4=n2500
-ladder xiangqi 4 3 pairs=60 ms=2000 shards=2 props=pm.level.xiangqi.4=n2500;pm.level.xiangqi.3=n500,p0.05,x25
-ladder xiangqi 3 2 pairs=60 ms=2000 shards=2 props=pm.level.xiangqi.3=n500,p0.05,x25;pm.level.xiangqi.2=d2,p0.1,x50
-ladder xiangqi 2 1 pairs=60 ms=2000 shards=2 props=pm.level.xiangqi.2=d2,p0.1,x50;pm.level.xiangqi.1=d1,p0.5,x180
-ladder xiangqi 1 0 pairs=100 ms=2000 shards=2 props=pm.level.xiangqi.1=d1,p0.5,x180;pm.level.xiangqi.0=d1,p0.8,x350
-ladder caro 5 4 pairs=60 ms=2000 shards=2 props=pm.level.caro.5=n4000;pm.level.caro.4=n1000
-ladder caro 4 3 pairs=60 ms=2000 shards=2 props=pm.level.caro.4=n1000;pm.level.caro.3=n250,p0.03,x200,e12
-ladder caro 3 2 pairs=60 ms=2000 shards=2 props=pm.level.caro.3=n250,p0.03,x200,e12
-ladder caro 2 1 pairs=60 ms=2000 shards=2
-ladder caro 1 0 pairs=100 ms=2000 shards=2
+tag=g10-accept-wallgo-quoridor
+note=Nghiệm thu 7 cấp Wall Go và Quoridor với cấu hình đã chốt trong BotLevels.kt (6 cặp kề, 5 cặp cách hai cấp). Cờ vua: thử trọng số chess-t3.
+ab chess new@w:chess-t3 new games=1000 ms=200 shards=6
+ladder wallgo 6 5 pairs=100 ms=2000 shards=4
+ladder wallgo 5 4 pairs=100 ms=2000 shards=2
+ladder wallgo 4 3 pairs=100 ms=2000 shards=2
+ladder wallgo 3 2 pairs=100 ms=2000 shards=2
+ladder wallgo 2 1 pairs=100 ms=2000 shards=2
+ladder wallgo 1 0 pairs=200 ms=2000 shards=2
+ladder wallgo 6 4 pairs=50 ms=2000 shards=2
+ladder wallgo 5 3 pairs=50 ms=2000 shards=1
+ladder wallgo 4 2 pairs=50 ms=2000 shards=1
+ladder wallgo 3 1 pairs=50 ms=2000 shards=1
+ladder wallgo 2 0 pairs=50 ms=2000 shards=1
+ladder quoridor 6 5 pairs=100 ms=2000 shards=4
+ladder quoridor 5 4 pairs=100 ms=2000 shards=2
+ladder quoridor 4 3 pairs=100 ms=2000 shards=2
+ladder quoridor 3 2 pairs=100 ms=2000 shards=2
+ladder quoridor 2 1 pairs=100 ms=2000 shards=2
+ladder quoridor 1 0 pairs=200 ms=2000 shards=2
+ladder quoridor 6 4 pairs=50 ms=2000 shards=2
+ladder quoridor 5 3 pairs=50 ms=2000 shards=1
+ladder quoridor 4 2 pairs=50 ms=2000 shards=1
+ladder quoridor 3 1 pairs=50 ms=2000 shards=1
+ladder quoridor 2 0 pairs=50 ms=2000 shards=1

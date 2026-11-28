@@ -74,10 +74,12 @@ object BotLevels {
         n(8_000, 0.03, 200, 12), n(25_000, 0.0, 0, 24), n(70_000, 0.0, 0, 24), top(24),
     )
 
-    // Quoridor (mục 9.3), alpha-beta. Điểm: 100 = một bước đường đi.
+    // Quoridor (mục 9.3), alpha-beta. Điểm: 100 = một bước đường đi. Thang sức của Quoridor rất nén: tìm sâu thêm cho ít Elo
+    // (Siêu việt hơn n300 khoảng 81%, n1000 khoảng 75%). Nhiễu có delta từ 200 (2 bước) trở lên làm bot đi lòng vòng và thua
+    // vì lặp thế, nên chỉ cấp Dễ dùng mức đó; các cấp khác giữ delta <= 150. Đo 11/2026 trên máy phát triển, xem mục 13.
     val quoridor = listOf(
-        d(1, 0.80, 400), d(2, 0.25, 70), d(3, 0.20, 50),
-        n(2_500, 0.04, 15), n(8_000), n(25_000), top(),
+        d(1, 0.80, 300), d(1, 1.0, 150), d(1, 0.50, 150),
+        d(1, 0.20, 60), d(1), n(300), top(),
     )
 
     // Wall Go (mục 10.3), alpha-beta. Điểm: 100 = một ô lãnh thổ. Một nút rất nặng (đánh giá mọi nước con), Siêu việt
