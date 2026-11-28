@@ -6,7 +6,7 @@
 #   Mọi dòng thêm được props=k1=v1;k2=v2 (thuộc tính hệ thống, ví dụ pm.level.chess.5=n15000 để thử cấu hình cấp).
 # Cấp: 0 Dễ, 1 Trung bình, 2 Khá, 3 Giỏi, 4 Cao thủ, 5 Thách đấu, 6 Siêu việt.
 tag=g26-all-games-chess-standard
-note=Nghiệm thu theo chuẩn cờ vua (cùng khoảng đạt 6 cặp kề, 5 cặp cách hai cấp): cờ tướng với trọng số xiangqi-t2 (đo lại cả chuỗi + gauge Pikafish 20k nút), Cờ cối xay, Công thức cao thấp (8 người), Lãnh địa đồng cỏ (8 người), Lục giác trí nhớ. Quoridor đã đạt sau g24; cờ vây chờ g25.
+note=Nghiệm thu theo chuẩn cờ vua (cùng khoảng đạt 6 cặp kề, 5 cặp cách hai cấp): cờ tướng với trọng số xiangqi-t2 (đo lại cả chuỗi + gauge Pikafish 20k nút), Cờ cối xay (cấu hình đã chỉnh trên máy), Công thức cao thấp (8 người), Lãnh địa đồng cỏ (8 người), Lục giác trí nhớ. Quoridor đã đạt sau g24; cờ vây chờ g25.
 ladder xiangqi 1 0 pairs=100 ms=2000 shards=2
 ladder xiangqi 2 1 pairs=100 ms=2000 shards=2
 ladder xiangqi 3 2 pairs=100 ms=2000 shards=2

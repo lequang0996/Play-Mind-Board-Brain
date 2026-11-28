@@ -110,7 +110,8 @@ object BotLevels {
     val hilo = listOf(d(1, 0.70), d(1, 0.40), d(1, 0.20), d(1, 0.08), d(1, 0.03), d(1), top())
 
     // Cờ cối xay (Nine Men's Morris): alpha-beta + TT + tìm tiếp nước ăn quân. Điểm: 120 mỗi quân. Khởi điểm, chờ đo trên CI.
-    val morris = listOf(d(1, 0.9, 300), d(1, 0.5, 150), d(2, 0.3, 80), d(3), d(4), n(60000), top())
+    // Chỉnh trên máy 11/2026: Khá vs TB 97% -> Khá thêm nhiễu; Giỏi d4, Cao thủ d6 (3v2 85%, 4v3 86%); Thách đấu n60000 chỉ 62% trước Cao thủ -> n250000.
+    val morris = listOf(d(1, 0.9, 300), d(1, 0.5, 150), d(2, 0.6, 150), d(4), d(6), n(250000), top())
 
     fun of(gameId: String): List<LevelConfig> = when (gameId) {
         "chess" -> chess; "xiangqi" -> xiangqi; "caro" -> caro
