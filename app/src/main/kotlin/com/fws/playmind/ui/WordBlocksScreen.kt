@@ -128,6 +128,15 @@ fun WordBlocksScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onE
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             Text(stringResource(R.string.wb_found, g.found.size, WordBlocks.WORDS), style = MaterialTheme.typography.labelLarge, color = pm.inkSoft)
+            // kết quả lần bấm Ghép gần nhất (hiện cả khi từ bị từ chối và các chữ vẫn còn trong ô ghép)
+            val fb = feedbackText(feedback)
+            if (fb != null) Text(
+                stringResource(fb),
+                Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp))
+                    .background((if (feedback == WordBlocksGame.Submit.OK) pm.good else pm.danger).copy(alpha = .14f))
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
+                style = MaterialTheme.typography.titleSmall, color = if (feedback == WordBlocksGame.Submit.OK) pm.good else pm.danger,
+            )
             // 7 thanh đáp án, 2 cột
             for (r in 0 until 4) Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 for (c in 0 until 2) {
@@ -143,8 +152,7 @@ fun WordBlocksScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onE
                 contentAlignment = Alignment.Center,
             ) {
                 if (g.current.isEmpty()) {
-                    Text(stringResource(feedbackText(feedback) ?: R.string.wb_tap_hint), style = MaterialTheme.typography.bodyMedium,
-                        color = when (feedback) { null -> pm.inkSoft; WordBlocksGame.Submit.OK -> pm.good; else -> pm.danger })
+                    Text(stringResource(R.string.wb_tap_hint), style = MaterialTheme.typography.bodyMedium, color = pm.inkSoft)
                 } else {
                     val t = minOf(48.dp, (maxWidth - 16.dp) / WordBlocks.MAX_LEN)
                     Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
