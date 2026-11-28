@@ -119,7 +119,7 @@ class BillingManager(private val app: Application, private val wallet: WalletRep
         if (offers.size < 4) loadProducts()
         client.queryPurchasesAsync(QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.SUBS).build()) { res, list ->
             if (res.responseCode != BillingClient.BillingResponseCode.OK) return@queryPurchasesAsync
-            val active = list.filter { it.purchaseState == Purchase.PurchaseState.PURCHASED }
+            val active = list.filter { it.purchaseState == Purchase.PurchaseState.PURCHASED && PurchaseCheck.valid(it, app.packageName) }
             active.forEach { acknowledgeIfNeeded(it) }
             val ids = active.flatMap { it.products }
             wallet.setPlan(when { SUB_YEARLY in ids -> Plan.YEARLY; SUB_MONTHLY in ids -> Plan.MONTHLY; else -> Plan.NONE })
@@ -149,6 +149,8 @@ class BillingManager(private val app: Application, private val wallet: WalletRep
     private fun handle(p: Purchase, silent: Boolean) {
         if (p.purchaseState == Purchase.PurchaseState.PENDING) { if (!silent) event = BillingEvent.Pending; return }
         if (p.purchaseState != Purchase.PurchaseState.PURCHASED) return
+        // giao dịch không có chữ ký hợp lệ của Google Play (công cụ giả lập thanh toán): bỏ qua
+        if (!PurchaseCheck.valid(p, app.packageName)) { android.util.Log.w("PMBilling", "purchase signature invalid"); if (!silent) event = BillingEvent.Failed; return }
         for (id in p.products) {
             val gems = GEMS[id]
             if (gems != null) {

@@ -58,9 +58,34 @@ class WalletRepo(private val ctx: Context) {
     private val marks = ctx.getSharedPreferences("pm_marks", Context.MODE_PRIVATE)   // chỉ lưu số lượt miễn phí đã dùng; được Auto Backup sao lưu
     @Volatile var wasReset = false; private set   // phải khai báo trước _state (load() có thể đặt cờ này)
     @Volatile private var freshInstall = false      // phải khai báo trước _state (load() đặt cờ này)
+    // ───── chống sửa bộ nhớ (GameGuardian...): bản sao số kim cương đã che bằng khóa ngẫu nhiên, kèm mã kiểm tra ─────
+    private val mask = java.security.SecureRandom().nextInt()
+    @Volatile private var shadow = 0
+    @Volatile private var shadowCheck = 0
+    @Volatile private var memTamper = false
+
     private val _state = MutableStateFlow(load())
     val state: StateFlow<WalletState> = _state
-    val rewardsAllowed: Boolean = Integrity.rewardsAllowed(ctx)
+    private val envOk: Boolean = Integrity.rewardsAllowed(ctx)
+    /** false nếu thiết bị bị can thiệp (Integrity) hoặc số kim cương trong bộ nhớ bị sửa: vẫn chơi được nhưng không nhận thưởng. */
+    val rewardsAllowed: Boolean get() = envOk && !memTamper
+
+    init { guard(_state.value.diamonds) }
+
+    private fun guard(d: Int) { shadow = d xor mask; shadowCheck = Integer.rotateLeft(d, 11) xor mask.inv() }
+
+    private fun guarded(): Int? { val d = shadow xor mask; return if ((Integer.rotateLeft(d, 11) xor mask.inv()) == shadowCheck) d else null }
+
+    /** Trạng thái hiện tại, với số kim cương đối chiếu bản sao: nếu bị sửa trong bộ nhớ thì trả lại giá trị đúng. */
+    private fun st(): WalletState {
+        val cur = _state.value
+        val g = guarded() ?: run { memTamper = true; return cur }
+        if (cur.diamonds == g) return cur
+        memTamper = true
+        val fixed = cur.copy(diamonds = g)
+        _state.value = fixed
+        return fixed
+    }
 
     private val _ready = MutableStateFlow(true)
     /** false trong lúc đang khôi phục ví từ Block Store sau khi cài lại (tối đa ~3 giây). UI nên chờ cờ này. */
@@ -70,7 +95,7 @@ class WalletRepo(private val ctx: Context) {
 
     /** Gói đang có hiệu lực. Nếu quá 8 ngày chưa xác nhận được với Google Play (offline lâu) thì coi như miễn phí. */
     fun currentPlan(): Plan {
-        val st = _state.value
+        val st = st()
         return if (st.plan != Plan.NONE && trustedNow() - st.planAt < 8 * 86_400_000L) st.plan else Plan.NONE
     }
 
@@ -82,7 +107,7 @@ class WalletRepo(private val ctx: Context) {
 
     /** BillingManager gọi khi biết gói hiện tại. */
     fun setPlan(plan: Plan) {
-        val st = _state.value
+        val st = st()
         if (st.plan == plan && trustedNow() - st.planAt < 86_400_000L) return
         commit(st.copy(plan = plan, planAt = trustedNow()))
     }
@@ -143,9 +168,10 @@ class WalletRepo(private val ctx: Context) {
         e.apply()
     }
 
-    // ───── đồng hồ đáng tin: phát hiện chỉnh giờ hệ thống trong cùng một lần khởi động ─────
+    // ───── đồng hồ đáng tin: giờ mạng (NetTime) nếu có; nếu không thì phát hiện chỉnh giờ trong cùng một lần khởi động ─────
     private fun trustedNow(): Long {
-        val st = _state.value
+        NetTime.now()?.let { return it }
+        val st = st()
         val wall = System.currentTimeMillis(); val el = SystemClock.elapsedRealtime()
         return if (st.lastElapsed in 1..el && st.lastWall > 0) {
             val expected = st.lastWall + (el - st.lastElapsed)
@@ -165,6 +191,7 @@ class WalletRepo(private val ctx: Context) {
         store.write(SIDE, ns.counter.toString() + "|" + sha(body))
         writeMarks(ns.freeUsed)
         backup.save(body + "\n#sig=" + sha(body))
+        guard(ns.diamonds)
         _state.value = ns
     }
 
@@ -191,11 +218,12 @@ class WalletRepo(private val ctx: Context) {
     }
 
     // ───── điểm danh ─────
-    fun canCheckIn(): Boolean = _state.value.lastCheckInDay != today()
+    fun canCheckIn(): Boolean = today() > _state.value.lastCheckInDay
 
     fun checkIn(): CheckIn {
-        val st = _state.value; val day = today()
-        if (st.lastCheckInDay == day || noDiamonds()) return CheckIn.Already
+        val st = st(); val day = today()
+        // ngày điểm danh lần trước ở "tương lai" (đã chỉnh giờ tới trước) cũng không được điểm danh lại
+        if (day <= st.lastCheckInDay || noDiamonds() || !rewardsAllowed) return CheckIn.Already
         val streak = if (st.lastCheckInDay == day - 1) st.streakDays + 1 else 1
         // Điểm danh +1; sau 30 ngày liên tục, mỗi lần tiếp theo +2 (gói tháng: +4; gói năm không điểm danh)
         val reward = if (streak > 30) (if (currentPlan() != Plan.NONE) 4 else 2) else 1
@@ -209,16 +237,18 @@ class WalletRepo(private val ctx: Context) {
         val limit = currentPlan().freePerDay
         if (limit == Int.MAX_VALUE) return Int.MAX_VALUE
         val u = _state.value.freeUsed[gameId]
-        val used = if (u != null && u.first == today()) u.second else 0
+        val day = today()
+        // lượt ghi ở một ngày "tương lai" (đã chỉnh giờ tới trước rồi chỉnh lại) coi như đã dùng hết hôm nay
+        val used = when { u == null || u.first < day -> 0; u.first == day -> u.second; else -> limit }
         return (limit - used).coerceAtLeast(0)
     }
 
     fun freeAvailable(gameId: String) = freeLeft(gameId) > 0
 
-    fun canStart(gameId: String): Boolean = freeAvailable(gameId) || _state.value.diamonds >= 1
+    fun canStart(gameId: String): Boolean = freeAvailable(gameId) || st().diamonds >= 1
 
     fun startMatch(gameId: String): StartCost {
-        val st = _state.value
+        val st = st()
         if (freeLeft(gameId) > 0) {
             val u = st.freeUsed[gameId]
             val used = if (u != null && u.first == today()) u.second else 0
@@ -234,7 +264,7 @@ class WalletRepo(private val ctx: Context) {
      * và với ván online thì hai máy đã đối chiếu cùng kết quả).
      */
     fun finishMatch(gameId: String, outcome: MatchOutcome, valid: Boolean): Reward {
-        val st = _state.value
+        val st = st()
         var d = st.diamonds
         var ws = st.winStreak[gameId] ?: 0
         var bonus = 0; var gained = 0; var blocked = false
@@ -256,7 +286,7 @@ class WalletRepo(private val ctx: Context) {
     /** Ván bị hủy không do lỗi người chơi (vd. đối thủ thoát sớm): trả lại trạng thái, không tính thắng/thua. */
     fun cancelMatch() { val st = _state.value; if (st.pending.isNotEmpty()) commit(st.copy(pending = "")) }
 
-    fun addDiamonds(n: Int) { if (n > 0 && !noDiamonds()) commit(_state.value.copy(diamonds = _state.value.diamonds + n)) }
+    fun addDiamonds(n: Int) { if (n > 0 && !noDiamonds()) { val st = st(); commit(st.copy(diamonds = st.diamonds + n)) } }
 
     private fun bump(m: Map<String, List<Int>>, g: String, i: Int): Map<String, List<Int>> {
         val cur = (m[g] ?: listOf(0, 0, 0)).toMutableList(); cur[i] = cur[i] + 1

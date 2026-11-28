@@ -30,6 +30,11 @@ android {
         manifestPlaceholders["admobAppId"] = cfg("ADMOB_APP_ID", "ca-app-pub-3940256099942544~3347511713")
         buildConfigField("String", "ADMOB_BANNER", "\"${cfg("ADMOB_BANNER", "ca-app-pub-3940256099942544/9214589741")}\"")
         buildConfigField("String", "ADMOB_APP_OPEN", "\"${cfg("ADMOB_APP_OPEN", "ca-app-pub-3940256099942544/9257395921")}\"")
+        // Chống gian lận (data/PurchaseCheck.kt, data/Integrity.kt). Trống = bỏ qua bước kiểm tra tương ứng.
+        // PLAY_LICENSE_KEY: khóa công khai RSA (Base64) của app ở Play Console > Kiếm tiền bằng Play > Thiết lập kiếm tiền.
+        // CERT_SHA256: SHA-256 các chứng chỉ ký hợp lệ (khóa tải lên + khóa ký của Google Play), cách nhau bằng dấu phẩy.
+        buildConfigField("String", "PLAY_LICENSE_KEY", "\"${cfg("PLAY_LICENSE_KEY", "")}\"")
+        buildConfigField("String", "CERT_SHA256", "\"${cfg("CERT_SHA256", "")}\"")
         // Firebase Realtime Database dùng làm trạm chuyển mã khi chơi qua internet (net/Relay.kt). Trống = trao đổi mã hai chiều.
         buildConfigField("String", "SIGNAL_DB_URL", "\"${cfg("SIGNAL_DB_URL", "https://gen-lang-client-0528598066-default-rtdb.asia-southeast1.firebasedatabase.app")}\"")
         buildConfigField("String", "PRIVACY_URL", "\"${cfg("PRIVACY_URL", "https://lequang0996.github.io/fwsandroid/play-mind/")}\"")

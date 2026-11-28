@@ -86,6 +86,23 @@ jobs:
           test -s app/src/main/assets/katago/b6.bin.gz && test -s app/src/main/assets/katago/b10.bin.gz
 
       # 5) Build release (AAB + APK, R8 bật)
+      # 5a) Chống sửa app rồi ký lại (data/Integrity.kt): chỉ bật khi đã có biến PLAY_CERT_SHA256 (khóa ký của Google Play,
+      #     Play Console > Kiểm tra và phát hành > Thiết lập > Tính toàn vẹn của ứng dụng). Ghép thêm khóa tải lên lấy từ keystore.
+      - name: Anti-tamper config
+        env:
+          PLAY_CERT_SHA256: ${{ vars.PLAY_CERT_SHA256 }}
+          KS: ${{ steps.ks.outputs.path }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        run: |
+          if [ -n "$PLAY_CERT_SHA256" ] && [ -n "$KS" ]; then
+            up=$(keytool -list -v -keystore "$KS" -storepass "$KEYSTORE_PASSWORD" -alias "$KEY_ALIAS" | grep -i "SHA256:" | head -1 | sed 's/.*SHA256: *//')
+            echo "CERT_SHA256=$up,$PLAY_CERT_SHA256" >> "$GITHUB_ENV"
+            echo "Kiểm tra chữ ký app: bật"
+          else
+            echo "Kiểm tra chữ ký app: tắt (chưa có biến PLAY_CERT_SHA256)"
+          fi
+
       - name: Build release (AAB + APK, R8 bật)
         run: |
           # NDK có sẵn trên máy CI: Gradle dùng nó để trích biểu tượng gỡ lỗi native vào .aab và strip thư viện
@@ -112,6 +129,8 @@ jobs:
           PRIVACY_URL: ${{ vars.PRIVACY_URL }}
           # Địa chỉ Firebase Realtime Database làm trạm chuyển mã khi chơi qua internet (tab Variables). Trống = trao đổi mã hai chiều.
           SIGNAL_DB_URL: ${{ vars.SIGNAL_DB_URL }}
+          # Khóa công khai RSA của app trên Google Play (tab Variables): kiểm tra chữ ký giao dịch mua.
+          PLAY_LICENSE_KEY: ${{ vars.PLAY_LICENSE_KEY }}
 
       # 5b) Biểu tượng gỡ lỗi native phải nằm trong .aab (nếu không, Play Console cảnh báo và không phân tích được crash/ANR)
       - name: Check native debug symbols in AAB

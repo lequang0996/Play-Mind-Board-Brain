@@ -18,6 +18,7 @@ class PlayMindApp : Application() {
     override fun onCreate() {
         super.onCreate()
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)  // app chỉ có giao diện tối
+        com.fws.playmind.data.NetTime.sync()
         prefs = Prefs(this)
         audio = AudioEngine(this)
         wallet = WalletRepo(this)
