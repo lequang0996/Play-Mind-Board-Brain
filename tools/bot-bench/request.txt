@@ -5,16 +5,61 @@
 #   ab     <game> <A> <B> games=<số ván> ms=<ms/nước> shards=<số máy> [nodes=<giới hạn nút>]   (A, B: new | smpN | ref | old; thêm @spec, ví dụ new@corr64)
 #   Mọi dòng thêm được props=k1=v1;k2=v2 (thuộc tính hệ thống, ví dụ pm.level.chess.5=n15000 để thử cấu hình cấp).
 # Cấp: 0 Dễ, 1 Trung bình, 2 Khá, 3 Giỏi, 4 Cao thủ, 5 Thách đấu, 6 Siêu việt.
-tag=g25-go-curve
-note=Cờ vây: g23 chưa đạt (CT-Giỏi 100%, TĐ-CT 96%, TB-Dễ 90%). Đo đường cong sức mạnh từng bước (nhiệt độ chính sách, số lượt b6, đổi mạng b6→b10, số lượt b10) để ghép bảng 7 cấp theo khoảng đạt.
-ladder go 1 0 pairs=24 ms=60000 shards=2 props=pm.kata.1=b6,v1,t0.9,raw;pm.kata.0=b6,v1,t1.4,raw
-ladder go 1 0 pairs=24 ms=60000 shards=2 props=pm.kata.1=b6,v1,t0.45,raw;pm.kata.0=b6,v1,t0.9,raw
-ladder go 1 0 pairs=24 ms=60000 shards=2 props=pm.kata.1=b6,v4,t0.2;pm.kata.0=b6,v1,t0.45,raw
-ladder go 1 0 pairs=24 ms=60000 shards=2 props=pm.kata.1=b6,v8,t0.2;pm.kata.0=b6,v4,t0.2
-ladder go 1 0 pairs=24 ms=60000 shards=2 props=pm.kata.1=b6,v16,t0;pm.kata.0=b6,v8,t0.2
-ladder go 1 0 pairs=24 ms=60000 shards=2 props=pm.kata.1=b10,v16,t0;pm.kata.0=b6,v16,t0
-ladder go 1 0 pairs=24 ms=60000 shards=3 props=pm.kata.1=b10,v40,t0;pm.kata.0=b10,v16,t0
-ladder go 1 0 pairs=24 ms=60000 shards=3 props=pm.kata.1=b10,v100,t0;pm.kata.0=b10,v40,t0
-ladder go 1 0 pairs=24 ms=60000 shards=4 props=pm.kata.1=b10,v200,t0;pm.kata.0=b10,v100,t0
-ladder go 1 0 pairs=18 ms=60000 shards=5 props=pm.kata.1=b10,v400,t0;pm.kata.0=b10,v200,t0
-ladder go 1 0 pairs=18 ms=60000 shards=6 props=pm.kata.1=b10,v800,t0;pm.kata.0=b10,v400,t0
+tag=g26-all-games-chess-standard
+note=Nghiệm thu theo chuẩn cờ vua (cùng khoảng đạt 6 cặp kề, 5 cặp cách hai cấp): cờ tướng với trọng số xiangqi-t2 (đo lại cả chuỗi + gauge Pikafish 20k nút), Cờ cối xay, Công thức cao thấp (8 người), Lãnh địa đồng cỏ (8 người), Lục giác trí nhớ. Quoridor đã đạt sau g24; cờ vây chờ g25.
+ladder xiangqi 1 0 pairs=100 ms=2000 shards=2
+ladder xiangqi 2 1 pairs=100 ms=2000 shards=2
+ladder xiangqi 3 2 pairs=100 ms=2000 shards=2
+ladder xiangqi 4 3 pairs=100 ms=2000 shards=2
+ladder xiangqi 5 4 pairs=100 ms=2000 shards=3
+ladder xiangqi 6 5 pairs=100 ms=2000 shards=5
+ladder xiangqi 2 0 pairs=50 ms=2000 shards=2
+ladder xiangqi 3 1 pairs=50 ms=2000 shards=2
+ladder xiangqi 4 2 pairs=50 ms=2000 shards=2
+ladder xiangqi 5 3 pairs=50 ms=2000 shards=3
+ladder xiangqi 6 4 pairs=50 ms=2000 shards=5
+gauge xiangqi nodes=20000 games=40 ms=2000 sfms=2000 shards=2
+ladder morris 1 0 pairs=100 ms=1000 shards=2
+ladder morris 2 1 pairs=100 ms=1000 shards=2
+ladder morris 3 2 pairs=100 ms=1000 shards=2
+ladder morris 4 3 pairs=100 ms=1000 shards=2
+ladder morris 5 4 pairs=100 ms=1000 shards=3
+ladder morris 6 5 pairs=100 ms=1000 shards=5
+ladder morris 2 0 pairs=50 ms=1000 shards=2
+ladder morris 3 1 pairs=50 ms=1000 shards=2
+ladder morris 4 2 pairs=50 ms=1000 shards=2
+ladder morris 5 3 pairs=50 ms=1000 shards=3
+ladder morris 6 4 pairs=50 ms=1000 shards=5
+ladder hilo 1 0 pairs=50 ms=1000 shards=2 players=8
+ladder hilo 2 1 pairs=50 ms=1000 shards=2 players=8
+ladder hilo 3 2 pairs=50 ms=1000 shards=2 players=8
+ladder hilo 4 3 pairs=50 ms=1000 shards=2 players=8
+ladder hilo 5 4 pairs=50 ms=1000 shards=2 players=8
+ladder hilo 6 5 pairs=50 ms=1000 shards=2 players=8
+ladder hilo 2 0 pairs=50 ms=1000 shards=2 players=8
+ladder hilo 3 1 pairs=50 ms=1000 shards=2 players=8
+ladder hilo 4 2 pairs=50 ms=1000 shards=2 players=8
+ladder hilo 5 3 pairs=50 ms=1000 shards=2 players=8
+ladder hilo 6 4 pairs=50 ms=1000 shards=2 players=8
+ladder meadow 1 0 pairs=50 ms=2000 shards=2 players=8
+ladder meadow 2 1 pairs=50 ms=2000 shards=2 players=8
+ladder meadow 3 2 pairs=50 ms=2000 shards=2 players=8
+ladder meadow 4 3 pairs=50 ms=2000 shards=2 players=8
+ladder meadow 5 4 pairs=50 ms=2000 shards=2 players=8
+ladder meadow 6 5 pairs=50 ms=2000 shards=2 players=8
+ladder meadow 2 0 pairs=50 ms=2000 shards=2 players=8
+ladder meadow 3 1 pairs=50 ms=2000 shards=2 players=8
+ladder meadow 4 2 pairs=50 ms=2000 shards=2 players=8
+ladder meadow 5 3 pairs=50 ms=2000 shards=2 players=8
+ladder meadow 6 4 pairs=50 ms=2000 shards=2 players=8
+ladder hexagon 1 0 pairs=200 ms=0 shards=1
+ladder hexagon 2 1 pairs=200 ms=0 shards=1
+ladder hexagon 3 2 pairs=200 ms=0 shards=1
+ladder hexagon 4 3 pairs=200 ms=0 shards=1
+ladder hexagon 5 4 pairs=200 ms=0 shards=1
+ladder hexagon 6 5 pairs=200 ms=0 shards=1
+ladder hexagon 2 0 pairs=200 ms=0 shards=1
+ladder hexagon 3 1 pairs=200 ms=0 shards=1
+ladder hexagon 4 2 pairs=200 ms=0 shards=1
+ladder hexagon 5 3 pairs=200 ms=0 shards=1
+ladder hexagon 6 4 pairs=200 ms=0 shards=1
