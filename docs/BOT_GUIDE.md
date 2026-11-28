@@ -851,6 +851,7 @@ Cú pháp: `d<độ sâu>` / `n<số nút>`, `p` xác suất nhiễu, `x` delta 
 | Cờ vây 19×19 | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt |
 | Quoridor | d1 p0.97 x100 e100 | d1 p0.75 x100 e100 | d1 p0.5 x100 e100 | d1 e80 | d1 p0.2 x150 e40 | n300 | toàn lực |
 | Wall Go | d1 p1.0 x700 | d1 p0.9 x400 | d1 p0.8 x250 | d1 | d2 | d3 | toàn lực |
+| Lãnh địa đồng cỏ (tạm) | d1 p0.75 | d1 p0.45 | d1 p0.25 | d1 p0.15 | d1 p0.08 | d1 p0.03 | toàn lực (một lớp) |
 
 ### 13.2. Tỉ lệ điểm của cấp cao trong 6 cặp kề nhau
 
@@ -864,6 +865,7 @@ Tỉ lệ điểm đo được (khoảng 200 ván; 400 ván cho Trung bình vs D
 | Cờ vây 19×19 | chưa đo | chưa đo | chưa đo | chưa đo | chưa đo | chưa đo |
 | Quoridor (engine v3) | 94,1% (g22) | 88,2% (g22) | 88,7% (g22) | 78,2% (g22) | 92,1% (g22) ✗ đang chỉnh (g24) | 88,4% (g22) |
 | Wall Go | 93,3% (g12) | 91,7% (g15) | 88,0% (g15, 408 ván) | 81,9% (g12) | 86,5% (g12) | 89,8% (g12) |
+| Lãnh địa đồng cỏ (8 người, máy tính) | 74,0% ✗ | 93,0% | 49,5% ✗ | 60,5% ✗ | 55,0% ✗ | 53,0% ✗ |
 
 Cặp cách hai cấp, mức tối thiểu ghi dưới tên cặp:
 
@@ -885,7 +887,20 @@ Cặp cách hai cấp, mức tối thiểu ghi dưới tên cặp:
 | Cờ vây 19×19 | đạt | chưa | chưa | chưa | chưa | chưa | chưa | KataGo (mục 8.3a) | chưa xong |
 | Quoridor | đạt | đạt | đạt | đạt (engine v3, g22) | chưa | chưa | chưa | tự làm; engine v3 +340 Elo so với engine cũ (mục 9.4) | còn cặp Thách đấu vs Cao thủ (g24) và phần đo trên điện thoại |
 | Wall Go | đạt | đạt | đạt | đạt (g12, g13, g15) | chưa | chưa | chưa | tự làm; +124 Elo so với engine cũ | còn phần đo trên điện thoại |
+| Lãnh địa đồng cỏ | đạt (`SelfCheck`) | chưa | chưa | chưa | chưa | chưa | chưa | tự làm, đánh giá một lớp | chưa xong: cấp Khá trở lên gần như ngang nhau, cần bot có tìm kiếm (mục 13.4) |
 | *(game mới)* | | | | | | | | | |
+
+### 13.4. Lãnh địa đồng cỏ: đo nhiều người
+
+`ladder meadow <A> <B> <cặp> <ms> <seed> <số người>`: nửa ghế cấp A, nửa ghế cấp B xen kẽ, đổi ghế ở ván thứ hai của cặp.
+A được 1 điểm khi ghế A tốt nhất hơn ghế B tốt nhất (điểm hình vuông, rồi diện tích), nên hai cấp ngang nhau cho 50% và
+dùng chung ngưỡng với các game hai bên. Mỗi ván mất khoảng 1 giây trên máy tính, chạy được ngay trên máy (mã tự làm).
+
+Kết quả 11/2026, 100 ván mỗi cặp (4 người / 8 người): 1v0 59% / 74%, 2v1 91% / 93%, 3v2 58% / 49,5%, 4v3 61% / 60,5%,
+5v4 53% / 55%, 6v5 51% / 53%, 6v4 57% / 52%. Giảm nhiễu từ Khá trở lên gần như không đổi sức mạnh: bot đánh giá một lớp
+đã chơi gần mức trần của chính nó, còn các tính năng theo cấp (phiếu đổi gạch, cản người dẫn đầu, nhìn mảnh kế tiếp) chưa
+cho thêm điểm. Việc tiếp theo: tìm kiếm nhiều lớp trên hàng chờ công khai (các mảnh kế tiếp của mình và của đối thủ),
+rồi chia 7 cấp theo độ sâu và số nước xét.
 
 ---
 

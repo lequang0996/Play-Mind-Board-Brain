@@ -502,7 +502,7 @@ internal class MeadowBot(private val g: MeadowGame, private val lv: Int, private
         else -> -1
     }
 
-    private fun random() = lv <= 2 && rnd.nextDouble() < noise
+    private fun random() = noise > 0 && rnd.nextDouble() < noise
 
     // ── ô nền: nhiều chỗ trống quanh, xa người khác, gần ô đặc biệt
     private fun baseMove(): Int {

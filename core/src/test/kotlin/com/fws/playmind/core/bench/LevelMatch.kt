@@ -15,6 +15,7 @@ fun ladderMain(args: List<String>) {
     val pairs = args[3].toInt(); val ms = args[4].toLong(); val seed0 = args[5].toInt()
     val players = args.getOrNull(6)?.toInt() ?: 2
     if (game == "go") { goLadder(a, b, pairs, ms, seed0); return }   // KataGo (GoKata.kt), chỉ trên CI
+    if (game == "meadow") { meadowLadder(a, b, pairs, ms, seed0, players); return }
     ChessGame.threads = 1   // đo cấp: 1 luồng (nhiều tiến trình chạy song song trên một máy)
     var w = 0; var d = 0; var l = 0
     for (i in 0 until pairs) {
@@ -62,4 +63,34 @@ internal fun benchOpening(game: String, players: Int, seed: Int): BoardGame {
     }
     if (game == "caro") while (g.plies < 3) g.play(GomokuGame.pack(r.nextInt(5) - 2, r.nextInt(5) - 2))
     return g
+}
+
+/**
+ * Lãnh địa đồng cỏ nhiều người: [players] ghế, nửa ghế cấp A, nửa ghế cấp B xen kẽ (A ở ghế chẵn rồi đổi sang ghế lẻ).
+ * Điểm của A trong một ván: 1 nếu ghế A tốt nhất hơn ghế B tốt nhất (điểm hình vuông, rồi diện tích), 0 nếu kém, 0,5 nếu bằng.
+ * Hai cấp ngang nhau cho 50%, nên dùng chung ngưỡng với cặp hai bên (mục 3.4). Dòng "R" giống ladder thường.
+ */
+private fun meadowLadder(a: Int, b: Int, pairs: Int, ms: Long, seed0: Int, players: Int) {
+    var w = 0; var d = 0; var l = 0
+    for (i in 0 until pairs) {
+        val seed = seed0 + i
+        for (aFirst in listOf(true, false)) {
+            val g = MeadowGame(players)
+            val rnd = Random(seed * 2 + (if (aFirst) 0 else 1))
+            fun isA(p: Int) = (p % 2 == 0) == aFirst
+            var guard = 0
+            while (g.result == Outcome.ONGOING && guard++ < 5000) {
+                val mv = g.levelMove(BotLevel.of(if (isA(g.turn)) a else b), ms, rnd)
+                if (mv < 0 || !g.play(mv)) { g.play(MeadowGame.DISCARD) || g.play(MeadowGame.STEAL_SKIP) || break }
+            }
+            fun key(p: Int) = g.finalPoints[p] * 10000L + g.finalArea[p]
+            val bestA = (0 until players).filter { isA(it) }.maxOf { key(it) }
+            val bestB = (0 until players).filter { !isA(it) }.maxOf { key(it) }
+            val sA = if (bestA > bestB) 1.0 else if (bestA < bestB) 0.0 else 0.5
+            when (sA) { 1.0 -> w++; 0.0 -> l++; else -> d++ }
+            println("R $seed ${if (aFirst) 1 else 0} $sA ${g.plies} ${g.reason} pts=${g.finalPoints.joinToString(",")}")
+            System.out.flush()
+        }
+    }
+    println("TOTAL $w $d $l")
 }
