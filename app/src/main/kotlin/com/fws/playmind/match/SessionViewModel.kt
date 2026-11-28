@@ -192,8 +192,12 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         return Catalog.LEVEL_MOVE_SECONDS[i.coerceIn(0, Catalog.LEVELS - 1)]
     }
 
-    /** Cấp của bot ở ván hiện tại: chơi với máy theo cấp đã chọn; bot thay ghế trống / bot ẩn trong phòng dùng cấp Khá. */
-    private fun matchLevel(): BotLevel = if (mode == Mode.BOT) BotLevel.of(botLevel) else BotLevel.GOOD
+    /**
+     * Cấp của bot ở ván hiện tại: chơi với máy theo cấp đã chọn; bot thay ghế trống / bot vào phòng khi không có ai
+     * dùng cấp cao nhất mà chủ phòng đã mở khóa ở game này.
+     */
+    private fun matchLevel(): BotLevel =
+        if (mode == Mode.BOT) BotLevel.of(botLevel) else BotLevel.of(info?.let { prefs.unlockedLevel(it.id) } ?: 0)
 
     /** Tính nước của bot ở cấp [lv] (chạy trên luồng nền với bản sao [g]). Cờ vây dùng KataGo nếu chạy được. */
     private fun computeBotMove(g: BoardGame, inf: GameInfo, lv: BotLevel): Int {
