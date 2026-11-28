@@ -5,7 +5,7 @@
 #   ab     <game> <A> <B> games=<số ván> ms=<ms/nước> shards=<số máy> [nodes=<giới hạn nút>]   (A, B: new | smpN | ref | old; thêm @spec, ví dụ new@corr64)
 #   Mọi dòng thêm được props=k1=v1;k2=v2 (thuộc tính hệ thống, ví dụ pm.level.chess.5=n15000 để thử cấu hình cấp).
 # Cấp: 0 Dễ, 1 Trung bình, 2 Khá, 3 Giỏi, 4 Cao thủ, 5 Thách đấu, 6 Siêu việt.
-tag=g20-go-smoke
+tag=g20b-go-smoke
 note=Cờ vây KataGo: chạy thử ngắn để kiểm tra đường đo (g19 lỗi khi khởi động KataGo, không ghi được lỗi).
 ladder go 1 0 pairs=1 ms=60000 shards=1 props=pm.kata.6=b10,v800
 ladder go 4 3 pairs=1 ms=60000 shards=1 props=pm.kata.6=b10,v800
