@@ -62,6 +62,8 @@ class BillingManager(private val app: Application, private val wallet: WalletRep
         if (client.isReady) return
         client.startConnection(object : BillingClientStateListener {
             override fun onBillingSetupFinished(r: BillingResult) {
+                if (r.responseCode != BillingClient.BillingResponseCode.OK)
+                    android.util.Log.w("PMBilling", "kết nối Google Play Billing lỗi ${r.responseCode}: ${r.debugMessage}")
                 if (r.responseCode == BillingClient.BillingResponseCode.OK) {
                     connected = true
                     loadProducts(); refresh()
@@ -77,7 +79,14 @@ class BillingManager(private val app: Application, private val wallet: WalletRep
                 ids.map { QueryProductDetailsParams.Product.newBuilder().setProductId(it).setProductType(type).build() }
             ).build()
             client.queryProductDetailsAsync(params) { res, result ->
-                if (res.responseCode != BillingClient.BillingResponseCode.OK) return@queryProductDetailsAsync
+                if (res.responseCode != BillingClient.BillingResponseCode.OK) {
+                    android.util.Log.w("PMBilling", "queryProductDetails($type) lỗi ${res.responseCode}: ${res.debugMessage}")
+                    return@queryProductDetailsAsync
+                }
+                // Mã Play không trả về: chưa kích hoạt, sai mã, hoặc bản cài không phải từ kênh thử nghiệm của Play
+                result.unfetchedProductList.forEach {
+                    android.util.Log.w("PMBilling", "không lấy được sản phẩm ${it.productId} (status ${it.statusCode})")
+                }
                 val m = offers.toMutableMap()
                 for (d in result.productDetailsList) {
                     val price = if (type == BillingClient.ProductType.SUBS)
@@ -95,6 +104,8 @@ class BillingManager(private val app: Application, private val wallet: WalletRep
     /** Đối chiếu lại với Google Play: gói đang có + giao dịch kim cương chưa được tiêu thụ. Gọi mỗi lần mở app. */
     fun refresh() {
         if (!client.isReady) { start(); return }
+        // lần truy vấn đầu có thể thất bại (Play chưa sẵn sàng, mạng): thử lại mỗi lần mở app cho tới khi có sản phẩm
+        if (offers.size < 4) loadProducts()
         client.queryPurchasesAsync(QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.SUBS).build()) { res, list ->
             if (res.responseCode != BillingClient.BillingResponseCode.OK) return@queryPurchasesAsync
             val active = list.filter { it.purchaseState == Purchase.PurchaseState.PURCHASED }
