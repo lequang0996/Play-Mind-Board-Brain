@@ -31,7 +31,7 @@ android {
         buildConfigField("String", "ADMOB_BANNER", "\"${cfg("ADMOB_BANNER", "ca-app-pub-3940256099942544/9214589741")}\"")
         buildConfigField("String", "ADMOB_APP_OPEN", "\"${cfg("ADMOB_APP_OPEN", "ca-app-pub-3940256099942544/9257395921")}\"")
         // Firebase Realtime Database dùng làm trạm chuyển mã khi chơi qua internet (net/Relay.kt). Trống = trao đổi mã hai chiều.
-        buildConfigField("String", "SIGNAL_DB_URL", "\"${cfg("SIGNAL_DB_URL", "")}\"")
+        buildConfigField("String", "SIGNAL_DB_URL", "\"${cfg("SIGNAL_DB_URL", "https://gen-lang-client-0528598066-default-rtdb.asia-southeast1.firebasedatabase.app")}\"")
         buildConfigField("String", "PRIVACY_URL", "\"${cfg("PRIVACY_URL", "https://lequang0996.github.io/fwsandroid/play-mind/")}\"")
         ndk { abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64") }
     }
