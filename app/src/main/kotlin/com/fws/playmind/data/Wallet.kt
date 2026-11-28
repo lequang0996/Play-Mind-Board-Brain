@@ -43,7 +43,8 @@ sealed interface CheckIn {
 /**
  * Luật kim cương:
  *  - Điểm danh mỗi ngày +1. Điểm danh liên tục 30 ngày thì mỗi lần tiếp theo +2 (gói tháng: +4). Gói năm không dùng kim cương.
- *  - Mỗi game 1 lượt chơi miễn phí/ngày (gói tháng: 3, gói năm: không giới hạn). Hết lượt: mỗi ván tốn 1 kim cương.
+ *  - Chơi với máy: mỗi game 1 lượt miễn phí/ngày (gói tháng: 3, gói năm: không giới hạn). Hết lượt: mỗi ván tốn 1 kim cương.
+ *  - Phòng chơi với bạn (gần nhau / internet): mỗi người -1 kim cương mỗi ván, không dùng lượt miễn phí; gói tháng / năm: miễn phí.
  *  - Thắng +1. Thắng liên tiếp 3 ván trong một game +2, 5 ván +3 (rồi tính lại từ 0).
  *  - Thua / hòa / thoát giữa ván / mất kết nối: chuỗi thắng về 0.
  * Không có mức trần kim cương.
@@ -245,10 +246,19 @@ class WalletRepo(private val ctx: Context) {
 
     fun freeAvailable(gameId: String) = freeLeft(gameId) > 0
 
-    fun canStart(gameId: String): Boolean = freeAvailable(gameId) || st().diamonds >= 1
+    /**
+     * Có bắt đầu ván được không. [room] = ván trong phòng chơi với bạn (gần nhau / internet): mỗi người -1 kim cương,
+     * không dùng lượt miễn phí; gói tháng hoặc gói năm thì không mất kim cương.
+     */
+    fun canStart(gameId: String, room: Boolean = false): Boolean =
+        if (room) currentPlan() != Plan.NONE || st().diamonds >= 1 else freeAvailable(gameId) || st().diamonds >= 1
 
-    fun startMatch(gameId: String): StartCost {
+    fun startMatch(gameId: String, room: Boolean = false): StartCost {
         val st = st()
+        if (room) {
+            if (currentPlan() != Plan.NONE) { commit(st.copy(pending = gameId)); return StartCost.FREE }
+            return if (st.diamonds >= 1) { commit(st.copy(diamonds = st.diamonds - 1, pending = gameId)); StartCost.PAID } else StartCost.INSUFFICIENT
+        }
         if (freeLeft(gameId) > 0) {
             val u = st.freeUsed[gameId]
             val used = if (u != null && u.first == today()) u.second else 0

@@ -161,6 +161,8 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
     /** Bên đang được người dùng điều khiển: khi chơi chung một máy thì là bên đang đến lượt. */
     val actingSide get() = if (mode == Mode.LOCAL) (game?.turn ?: 0) else mySide
     val oppIsMachine get() = opp == Opp.COMPUTER || opp == Opp.HIDDEN_BOT
+    /** Ván trong phòng chơi với bạn (gần nhau / internet): mỗi người -1 kim cương, gói tháng / năm miễn phí. */
+    private val roomMode get() = mode == Mode.HOST_NEARBY || mode == Mode.HOST_NET || mode == Mode.JOIN_NEARBY || mode == Mode.JOIN_NET
 
     // ───────────────────────── vào / thoát ─────────────────────────
     fun open(g: GameInfo) {
@@ -309,7 +311,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
     // ───────────────────────── tạo phòng (chủ phòng) ─────────────────────────
     fun hostRoom(nearby: Boolean): Boolean {
         val inf = info ?: return false
-        if (!wallet.canStart(inf.id)) { notice = Notice.NOT_ENOUGH; return false }
+        if (!wallet.canStart(inf.id, room = true)) { notice = Notice.NOT_ENOUGH; return false }
         teardown()
         mode = if (nearby) Mode.HOST_NEARBY else Mode.HOST_NET
         phase = Phase.ROOM
@@ -529,11 +531,11 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         val inf = info ?: return
         if (multi) {
             if (phase != Phase.ROOM) return
-            if (!wallet.canStart(inf.id)) { notice = Notice.NOT_ENOUGH; return }
+            if (!wallet.canStart(inf.id, room = true)) { notice = Notice.NOT_ENOUGH; return }
             hostStartMulti(); return
         }
         if (phase != Phase.ROOM || opp == Opp.NONE) return
-        if (!wallet.canStart(inf.id)) { notice = Notice.NOT_ENOUGH; return }
+        if (!wallet.canStart(inf.id, room = true)) { notice = Notice.NOT_ENOUGH; return }
         hostSide = Random.nextInt(2); mySide = hostSide
         if (opp == Opp.HUMAN) transport?.send(Proto.start(hostSide, option, pvpTime))
         timerJob?.cancel()
@@ -543,7 +545,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
     // ───────────────────────── vào phòng (khách) ─────────────────────────
     fun joinNearby(): Boolean {
         val inf = info ?: return false
-        if (!wallet.canStart(inf.id)) { notice = Notice.NOT_ENOUGH; return false }
+        if (!wallet.canStart(inf.id, room = true)) { notice = Notice.NOT_ENOUGH; return false }
         teardown()
         mode = Mode.JOIN_NEARBY; phase = Phase.ROOM
         val t = NearbyTransport(getApplication(), inf.id); transport = t
@@ -559,7 +561,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
 
     fun joinNet(): Boolean {
         val inf = info ?: return false
-        if (!wallet.canStart(inf.id)) { notice = Notice.NOT_ENOUGH; return false }
+        if (!wallet.canStart(inf.id, room = true)) { notice = Notice.NOT_ENOUGH; return false }
         teardown()
         mode = Mode.JOIN_NET; phase = Phase.ROOM
         transport = WebRtcTransport(getApplication())
@@ -721,7 +723,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
     // ───────────────────────── ván đấu ─────────────────────────
     private fun beginMatch(): Boolean {
         val inf = info ?: return false
-        if (mode != Mode.LOCAL && wallet.startMatch(inf.id) == StartCost.INSUFFICIENT) {
+        if (mode != Mode.LOCAL && wallet.startMatch(inf.id, roomMode) == StartCost.INSUFFICIENT) {
             notice = Notice.NOT_ENOUGH
             if (isOnline) { transport?.send(Proto.QUIT) }
             teardown(); phase = Phase.IDLE; mode = Mode.NONE
@@ -932,7 +934,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         if (mode == Mode.LOCAL) { beginMatch(); return }
         if (mode == Mode.SOLO) { startSudoku(option); return }
         if (multi) return                                       // phòng nhiều người: về phòng chờ để tạo ván mới
-        if (!wallet.canStart(inf.id)) { notice = Notice.NOT_ENOUGH; return }
+        if (!wallet.canStart(inf.id, roomMode)) { notice = Notice.NOT_ENOUGH; return }
         if (isOnline && opp == Opp.HUMAN) { rematchAsked = true; transport?.send(Proto.REMATCH); maybeRematch() }
         else if (oppIsMachine) { mySide = 0; beginMatch() }
     }

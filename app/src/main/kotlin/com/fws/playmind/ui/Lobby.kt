@@ -260,6 +260,8 @@ fun LobbyScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onBack: 
                         Text(stringResource(R.string.pvp_time), style = MaterialTheme.typography.titleSmall, color = pm.ink)
                         TimePicker(vm.pvpTime) { vm.selectPvpTime(it) }
                         Text(stringResource(R.string.pvp_time_note), style = MaterialTheme.typography.bodySmall, color = pm.inkSoft)
+                        // ván với bạn bè: mỗi người -1 kim cương, thắng +1; gói tháng / năm không mất kim cương
+                        Text(stringResource(if (vm.wallet.currentPlan() == com.fws.playmind.data.Plan.NONE) R.string.room_cost else R.string.room_cost_plan), style = MaterialTheme.typography.bodySmall, color = pm.gold)
                     }
                     ModeCard(Ic.Nearby, stringResource(R.string.nearby), stringResource(R.string.nearby_card_desc)) {
                         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
