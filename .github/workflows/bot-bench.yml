@@ -101,20 +101,24 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/download-artifact@v4
         with: { path: parts }
-      - name: Gom kết quả và sinh báo cáo
-        run: |
-          python3 tools/bot-bench/collect.py tools/bot-bench/request.txt parts "$(date -u +%Y-%m-%d)" >> "$GITHUB_STEP_SUMMARY"
-          python3 tools/bot-bench/make_reports.py
-          python3 tools/bot-bench/make_profiles.py
-      - name: Commit vào main
+      - name: Gom kết quả, sinh báo cáo và commit vào main
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add tools/bot-bench/results docs/bot-results docs/games
-          git diff --cached --quiet && exit 0
-          git commit -m "Kết quả đo bot: ${{ needs.plan.outputs.tag }}"
+          # giữ request của chính lần chạy này (main có thể đã có request mới hơn)
+          cp tools/bot-bench/request.txt "$RUNNER_TEMP/request.txt"
+          day="$(date -u +%Y-%m-%d)"
           for n in 1 2 3 4 5; do
-            git pull --rebase -q origin main && git push -q origin HEAD:main && exit 0
-            sleep $((n * 10))
+            # mỗi lần thử: lấy main mới nhất rồi sinh lại kết quả trên đó (tránh xung đột khi rebase)
+            git fetch -q origin main && git reset -q --hard origin/main
+            python3 tools/bot-bench/collect.py "$RUNNER_TEMP/request.txt" parts "$day" > "$RUNNER_TEMP/summary.md"
+            python3 tools/bot-bench/make_reports.py
+            python3 tools/bot-bench/make_profiles.py
+            git add tools/bot-bench/results docs/bot-results docs/games
+            git diff --cached --quiet && break
+            git commit -q -m "Kết quả đo bot: ${{ needs.plan.outputs.tag }}"
+            git push -q origin HEAD:main && break
+            sleep $((n * 15))
+            [ $n -eq 5 ] && exit 1
           done
-          exit 1
+          cat "$RUNNER_TEMP/summary.md" >> "$GITHUB_STEP_SUMMARY"
