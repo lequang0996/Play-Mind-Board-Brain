@@ -412,3 +412,27 @@ hl_failed|Não enviou expressão
 hl_continue|Continuar
 reason_chips|Só um jogador ainda tem fichas
 reason_stall|Regra de impasse: 10 turnos sem captura
+game_morris|Trilha (Nine Men's Morris)
+game_morris_desc|Clássico para 2 jogadores com 9 peças cada: alinhe 3 (um moinho) para tirar uma peça do adversário.
+guide_morris|Objetivo: deixar o adversário com 2 peças, ou sem jogada legal na vez dele.\n• Tabuleiro: 3 quadrados aninhados ligados pelo meio dos lados, 24 pontos e 16 linhas de 3. Cada lado tem 9 peças; as pretas começam.\n• Fase 1, colocar: alternem colocando uma peça em qualquer ponto vazio. Ninguém move antes de ambos colocarem as 9.\n• Fase 2, mover: a cada vez, mova uma peça pela linha para um ponto vazio vizinho.\n• Moinho: 3 peças suas numa linha permitem tirar 1 peça adversária. Peças dentro de um moinho adversário não podem ser tiradas; se todas estiverem, você não tira nada dessa vez. Abrir e fechar o mesmo moinho conta como novo. Formar 2 moinhos de uma vez tira só 1 peça.\n• Fase 3, voar: com exatamente 3 peças (após colocar), suas peças podem voar para qualquer ponto vazio.\n• Regra de impasse: quando alguém fica com 3 peças, se passarem 10 turnos sem captura a partida termina: perde quem tem menos peças; empatadas, é empate.
+mo_info|Mão %1$d · tabuleiro %2$d
+mo_place|Toque um ponto vazio para colocar (restam %d)
+mo_move|Toque sua peça e depois um ponto vizinho
+mo_fly|Você tem 3 peças: toque uma e depois qualquer ponto vazio para voar
+mo_capture|Moinho! Toque uma peça adversária (anel vermelho) para tirá-la
+mo_stall|Regra de impasse: restam %d turnos sem captura
+game_hexagon|Hexágono da memória
+game_hexagon_desc|Memorize 19 números em 30 segundos e aperte a campainha para achar 3 casas em linha que somem o alvo. Jogue contra a máquina em 7 níveis.
+guide_hexagon|Objetivo: fazer mais pontos que a máquina em 10 rodadas.\n• Tabuleiro: 19 hexágonos em fileiras de 3-4-5-4-3. Cada casa tem um número e uma letra de A a S.\n• Memorizar (30 segundos): o tabuleiro mostra os números.\n• Procurar: as casas viram letras e o alvo aparece. Ache 3 casas seguidas numa linha reta (horizontal ou uma das diagonais) que somem o alvo.\n• Campainha: quem aperta primeiro responde e tem 10 segundos para tocar as 3 casas (pela letra).\n• Pontos: acerto +1, erro −1. Erro inclui soma errada, repetir um trio já dito ou passar de 10 segundos.\n• Trios ditos não são marcados: você precisa lembrar. O número de respostas não é anunciado. A rodada acaba quando todas são achadas ou ninguém aperta por 90 segundos (reinicia após cada resposta).\n• Após 10 rodadas, empate vai para rodadas extras.
+hx_you|Você
+hx_round|Rodada %1$d/%2$d
+hx_extra|Rodada extra
+hx_target|ALVO
+hx_memorize|Memorize os números
+hx_find|Ache 3 casas em linha que somem o alvo
+hx_call|Toque 3 casas em 10 segundos
+hx_bot_buzzed|%s apertou a campainha!
+hx_reveal|Respostas da rodada (verde)
+hx_correct|+1 acerto
+hx_wrong|−1 erro
+hx_buzz|APERTAR

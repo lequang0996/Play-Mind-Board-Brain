@@ -57,6 +57,7 @@ import com.fws.playmind.core.QuoridorGame
 import com.fws.playmind.core.WallGoGame
 import com.fws.playmind.core.MeadowGame
 import com.fws.playmind.core.HiLoGame
+import com.fws.playmind.core.MorrisGame
 import com.fws.playmind.match.Mode
 import com.fws.playmind.match.Opp
 import com.fws.playmind.match.Phase
@@ -85,6 +86,7 @@ private fun seatInfo(vm: SessionViewModel, seat: Int): String? {
         is WallGoGame -> stringResource(R.string.st_cells, g.territory()[seat])
         is MeadowGame -> stringResource(R.string.md_points, g.points(seat))
         is HiLoGame -> stringResource(R.string.hl_chips, g.chips[seat])
+        is MorrisGame -> stringResource(R.string.mo_info, g.hand[seat], g.count[seat])
         is QuoridorGame -> stringResource(R.string.st_walls, g.wallsOf(seat))
         is GoGame -> stringResource(R.string.st_captured, g.capturedBy(seat))
         else -> null
@@ -242,6 +244,7 @@ fun GameScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onExit: (
                 "wallgo" -> WallGoBoardView(vm)
                 "meadow" -> MeadowBoardView(vm)
                 "hilo" -> HiLoBoardView(vm, info)
+                "morris" -> MorrisBoardView(vm)
                 "blindcaro" -> BlindCaroBoardView(vm, Modifier.fillMaxSize())
                 else -> GomokuBoardView(vm, Modifier.fillMaxSize())   // bàn vô hạn: lấp đầy khoảng trống, kéo/thu phóng được
             }

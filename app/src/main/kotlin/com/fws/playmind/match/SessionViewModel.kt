@@ -28,6 +28,8 @@ import com.fws.playmind.core.QuoridorGame
 import com.fws.playmind.core.WallGoGame
 import com.fws.playmind.core.MeadowGame
 import com.fws.playmind.core.HiLoGame
+import com.fws.playmind.core.HexagonMatch
+import com.fws.playmind.core.HexPhase
 import com.fws.playmind.core.AutoOnTimeout
 import com.fws.playmind.core.MeadowPhase
 import com.fws.playmind.net.NearbyHub
@@ -116,6 +118,10 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
     /** Đang hiện "Đúng rồi!" trước khi sang hình kế tiếp. */
     var tgSolved by mutableStateOf(false); private set
     private var tgJob: Job? = null
+    /** Lục giác trí nhớ: trận đang chơi (ghế 0 = người, ghế 1 = máy), đếm vẽ lại và vòng lặp thời gian. */
+    var hex by mutableStateOf<HexagonMatch?>(null); private set
+    var hexTick by mutableIntStateOf(0); private set
+    private var hexJob: Job? = null
     private var tgClock: Job? = null
     // Khối gỗ ghép chữ: 7 từ cùng chủ đề trong 10 phút
     var words by mutableStateOf<WordBlocksGame?>(null); private set
@@ -251,7 +257,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         val g = game
         val inf = info
         val sd = sudoku
-        if (phase == Phase.PLAYING && inf != null && (inf.id == Catalog.TANGRAM_ID || inf.id == Catalog.WORDS_ID)) {
+        if (phase == Phase.PLAYING && inf != null && (inf.id == Catalog.TANGRAM_ID || inf.id == Catalog.WORDS_ID || inf.id == Catalog.HEXAGON_ID)) {
             wallet.finishMatch(inf.id, MatchOutcome.LOSS, true)
         } else if (phase == Phase.PLAYING && sd != null && inf != null && sd.status == SudokuStatus.PLAYING) {
             sd.giveUp()
@@ -287,6 +293,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         magicClock?.cancel(); saveMagic(); magic = null; magicSeconds = 0
         tgJob?.cancel(); tgClock?.cancel(); tangram = emptyList(); tgIndex = 0; tgSeconds = Tangram.SECONDS_PER_PUZZLE; tgTotal = 0; tgSolved = false
         wbClock?.cancel(); words = null; wbSeconds = WordBlocks.SECONDS
+        hexJob?.cancel(); hex = null
         inviteCode = ""; replyCode = ""; inviteBusy = false; inviteOpen = false; guestConnected = false
         relayJob?.cancel(); relayJob = null; dropRelayRooms(); relayJoined = false
         rematchAsked = false; oppAskedRematch = false; localEnd = null; remoteEnd = null; finalized = false
@@ -341,6 +348,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         Catalog.MAGIC_ID -> startMagic()
         Catalog.TANGRAM_ID -> startTangram()
         Catalog.WORDS_ID -> startWords()
+        Catalog.HEXAGON_ID -> startHexagon()
         else -> startSudoku(Catalog.SUDOKU_LEVEL)
     }
 
@@ -444,6 +452,38 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         }
         return true
     }
+
+    // ───────────────────────── Lục giác trí nhớ ─────────────────────────
+    /** Trận 10 vòng với máy ở cấp đang chọn; thắng thì mở cấp kế tiếp. Thời gian chạy theo nhịp 100 ms. */
+    fun startHexagon(): Boolean {
+        val inf = info ?: return false
+        if (!wallet.canStart(inf.id)) { notice = Notice.NOT_ENOUGH; return false }
+        teardown()
+        if (wallet.startMatch(inf.id) == StartCost.INSUFFICIENT) { notice = Notice.NOT_ENOUGH; return false }
+        mode = Mode.SOLO; reward = null; finalized = false; unlockedNow = -1
+        val m = HexagonMatch(intArrayOf(-1, botLevel), System.nanoTime())
+        hex = m; phase = Phase.PLAYING; tick++; hexTick++
+        val my = ++epoch
+        hexJob = viewModelScope.launch {
+            var t0 = System.currentTimeMillis()
+            while (true) {
+                delay(100)
+                if (my != epoch || phase != Phase.PLAYING) break
+                val t1 = System.currentTimeMillis(); m.tick((t1 - t0).coerceIn(0, 1000)); t0 = t1
+                hexTick++
+                if (m.phase == HexPhase.OVER) {
+                    phase = Phase.OVER
+                    val out = if (m.draw) MatchOutcome.DRAW else if (m.winner == 0) MatchOutcome.WIN else MatchOutcome.LOSS
+                    if (out == MatchOutcome.WIN && botLevel < Catalog.LEVELS - 1 && prefs.unlockLevel(inf.id, botLevel + 1)) unlockedNow = botLevel + 1
+                    settle(out, true)
+                    break
+                }
+            }
+        }
+        return true
+    }
+    fun hexBuzz() { hex?.buzz(0); hexTick++ }
+    fun hexPick(cell: Int) { hex?.pick(0, cell); hexTick++ }
 
     /** Màn hình báo hình hiện tại đã ghép xong. */
     fun tangramSolved() {
@@ -1182,7 +1222,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
 
     /** Kim cương cơ bản khi thắng ván này: thắng máy / Xếp hình 7 mảnh theo cấp (Dễ 0 ... Siêu việt 6), còn lại 1. */
     fun winBase(inf: GameInfo? = info): Int =
-        if (mode == Mode.BOT || (mode == Mode.SOLO && inf?.id == Catalog.TANGRAM_ID)) botLevel.coerceIn(0, Catalog.LEVELS - 1) else 1
+        if (mode == Mode.BOT || (mode == Mode.SOLO && (inf?.id == Catalog.TANGRAM_ID || inf?.id == Catalog.HEXAGON_ID))) botLevel.coerceIn(0, Catalog.LEVELS - 1) else 1
 
     private fun settle(out: MatchOutcome, valid: Boolean) {
         if (finalized) return
@@ -1204,7 +1244,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         val inf = info ?: return
         if (phase != Phase.OVER) return
         if (mode == Mode.LOCAL) { beginMatch(); return }
-        if (mode == Mode.SOLO) { when (inf.id) { Catalog.MAGIC_ID -> {}; Catalog.TANGRAM_ID -> startTangram(); Catalog.WORDS_ID -> startWords(); else -> startSudoku(option) }; return }
+        if (mode == Mode.SOLO) { when (inf.id) { Catalog.MAGIC_ID -> {}; Catalog.TANGRAM_ID -> startTangram(); Catalog.WORDS_ID -> startWords(); Catalog.HEXAGON_ID -> startHexagon(); else -> startSudoku(option) }; return }
         if (multi) return                                       // phòng nhiều người: về phòng chờ để tạo ván mới
         if (!wallet.canStart(inf.id, roomMode)) { notice = Notice.NOT_ENOUGH; return }
         if (isOnline && opp == Opp.HUMAN) { rematchAsked = true; transport?.send(Proto.REMATCH); maybeRematch() }

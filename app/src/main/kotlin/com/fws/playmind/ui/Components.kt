@@ -345,6 +345,8 @@ fun GameArt(gameId: String, modifier: Modifier = Modifier) {
             "wordblocks" -> drawWordBlocksArt(tm, ox, oy, s)
             "meadow" -> drawMeadowArt(ox, oy, s)
             "hilo" -> drawHiLoArt(ox, oy, s)
+            "morris" -> drawMorrisArt(ox, oy, s)
+            "hexagon" -> drawHexagonArt(ox, oy, s)
             else -> {
                 drawCaroPiece(Offset(ox + s * .66f, oy + s * .64f), s * .62f, false)
                 drawCaroPiece(Offset(ox + s * .36f, oy + s * .36f), s * .66f, true)

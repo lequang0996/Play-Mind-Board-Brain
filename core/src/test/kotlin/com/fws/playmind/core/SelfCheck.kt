@@ -237,6 +237,41 @@ fun main() {
         expect("tangram: de 10 manh ghep dung thi khop", Tangram.coverError(hard[9].pieces.map { it.poly }, hard[9]) < Tangram.SOLVED_ERROR)
     }
 
+    // ── Cờ cối xay ──
+    run {
+        expect("morris: 24 diem, 16 coi xay, 32 duong noi", MorrisGame.MILLS.size == 16 && MorrisGame.ADJ.sumOf { it.size } == 64)
+        val g = MorrisGame()
+        expect("morris: dat quan dau tien co 24 nuoc", g.legalMoves().size == 24)
+        // Đen đặt 0, 1, 2 (cối xay hàng trên ngoài); Trắng đặt 8, 9 -> Đen tạo cối xay được ăn 8 hoặc 9
+        for (m in listOf(0, 8, 1, 9)) g.play(MorrisGame.enc(-1, m, MorrisGame.NO_CAP))
+        val caps = g.legalMoves().filter { MorrisGame.toOf(it) == 2 }.map { MorrisGame.capOf(it) }.toSet()
+        expect("morris: tao coi xay thi duoc an quan khong nam trong coi xay", caps == setOf(8, 9))
+        // bot tự đấu luôn kết thúc
+        var ended = 0
+        for (seed in 1..3) {
+            val h = MorrisGame(); val r = kotlin.random.Random(seed); var guard = 0
+            while (h.result == Outcome.ONGOING && guard++ < 400) { val mv = h.levelMove(BotLevel.of(seed), 0, r); if (mv < 0 || !h.play(mv)) break }
+            if (h.result != Outcome.ONGOING) ended++
+        }
+        expect("morris: bot tu dau ket thuc (3/3)", ended == 3)
+    }
+
+    // ── Lục giác trí nhớ ──
+    run {
+        expect("hexagon: 19 o, 27 duong 3 o", Hexagon.AX.size == 19 && Hexagon.LINES.size == 27)
+        val (v, t) = Hexagon.deal(kotlin.random.Random(5))
+        expect("hexagon: de co 2-5 dap an", Hexagon.solutions(v, t).size in 2..5)
+        val m = HexagonMatch(intArrayOf(6, 0), 3L, botPickMs = 300); m.simulate()
+        expect("hexagon: Sieu viet thang De", m.winner == 0)
+        // người: bấm chuông, chọn sai bộ thì -1
+        val h = HexagonMatch(intArrayOf(-1, -1), 9L)
+        h.tick(Hexagon.MEMO_MS)
+        h.buzz(0)
+        val bad = Hexagon.LINES.first { it !in h.solutions }
+        for (c in Hexagon.cellsOf(bad)) h.pick(0, c)
+        expect("hexagon: tra loi sai bi tru 1 diem", h.scores[0] == -1 && h.phase == HexPhase.FIND)
+    }
+
     // ── Công thức cao thấp ──
     run {
         val A = HiLoGame.OP_ADD; val S = HiLoGame.OP_SUB; val M = HiLoGame.OP_MUL; val D = HiLoGame.OP_DIV

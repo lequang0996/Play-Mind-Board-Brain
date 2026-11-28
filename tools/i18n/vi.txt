@@ -412,3 +412,27 @@ hl_failed|Không nộp biểu thức
 hl_continue|Tiếp tục
 reason_chips|Chỉ còn một người có chip
 reason_stall|Hết 10 lượt bế tắc
+game_morris|Cờ cối xay
+game_morris_desc|Cờ dân gian 2 người, mỗi bên 9 quân: xếp 3 quân thẳng hàng (cối xay) để ăn quân đối thủ.
+guide_morris|Mục tiêu: làm đối thủ chỉ còn 2 quân, hoặc hết nước đi khi tới lượt.\n• Bàn: 3 hình vuông lồng nhau nối ở trung điểm các cạnh, 24 điểm, 16 đường 3 điểm. Mỗi bên 9 quân, Đen đi trước.\n• Giai đoạn 1, đặt quân: lần lượt đặt từng quân vào điểm trống. Chưa được đi quân cho tới khi cả hai đặt đủ 9 quân.\n• Giai đoạn 2, đi quân: mỗi lượt đi 1 quân dọc đường nối sang điểm trống kề bên.\n• Cối xay: xếp được 3 quân của mình trên một đường thì ăn 1 quân đối thủ. Không được ăn quân đang nằm trong cối xay của đối thủ; nếu mọi quân của đối thủ đều nằm trong cối xay thì lần đó không ăn được quân nào. Mở rồi đóng lại cùng một cối xay vẫn tính. Tạo 2 cối xay cùng lúc vẫn chỉ ăn 1 quân.\n• Giai đoạn 3, bay quân: còn đúng 3 quân (đã đặt xong) thì quân của bạn được bay tới bất kỳ điểm trống nào.\n• Bế tắc: khi đã có bên chỉ còn 3 quân, nếu 10 lượt liên tiếp không có quân nào bị ăn thì ván kết thúc: bên ít quân hơn thua, bằng nhau thì hòa.
+mo_info|Tay %1$d · bàn %2$d
+mo_place|Chạm điểm trống để đặt quân (còn %d quân)
+mo_move|Chạm quân của bạn rồi chạm điểm kề bên để đi
+mo_fly|Bạn còn 3 quân: chạm quân rồi chạm điểm trống bất kỳ để bay
+mo_capture|Cối xay! Chạm quân đối thủ (viền đỏ) để ăn
+mo_stall|Luật bế tắc: còn %d lượt không ăn quân
+game_hexagon|Lục giác trí nhớ
+game_hexagon_desc|Nhớ 19 con số trong 30 giây, rồi bấm chuông tìm 3 ô thẳng hàng có tổng bằng số mục tiêu. Đấu với máy 7 cấp.
+guide_hexagon|Mục tiêu: sau 10 vòng có nhiều điểm hơn máy.\n• Bàn: 19 ô lục giác xếp hàng 3-4-5-4-3. Mỗi ô có một số và một chữ cái từ A đến S.\n• Nhớ (30 giây): bàn hiện các con số.\n• Tìm: các ô lật sang chữ cái và số mục tiêu hiện ra. Tìm 3 ô liên tiếp trên một đường thẳng (hàng ngang hoặc hai đường chéo) có tổng đúng bằng mục tiêu.\n• Bấm chuông: ai bấm trước được trả lời và có 10 giây để chạm đúng 3 ô (theo chữ cái).\n• Điểm: đúng +1; sai −1. Sai gồm: chọn bộ không đúng tổng, chọn lại bộ đã được gọi trước đó, hoặc quá 10 giây.\n• Bộ đã gọi không được đánh dấu: bạn phải tự nhớ. Số đáp án mỗi vòng không được công bố. Vòng kết thúc khi tìm hết đáp án hoặc 90 giây không ai bấm chuông (đếm lại sau mỗi lần trả lời).\n• Sau 10 vòng, hòa điểm thì đấu thêm vòng phụ.
+hx_you|Bạn
+hx_round|Vòng %1$d/%2$d
+hx_extra|Vòng phụ
+hx_target|MỤC TIÊU
+hx_memorize|Ghi nhớ các con số
+hx_find|Tìm 3 ô thẳng hàng có tổng bằng mục tiêu
+hx_call|Chạm 3 ô trong 10 giây
+hx_bot_buzzed|%s bấm chuông!
+hx_reveal|Đáp án của vòng (ô xanh)
+hx_correct|+1 đúng
+hx_wrong|−1 sai
+hx_buzz|BẤM

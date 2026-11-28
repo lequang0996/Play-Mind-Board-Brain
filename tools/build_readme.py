@@ -12,6 +12,7 @@ EN = dict(
 AVAILABLE NOW — INTELLECT
 • Chess: full rules including castling, en passant, promotion, check, checkmate, stalemate and draws.
 • Xiangqi (Chinese Chess): generals, advisors, elephants, horses, chariots, cannons and soldiers on the river board, including the flying-general rule.
+• Nine Men's Morris: place 9 pieces, then move and fly; three in a row removes an opponent's piece.
 • Gomoku (Caro): make five in a row on an endless board - drag to explore, pinch to zoom. A line blocked at both ends does not count.
 
 AVAILABLE NOW — PUZZLE
@@ -22,6 +23,7 @@ AVAILABLE NOW — PUZZLE
 • Meadow Realm: 2-8 players lay grass tiles on a 30×30 meadow; the largest square of territory wins.
 
 AVAILABLE NOW — MEMORY
+• Hexagon Memory: memorise 19 numbers in 30 seconds, then race the computer to find three cells in a line that add up to the target.
 • Blind Gomoku: Gomoku with shared stones in four colours. The board never shows whose stone is whose, so you must remember yours.
 
 AVAILABLE NOW — CALCULATION

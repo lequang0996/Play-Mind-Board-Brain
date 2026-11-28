@@ -364,6 +364,50 @@ GAMES = {
 <h2>Dùng trong app</h2>
 <ul><li>Chạm thẻ theo thứ tự (số, phép, số, ...). Chạm √ rồi chạm một số để đặt căn. Giá trị và khoảng cách tới mốc hiện ngay trước khi nộp.</li></ul>
 <h2>Mẹo</h2><ul><li>Số nhỏ và phép ÷ hợp cửa Low; phép × và số lớn hợp cửa High. Xem thẻ ngửa của người khác trước khi tố.</li></ul>"""),
+"morris": dict(
+  en_name="Nine Men's Morris", vi_name="Cờ cối xay",
+  en_intro="A classic two-player game: 9 pieces each on a board of three nested squares. Line up three to remove an opponent's piece.",
+  vi_intro="Trò chơi dân gian cho 2 người: mỗi bên 9 quân trên bàn 3 hình vuông lồng nhau. Xếp 3 quân thẳng hàng để ăn quân đối thủ.",
+  en_body="""
+<h2>Rules</h2>
+<ul><li>24 points and 16 lines of three. Black moves first. Phase 1: take turns placing your 9 pieces on empty points; nothing moves until all 18 are placed.</li>
+<li>Phase 2: move one piece along a line to an adjacent empty point. Phase 3: with exactly 3 pieces left, your pieces fly to any empty point.</li>
+<li>Three in a line (a mill) removes one opponent piece that is not in a mill. If every opponent piece is in a mill, nothing is removed. Two mills at once still remove one piece.</li>
+<li>You win when the opponent is down to 2 pieces or cannot move. Once a player has 3 pieces, 10 turns without a capture end the game: fewer pieces loses, equal is a draw.</li></ul>
+<h2>Using the app</h2>
+<ul><li>Tap an empty point to place. Tap your piece, then a highlighted point to move. After a mill, tap an opponent piece with a red ring to remove it.</li></ul>
+<h2>Tips</h2><ul><li>Corner-to-middle points with 4 neighbours are the most flexible. A "running mill" (opening and closing the same mill every turn) wins material fast.</li></ul>""",
+  vi_body="""
+<h2>Luật</h2>
+<ul><li>24 điểm và 16 đường 3 điểm. Đen đi trước. Giai đoạn 1: lần lượt đặt 9 quân vào điểm trống; chưa ai đi quân cho tới khi đặt đủ 18 quân.</li>
+<li>Giai đoạn 2: đi một quân dọc đường nối sang điểm trống kề bên. Giai đoạn 3: còn đúng 3 quân thì quân của bạn bay tới điểm trống bất kỳ.</li>
+<li>Ba quân thẳng hàng (cối xay) thì ăn một quân đối thủ không nằm trong cối xay. Nếu mọi quân đối thủ đều trong cối xay thì không ăn được. Hai cối xay cùng lúc vẫn chỉ ăn một quân.</li>
+<li>Thắng khi đối thủ còn 2 quân hoặc hết nước đi. Khi đã có bên còn 3 quân, 10 lượt không ăn quân thì kết thúc: ít quân hơn thua, bằng nhau hòa.</li></ul>
+<h2>Dùng trong app</h2>
+<ul><li>Chạm điểm trống để đặt. Chạm quân của bạn rồi chạm điểm được tô để đi. Sau khi tạo cối xay, chạm quân đối thủ có viền đỏ để ăn.</li></ul>
+<h2>Mẹo</h2><ul><li>Các điểm giữa cạnh có 4 đường nối linh hoạt nhất. "Cối xay chạy" (mở rồi đóng cùng một cối xay mỗi lượt) ăn quân rất nhanh.</li></ul>"""),
+"hexagon": dict(
+  en_name="Hexagon Memory", vi_name="Lục giác trí nhớ",
+  en_intro="A memory duel against the computer: memorise 19 numbers, then race to find three cells in a line that add up to the target.",
+  vi_intro="Đấu trí nhớ với máy: nhớ 19 con số, rồi thi bấm chuông tìm 3 ô thẳng hàng có tổng bằng số mục tiêu.",
+  en_body="""
+<h2>Rules</h2>
+<ul><li>19 hexagons in rows of 3-4-5-4-3; each has a number and a letter A to S. You see the numbers for 30 seconds, then only letters and a target.</li>
+<li>Find 3 consecutive cells on a straight line (27 lines: across and both diagonals) whose numbers add up to the target. Buzz first, then tap the 3 cells within 10 seconds.</li>
+<li>Correct +1, wrong −1 (wrong sum, a set already called, or time-out). Called sets are not marked and the number of answers is not announced.</li>
+<li>A round ends when all answers are found or nobody buzzes for 90 seconds. 10 rounds; a tie goes to extra rounds.</li></ul>
+<h2>Using the app</h2>
+<ul><li>Choose the computer level (Easy to Supreme) in the lobby; winning unlocks the next level. Answers of each round are shown in green at the end.</li></ul>
+<h2>Tips</h2><ul><li>During the 30 seconds, group numbers by line instead of memorising cells one by one. Keep a mental list of sets already called.</li></ul>""",
+  vi_body="""
+<h2>Luật</h2>
+<ul><li>19 ô lục giác hàng 3-4-5-4-3; mỗi ô có một số và một chữ cái A đến S. Bạn thấy các con số trong 30 giây, sau đó chỉ còn chữ cái và số mục tiêu.</li>
+<li>Tìm 3 ô liên tiếp trên một đường thẳng (27 đường: ngang và hai đường chéo) có tổng bằng mục tiêu. Bấm chuông trước rồi chạm đúng 3 ô trong 10 giây.</li>
+<li>Đúng +1, sai −1 (sai tổng, bộ đã gọi rồi, hoặc quá giờ). Bộ đã gọi không được đánh dấu và số đáp án không được công bố.</li>
+<li>Vòng kết thúc khi tìm hết đáp án hoặc 90 giây không ai bấm chuông. 10 vòng; hòa thì đấu thêm vòng phụ.</li></ul>
+<h2>Dùng trong app</h2>
+<ul><li>Chọn cấp máy (Dễ đến Siêu việt) ở phòng chờ; thắng thì mở cấp kế tiếp. Cuối mỗi vòng, các đáp án được tô xanh.</li></ul>
+<h2>Mẹo</h2><ul><li>Trong 30 giây, nhớ theo từng đường thay vì từng ô. Tự ghi nhớ danh sách các bộ đã được gọi.</li></ul>"""),
 "wordblocks": dict(
   en_name="Word Blocks", vi_name="Khối gỗ ghép chữ",
   en_intro="A single-player word game: build 7 English words on one theme from shuffled wooden letter blocks within 10 minutes.",
@@ -484,6 +528,8 @@ index_body = f"""
 <a href="how-to-play/sudoku.html"><div class="card"><b>Sudoku</b><span class="muted" data-l="en">One given per box, any valid grid wins.</span><span class="muted" data-l="vi">Mỗi khối một gợi ý, điền đúng luật là thắng.</span></div></a>
 <a href="how-to-play/meadow.html"><div class="card"><b><span data-l="en">Meadow Realm</span><span data-l="vi">Lãnh địa đồng cỏ</span></b><span class="muted" data-l="en">2-8 players, 30×30 meadow, biggest square wins.</span><span class="muted" data-l="vi">2-8 người, đồng cỏ 30×30, hình vuông lớn nhất thắng.</span></div></a>
 <a href="how-to-play/hilo.html"><div class="card"><b><span data-l="en">High-Low Formula</span><span data-l="vi">Công thức cao thấp</span></b><span class="muted" data-l="en">2-8 players, 50 chips, expressions near 20 or 1.</span><span class="muted" data-l="vi">2-8 người, 50 chip, biểu thức sát 20 hoặc sát 1.</span></div></a>
+<a href="how-to-play/morris.html"><div class="card"><b><span data-l="en">Nine Men's Morris</span><span data-l="vi">Cờ cối xay</span></b><span class="muted" data-l="en">Place, move, fly: three in a row removes a piece.</span><span class="muted" data-l="vi">Đặt, đi, bay: 3 quân thẳng hàng thì ăn quân.</span></div></a>
+<a href="how-to-play/hexagon.html"><div class="card"><b><span data-l="en">Hexagon Memory</span><span data-l="vi">Lục giác trí nhớ</span></b><span class="muted" data-l="en">Memorise 19 numbers, buzz in, find sums.</span><span class="muted" data-l="vi">Nhớ 19 số, bấm chuông, tìm tổng.</span></div></a>
 <a href="how-to-play/wordblocks.html"><div class="card"><b><span data-l="en">Word Blocks</span><span data-l="vi">Khối gỗ ghép chữ</span></b><span class="muted" data-l="en">7 English words on one theme in 10 minutes.</span><span class="muted" data-l="vi">7 từ tiếng Anh cùng chủ đề trong 10 phút.</span></div></a>
 <a href="how-to-play/tangram.html"><div class="card"><b><span data-l="en">Tangram</span><span data-l="vi">Xếp hình Tangram</span></b><span class="muted" data-l="en">7 levels, 4 to 10 pieces, 10 shapes per round.</span><span class="muted" data-l="vi">7 cấp, 4 đến 10 mảnh, mỗi lượt 10 hình.</span></div></a>
 <a href="how-to-play/blindcaro.html"><div class="card"><b><span data-l="en">Blind Gomoku</span><span data-l="vi">Cờ caro mù</span></b><span class="muted" data-l="en">Shared four-colour stones: remember which are yours.</span><span class="muted" data-l="vi">Quân bốn màu dùng chung: nhớ quân nào của mình.</span></div></a>

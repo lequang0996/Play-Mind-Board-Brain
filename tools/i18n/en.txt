@@ -412,3 +412,27 @@ hl_failed|No expression submitted
 hl_continue|Continue
 reason_chips|Only one player has chips left
 reason_stall|Stalemate rule: 10 turns without a capture
+game_morris|Nine Men's Morris
+game_morris_desc|A classic 2-player game with 9 pieces each: line up 3 (a mill) to remove an opponent's piece.
+guide_morris|Goal: reduce your opponent to 2 pieces, or leave them with no legal move on their turn.\n• Board: 3 nested squares joined at the midpoints of their sides, 24 points and 16 lines of 3. Each side has 9 pieces; Black moves first.\n• Phase 1, placing: take turns placing one piece on any empty point. No piece may move until both players have placed all 9.\n• Phase 2, moving: each turn move one piece along a line to an adjacent empty point.\n• Mill: 3 of your pieces on one line lets you remove 1 opponent piece. Pieces inside an opponent's mill cannot be removed; if all of their pieces are in mills, you remove nothing that time. Opening and closing the same mill again counts as a new mill. Making 2 mills at once still removes only 1 piece.\n• Phase 3, flying: with exactly 3 pieces left (after placing), your pieces may fly to any empty point.\n• Stall rule: once a player is down to 3 pieces, if 10 turns pass without a capture the game ends: fewer pieces loses, equal is a draw.
+mo_info|Hand %1$d · board %2$d
+mo_place|Tap an empty point to place a piece (%d left)
+mo_move|Tap your piece, then an adjacent point to move
+mo_fly|You have 3 pieces: tap a piece, then any empty point to fly
+mo_capture|Mill! Tap an opponent piece (red ring) to remove it
+mo_stall|Stall rule: %d turns left without a capture
+game_hexagon|Hexagon Memory
+game_hexagon_desc|Memorise 19 numbers in 30 seconds, then buzz in to find 3 cells in a line that add up to the target. Play the computer at 7 levels.
+guide_hexagon|Goal: score more than the computer over 10 rounds.\n• Board: 19 hexagons in rows of 3-4-5-4-3. Each cell has a number and a letter from A to S.\n• Memorise (30 seconds): the board shows the numbers.\n• Find: the cells flip to letters and the target appears. Find 3 cells in a row along a straight line (across or either diagonal) that add up to the target.\n• Buzz: whoever buzzes first answers and has 10 seconds to tap the 3 cells (by letter).\n• Scoring: correct +1, wrong −1. Wrong includes a set with the wrong sum, repeating a set already called, or running out of 10 seconds.\n• Called sets are not marked: you must remember them. The number of answers is not announced. A round ends when all answers are found or nobody buzzes for 90 seconds (reset after each answer).\n• After 10 rounds, a tie goes to extra rounds.
+hx_you|You
+hx_round|Round %1$d/%2$d
+hx_extra|Extra round
+hx_target|TARGET
+hx_memorize|Memorise the numbers
+hx_find|Find 3 cells in a line that add up to the target
+hx_call|Tap 3 cells within 10 seconds
+hx_bot_buzzed|%s buzzed in!
+hx_reveal|This round's answers (green)
+hx_correct|+1 correct
+hx_wrong|−1 wrong
+hx_buzz|BUZZ

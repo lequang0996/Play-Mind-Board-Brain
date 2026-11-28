@@ -10,6 +10,7 @@ import com.fws.playmind.core.GoGame
 import com.fws.playmind.core.GomokuGame
 import com.fws.playmind.core.HiLoGame
 import com.fws.playmind.core.MeadowGame
+import com.fws.playmind.core.MorrisGame
 import com.fws.playmind.core.QuoridorGame
 import com.fws.playmind.core.WallGoGame
 import com.fws.playmind.core.XiangqiGame
@@ -88,6 +89,10 @@ object Catalog {
     /** Công thức cao thấp: 2-8 người, mỗi người 50 chip, ghép biểu thức sát 20 (High) hoặc sát 1 (Low) (core HiLoGame). Mỗi lượt 90 giây. */
     const val HILO_ID = "hilo"
     const val HILO_MOVE_SECONDS = 90
+    /** Cờ cối xay (Nine Men's Morris): 2 người, 9 quân, ăn quân bằng cối xay 3 quân (core MorrisGame). */
+    const val MORRIS_ID = "morris"
+    /** Lục giác trí nhớ: nhớ 19 số trong 30 giây rồi bấm chuông tìm bộ 3 ô có tổng bằng mục tiêu, đấu với máy 7 cấp (core Hexagon). */
+    const val HEXAGON_ID = "hexagon"
     const val MAGIC_HINTS_MONTHLY = 10
     const val MAGIC_HINTS_YEARLY = 20
 
@@ -145,6 +150,14 @@ object Catalog {
             R.string.side_red, R.string.side_blue, 12, { 1500L },
             optionKind = OptionKind.PLAYERS, options = listOf(2, 3, 4, 5, 6, 7, 8), defaultOption = 8, order = 1, minutes = 25,
             create = { n -> HiLoGame(n) }, popularity = 4, contentTags = listOf(Tag.DUEL, Tag.PARTY, Tag.NUMBERS, Tag.STRATEGY, Tag.COUNTDOWN)),
+        // Trí tuệ: Cờ cối xay, 2 người, bot alpha-beta 7 cấp
+        GameInfo(MORRIS_ID, Topic.MIND, R.string.game_morris, R.string.game_morris_desc, R.string.guide_morris,
+            R.string.stone_black, R.string.stone_white, 14, { 3000L }, order = 8, minutes = 10, create = { MorrisGame() },
+            popularity = 25, contentTags = listOf(Tag.DUEL, Tag.BOARD, Tag.STRATEGY, Tag.CLASSIC)),
+        // Ghi nhớ: Lục giác trí nhớ, đấu với máy (bấm chuông thời gian thực trên một máy)
+        GameInfo(HEXAGON_ID, Topic.MEMORY, R.string.game_hexagon, R.string.game_hexagon_desc, R.string.guide_hexagon,
+            R.string.side_white, R.string.side_black, 0, { 0L }, kind = GameKind.SOLO, order = 2, minutes = 15,
+            popularity = 6, contentTags = listOf(Tag.DUEL, Tag.NUMBERS, Tag.MEMORY, Tag.COUNTDOWN)),
         // Trí tuệ: ghép 7 từ tiếng Anh cùng chủ đề từ các khối gỗ chữ cái, 10 phút
         GameInfo(WORDS_ID, Topic.MIND, R.string.game_wordblocks, R.string.game_wordblocks_desc, R.string.guide_wordblocks,
             R.string.side_white, R.string.side_black, 0, { 0L }, kind = GameKind.SOLO, order = 0, minutes = 10,
