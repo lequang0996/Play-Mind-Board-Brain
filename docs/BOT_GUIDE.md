@@ -631,6 +631,11 @@ Cờ vây dùng **cả kích thước mạng lẫn số lượt** làm công c�
 | Thách đấu | Như Siêu việt | Theo mục 4.3, cách Siêu việt 300 Elo | Không |
 | Siêu việt | Mạnh nhất chạy được trong `botMillis` trên máy thấp nhất | Toàn lực | Không |
 
+**Đo trên CI (11/2026, `ladder go`, KataGo 1.18.2 Eigen, mạng g170 b6/b10):**
+* g21 (Dễ b6 1 lượt nhiệt độ 1.6, TB 0.8, Khá b6 12 lượt, Giỏi b10 40, CT b10 160, TĐ b10 480, SV b10 800): ba cặp dưới 100%, Giỏi–Khá 98,1%, CT–Giỏi 95,8%, SV–TĐ 63,9%. Gấp 4 lần số lượt cùng mạng thắng khoảng 96–98%.
+* g23 (Dễ/TB/Khá lấy mẫu chính sách b6 nhiệt độ 1.2/0.9/0.6, Giỏi b6 8 lượt, CT b10 40, TĐ b10 200, SV b10 800): TB–Dễ 89,6% (thấp, cần 93–98%), Khá–TB 89,6%, Giỏi–Khá 97,9% (hơi cao), CT–Giỏi 100% ✗, TĐ–CT 95,8% ✗, SV–TĐ 88,9%. Nhảy từ b6 sang b10 cộng gấp 5 lượt là quá xa cho khoảng cách 200 Elo.
+* g25 đang đo đường cong từng bước (nhiệt độ, b6 4→8→16 lượt, b6→b10 cùng 16 lượt, b10 16→40→100→200→400→800) để ghép bảng theo khoảng đạt thay vì đoán.
+
 Khi đo trên máy chủ, định nghĩa Siêu việt bằng **số lượt cố định** (lượt/giây bền trên máy thấp nhất × `botMillis`), không bằng thời gian, để kết quả không phụ thuộc phần cứng đo. Số lượt, nhiệt độ và kích thước mạng của từng hàng chỉ chốt sau khi qua vòng chỉnh mục 4.3.
 
 ### 8.4. Đối chiếu engine ngoài (tùy chọn)
