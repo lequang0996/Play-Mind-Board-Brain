@@ -5,11 +5,12 @@
 #   ab     <game> <A> <B> games=<số ván> ms=<ms/nước> shards=<số máy> [nodes=<giới hạn nút>]   (A, B: new | smpN | ref | old; thêm @spec, ví dụ new@corr64)
 #   Mọi dòng thêm được props=k1=v1;k2=v2 (thuộc tính hệ thống, ví dụ pm.level.chess.5=n15000 để thử cấu hình cấp).
 # Cấp: 0 Dễ, 1 Trung bình, 2 Khá, 3 Giỏi, 4 Cao thủ, 5 Thách đấu, 6 Siêu việt.
-tag=g23-go-chain-v2
-note=Cờ vây: chỉnh bảng cấp sau g21 (ba cặp dưới 100%, Siêu việt vs Thách đấu 64%): Dễ/TB/Khá lấy mẫu chính sách b6 nhiệt độ 1.2/0.9/0.6, Giỏi b6 8 lượt, Cao thủ b10 40, Thách đấu b10 200, Siêu việt b10 800.
-ladder go 1 0 pairs=24 ms=60000 shards=2 props=pm.kata.0=b6,v1,t1.2,raw;pm.kata.1=b6,v1,t0.9,raw;pm.kata.2=b6,v1,t0.6,raw;pm.kata.3=b6,v8,t0.3;pm.kata.4=b10,v40,t0;pm.kata.5=b10,v200,t0;pm.kata.6=b10,v800,t0
-ladder go 2 1 pairs=24 ms=60000 shards=2 props=pm.kata.0=b6,v1,t1.2,raw;pm.kata.1=b6,v1,t0.9,raw;pm.kata.2=b6,v1,t0.6,raw;pm.kata.3=b6,v8,t0.3;pm.kata.4=b10,v40,t0;pm.kata.5=b10,v200,t0;pm.kata.6=b10,v800,t0
-ladder go 3 2 pairs=24 ms=60000 shards=2 props=pm.kata.0=b6,v1,t1.2,raw;pm.kata.1=b6,v1,t0.9,raw;pm.kata.2=b6,v1,t0.6,raw;pm.kata.3=b6,v8,t0.3;pm.kata.4=b10,v40,t0;pm.kata.5=b10,v200,t0;pm.kata.6=b10,v800,t0
-ladder go 4 3 pairs=24 ms=60000 shards=3 props=pm.kata.0=b6,v1,t1.2,raw;pm.kata.1=b6,v1,t0.9,raw;pm.kata.2=b6,v1,t0.6,raw;pm.kata.3=b6,v8,t0.3;pm.kata.4=b10,v40,t0;pm.kata.5=b10,v200,t0;pm.kata.6=b10,v800,t0
-ladder go 5 4 pairs=24 ms=60000 shards=4 props=pm.kata.0=b6,v1,t1.2,raw;pm.kata.1=b6,v1,t0.9,raw;pm.kata.2=b6,v1,t0.6,raw;pm.kata.3=b6,v8,t0.3;pm.kata.4=b10,v40,t0;pm.kata.5=b10,v200,t0;pm.kata.6=b10,v800,t0
-ladder go 6 5 pairs=18 ms=60000 shards=6 props=pm.kata.0=b6,v1,t1.2,raw;pm.kata.1=b6,v1,t0.9,raw;pm.kata.2=b6,v1,t0.6,raw;pm.kata.3=b6,v8,t0.3;pm.kata.4=b10,v40,t0;pm.kata.5=b10,v200,t0;pm.kata.6=b10,v800,t0
+tag=g24-quoridor-ct-xq-t2b
+note=Quoridor sau g22: 10/11 cặp đạt, chỉ Thách đấu vs Cao thủ 92% (trần 88%). Thử mạnh Cao thủ lên (A: p0.10 x150 e25; B: p0.05 x100 e10), đo lại 5v4, 4v3, 6v4. Cờ tướng: thêm 400 ván A/B xiangqi-t2 (g22: +30 Elo, khoảng tin cậy chạm 50%).
+ladder quoridor 5 4 pairs=100 ms=2000 shards=4 props=pm.level.quoridor.4=d1,p0.10,x150,e25
+ladder quoridor 4 3 pairs=100 ms=2000 shards=3 props=pm.level.quoridor.4=d1,p0.10,x150,e25
+ladder quoridor 6 4 pairs=50 ms=2000 shards=2 props=pm.level.quoridor.4=d1,p0.10,x150,e25
+ladder quoridor 5 4 pairs=100 ms=2000 shards=4 props=pm.level.quoridor.4=d1,p0.05,x100,e10
+ladder quoridor 4 3 pairs=100 ms=2000 shards=3 props=pm.level.quoridor.4=d1,p0.05,x100,e10
+ladder quoridor 6 4 pairs=50 ms=2000 shards=2 props=pm.level.quoridor.4=d1,p0.05,x100,e10
+ab xiangqi new@w:xiangqi-t2 new games=400 ms=1000 shards=4
