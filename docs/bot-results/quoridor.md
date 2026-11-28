@@ -6,8 +6,8 @@ Sinh tự động bởi `tools/bot-bench/make_reports.py` từ `tools/bot-bench/
 
 | Mục | Giá trị |
 |---|---|
-| Số đợt đo | 5 |
-| Tổng số ván đã đấu | 6642 |
+| Số đợt đo | 6 |
+| Tổng số ván đã đấu | 7758 |
 | Cặp kề đạt (kết quả mới nhất) | 2/6 |
 | Nghiệm thu | Chưa đạt (cần đủ 6 cặp kề với đủ số ván, 5 cặp cách hai cấp và đo trên điện thoại thật) |
 
@@ -76,6 +76,16 @@ Quoridor: cấp mới dùng "quên tường" (extra = % nước chỉ đi quân)
 | Cao thủ vs Giỏi | 2000 ms | 204 | 158/0/46 | 77,5% | 0.74 / 0.81 | Đạt |
 | Thách đấu vs Cao thủ | 2000 ms | 204 | 157/0/47 | 77,0% | 0.78 / 0.75 | Đạt |
 | Siêu việt vs Thách đấu | 2000 ms | 216 | 173/0/43 | 80,1% | 0.81 / 0.80 | Đạt |
+
+### Đợt g17-quoridor-low-levels (2026-11-28)
+
+Quoridor: Khá p0.5, Trung bình p0.75, Dễ p0.97 (sau g15: Giỏi-Khá 83,8%). Đo lại các cặp có ba cấp dưới.
+
+| Cặp | Thời gian Siêu việt (PC) | Số ván | Thắng/Hòa/Thua | Tỉ lệ điểm | Đi trước / đi sau | Kết luận |
+|---|---|---|---|---|---|---|
+| Trung bình vs Dễ | 2000 ms | 402 | 386/0/16 | 96,0% | 0.94 / 0.99 | Đạt |
+| Khá vs Trung bình | 2000 ms | 204 | 179/0/25 | 87,7% | 0.84 / 0.91 | Đạt |
+| Giỏi vs Khá | 2000 ms | 204 | 189/0/15 | 92,6% | 0.93 / 0.92 | Đạt |
 
 ### Đợt r1 (2026-11-27)
 

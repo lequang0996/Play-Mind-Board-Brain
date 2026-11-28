@@ -8,7 +8,7 @@ Sinh tự động bởi `python tools/bot-bench/make_reports.py` từ `tools/bot
 | [Cờ vua](chess.md) | 10 | 7688 | 6/6 | 6/6 | ~2659 | 2863 (đạt 2800+) |
 | [Cờ tướng](xiangqi.md) | 6 | 4720 | 6/6 | 5/6 | ~3154 | chưa đo |
 | [Cờ caro](caro.md) | 5 | 4092 | 6/6 | 1/6 | ~1863 | chưa đo |
-| [Quoridor](quoridor.md) | 5 | 6642 | 6/6 | 2/6 | ~2423 | chưa đo |
+| [Quoridor](quoridor.md) | 6 | 7758 | 6/6 | 2/6 | ~2423 | chưa đo |
 | [Wall Go](wallgo.md) | 5 | 4280 | 6/6 | 3/6 | ~2006 | chưa đo |
 | [Cờ vây](go.md) | 0 | 0 | 0/6 | 0/6 | chưa đủ dữ liệu | chưa đo |
 
