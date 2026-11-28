@@ -347,7 +347,7 @@ GAMES = {
   en_body="""
 <h2>Rules</h2>
 <ul><li>Deck: number cards 0 to 10 in 4 colours (gold &gt; silver &gt; bronze &gt; black, used only for ties), 4 × cards and 4 √ cards. Everyone always holds + − ÷.</li>
-<li>Each hand everyone pays the ante (1 chip, doubling every 4 hands). You get 1 face-down number card and 2 face-up cards, then bet; one more face-up card, then bet again. A special card is kept and you draw again until you get a number. × forces you to give up one of + − ÷; √ takes the square root of one number.</li>
+<li>Each hand everyone pays the ante (1 chip, doubling every 4 hands). You get 1 face-down number card and 1 face-up card, then bet; two more face-up cards, then bet again. A special card is kept and you draw again until you get a number. × forces you to give up one of + − ÷; √ takes the square root of one number.</li>
 <li>Betting: check / call, raise (up to 3 raises per round) or fold. Out of chips means all-in, with side pots for the rest.</li>
 <li>Pick a side in secret: High (near 20), Low (near 1) or Swing (both). Within 90 seconds build an expression using all 4 numbers and all 3 operators; × ÷ before + −, then left to right, no brackets, no dividing by 0. Missing the deadline loses the hand.</li>
 <li>Closest to 20 takes half the pot, closest to 1 takes the other half. Swing must win both sides or gets nothing. Ties: High compares the largest number card, Low the smallest, then colour.</li></ul>
@@ -357,7 +357,7 @@ GAMES = {
   vi_body="""
 <h2>Luật</h2>
 <ul><li>Bộ bài: thẻ số 0 đến 10 ở 4 màu (vàng &gt; bạc &gt; đồng &gt; đen, chỉ dùng khi xét hòa), 4 thẻ × và 4 thẻ √. Ai cũng có sẵn 3 thẻ + − ÷.</li>
-<li>Mỗi ván bài ai cũng góp ante (1 chip, gấp đôi sau mỗi 4 ván bài). Mỗi người nhận 1 thẻ số úp và 2 thẻ ngửa, cược vòng 1; thêm 1 thẻ ngửa, cược vòng 2. Rút trúng thẻ đặc biệt thì giữ lại và rút tiếp tới khi được thẻ số. Thẻ × bắt bỏ một trong + − ÷; thẻ √ lấy căn bậc hai của một số.</li>
+<li>Mỗi ván bài ai cũng góp ante (1 chip, gấp đôi sau mỗi 4 ván bài). Mỗi người nhận 1 thẻ số úp và 1 thẻ ngửa, cược vòng 1; thêm 2 thẻ ngửa, cược vòng 2. Rút trúng thẻ đặc biệt thì giữ lại và rút tiếp tới khi được thẻ số. Thẻ × bắt bỏ một trong + − ÷; thẻ √ lấy căn bậc hai của một số.</li>
 <li>Cược: xem / theo, tố thêm (tối đa 3 lần mỗi vòng) hoặc bỏ bài. Hết chip thì tất tay, phần còn lại thành pot phụ.</li>
 <li>Chọn cửa kín: High (sát 20), Low (sát 1) hoặc Swing (cả hai). Trong 90 giây lập biểu thức dùng hết 4 số và 3 phép; × ÷ trước + −, rồi từ trái sang phải, không có ngoặc, không chia cho 0. Quá giờ là thua ván bài đó.</li>
 <li>Người sát 20 nhất ăn nửa pot, người sát 1 nhất ăn nửa còn lại. Swing phải thắng cả hai cửa, thua một cửa là trắng tay. Hòa: High xét thẻ số lớn nhất, Low xét thẻ số nhỏ nhất, rồi đến màu.</li></ul>

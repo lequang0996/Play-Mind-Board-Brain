@@ -84,7 +84,7 @@ object BotLevels {
     // nên các cấp dưới kết hợp "quên tường" với nhiễu nhỏ (delta 100) trên nước đi quân. Đo 11/2026, mục 13.
     val quoridor = listOf(
         d(1, 0.97, 100, 100), d(1, 0.75, 100, 100), d(1, 0.50, 100, 100),
-        d(1, extra = 80), d(1, 0.20, 150, 40), n(300), top(),
+        d(1, extra = 80), d(1, 0.10, 150, 25), n(300), top(),   // Cao thủ: g24 biến thể A (5v4 82%, 4v3 82%, 6v4 90%)
     )
 
     // Wall Go (mục 10.3), alpha-beta. Điểm: 100 = một ô lãnh thổ. Một nút rất nặng (đánh giá mọi nước con), Siêu việt
@@ -109,9 +109,12 @@ object BotLevels {
     // Công thức cao thấp (2-8 người): HiLoBot, số mẫu Monte Carlo tăng theo cấp (4 ... 400); noiseP = xác suất đi ngẫu nhiên.
     val hilo = listOf(d(1, 0.70), d(1, 0.40), d(1, 0.20), d(1, 0.08), d(1, 0.03), d(1), top())
 
+    // Cờ cối xay (Nine Men's Morris): alpha-beta + TT + tìm tiếp nước ăn quân. Điểm: 120 mỗi quân. Khởi điểm, chờ đo trên CI.
+    val morris = listOf(d(1, 0.9, 300), d(1, 0.5, 150), d(2, 0.3, 80), d(3), d(4), n(60000), top())
+
     fun of(gameId: String): List<LevelConfig> = when (gameId) {
         "chess" -> chess; "xiangqi" -> xiangqi; "caro" -> caro
-        "quoridor" -> quoridor; "wallgo" -> wallgo; "go" -> go; "meadow" -> meadow; "hilo" -> hilo
+        "quoridor" -> quoridor; "wallgo" -> wallgo; "go" -> go; "meadow" -> meadow; "hilo" -> hilo; "morris" -> morris
         else -> chess
     }
 

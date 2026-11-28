@@ -15,6 +15,7 @@ fun ladderMain(args: List<String>) {
     val pairs = args[3].toInt(); val ms = args[4].toLong(); val seed0 = args[5].toInt()
     val players = args.getOrNull(6)?.toInt() ?: 2
     if (game == "go") { goLadder(a, b, pairs, ms, seed0); return }   // KataGo (GoKata.kt), chỉ trên CI
+    if (game == "hexagon") { hexLadder(a, b, pairs, seed0); return }
     if (game == "meadow" || game == "hilo") { multiLadder(game, a, b, pairs, ms, seed0, players); return }
     ChessGame.threads = 1   // đo cấp: 1 luồng (nhiều tiến trình chạy song song trên một máy)
     var w = 0; var d = 0; var l = 0
@@ -44,7 +45,7 @@ fun ladderMain(args: List<String>) {
 
 private fun create(game: String, players: Int): BoardGame = when (game) {
     "chess" -> ChessGame(); "xiangqi" -> XiangqiGame(); "caro" -> GomokuGame()
-    "quoridor" -> QuoridorGame(players); "wallgo" -> WallGoGame(players)
+    "quoridor" -> QuoridorGame(players); "wallgo" -> WallGoGame(players); "morris" -> MorrisGame()
     else -> error("game?")
 }
 
@@ -54,7 +55,7 @@ internal fun benchOpening(game: String, players: Int, seed: Int): BoardGame {
     val r = Random(seed * 7919 + 13)
     // Quoridor: 4 nước đi quân rồi mỗi bên một tường ngẫu nhiên (chỉ đi quân thì có khoảng 9 thế mở đầu, bot giới hạn nút
     // chơi lại y hệt nên các ván trùng nhau và sai số thật rất lớn; BOT_GUIDE mục 3.1)
-    val k = when (game) { "chess", "xiangqi" -> 2 + r.nextInt(3); "caro" -> 0; "quoridor" -> 6; else -> 2 }
+    val k = when (game) { "chess", "xiangqi" -> 2 + r.nextInt(3); "caro" -> 0; "quoridor" -> 6; "morris" -> 2 + r.nextInt(3); else -> 2 }
     repeat(k) { ply ->
         val ms = g.legalMoves().let { all -> if (game == "quoridor") all.filter { if (ply < 4) it < 128 else it >= 128 }.toIntArray() else all }
         // chỉ nhận nước không kết thúc ván (ví dụ đi quân về chỗ cũ tạo lại thế ban đầu = thua do lặp thế)
@@ -92,6 +93,24 @@ private fun multiLadder(game: String, a: Int, b: Int, pairs: Int, ms: Long, seed
             when (sA) { 1.0 -> w++; 0.0 -> l++; else -> d++ }
             val info = if (g is HiLoGame) "hands=${g.hand} w=${g.winner}" else "pts=${(g as MeadowGame).finalPoints.joinToString(",")}"
             println("R $seed ${if (aFirst) 1 else 0} $sA ${g.plies} ${g.reason} $info")
+            System.out.flush()
+        }
+    }
+    println("TOTAL $w $d $l")
+}
+
+/** Lục giác trí nhớ: hai bot đấu nguyên trận (10 vòng + vòng phụ), A ở ghế 0 rồi ghế 1. */
+private fun hexLadder(a: Int, b: Int, pairs: Int, seed0: Int) {
+    var w = 0; var d = 0; var l = 0
+    for (i in 0 until pairs) {
+        val seed = seed0 + i
+        for (aFirst in listOf(true, false)) {
+            val m = HexagonMatch(if (aFirst) intArrayOf(a, b) else intArrayOf(b, a), seed * 2L + (if (aFirst) 0 else 1), botPickMs = 300)
+            m.simulate()
+            val aSeat = if (aFirst) 0 else 1
+            val sA = if (m.draw) 0.5 else if (m.winner == aSeat) 1.0 else 0.0
+            when (sA) { 1.0 -> w++; 0.0 -> l++; else -> d++ }
+            println("R $seed ${if (aFirst) 1 else 0} $sA ${m.round} ${if (m.draw) "DRAW" else "SCORE"} ${m.scores.joinToString(":")}")
             System.out.flush()
         }
     }

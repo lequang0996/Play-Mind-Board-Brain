@@ -354,7 +354,7 @@ fun MeadowBoardView(vm: SessionViewModel, modifier: Modifier = Modifier) {
             }
             }
             // hàng chờ công khai
-            QueueStrip(g, act && phase == MeadowPhase.TURN && !g.couponUsed && g.coupons[me] > 0) { askCoupon = it }
+            QueueStrip(g, act && phase == MeadowPhase.TURN && !g.couponUsed && g.coupons[me] > 0, vm.tick) { askCoupon = it }
             // bảng điều khiển
             val panel = RoundedCornerShape(20.dp)
             Column(
@@ -416,7 +416,8 @@ private fun promptText(g: MeadowGame, act: Boolean, clearMode: Boolean): String 
 
 /** Hàng chờ: 5 mảnh tới (mảnh đang lấy viền vàng; chạm mảnh 2-5 để dùng phiếu) và vài mảnh sau đó nhỏ, mờ hơn. */
 @Composable
-private fun QueueStrip(g: MeadowGame, canSwap: Boolean, onSwap: (Int) -> Unit) {
+private fun QueueStrip(g: MeadowGame, canSwap: Boolean, tick: Int, onSwap: (Int) -> Unit) {
+    @Suppress("UNUSED_EXPRESSION") tick   // đối tượng game không đổi: phải đọc tick để hàng chờ vẽ lại sau mỗi nước
     Row(
         Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = 6.dp, vertical = 2.dp),
         horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically,

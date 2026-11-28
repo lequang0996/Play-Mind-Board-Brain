@@ -24,7 +24,7 @@ class HiLoShowdown(
  * lấy ×) thành một biểu thức, cộng thêm √ cho từng số nếu có thẻ √; cửa High thắng khi kết quả gần 20 nhất, cửa Low gần 1 nhất.
  *
  * Bộ bài: thẻ số 0..10 ở 4 chất (vàng > bạc > đồng > đen, dùng xét hòa) = 44 thẻ, cùng 4 thẻ × và 4 thẻ √.
- * Một ván: góp ante; mỗi người 1 thẻ số úp và 2 thẻ ngửa; vòng cược 1; thêm 1 thẻ ngửa; vòng cược 2; chọn cửa kín
+ * Một ván (theo Devil's Plan mùa 1): góp ante; mỗi người 1 thẻ số úp và 1 thẻ ngửa; vòng cược 1; thêm 2 thẻ ngửa; vòng cược 2; chọn cửa kín
  * (High / Low / Swing); lập biểu thức (Swing: hai biểu thức, phải thắng cả hai cửa); lật bài, chia pot (mỗi cửa một nửa).
  * Rút trúng thẻ đặc biệt khi chia thẻ ngửa: giữ thẻ đó và rút tiếp tới khi được thẻ số. Thẻ ×: bắt buộc bỏ một trong + − ÷.
  * Tính theo thứ tự thông thường (× ÷ trước + −), không có ngoặc; chia cho 0 là biểu thức không hợp lệ.
@@ -320,7 +320,7 @@ class HiLoGame(val players: Int = 8) : BoardGame, LeveledEngine, AutoOnTimeout {
         deck = ArrayList((0 until CARDS).toList()); deck.shuffle(Random(seed))
         val order = (1..players).map { (dealer + it) % players }.filter { inHand[it] }
         for (p in order) { val c = drawNumber(); nums[p].add(c) }
-        repeat(2) { for (p in order) dealOpen(p) }
+        for (p in order) dealOpen(p)          // như Devil's Plan: 1 thẻ úp + 1 thẻ ngửa rồi cược vòng 1
         betRound = 1
         afterDeal()
     }
@@ -370,7 +370,8 @@ class HiLoGame(val players: Int = 8) : BoardGame, LeveledEngine, AutoOnTimeout {
     private fun endBetting() {
         if (betRound == 1) {
             betRound = 2
-            for (p in (1..players).map { (dealer + it) % players }) if (active(p)) dealOpen(p)
+            // thêm 2 thẻ ngửa rồi cược vòng 2 (đủ 4 thẻ số)
+            repeat(2) { for (p in (1..players).map { (dealer + it) % players }) if (active(p)) dealOpen(p) }
             afterDeal()
         } else {
             phase = HiLoPhase.DECLARE
