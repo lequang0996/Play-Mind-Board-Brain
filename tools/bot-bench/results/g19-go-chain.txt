@@ -1,0 +1,2 @@
+# date: 2026-11-28
+# note: Cờ vây KataGo (bảng KataLevels, mục 8.3a) lần đầu: 6 cặp kề. Siêu việt cố định 800 lượt b10 (chưa có số đo điện thoại); in thêm ms mỗi genmove trên CI.
