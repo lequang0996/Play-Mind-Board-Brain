@@ -6,7 +6,7 @@ import kotlin.random.Random
 /**
  * Đấu hai cấp bot của cùng một game theo cặp ván đổi màu (BOT_GUIDE mục 2.5, 3.4).
  *   ladder <game> <A> <B> <pairs> <svMs> <seed0> [players]
- *   <game> chess | xiangqi | caro | quoridor | wallgo;  <A>,<B> cấp 0..6 (0 = Dễ ... 6 = Siêu việt)
+ *   <game> chess | xiangqi | caro | quoridor | wallgo | go (KataGo, cần KATAGO/KG_B6/KG_B10);  <A>,<B> cấp 0..6 (0 = Dễ ... 6 = Siêu việt)
  *   <svMs> ngân sách thời gian của Siêu việt trên máy đo (= botMillis ÷ k, mục 3.2)
  * In mỗi ván: "R <i> <A đi trước 1/0> <điểm của A> <số nửa nước> <lý do>", cuối cùng "TOTAL W D L".
  */
@@ -14,6 +14,7 @@ fun ladderMain(args: List<String>) {
     val game = args[0]; val a = args[1].toInt(); val b = args[2].toInt()
     val pairs = args[3].toInt(); val ms = args[4].toLong(); val seed0 = args[5].toInt()
     val players = args.getOrNull(6)?.toInt() ?: 2
+    if (game == "go") { goLadder(a, b, pairs, ms, seed0); return }   // KataGo (GoKata.kt), chỉ trên CI
     ChessGame.threads = 1   // đo cấp: 1 luồng (nhiều tiến trình chạy song song trên một máy)
     var w = 0; var d = 0; var l = 0
     for (i in 0 until pairs) {

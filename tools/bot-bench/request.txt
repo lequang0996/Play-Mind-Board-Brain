@@ -5,6 +5,11 @@
 #   ab     <game> <A> <B> games=<số ván> ms=<ms/nước> shards=<số máy> [nodes=<giới hạn nút>]   (A, B: new | smpN | ref | old; thêm @spec, ví dụ new@corr64)
 #   Mọi dòng thêm được props=k1=v1;k2=v2 (thuộc tính hệ thống, ví dụ pm.level.chess.5=n15000 để thử cấu hình cấp).
 # Cấp: 0 Dễ, 1 Trung bình, 2 Khá, 3 Giỏi, 4 Cao thủ, 5 Thách đấu, 6 Siêu việt.
-tag=g18-chess-kha-de
-note=Cờ vua Khá vs Dễ đo lại với 400 ván (g16: 95,6% trên 102 ván, g13: 98,0%).
-ladder chess 2 0 pairs=200 ms=2000 shards=2
+tag=g19-go-chain
+note=Cờ vây KataGo (bảng KataLevels, mục 8.3a) lần đầu: 6 cặp kề. Siêu việt cố định 800 lượt b10 (chưa có số đo điện thoại); in thêm ms mỗi genmove trên CI.
+ladder go 6 5 pairs=18 ms=60000 shards=6 props=pm.kata.6=b10,v800
+ladder go 5 4 pairs=24 ms=60000 shards=4 props=pm.kata.6=b10,v800
+ladder go 4 3 pairs=24 ms=60000 shards=3 props=pm.kata.6=b10,v800
+ladder go 3 2 pairs=24 ms=60000 shards=2 props=pm.kata.6=b10,v800
+ladder go 2 1 pairs=24 ms=60000 shards=2 props=pm.kata.6=b10,v800
+ladder go 1 0 pairs=24 ms=60000 shards=2 props=pm.kata.6=b10,v800

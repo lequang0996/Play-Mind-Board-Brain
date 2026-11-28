@@ -66,6 +66,18 @@ jobs:
           net=$(find "$PWD/pf" -name '*.nnue' | head -1)
           test -n "$bin" && test -n "$net" || { find pf -maxdepth 3; echo "::error::không tìm thấy Pikafish/nnue"; exit 1; }
           chmod +x "$bin"; echo "PFBIN=$bin" >> "$GITHUB_ENV"; echo "PFNET=$net" >> "$GITHUB_ENV"
+      - uses: actions/cache@v4
+        if: contains(matrix.cmds, 'ladder go ')
+        id: kgcache
+        with: { path: kgbin, key: "katago-linux-${{ hashFiles('tools/katago/build_linux.sh') }}" }
+      - name: Build KataGo for Linux (engine cờ vây, MIT; mạng g170 CC0)
+        if: contains(matrix.cmds, 'ladder go ') && steps.kgcache.outputs.cache-hit != 'true'
+        run: bash tools/katago/build_linux.sh kgbin
+      - name: KataGo env
+        if: contains(matrix.cmds, 'ladder go ')
+        run: |
+          sudo apt-get install -y -qq libgomp1 zlib1g >/dev/null || true
+          echo "KATAGO=$PWD/kgbin/katago" >> "$GITHUB_ENV"; echo "KG_B6=$PWD/kgbin/b6.bin.gz" >> "$GITHUB_ENV"; echo "KG_B10=$PWD/kgbin/b10.bin.gz" >> "$GITHUB_ENV"
       - name: Run
         env: { CMDS: "${{ matrix.cmds }}" }
         run: |
