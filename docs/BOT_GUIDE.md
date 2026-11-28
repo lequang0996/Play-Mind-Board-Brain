@@ -257,14 +257,17 @@ Giới hạn nút của mọi cấp dưới phải thỏa `node_limit ≤ 0,5 ×
 
 ### 3.3. Công cụ
 
-| Game | Chạy trận tự động |
-|---|---|
-| Cờ vua | `fastchess` hoặc `cutechess-cli` (UCI), kèm SPRT |
-| Cờ tướng | Cùng công cụ nếu engine nói UCI/UCCI qua bộ chuyển; hoặc viết khung riêng trong `tools/bot-bench/` |
-| Caro | Giao thức Piskvork/Gomocup, hoặc khung riêng |
-| Cờ vây, Quoridor, Wall Go | Khung riêng trong `tools/bot-bench/` theo giao diện `BoardGame` (`Game.kt`) |
+Mọi trận đo chạy trên **GitHub Actions** bằng workflow `bot-bench.yml`; mã đo dùng chính engine của app (`core/src/test/.../bench/`). Hướng dẫn đầy đủ: [`tools/bot-bench/README.md`](../tools/bot-bench/README.md).
 
-Vì phần lớn trận là bot nội bộ đấu nhau, một khung riêng cho phép chọn **cấu hình bot cho từng bên** (cấp nào, giới hạn nào) là đủ. Chạy tuần tự nếu chỉ có 1 CPU để không làm lệch thời gian; nếu nhiều nhân thì chạy song song, mỗi ván một nhân riêng. Chạy nền bằng `setsid nohup ... &`.
+| Việc | Cách làm |
+|---|---|
+| Đo hai cấp (mục 3.4) | dòng `ladder <game> <A> <B> pairs=... ms=...` trong `tools/bot-bench/request.txt` |
+| Thử cấu hình cấp mà không sửa mã | thêm `props=pm.level.<game>.<cấp>=n15000,p0.05,x20` (xem `BotLevels.override`) |
+| So hai biến thể engine (mục 2.6) | dòng `ab <game> <A> <B> games=... ms=...`; người chơi `new`, `old`, `ref`, `smpN`, kèm `@tham số` hoặc `@w:<tag>` |
+| Đối chiếu engine ngoài (mục 3.5) | dòng `gauge chess elo=...` (Stockfish biên dịch trên CI) hoặc `gauge xiangqi nodes=...` (Pikafish) |
+| Tinh chỉnh Texel (cờ vua, cờ tướng) | `tools/tune/request.txt`, workflow `tune.yml` |
+
+Push `request.txt` lên `main` là chạy: việc được chia ra nhiều máy 4 vCPU (mỗi ván một nhân), kết quả tự commit vào `tools/bot-bench/results/<tag>.txt` và báo cáo `docs/bot-results/`. Không chạy engine đo GPL trên máy phát triển.
 
 ### 3.4. Đo 7 bot của một game
 
@@ -283,7 +286,7 @@ Làm theo thứ tự, ghi kết quả vào báo cáo (mục 11.2):
 
 ### 3.5. Đối chiếu với engine ngoài
 
-Muốn biết bot "ngang rung nào" của engine công khai, cho Siêu việt và vài cấp đấu engine ngoài ở thời gian đã chuẩn hóa (cờ vua: Stockfish `UCI_Elo`; cờ tướng: Pikafish theo số nút; cờ vây: KataGo theo số lượt mô phỏng; caro: engine Gomocup). Kết quả chỉ để **báo cáo** (ví dụ "Siêu việt ngang Stockfish `UCI_Elo` X"), **không** là điều kiện đạt. Mỗi mục game có gợi ý đối thủ ngoài. Đây là **engine đo** (mục 4.0): không phát hành nên không bị cổng giấy phép chặn. Game không có engine đo thì bỏ bước này; nghiệm thu chỉ dựa vào mục 3.4.
+Muốn biết bot "ngang rung nào" của engine công khai, cho Siêu việt và vài cấp đấu engine ngoài ở thời gian đã chuẩn hóa (cờ vua: Stockfish `UCI_Elo`; cờ tướng: Pikafish theo số nút vì Pikafish không có `UCI_Elo`; cờ vây: KataGo theo số lượt mô phỏng; caro: engine Gomocup). Kết quả chỉ để **báo cáo** (ví dụ "Siêu việt ngang Stockfish `UCI_Elo` X"), **không** là điều kiện đạt. Mỗi mục game có gợi ý đối thủ ngoài. Đây là **engine đo** (mục 4.0): không phát hành nên không bị cổng giấy phép chặn. Game không có engine đo thì bỏ bước này; nghiệm thu chỉ dựa vào mục 3.4.
 
 ---
 
@@ -444,7 +447,13 @@ Các tỉ lệ nút tính với `g = 60` (mục 4.3); đo lại `g` rồi tính 
 
 ### 5.4. Đối chiếu engine ngoài (tùy chọn)
 
-Stockfish có `UCI_LimitStrength=true` và `UCI_Elo` (mức thấp nhất khoảng 1320 tùy phiên bản; thang này không phải FIDE). Để biết Siêu việt và các cấp "ngang rung nào", cho đấu Stockfish ở vài mức `UCI_Elo`, cùng thời gian đã chuẩn hóa, 1 luồng, ≥ 100 ván mỗi mức, chọn mức sao cho tỉ lệ điểm nằm trong 20% đến 80%. Chỉ để báo cáo, không phải điều kiện đạt. Dễ và Trung bình thường nằm dưới mức thấp nhất của `UCI_Elo` nên không đo được bằng cách này.
+Stockfish có `UCI_LimitStrength=true` và `UCI_Elo` (mức thấp nhất khoảng 1320 tùy phiên bản; thang này được neo theo CCRL, không phải FIDE). Để biết Siêu việt và các cấp "ngang rung nào", cho đấu Stockfish ở vài mức `UCI_Elo`, cùng thời gian đã chuẩn hóa, 1 luồng, ≥ 100 ván mỗi mức, chọn mức sao cho tỉ lệ điểm nằm trong 20% đến 80%. Chỉ để báo cáo, không phải điều kiện đạt. Dễ và Trung bình thường nằm dưới mức thấp nhất của `UCI_Elo` nên không đo được bằng cách này.
+
+### 5.5. Trạng thái 11/2026
+
+* **Engine Siêu việt** (`ChessEngine.kt`, tự làm, alpha-beta): bitboard với magic, PVS lặp sâu dần có cửa sổ hẹp, Lazy SMP, bảng băm dùng chung, null move, reverse futility, razoring, futility, late move pruning, cắt tỉa theo SEE và history, LMR, singular extension, internal iterative reduction, killer, countermove, history, continuation history, capture history, correction history theo cấu trúc tốt. Đánh giá tuyến tính 545 tham số (tapered), tinh chỉnh Texel trên khoảng 1,5 triệu thế tự đấu sinh trên CI (workflow `tune.yml`, đợt `chess-t2`). Tham số tìm kiếm nằm ở `object SP`, mỗi giá trị đã qua A/B trên CI.
+* **Các bước đã đo trên CI** (A/B 200 ms/nước, 1 luồng): trọng số Texel đầu tiên +73 Elo; correction history +40; tổ hợp tham số tìm kiếm `qd240 futd130 asp12 hp2500` +26; trọng số `chess-t2` +112 (1008 ván). Lazy SMP 3 luồng hơn 1 luồng +119 Elo ở 1 s/nước.
+* **Đối chiếu Stockfish 17.1** (biên dịch trên CI, `UCI_LimitStrength`, 1 luồng; ta 3 luồng; cả hai 2 s/nước; đợt `g9`): `UCI_Elo` 2800 → 54,4% (80 ván, ước tính 2830); `UCI_Elo` 3000 → 40% (40 ván, ước tính 2930). **`UCI_Elo` của Stockfish được neo theo thang CCRL (danh sách xếp hạng engine), không phải FIDE**: "ngang `UCI_Elo` 2800" nghĩa là ngang Stockfish ở mức giới hạn đó trên thang CCRL, không phải ngang kỳ thủ FIDE 2800. Số đo ở thời gian của máy CI (4 vCPU); trên điện thoại, Siêu việt mạnh hay yếu hơn theo hệ số `k` (mục 3.2).
 
 ---
 
@@ -486,6 +495,12 @@ Các tỉ lệ nút tính với `g = 60` (mục 4.3); đo lại `g` rồi tính 
 ### 6.4. Đối chiếu engine ngoài (tùy chọn)
 
 Pikafish dùng mạng nơ-ron nên giới hạn theo **số nút**, không theo Elo. Dựng một thang vài rung, ví dụ 30, 100, 300, 1.000, 3.000, 10.000, 30.000, 100.000 nút, cho Siêu việt và vài cấp đấu từng rung (cùng thời gian chuẩn hóa, ≥ 100 ván mỗi rung). Chỉ để báo cáo "ngang rung nào", không là điều kiện đạt.
+
+### 6.5. Trạng thái 11/2026
+
+* **Engine Siêu việt** (`XiangqiEngine.kt`, tự làm): danh sách quân và bảng nước đi tính sẵn, cùng khung tìm kiếm với cờ vua (PVS, Lazy SMP, null move, LMR, singular, SEE, history các loại, correction history), đánh giá tuyến tính 711 tham số tinh chỉnh Texel trên khoảng 3,1 triệu thế tự đấu (đợt `xiangqi-t1`). Luật app: hết nước là thua, lặp thế thì bên vừa đi thua.
+* **A/B trên CI:** engine mới hơn engine cũ +267 Elo (240 ván, 1 s/nước); trọng số tinh chỉnh hơn trọng số khởi điểm +236 (408 ván). Correction history chỉ +15 (không có ý nghĩa thống kê), vẫn giữ mức 32.
+* **Đối chiếu Pikafish:** bản phát hành 2026 không có `UCI_Elo` / `UCI_LimitStrength`, nên chỉ giới hạn được theo số nút mỗi nước (dòng `gauge xiangqi nodes=...`). Với 20.000 nút/nước, Pikafish vẫn thắng áp đảo (ta 12,5%, 20 ván): Siêu việt còn cách xa engine NNUE hàng đầu. Đây là số đo báo cáo, không phải điều kiện đạt.
 
 ---
 
@@ -533,6 +548,13 @@ Các tỉ lệ nút tính với `g = 60` (mục 4.3); đo lại `g` cho caro r�
 ### 7.5. Đối chiếu engine ngoài (tùy chọn)
 
 Một engine Gomocup (như Rapfi) bị giới hạn nút, độ sâu hoặc thời gian. Cho Siêu việt đấu vài mức giới hạn, ≥ 100 ván mỗi mức. Chỉ để báo cáo. Chỉ hợp lệ nếu engine chạy đúng luật caro của dự án (Gomocup thường dùng freestyle, standard hoặc renju, khác luật chặn hai đầu): kiểm bằng thế viết tay trước, không giả định.
+
+### 7.6. Trạng thái 11/2026
+
+* **Engine Siêu việt** (`CaroEngine.kt`, tự làm). Mỗi ô trống, mỗi hướng có khóa màu 10 ô lân cận (5 ô mỗi phía). Bảng `CaroPat` tính sẵn hình cờ theo định nghĩa đệ quy (năm, bốn hở, bốn, ba hở…), nên tự đúng với luật chặn hai đầu và hình gãy. Cửa sổ 5 ô mỗi phía là bắt buộc: với 4 ô, thế `O X X X X _ O` bị nhận nhầm là bốn. Đánh giá và lớp ô (4-4, 4-3, 3-3) cập nhật tăng dần. Tìm kiếm có VCF, phòng VCF, PVS lặp sâu, bảng băm, killer; đối phương có ba hở thì chỉ xét nước chặn và nước đánh bốn. Bàn vô hạn: cửa sổ 32×32 quanh các quân, ngoài cửa sổ coi là trống.
+* **Luật đỡ bốn.** Một hàng bốn có một đầu bị chặn đỡ được bằng **hai** cách: chiếm ô thành năm, hoặc đặt quân ở đầu kia để dãy năm bị chặn hai đầu (`O X X X X _ .` thì đặt vào ô `.`). VCF và nước bắt buộc phải xét cả hai (`defenses()` thử từng ô trên đường), nếu không sẽ báo thắng sai.
+* **A/B trên CI:** engine mới hơn engine cũ +232 Elo ở 1 s/nước (408 ván, 79%).
+* **7 cấp:** từ Giỏi trở lên đạt khoảng (mục 13). Hai cặp dưới cùng bị nén: ở độ sâu 1, nhiễu bão hòa, còn lớp an toàn luôn chặn bốn, nên cấp Dễ vẫn đỡ được đòn đơn giản. Muốn đạt đủ cần thêm công cụ giảm sức riêng cho caro (ví dụ bỏ qua ba hở với một xác suất).
 
 ---
 
@@ -648,6 +670,12 @@ Hàm đánh giá khởi điểm: hiệu số độ dài đường ngắn nhất 
 
 Lưu ý cho cột MCTS: Dễ, Trung bình, Khá chỉ cách nhau ×4 đến ×5 lượt, tức khoảng 200 đến 230 Elo mỗi bậc, trong khi khoảng cách mục tiêu là 550 và 350 Elo; Khá lên Giỏi cần thêm 400 Elo, tức khoảng ×16 lượt. Chỉ dùng lượt thì phải ×45, ×11, ×16, không khả thi trên điện thoại. Vì vậy các cấp thấp phải bù chủ yếu bằng **nhiễu** (mục 4.2), và mọi con số chỉ chốt sau vòng chỉnh mục 4.3. Cột alpha-beta cũng vậy: mỗi bậc độ sâu chưa chắc cho đủ 550 / 350 / 400 Elo, phải đo.
 
+### 9.4. Trạng thái 11/2026
+
+* **Engine Siêu việt:** alpha-beta PVS, bảng băm Zobrist, killer cho 2 người; paranoid cho 4 người. Tham số ở `object QP` (thử A/B được bằng `new@...`).
+* **Các thử nghiệm không có lợi** (A/B với thế mở đầu đa dạng, 240 ván mỗi biến thể, đều quanh 50% so với engine cũ): tường ứng viên chặn mọi đường ngắn nhất, LMR, history, tăng hoặc giảm số tường ứng viên, đổi trọng số tường. Mặc định giữ cách chọn tường cũ. **Bài học đo:** thế mở đầu chỉ gồm 2 nước đi quân cho ra khoảng 9 thế khác nhau, bot giới hạn nút chơi lại y hệt, và kết quả A/B lệch tới 25 điểm phần trăm. Bộ đo giờ dùng 4 nước đi quân cộng mỗi bên một tường ngẫu nhiên.
+* **Thang sức nén:** tìm sâu thêm cho ít Elo (Siêu việt 2 s hơn n300 khoảng 81%, hơn n1000 khoảng 75%). Nhiễu có delta từ 2 bước đường đi trở lên làm bot đi lòng vòng, rồi thua vì luật lặp thế của app, nên kết quả gần như ngẫu nhiên. Vì vậy các cấp dưới bị nén (mục 13).
+
 ---
 
 ## 10. Wall Go
@@ -668,6 +696,12 @@ Hợp với MCTS hoặc alpha-beta với hàm đánh giá diện tích vây đư
 ### 10.3. Cấu hình 7 bot (khởi điểm để thử, phải đo lại)
 
 Dùng cùng bảng với Quoridor (mục 9.3): độ sâu 1 đến 4 cho Dễ đến Giỏi, rồi giới hạn nút hoặc lượt cho Cao thủ và Thách đấu theo công thức ở mục 4.3 (đo `g` riêng cho Wall Go), Siêu việt toàn lực. Số cụ thể phải đo lại riêng cho Wall Go vì độ rộng và độ dài ván khác Quoridor.
+
+### 10.4. Trạng thái 11/2026
+
+* **Engine Siêu việt (2 người):** negamax PVS đi/hoàn tác trên một bàn, bảng băm Zobrist, killer. Ở nút sát lá, điểm sắp xếp (đánh giá tĩnh của thế con) dùng luôn làm giá trị lá, không đánh giá lại và không cắt nước. Hàm đánh giá nhanh `score2` không cấp phát bộ nhớ. Độ sâu ở 1 s tăng từ 4 lên 5. 3-4 người vẫn dùng paranoid như cũ.
+* **A/B trên CI:** engine mới hơn engine cũ +124 Elo ở 1 s/nước (408 ván, 67%).
+* **7 cấp theo độ sâu và nhiễu** (không đổi theo máy): Siêu việt chỉ duyệt vài nghìn nút mỗi nước vì mỗi nút đánh giá mọi nước con, nên giới hạn nút không phù hợp. Đo trên máy phát triển, 200 ván mỗi cặp: cả 6 cặp kề đều trong khoảng đạt (mục 13).
 
 ---
 
