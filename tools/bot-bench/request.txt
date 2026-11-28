@@ -5,7 +5,15 @@
 #   ab     <game> <A> <B> games=<số ván> ms=<ms/nước> shards=<số máy> [nodes=<giới hạn nút>]   (A, B: new | smpN | ref | old; thêm @spec, ví dụ new@corr64)
 #   Mọi dòng thêm được props=k1=v1;k2=v2 (thuộc tính hệ thống, ví dụ pm.level.chess.5=n15000 để thử cấu hình cấp).
 # Cấp: 0 Dễ, 1 Trung bình, 2 Khá, 3 Giỏi, 4 Cao thủ, 5 Thách đấu, 6 Siêu việt.
-tag=g20b-go-smoke
-note=Cờ vây KataGo: chạy thử ngắn để kiểm tra đường đo (g19 lỗi khi khởi động KataGo, không ghi được lỗi).
-ladder go 1 0 pairs=1 ms=60000 shards=1 props=pm.kata.6=b10,v800
-ladder go 4 3 pairs=1 ms=60000 shards=1 props=pm.kata.6=b10,v800
+tag=g21-go-chain-xq-ab
+note=Cờ vây KataGo (sửa cấu hình: thiếu resignThreshold làm KataGo thoát ngay, cả trong app): 6 cặp kề, Siêu việt cố định 800 lượt b10. Cờ tướng: A/B tham số tìm kiếm XSP so với mặc định.
+ladder go 1 0 pairs=24 ms=60000 shards=2 props=pm.kata.6=b10,v800
+ladder go 2 1 pairs=24 ms=60000 shards=2 props=pm.kata.6=b10,v800
+ladder go 3 2 pairs=24 ms=60000 shards=2 props=pm.kata.6=b10,v800
+ladder go 4 3 pairs=24 ms=60000 shards=3 props=pm.kata.6=b10,v800
+ladder go 5 4 pairs=24 ms=60000 shards=4 props=pm.kata.6=b10,v800
+ladder go 6 5 pairs=18 ms=60000 shards=6 props=pm.kata.6=b10,v800
+ab xiangqi new@rfpm80+rfpi60 new games=400 ms=1000 shards=4
+ab xiangqi new@futb120+futd130 new games=400 ms=1000 shards=4
+ab xiangqi new@hp2500 new games=400 ms=1000 shards=4
+ab xiangqi new@asp12+qd240 new games=400 ms=1000 shards=4

@@ -78,7 +78,7 @@ jobs:
         run: |
           sudo apt-get install -y -qq libgomp1 zlib1g >/dev/null || true
           # thử khởi động: in kết quả thành annotation (đọc được không cần đăng nhập) để biết lỗi nếu có
-          printf 'logToStderr = true\nlogSearchInfo = false\n' > kgsmoke.cfg
+          printf 'logToStderr = true\nlogSearchInfo = false\nlogAllGTPCommunication = false\nnumSearchThreads = 1\n' > kgsmoke.cfg
           out=$(printf 'version\nboardsize 19\nkata-raw-nn b 0\nquit\n' | timeout 120 kgbin/katago gtp -model kgbin/b6.bin.gz -config kgsmoke.cfg 2>&1 | head -c 1500 | tr '\n' ' ' || true)
           echo "::warning::KataGo smoke: ${out:0:900}"
           ldd kgbin/katago | grep -i "not found" && echo "::error::thiếu thư viện" || true

@@ -20,7 +20,7 @@ class GoKata(private val level: Int, private val svMs: Long) {
     var genmoves = 0; private set
     var genmoveNanos = 0L; private set
     private val errTail = ArrayDeque<String>()
-    private fun errText() = synchronized(errTail) { errTail.joinToString(" | ") }
+    private fun errText() = synchronized(errTail) { errTail.filter { it.contains("rror") || it.contains("what()") || it.contains("ould not") || it.contains("xception") }.ifEmpty { errTail.toList().takeLast(3) }.joinToString(" | ") }
 
     init {
         val bin = System.getenv("KATAGO") ?: error("thiếu biến KATAGO")

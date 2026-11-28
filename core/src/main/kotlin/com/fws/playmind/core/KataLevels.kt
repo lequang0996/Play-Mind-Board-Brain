@@ -56,7 +56,10 @@ object KataLevels {
         return (size - row) * size + x
     }
 
-    /** Nội dung tệp cấu hình GTP của KataGo cho một cấp; luật khớp GoGame (diện tích, siêu ko vị trí, cấm tự sát, komi 7,5). */
+    /**
+     * Nội dung tệp cấu hình GTP của KataGo cho một cấp; luật khớp GoGame (diện tích, siêu ko vị trí, cấm tự sát, komi 7,5).
+     * Đã chạy thử trên CI với KataGo 1.18.2 (bot-bench "ladder go"): thiếu khóa bắt buộc là tiến trình thoát ngay.
+     */
     fun configText(lv: Lv, threads: Int, maxTimeSec: Double): String = buildString {
         appendLine("logToStderr = false")
         appendLine("logAllGTPCommunication = false")
@@ -69,6 +72,9 @@ object KataLevels {
         appendLine("whiteHandicapBonus = 0")
         appendLine("friendlyPassOk = false")
         appendLine("allowResignation = false")
+        // KataGo 1.18 bắt buộc có các khóa này khi tệp cấu hình có allowResignation (thiếu thì tiến trình thoát ngay)
+        appendLine("resignThreshold = -0.99")
+        appendLine("resignConsecTurns = 3")
         appendLine("ponderingEnabled = false")
         val t = if (lv.visits in 1..64) 1 else threads
         appendLine("numSearchThreads = $t")
