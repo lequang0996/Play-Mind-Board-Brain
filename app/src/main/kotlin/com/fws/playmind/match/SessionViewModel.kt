@@ -27,6 +27,8 @@ import com.fws.playmind.core.SudokuStatus
 import com.fws.playmind.core.QuoridorGame
 import com.fws.playmind.core.WallGoGame
 import com.fws.playmind.core.MeadowGame
+import com.fws.playmind.core.HiLoGame
+import com.fws.playmind.core.AutoOnTimeout
 import com.fws.playmind.core.MeadowPhase
 import com.fws.playmind.net.NearbyHub
 import kotlinx.coroutines.flow.first
@@ -222,6 +224,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         val inf = info ?: return 0
         if (inf.kind == GameKind.SOLO) return 0
         if (inf.id == Catalog.MEADOW_ID) return Catalog.MEADOW_MOVE_SECONDS   // luật game: mỗi lượt đặt mảnh 2 phút
+        if (inf.id == Catalog.HILO_ID) return Catalog.HILO_MOVE_SECONDS       // luật game: 90 giây mỗi lượt (lập biểu thức)
         val i = if (mode == Mode.BOT) botLevel else pvpTime
         return Catalog.LEVEL_MOVE_SECONDS[i.coerceIn(0, Catalog.LEVELS - 1)]
     }
@@ -974,6 +977,8 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         }
         epoch++
         game = inf.make(option); reward = null; verifying = false; finalized = false
+        // Công thức cao thấp với máy: người chơi hết chip thì ván dừng ngay (không phải ngồi xem máy đấu tiếp)
+        (game as? HiLoGame)?.let { if (mode == Mode.BOT) it.stopSeat = mySide }
         localEnd = null; remoteEnd = null; rematchAsked = false; oppAskedRematch = false; botThinking = false
         unlockedNow = -1
         phase = Phase.PLAYING; tick++
@@ -1025,7 +1030,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         val g = game ?: return true
         if (g.result != Outcome.ONGOING) return true
         val loser = g.turn
-        if (g is MeadowGame) return meadowTimeout(g, loser, left)
+        if (g is AutoOnTimeout) return autoTimeout(g, loser, left)
         if (multi) {
             when {
                 loser in botSeats -> resetTurnClock()
@@ -1057,16 +1062,13 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
      * Lãnh địa đồng cỏ: hết 2 phút không thua ván mà mảnh bị thu hồi (bỏ lượt). Ở bước phụ (ô nền, đặt đá, cướp) thì tự chọn
      * nước dễ nhất. Máy của người hết giờ tự đi nước đó; chủ phòng đi thay khách sau [GRACE_MS] nếu không nhận được.
      */
-    private fun meadowTimeout(g: MeadowGame, loser: Int, left: Long): Boolean {
+    private fun autoTimeout(g: AutoOnTimeout, loser: Int, left: Long): Boolean {
+        g as BoardGame
         val mine = mode == Mode.LOCAL || (loser == mySide && !eliminated)
         val hostForPeer = multi && isHost && loser !in botSeats && loser != mySide && left <= -GRACE_MS
         if (loser in botSeats || (!multi && oppIsMachine && loser != mySide)) { resetTurnClock(); return false }
         if (!mine && !hostForPeer) return false
-        val m = when (g.phase) {
-            MeadowPhase.TURN, MeadowPhase.STEAL_PLACE -> MeadowGame.DISCARD
-            MeadowPhase.STEAL_PICK -> MeadowGame.STEAL_SKIP
-            else -> g.levelMove(com.fws.playmind.core.BotLevel.EASY, 0, Random)
-        }
+        val m = (g as AutoOnTimeout).timeoutMove()
         val index = g.plies
         if (m < 0 || !g.play(m)) { resetTurnClock(); return false }
         if (multi && isHost) broadcast(Proto.move(index, g.lastMove))
@@ -1132,7 +1134,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
 
     private fun outcomeForMe(g: BoardGame): MatchOutcome {
         if (playerCount > 2) {
-            val w = when (g) { is WallGoGame -> g.winner; is QuoridorGame -> g.winner; is MeadowGame -> g.winner; else -> -1 }
+            val w = when (g) { is WallGoGame -> g.winner; is QuoridorGame -> g.winner; is MeadowGame -> g.winner; is HiLoGame -> g.winner; else -> -1 }
             if (w >= 0) return if (w == mySide) MatchOutcome.WIN else MatchOutcome.LOSS
             if (g.result == Outcome.DRAW) return MatchOutcome.DRAW
             if (g is WallGoGame && mySide < g.finalScores.size && g.finalScores[mySide] == g.finalScores.max()) return MatchOutcome.DRAW

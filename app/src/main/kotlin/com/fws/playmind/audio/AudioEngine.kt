@@ -32,11 +32,14 @@ class AudioEngine(ctx: Context) {
 
     var musicOn by mutableStateOf(sp.getBoolean("music_on", true)); private set
 
-    /** true khi đang trong ván: nhạc thưa và dịu hơn. */
+    /** true khi đang trong ván: nhạc thưa và dịu hơn. Đổi màn (vào / rời ván) cũng kiểm tra lại để bật nhạc nếu đang tắt nhầm. */
     @Volatile var calm = false
+        set(v) { field = v; refresh() }
 
     @Volatile private var foreground = false
     @Volatile private var musicWanted = false
+    /** Track của chính app đang phát (lúc đó isMusicActive = true do chính mình, không phải app khác). */
+    @Volatile private var selfPlaying = false
     private var thread: Thread? = null
     private val lock = Any()
 
@@ -45,8 +48,14 @@ class AudioEngine(ctx: Context) {
     /** Gọi từ Activity.onStart / onStop. */
     fun onForeground(fg: Boolean) { foreground = fg; refresh() }
 
+    /**
+     * Lỗi cũ: isMusicActive cũng true khi chính nhạc của app đang phát, nên chỉ cần một lần onStop -> onStart (quảng cáo,
+     * hộp thoại quyền, chuyển app nhanh) trong lúc nhạc còn đang nhỏ dần là nhạc tắt luôn tới khi mở lại app.
+     * Giờ chỉ coi là "app khác đang phát nhạc" khi track của mình không phát.
+     */
     private fun refresh() {
-        musicWanted = foreground && musicOn && !am.isMusicActive
+        val otherApp = am.isMusicActive && !selfPlaying
+        musicWanted = foreground && musicOn && !otherApp
         if (musicWanted) ensureThread()
     }
 
@@ -74,7 +83,7 @@ class AudioEngine(ctx: Context) {
         val out = ShortArray(CHUNK * 2)
         var gain = 0f
         try {
-            track.play()
+            track.play(); selfPlaying = true
             while (true) {
                 val target = if (musicWanted) (if (calm) LOUD * 0.85f else LOUD) else 0f
                 if (target == 0f && gain < 0.005f) break          // đã tắt hẳn: dừng luồng, refresh() sẽ bật lại
@@ -91,6 +100,7 @@ class AudioEngine(ctx: Context) {
             }
         } catch (_: Exception) {
         } finally {
+            selfPlaying = false
             runCatching { track.pause(); track.flush() }
             track.release()
             synchronized(lock) { if (thread === Thread.currentThread()) thread = null }

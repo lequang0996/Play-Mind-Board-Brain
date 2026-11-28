@@ -375,3 +375,39 @@ notice_fav_locked|Os favoritos são liberados com o plano mensal ou anual.
 win_reward_n|Vencer este nível: +%d diamantes
 bc_reveal|Ver X/O
 bc_revealing|Mostrando os X/O reais por 10 segundos
+game_hilo|Fórmula Alta-Baixa
+game_hilo_desc|De 2 a 8 jogadores montam com cartas de números e operações uma expressão perto de 20 (Alta) ou de 1 (Baixa), apostam fichas e vence o último com fichas.
+guide_hilo|Objetivo: ser o último jogador com fichas. Todos começam com 50 fichas. Só o vencedor ganha diamantes.\n• Baralho: cartas de número de 0 a 10 em 4 cores (ouro > prata > bronze > preto, só para desempate), 4 cartas × e 4 cartas √. Todos têm sempre + − ÷.\n• Cada mão: todos pagam a aposta inicial (1 ficha, dobra a cada 4 mãos). Cada jogador recebe 1 carta de número virada para baixo (só você vê) e 2 viradas para cima; rodada de apostas 1; mais uma carta para cima; rodada de apostas 2. No fim cada um tem 4 cartas de número.\n• Carta especial: fique com ela e compre de novo até tirar um número. ×: você deve abrir mão de uma de + − ÷. √: coloque antes de um número para tirar a raiz quadrada.\n• Apostas: passar / pagar, aumentar (até 3 aumentos por rodada) ou desistir. Sem fichas você fica all-in e ainda pode ganhar a parte do pote que cobriu.\n• Escolha o lado em segredo: Alta (perto de 20), Baixa (perto de 1) ou Swing (ambos).\n• Monte a expressão em 90 segundos usando os 4 números, as 3 operações (e todas as √). × e ÷ antes de + e −, depois da esquerda para a direita; sem parênteses, sem dividir por 0. Tempo esgotado ou sem envio perde a mão.\n• Revelação: o mais perto de 20 ganha a metade Alta do pote e o mais perto de 1 a metade Baixa (se ninguém joga um lado, o outro leva tudo). Swing precisa vencer os dois lados para levar tudo; perdendo um, não ganha nada.\n• Mesma distância: Alta compara a maior carta de número, Baixa a menor; mesmo número, depois a cor.\n• 90 segundos por vez; se o tempo acabar na aposta, você passa se puder, senão desiste.
+hl_chips|%d fichas
+hl_hand|Mão %1$d · aposta %2$d
+hl_bet_round|Rodada de apostas %d
+hl_pot|Pote %d
+hl_in_pot|pôs %d
+hl_out|Fora
+hl_folded|Desistiu
+hl_allin|All-in
+hl_hidden|oculta
+hl_waiting|Aguardando %s…
+hl_deal|Distribuir
+hl_discard_title|Você tirou ×: escolha uma operação para descartar
+hl_declare_title|Escolha seu lado (secreto até a revelação)
+hl_high|Alta: perto de 20
+hl_low|Baixa: perto de 1
+hl_swing|Swing: ambos
+hl_fold|Desistir
+hl_check|Passar
+hl_call|Pagar %d
+hl_raise|+%d
+hl_build_high|Expressão Alta (perto de 20)
+hl_build_low|Expressão Baixa (perto de 1)
+hl_off|a %s
+hl_invalid|Inválida (divisão por 0)
+hl_sqrt_hint|Toque √ e depois um número para tirar a raiz; use as %d cartas √.
+hl_undo|Desfazer
+hl_submit|Enviar
+hl_result_title|Resultado da mão %d
+hl_uncontested|Todos os outros desistiram.
+hl_won|+%d
+hl_failed|Não enviou expressão
+hl_continue|Continuar
+reason_chips|Só um jogador ainda tem fichas

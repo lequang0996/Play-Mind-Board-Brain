@@ -851,6 +851,7 @@ Cú pháp: `d<độ sâu>` / `n<số nút>`, `p` xác suất nhiễu, `x` delta 
 | Cờ vây 19×19 | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt |
 | Quoridor | d1 p0.97 x100 e100 | d1 p0.75 x100 e100 | d1 p0.5 x100 e100 | d1 e80 | d1 p0.2 x150 e40 | n300 | toàn lực |
 | Wall Go | d1 p1.0 x700 | d1 p0.9 x400 | d1 p0.8 x250 | d1 | d2 | d3 | toàn lực |
+| Công thức cao thấp (tạm) | MC 4 mẫu p0.7 | MC 8 p0.4 | MC 16 p0.2 | MC 40 p0.08 | MC 100 p0.03 | MC 200 | MC 400 |
 | Lãnh địa đồng cỏ (tạm) | d1 p0.75 | d1 p0.45 | d1 p0.25 | d1 p0.15 | d1 p0.08 | d1 p0.03 | toàn lực (một lớp) |
 
 ### 13.2. Tỉ lệ điểm của cấp cao trong 6 cặp kề nhau
@@ -865,6 +866,7 @@ Tỉ lệ điểm đo được (khoảng 200 ván; 400 ván cho Trung bình vs D
 | Cờ vây 19×19 | chưa đo | chưa đo | chưa đo | chưa đo | chưa đo | chưa đo |
 | Quoridor (engine v3) | 94,1% (g22) | 88,2% (g22) | 88,7% (g22) | 78,2% (g22) | 92,1% (g22) ✗ đang chỉnh (g24) | 88,4% (g22) |
 | Wall Go | 93,3% (g12) | 91,7% (g15) | 88,0% (g15, 408 ván) | 81,9% (g12) | 86,5% (g12) | 89,8% (g12) |
+| Công thức cao thấp (8 người, máy tính) | 95,0% | 93,3% | 78,3% | 66,7% ✗ | 48,3% ✗ | 55,0% ✗ |
 | Lãnh địa đồng cỏ (8 người, máy tính) | 74,0% ✗ | 93,0% | 49,5% ✗ | 60,5% ✗ | 55,0% ✗ | 53,0% ✗ |
 
 Cặp cách hai cấp, mức tối thiểu ghi dưới tên cặp:
@@ -887,6 +889,7 @@ Cặp cách hai cấp, mức tối thiểu ghi dưới tên cặp:
 | Cờ vây 19×19 | đạt | chưa | chưa | chưa | chưa | chưa | chưa | KataGo (mục 8.3a) | chưa xong |
 | Quoridor | đạt | đạt | đạt | đạt (engine v3, g22) | chưa | chưa | chưa | tự làm; engine v3 +340 Elo so với engine cũ (mục 9.4) | còn cặp Thách đấu vs Cao thủ (g24) và phần đo trên điện thoại |
 | Wall Go | đạt | đạt | đạt | đạt (g12, g13, g15) | chưa | chưa | chưa | tự làm; +124 Elo so với engine cũ | còn phần đo trên điện thoại |
+| Công thức cao thấp | đạt (`SelfCheck`) | chưa | chưa | chưa | chưa | chưa | chưa | tự làm, Monte Carlo trên thẻ chưa thấy | chưa xong: Cao thủ trở lên gần như ngang nhau (mục 13.4) |
 | Lãnh địa đồng cỏ | đạt (`SelfCheck`) | chưa | chưa | chưa | chưa | chưa | chưa | tự làm, đánh giá một lớp | chưa xong: cấp Khá trở lên gần như ngang nhau, cần bot có tìm kiếm (mục 13.4) |
 | *(game mới)* | | | | | | | | | |
 
@@ -901,6 +904,12 @@ Kết quả 11/2026, 100 ván mỗi cặp (4 người / 8 người): 1v0 59% / 7
 đã chơi gần mức trần của chính nó, còn các tính năng theo cấp (phiếu đổi gạch, cản người dẫn đầu, nhìn mảnh kế tiếp) chưa
 cho thêm điểm. Việc tiếp theo: tìm kiếm nhiều lớp trên hàng chờ công khai (các mảnh kế tiếp của mình và của đối thủ),
 rồi chia 7 cấp theo độ sâu và số nước xét.
+
+Công thức cao thấp dùng cùng lệnh (`ladder hilo ...`): A được 1 điểm khi người còn chip cuối cùng ngồi ghế A. Kết quả 11/2026,
+60 ván mỗi cặp (4 người / 8 người): 1v0 92% / 95%, 2v1 78% / 93%, 3v2 72% / 78%, 4v3 60% / 67%, 5v4 55% / 48%, 6v5 50% / 55%,
+6v4 50% / 50%. Ba cấp dưới tách rõ nhờ nhiễu và số mẫu; từ 40 mẫu trở lên thêm mẫu không thêm sức mạnh, phần giới hạn là
+chính sách cược (ngưỡng theo phần pot kỳ vọng, chưa mô hình hóa đối thủ chọn cửa nào). Việc tiếp theo: ước lượng cửa đối thủ
+từ thẻ ngửa, cược theo vị trí và kích cỡ pot, rồi chia lại 7 cấp.
 
 ---
 

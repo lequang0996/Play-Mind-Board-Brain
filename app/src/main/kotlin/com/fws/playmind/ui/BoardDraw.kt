@@ -309,6 +309,11 @@ fun DrawScope.drawSideBadge(gameId: String, side: Int, tm: TextMeasurer, s: Floa
         "go" -> drawStone(Offset(s / 2f, s / 2f), s * .44f, side == 0)
         "wallgo" -> drawPawn(Offset(s / 2f, s * .56f), s * .27f, playerColor(side))
         "quoridor" -> drawQuoridorPawn(Offset(s / 2f, s * .86f), s * .25f, playerColor(side))
+        "hilo" -> {
+            drawCircle(lerp(playerColor(side), Color(0xFF6A3FD0), .3f), s * .38f, Offset(s / 2f, s / 2f))
+            drawCircle(Color.White.copy(alpha = .8f), s * .38f, Offset(s / 2f, s / 2f), style = Stroke(s * .06f))
+            drawCircle(Color.White.copy(alpha = .55f), s * .22f, Offset(s / 2f, s / 2f), style = Stroke(s * .03f))
+        }
         "meadow" -> {
             drawRoundRect(lerp(playerColor(side), Color(0xFF3FA34D), .18f), Offset(s * .14f, s * .14f), Size(s * .72f, s * .72f), CornerRadius(s * .16f))
             drawRoundRect(Color.Black.copy(alpha = .25f), Offset(s * .14f, s * .14f), Size(s * .72f, s * .72f), CornerRadius(s * .16f), style = Stroke(s * .05f))

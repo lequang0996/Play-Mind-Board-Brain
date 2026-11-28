@@ -25,7 +25,7 @@ Play Mind: Board & Brain
 Chess, Xiangqi and Gomoku vs the computer, friends nearby or online.
 ```
 
-**Full description** (3243/4000 characters)
+**Full description** (3395/4000 characters)
 
 ```
 Play Mind: Board & Brain is a polished collection of classic board games and brain games, built around four ways to exercise your mind: Puzzle, Intellect, Calculation and Memory.
@@ -44,7 +44,9 @@ AVAILABLE NOW — PUZZLE
 
 AVAILABLE NOW — MEMORY
 • Blind Gomoku: Gomoku with shared stones in four colours. The board never shows whose stone is whose, so you must remember yours.
-More games for the Calculation topic are coming soon.
+
+AVAILABLE NOW — CALCULATION
+• High-Low Formula: 2-8 players, 50 chips each. Build an expression from number and operator cards as close to 20 (High) or 1 (Low) as you can, bet, and be the last with chips.
 
 PLAY YOUR WAY
 • Against the computer: 7 levels from Easy to Supreme. Start at Easy and win to unlock the next level; Go is powered by KataGo.

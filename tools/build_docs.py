@@ -340,6 +340,30 @@ GAMES = {
 <h2>Dùng trong app</h2>
 <ul><li>Chạm hoặc kéo trên bàn để dời mảnh (xanh = hợp lệ, đỏ = sai luật), dùng Xoay và Lật, rồi bấm Đặt. Chạm mảnh 2 đến 5 trong hàng chờ để dùng phiếu.</li></ul>
 <h2>Mẹo</h2><ul><li>Sớm nhắm một hình vuông lớn và giữ vùng đó sạch đối thủ: chỉ một ô của đối thủ sát bên là chặn mất cạnh đó.</li></ul>"""),
+"hilo": dict(
+  en_name="High-Low Formula", vi_name="Công thức cao thấp",
+  en_intro="A betting card game for 2 to 8 players: turn number and operator cards into an expression close to 20 (High) or 1 (Low). Everyone starts with 50 chips; the last player with chips wins.",
+  vi_intro="Trò chơi bài có đặt cược cho 2 đến 8 người: ghép thẻ số và thẻ phép toán thành biểu thức sát 20 (High) hoặc sát 1 (Low). Mỗi người có 50 chip; người còn chip cuối cùng thắng.",
+  en_body="""
+<h2>Rules</h2>
+<ul><li>Deck: number cards 0 to 10 in 4 colours (gold &gt; silver &gt; bronze &gt; black, used only for ties), 4 × cards and 4 √ cards. Everyone always holds + − ÷.</li>
+<li>Each hand everyone pays the ante (1 chip, doubling every 4 hands). You get 1 face-down number card and 2 face-up cards, then bet; one more face-up card, then bet again. A special card is kept and you draw again until you get a number. × forces you to give up one of + − ÷; √ takes the square root of one number.</li>
+<li>Betting: check / call, raise (up to 3 raises per round) or fold. Out of chips means all-in, with side pots for the rest.</li>
+<li>Pick a side in secret: High (near 20), Low (near 1) or Swing (both). Within 90 seconds build an expression using all 4 numbers and all 3 operators; × ÷ before + −, then left to right, no brackets, no dividing by 0. Missing the deadline loses the hand.</li>
+<li>Closest to 20 takes half the pot, closest to 1 takes the other half. Swing must win both sides or gets nothing. Ties: High compares the largest number card, Low the smallest, then colour.</li></ul>
+<h2>Using the app</h2>
+<ul><li>Tap cards in order (number, operator, number, ...). Tap √ then a number to put a root on it. The live value and distance to the target are shown before you submit.</li></ul>
+<h2>Tips</h2><ul><li>Small numbers and ÷ suit Low; × and big numbers suit High. Watch the face-up cards of the others before raising.</li></ul>""",
+  vi_body="""
+<h2>Luật</h2>
+<ul><li>Bộ bài: thẻ số 0 đến 10 ở 4 màu (vàng &gt; bạc &gt; đồng &gt; đen, chỉ dùng khi xét hòa), 4 thẻ × và 4 thẻ √. Ai cũng có sẵn 3 thẻ + − ÷.</li>
+<li>Mỗi ván bài ai cũng góp ante (1 chip, gấp đôi sau mỗi 4 ván bài). Mỗi người nhận 1 thẻ số úp và 2 thẻ ngửa, cược vòng 1; thêm 1 thẻ ngửa, cược vòng 2. Rút trúng thẻ đặc biệt thì giữ lại và rút tiếp tới khi được thẻ số. Thẻ × bắt bỏ một trong + − ÷; thẻ √ lấy căn bậc hai của một số.</li>
+<li>Cược: xem / theo, tố thêm (tối đa 3 lần mỗi vòng) hoặc bỏ bài. Hết chip thì tất tay, phần còn lại thành pot phụ.</li>
+<li>Chọn cửa kín: High (sát 20), Low (sát 1) hoặc Swing (cả hai). Trong 90 giây lập biểu thức dùng hết 4 số và 3 phép; × ÷ trước + −, rồi từ trái sang phải, không có ngoặc, không chia cho 0. Quá giờ là thua ván bài đó.</li>
+<li>Người sát 20 nhất ăn nửa pot, người sát 1 nhất ăn nửa còn lại. Swing phải thắng cả hai cửa, thua một cửa là trắng tay. Hòa: High xét thẻ số lớn nhất, Low xét thẻ số nhỏ nhất, rồi đến màu.</li></ul>
+<h2>Dùng trong app</h2>
+<ul><li>Chạm thẻ theo thứ tự (số, phép, số, ...). Chạm √ rồi chạm một số để đặt căn. Giá trị và khoảng cách tới mốc hiện ngay trước khi nộp.</li></ul>
+<h2>Mẹo</h2><ul><li>Số nhỏ và phép ÷ hợp cửa Low; phép × và số lớn hợp cửa High. Xem thẻ ngửa của người khác trước khi tố.</li></ul>"""),
 "wordblocks": dict(
   en_name="Word Blocks", vi_name="Khối gỗ ghép chữ",
   en_intro="A single-player word game: build 7 English words on one theme from shuffled wooden letter blocks within 10 minutes.",
@@ -459,6 +483,7 @@ index_body = f"""
 <a href="how-to-play/wallgo.html"><div class="card"><b>Wall Go</b><span class="muted" data-l="en">Move, build a wall, claim territory.</span><span class="muted" data-l="vi">Đi quân, xây tường, chiếm lãnh thổ.</span></div></a>
 <a href="how-to-play/sudoku.html"><div class="card"><b>Sudoku</b><span class="muted" data-l="en">One given per box, any valid grid wins.</span><span class="muted" data-l="vi">Mỗi khối một gợi ý, điền đúng luật là thắng.</span></div></a>
 <a href="how-to-play/meadow.html"><div class="card"><b><span data-l="en">Meadow Realm</span><span data-l="vi">Lãnh địa đồng cỏ</span></b><span class="muted" data-l="en">2-8 players, 30×30 meadow, biggest square wins.</span><span class="muted" data-l="vi">2-8 người, đồng cỏ 30×30, hình vuông lớn nhất thắng.</span></div></a>
+<a href="how-to-play/hilo.html"><div class="card"><b><span data-l="en">High-Low Formula</span><span data-l="vi">Công thức cao thấp</span></b><span class="muted" data-l="en">2-8 players, 50 chips, expressions near 20 or 1.</span><span class="muted" data-l="vi">2-8 người, 50 chip, biểu thức sát 20 hoặc sát 1.</span></div></a>
 <a href="how-to-play/wordblocks.html"><div class="card"><b><span data-l="en">Word Blocks</span><span data-l="vi">Khối gỗ ghép chữ</span></b><span class="muted" data-l="en">7 English words on one theme in 10 minutes.</span><span class="muted" data-l="vi">7 từ tiếng Anh cùng chủ đề trong 10 phút.</span></div></a>
 <a href="how-to-play/tangram.html"><div class="card"><b><span data-l="en">Tangram</span><span data-l="vi">Xếp hình Tangram</span></b><span class="muted" data-l="en">7 levels, 4 to 10 pieces, 10 shapes per round.</span><span class="muted" data-l="vi">7 cấp, 4 đến 10 mảnh, mỗi lượt 10 hình.</span></div></a>
 <a href="how-to-play/blindcaro.html"><div class="card"><b><span data-l="en">Blind Gomoku</span><span data-l="vi">Cờ caro mù</span></b><span class="muted" data-l="en">Shared four-colour stones: remember which are yours.</span><span class="muted" data-l="vi">Quân bốn màu dùng chung: nhớ quân nào của mình.</span></div></a>

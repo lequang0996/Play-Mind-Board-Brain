@@ -375,3 +375,39 @@ notice_fav_locked|Favourites unlock with the monthly or yearly plan.
 win_reward_n|Win this level: +%d diamonds
 bc_reveal|Show X/O
 bc_revealing|Showing the real X/O for 10 seconds
+game_hilo|High-Low Formula
+game_hilo_desc|2-8 players turn number and operator cards into an expression close to 20 (High) or 1 (Low), bet chips, and the last player with chips wins.
+guide_hilo|Goal: be the last player with chips. Everyone starts with 50 chips. Only the winner earns diamonds.\n• Deck: number cards 0 to 10 in 4 colours (gold > silver > bronze > black, used only for ties), 4 × cards and 4 √ cards. Everyone always holds + − ÷.\n• Each hand: everyone pays the ante (1 chip, doubling every 4 hands). Each player gets 1 face-down number card (only you see it) and 2 face-up cards, then betting round 1; one more face-up card, then betting round 2. In the end everyone has 4 number cards.\n• Drawing a special card: keep it and draw again until you get a number. ×: you must give up one of + − ÷. √: put it in front of a number to take its square root.\n• Betting: check / call, raise (up to 3 raises per round) or fold. Out of chips means all-in: you can still win the part of the pot you matched.\n• Pick a side in secret: High (close to 20), Low (close to 1) or Swing (both).\n• Build your expression within 90 seconds using all 4 numbers, all 3 operators (and every √). × and ÷ come before + and −, then left to right; no brackets, no dividing by 0. Running out of time or not submitting loses that hand.\n• Showdown: closest to 20 wins the High half of the pot, closest to 1 wins the Low half (if nobody plays a side, the other side takes the whole pot). Swing must win both sides to take everything; losing either side wins nothing.\n• Same distance: High compares the largest number card, Low the smallest; same number, then colour.\n• 90 seconds per turn; when betting time runs out you check if possible, otherwise fold.
+hl_chips|%d chips
+hl_hand|Hand %1$d · ante %2$d
+hl_bet_round|Betting round %d
+hl_pot|Pot %d
+hl_in_pot|in %d
+hl_out|Out
+hl_folded|Folded
+hl_allin|All-in
+hl_hidden|hidden
+hl_waiting|Waiting for %s…
+hl_deal|Deal
+hl_discard_title|You drew ×: pick an operator to give up
+hl_declare_title|Pick your side (secret until showdown)
+hl_high|High: near 20
+hl_low|Low: near 1
+hl_swing|Swing: both
+hl_fold|Fold
+hl_check|Check
+hl_call|Call %d
+hl_raise|+%d
+hl_build_high|High expression (near 20)
+hl_build_low|Low expression (near 1)
+hl_off|off by %s
+hl_invalid|Invalid (division by 0)
+hl_sqrt_hint|Tap √, then a number to take its root; use all %d √ cards.
+hl_undo|Undo
+hl_submit|Submit
+hl_result_title|Hand %d result
+hl_uncontested|Everyone else folded.
+hl_won|+%d
+hl_failed|No expression submitted
+hl_continue|Continue
+reason_chips|Only one player has chips left

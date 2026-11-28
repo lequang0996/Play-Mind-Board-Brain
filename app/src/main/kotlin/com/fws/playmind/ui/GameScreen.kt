@@ -56,6 +56,7 @@ import com.fws.playmind.core.Outcome
 import com.fws.playmind.core.QuoridorGame
 import com.fws.playmind.core.WallGoGame
 import com.fws.playmind.core.MeadowGame
+import com.fws.playmind.core.HiLoGame
 import com.fws.playmind.match.Mode
 import com.fws.playmind.match.Opp
 import com.fws.playmind.match.Phase
@@ -83,6 +84,7 @@ private fun seatInfo(vm: SessionViewModel, seat: Int): String? {
     return when (val g = vm.game) {
         is WallGoGame -> stringResource(R.string.st_cells, g.territory()[seat])
         is MeadowGame -> stringResource(R.string.md_points, g.points(seat))
+        is HiLoGame -> stringResource(R.string.hl_chips, g.chips[seat])
         is QuoridorGame -> stringResource(R.string.st_walls, g.wallsOf(seat))
         is GoGame -> stringResource(R.string.st_captured, g.capturedBy(seat))
         else -> null
@@ -222,7 +224,9 @@ fun GameScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onExit: (
         TopBar(stringResource(info.name), { if (over) onExit() else confirmLeave = true }) {
             if (!over) PmIconButton(Ic.Flag, stringResource(R.string.resign), { confirmResign = true })
         }
-        if (multi) SeatStrip(vm, info, g.turn, over)
+        val table = info.id == "hilo"     // Công thức cao thấp tự vẽ cả bàn (ghế, bài, pot, đồng hồ)
+        if (table) Spacer(Modifier.height(2.dp))
+        else if (multi) SeatStrip(vm, info, g.turn, over)
         else PlayerBar(
             info, topSeat, seatName(vm, info, topSeat), sideLabel(info, topSeat), oppTurn,
             if (oppTurn && vm.botThinking) stringResource(R.string.thinking) else if (oppTurn) stringResource(R.string.their_turn) else null,
@@ -237,11 +241,13 @@ fun GameScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onExit: (
                 "quoridor" -> QuoridorBoardView(vm)
                 "wallgo" -> WallGoBoardView(vm)
                 "meadow" -> MeadowBoardView(vm)
+                "hilo" -> HiLoBoardView(vm, info)
                 "blindcaro" -> BlindCaroBoardView(vm, Modifier.fillMaxSize())
                 else -> GomokuBoardView(vm, Modifier.fillMaxSize())   // bàn vô hạn: lấp đầy khoảng trống, kéo/thu phóng được
             }
         }
-        if (multi) {
+        if (table) Spacer(Modifier.height(0.dp))
+        else if (multi) {
             val who = seatName(vm, info, g.turn)
             Row(Modifier.fillMaxWidth().padding(vertical = 4.dp), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
                 Text(
@@ -280,6 +286,7 @@ private fun reasonText(info: GameInfo, r: EndReason): String = stringResource(wh
     EndReason.TIMEOUT -> R.string.reason_timeout
     EndReason.TERRITORY -> R.string.reason_territory
     EndReason.MOVE_LIMIT -> R.string.reason_move_limit
+    EndReason.CHIPS -> R.string.reason_chips
     EndReason.NONE -> if (info.id == "quoridor") R.string.reason_goal else R.string.empty
 })
 
@@ -290,7 +297,7 @@ private fun ResultDialog(app: PlayMindApp, vm: SessionViewModel, info: GameInfo,
     val out = vm.myOutcome()
     val draw = out == com.fws.playmind.data.MatchOutcome.DRAW
     val win = out == com.fws.playmind.data.MatchOutcome.WIN
-    val winnerSeat = when (g) { is WallGoGame -> g.winner; is QuoridorGame -> g.winner; is MeadowGame -> g.winner; else -> if (g.result == Outcome.WIN_FIRST) 0 else if (g.result == Outcome.WIN_SECOND) 1 else -1 }
+    val winnerSeat = when (g) { is WallGoGame -> g.winner; is QuoridorGame -> g.winner; is MeadowGame -> g.winner; is HiLoGame -> g.winner; else -> if (g.result == Outcome.WIN_FIRST) 0 else if (g.result == Outcome.WIN_SECOND) 1 else -1 }
     val title = when {
         local && winnerSeat >= 0 -> stringResource(R.string.winner_is, seatName(vm, info, winnerSeat))
         draw -> stringResource(R.string.result_draw)
@@ -324,6 +331,7 @@ private fun ResultDialog(app: PlayMindApp, vm: SessionViewModel, info: GameInfo,
             // Bảng điểm cuối ván
             if (g is WallGoGame && g.reason == EndReason.TERRITORY) FinalScores(vm, info, g.finalScores.toList())
             if (g is MeadowGame && g.reason == EndReason.TERRITORY) FinalScores(vm, info, g.finalPoints.toList(), R.string.md_points)
+            if (g is HiLoGame && g.reason == EndReason.CHIPS) FinalScores(vm, info, g.chips.toList(), R.string.hl_chips)
             if (g is GoGame && g.reason == EndReason.TERRITORY) {
                 Text(stringResource(R.string.go_score, g.finalBlack, g.finalWhite, "%.1f".format(GoGame.KOMI)), style = MaterialTheme.typography.bodyMedium, color = pm.ink, textAlign = TextAlign.Center)
             }

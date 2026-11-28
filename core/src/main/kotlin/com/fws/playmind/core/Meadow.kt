@@ -17,7 +17,7 @@ import kotlin.random.Random
 /** Giai đoạn trong lượt: đặt ô nền, lượt chính, đặt đá, chọn mảnh để cướp, đặt mảnh cướp, hết ván. */
 enum class MeadowPhase { BASE, TURN, STONE, STEAL_PICK, STEAL_PLACE, OVER }
 
-class MeadowGame(val players: Int = 8) : BoardGame, LeveledEngine {
+class MeadowGame(val players: Int = 8) : BoardGame, LeveledEngine, AutoOnTimeout {
     companion object {
         const val N = 30
         const val CELLS = 900
@@ -463,6 +463,14 @@ class MeadowGame(val players: Int = 8) : BoardGame, LeveledEngine {
         val tied = (0 until players).filter { finalPoints[it] == finalPoints[best] && finalArea[it] == finalArea[best] }
         if (tied.size > 1) { winner = -1; result = if (0 in tied) Outcome.DRAW else Outcome.WIN_SECOND }
         else { winner = best; result = if (best == 0) Outcome.WIN_FIRST else Outcome.WIN_SECOND }
+    }
+
+    /** Hết 2 phút: mảnh bị thu hồi (bỏ lượt); bước phụ thì đi nước dễ nhất. */
+    override fun timeoutMove(): Int = when (phase) {
+        MeadowPhase.TURN, MeadowPhase.STEAL_PLACE -> DISCARD
+        MeadowPhase.STEAL_PICK -> STEAL_SKIP
+        MeadowPhase.OVER -> -1
+        else -> levelMove(BotLevel.EASY, 0, Random)
     }
 
     override fun forfeit(loser: Int, reason: EndReason) {

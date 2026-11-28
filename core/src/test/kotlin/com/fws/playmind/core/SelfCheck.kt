@@ -237,6 +237,34 @@ fun main() {
         expect("tangram: de 10 manh ghep dung thi khop", Tangram.coverError(hard[9].pieces.map { it.poly }, hard[9]) < Tangram.SOLVED_ERROR)
     }
 
+    // ── Công thức cao thấp ──
+    run {
+        val A = HiLoGame.OP_ADD; val S = HiLoGame.OP_SUB; val M = HiLoGame.OP_MUL; val D = HiLoGame.OP_DIV
+        fun near(x: Double, y: Double) = kotlin.math.abs(x - y) < 1e-3
+        expect("hilo: √4 ÷ 7 + 9 − 8 = 1,286", near(HiLoGame.evaluate(intArrayOf(4, 7, 9, 8), 1, intArrayOf(D, A, S)), 1.2857))
+        expect("hilo: 8 × 3 ÷ 1 − 4 = 20", near(HiLoGame.evaluate(intArrayOf(8, 3, 1, 4), 0, intArrayOf(M, D, S)), 20.0))
+        expect("hilo: 10 × 6 ÷ √4 − 9 = 21", near(HiLoGame.evaluate(intArrayOf(10, 6, 4, 9), 4, intArrayOf(M, D, S)), 21.0))
+        expect("hilo: √9 ÷ 6 × 10 − 4 = 1", near(HiLoGame.evaluate(intArrayOf(9, 6, 10, 4), 1, intArrayOf(D, M, S)), 1.0))
+        expect("hilo: chia cho 0 khong hop le", HiLoGame.evaluate(intArrayOf(5, 0, 1, 1), 0, intArrayOf(D, A, A)).isNaN())
+        // ví dụ trong ảnh: 4 thẻ 10, 6, 4, 9 với × ÷ − và một √ ghép được đúng 1 (√9 ÷ 6 × 10 − 4)
+        val d = HiLoGame.best(intArrayOf(10, 6, 4, 9), intArrayOf(M, D, S), 1)
+        expect("hilo: tim bieu thuc tot nhat (Low = 1 dung)", d[1] < 1e-9)
+        // bot tự đấu: tổng chip luôn bằng 50 × số người, ván kết thúc
+        var okChips = true; var ended = 0
+        for (seed in 1..6) {
+            val g = HiLoGame(4 + seed % 5); val r = kotlin.random.Random(seed)
+            var guard = 0
+            while (g.result == Outcome.ONGOING && guard++ < 20000) {
+                val mv = g.levelMove(BotLevel.of(seed % 7), 0, r)
+                check(g.play(mv)) { "hilo: nuoc bot khong hop le $mv o pha ${g.phase}" }
+                if (g.phase == HiLoPhase.DEAL || g.phase == HiLoPhase.OVER) if (g.chips.sum() != HiLoGame.START_CHIPS * g.players) okChips = false
+            }
+            if (g.result != Outcome.ONGOING && g.winner >= 0) ended++
+        }
+        expect("hilo: bao toan chip giua cac van bai", okChips)
+        expect("hilo: bot tu dau den khi con 1 nguoi (6/6)", ended == 6)
+    }
+
     // ── Lãnh địa đồng cỏ ──
     run {
         expect("meadow: 96 manh, 21 o dac biet", MeadowGame.ORDER.size == 96 && MeadowGame.SPECIAL_CELLS.size == 21)

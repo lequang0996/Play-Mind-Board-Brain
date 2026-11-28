@@ -36,6 +36,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() { super.onStart(); (application as PlayMindApp).audio.onForeground(true); (application as PlayMindApp).ads.showAppOpenIfReady(this) }
     override fun onStop() { (application as PlayMindApp).audio.onForeground(false); super.onStop() }
-    override fun onResume() { super.onResume(); com.fws.playmind.data.NetTime.sync(); update.onResume(); (application as PlayMindApp).billing.refresh() }
+    override fun onResume() { super.onResume(); (application as PlayMindApp).audio.onForeground(true); com.fws.playmind.data.NetTime.sync(); update.onResume(); (application as PlayMindApp).billing.refresh() }
     override fun onDestroy() { update.stop(); super.onDestroy() }
 }

@@ -106,9 +106,12 @@ object BotLevels {
     // tính năng theo cấp: Khá tính ô đặc biệt, Cao thủ dùng phiếu đổi gạch, Thách đấu cản người dẫn đầu, Siêu việt nhìn mảnh kế tiếp.
     val meadow = listOf(d(1, 0.75), d(1, 0.45), d(1, 0.25), d(1, 0.15), d(1, 0.08), d(1, 0.03), top())
 
+    // Công thức cao thấp (2-8 người): HiLoBot, số mẫu Monte Carlo tăng theo cấp (4 ... 400); noiseP = xác suất đi ngẫu nhiên.
+    val hilo = listOf(d(1, 0.70), d(1, 0.40), d(1, 0.20), d(1, 0.08), d(1, 0.03), d(1), top())
+
     fun of(gameId: String): List<LevelConfig> = when (gameId) {
         "chess" -> chess; "xiangqi" -> xiangqi; "caro" -> caro
-        "quoridor" -> quoridor; "wallgo" -> wallgo; "go" -> go; "meadow" -> meadow
+        "quoridor" -> quoridor; "wallgo" -> wallgo; "go" -> go; "meadow" -> meadow; "hilo" -> hilo
         else -> chess
     }
 
