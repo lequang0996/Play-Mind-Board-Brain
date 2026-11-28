@@ -862,7 +862,7 @@ Cặp cách hai cấp, mức tối thiểu ghi dưới tên cặp:
 
 | Game | Khá vs Dễ (≥ 97%) | Giỏi vs Trung bình (≥ 94%) | Cao thủ vs Khá (≥ 88%) | Thách đấu vs Giỏi (≥ 70%) | Siêu việt vs Cao thủ (≥ 80%) |
 |---|---|---|---|---|---|
-| Cờ vua | 95,6% (g16) ✗, đo lại với nhiều ván hơn (g13: 98,0%) | 96,1% (g16) | 100% (g16) | 89,7% (g16) | 95,8% (g16) |
+| Cờ vua | 99,3% (g18, 408 ván) | 96,1% (g16) | 100% (g16) | 89,7% (g16) | 95,8% (g16) |
 | Cờ tướng | 98,0% (g12) | 95,1% (g12) | 98,0% (g15) | 93,1% (g13) | 94,4% (g13) |
 | Cờ caro | 100% (g11) | 98,0% (g12) | 96,1% (g12) | 87,3% (g11) | 97,2% (g11) |
 | Quoridor | 98,0% (g17) | 100% (g17) | 96,1% (g17) | 75,5% (g15) | 73,1% (g15) ✗, hạn chế đã biết (mục 9.4) |
@@ -872,7 +872,7 @@ Cặp cách hai cấp, mức tối thiểu ghi dưới tên cặp:
 
 | Game | Luật | Cổng chiến thuật | Bộ thế không được sai (7 cấp) | Khoảng cách tối thiểu | 1000 ván tự đấu | `k` đã đo | Điện thoại (p99, RAM, nóng máy) | Nguồn bot | Kết luận |
 |---|---|---|---|---|---|---|---|---|---|
-| Cờ vua | đạt (`SelfCheck`) | đạt (`SelfCheck`) | đạt (lớp an toàn) | đạt (g16), trừ Khá vs Dễ đang đo lại | chưa | chưa | chưa | tự làm; Stockfish `UCI_Elo` 2800: 58,3% (chess-t4) | còn phần đo trên điện thoại |
+| Cờ vua | đạt (`SelfCheck`) | đạt (`SelfCheck`) | đạt (lớp an toàn) | đạt (g16, g18) | chưa | chưa | chưa | tự làm; Stockfish `UCI_Elo` 2800: 58,3% (chess-t4) | còn phần đo trên điện thoại |
 | Cờ tướng | đạt | đạt | đạt | đạt (g12, g13) | chưa | chưa | chưa | tự làm; Pikafish 20k nút: 12,5% | còn phần đo trên điện thoại |
 | Cờ caro | đạt | đạt (VCF, phòng VCF) | đạt | đạt (g11, g12) | chưa | chưa | chưa | tự làm; +232 Elo so với engine cũ | còn phần đo trên điện thoại |
 | Cờ vây 19×19 | đạt | chưa | chưa | chưa | chưa | chưa | chưa | KataGo (mục 8.3a) | chưa xong |
