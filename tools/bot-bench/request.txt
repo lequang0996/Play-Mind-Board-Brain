@@ -5,19 +5,18 @@
 #   ab     <game> <A> <B> games=<số ván> ms=<ms/nước> shards=<số máy> [nodes=<giới hạn nút>]   (A, B: new | smpN | ref | old; thêm @spec, ví dụ new@corr64)
 #   Mọi dòng thêm được props=k1=v1;k2=v2 (thuộc tính hệ thống, ví dụ pm.level.chess.5=n15000 để thử cấu hình cấp).
 # Cấp: 0 Dễ, 1 Trung bình, 2 Khá, 3 Giỏi, 4 Cao thủ, 5 Thách đấu, 6 Siêu việt.
-tag=g15-quoridor-levels-v2
-note=Quoridor: cấp mới dùng "quên tường" (extra = % nước chỉ đi quân) kết hợp nhiễu nhỏ trên nước đi quân; toàn bộ chuỗi 7 cấp. Wall Go Giỏi-Khá đo lại với nhiều ván hơn. Cờ tướng Cao thủ-Khá (cặp cách hai cấp sau khi đổi Cao thủ).
-ladder quoridor 6 5 pairs=100 ms=2000 shards=4
-ladder quoridor 5 4 pairs=100 ms=2000 shards=2
-ladder quoridor 4 3 pairs=100 ms=2000 shards=1
-ladder quoridor 3 2 pairs=100 ms=2000 shards=1
-ladder quoridor 2 1 pairs=100 ms=2000 shards=1
-ladder quoridor 1 0 pairs=200 ms=2000 shards=1
-ladder quoridor 6 4 pairs=50 ms=2000 shards=2
-ladder quoridor 5 3 pairs=50 ms=2000 shards=1
-ladder quoridor 4 2 pairs=50 ms=2000 shards=1
-ladder quoridor 3 1 pairs=50 ms=2000 shards=1
-ladder quoridor 2 0 pairs=50 ms=2000 shards=1
-ladder wallgo 3 2 pairs=200 ms=2000 shards=2
-ladder wallgo 2 1 pairs=100 ms=2000 shards=1
-ladder xiangqi 4 2 pairs=50 ms=2000 shards=1
+tag=g16-chess-t4-accept
+note=Nghiệm thu cờ vua với trọng số chess-t4 (+24 Elo so với chess-t3 ở g14): Stockfish 2800 / 3000 và toàn bộ chuỗi 7 cấp.
+gauge chess elo=2800 games=120 ms=2000 sfms=2000 shards=6 threads=3
+gauge chess elo=3000 games=60 ms=2000 sfms=2000 shards=3 threads=3
+ladder chess 6 5 pairs=100 ms=2000 shards=4
+ladder chess 5 4 pairs=100 ms=2000 shards=2
+ladder chess 4 3 pairs=100 ms=2000 shards=2
+ladder chess 3 2 pairs=100 ms=2000 shards=2
+ladder chess 2 1 pairs=100 ms=2000 shards=2
+ladder chess 1 0 pairs=200 ms=2000 shards=2
+ladder chess 6 4 pairs=50 ms=2000 shards=2
+ladder chess 5 3 pairs=50 ms=2000 shards=1
+ladder chess 4 2 pairs=50 ms=2000 shards=1
+ladder chess 3 1 pairs=50 ms=2000 shards=1
+ladder chess 2 0 pairs=50 ms=2000 shards=1
