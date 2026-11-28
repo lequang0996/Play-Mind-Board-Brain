@@ -318,13 +318,39 @@ GAMES = {
 <ul><li>Chạm một ô rồi chạm số. Bàn phím số cho biết mỗi số còn thiếu bao nhiêu lần.</li>
 <li>Bút chì để ghi chú số có thể điền; Xóa để xóa ô; Hoàn tác để lùi thao tác vừa làm; Gợi ý để điền đúng một ô.</li></ul>
 <h2>Mẹo</h2><ul><li>Vì gợi ý rất ít, hãy bắt đầu ở nơi hàng, cột và khối có nhiều ô đã điền nhất, và dùng ghi chú để theo dõi các số có thể điền.</li></ul>"""),
+"magic7": dict(
+  en_name="Magic Square 7×7", vi_name="Ma phương 7×7",
+  en_intro="A single-player number puzzle on a 7×7 board. One new puzzle every day; there is no opponent and no time limit.",
+  vi_intro="Trò chơi số một người trên bàn 7×7. Mỗi ngày một đề mới; không có đối thủ và không giới hạn thời gian.",
+  en_body="""
+<h2>Rules</h2>
+<ul><li>Place the numbers 1 to 49, each exactly once, so that every row, every column and both main diagonals add up to <b>175</b>.</li>
+<li>The puzzle starts with <b>one given number</b> in one cell. It always has a solution, and any arrangement that follows the rules wins.</li>
+<li>One puzzle per day, the same for every player. After you solve it, the next puzzle arrives the following day.</li></ul>
+<h2>Using the app</h2>
+<ul><li>Tap a cell, then a number on the 49-key pad. Picking a number already on the board moves it to the selected cell.</li>
+<li>The right column shows each row's sum, the bottom row each column's sum and the top bar both diagonals: green when a line is full and equals 175, red when it goes over 175 or is full but wrong.</li>
+<li>Hints: 10 per day with the monthly plan, 20 per day with the yearly plan. A hinted cell is locked.</li>
+<li>Leaving midway keeps your progress; come back the same day to continue.</li></ul>
+<h2>Tips</h2><ul><li>175 = 7 × 25, so 25 is the middle number. Pairs that add up to 50 (1 + 49, 2 + 48...) placed symmetrically around the centre keep lines balanced.</li></ul>""",
+  vi_body="""
+<h2>Luật</h2>
+<ul><li>Điền các số từ 1 đến 49, mỗi số đúng một lần, sao cho tổng của mỗi hàng, mỗi cột và hai đường chéo chính đều bằng <b>175</b>.</li>
+<li>Đề bắt đầu với <b>một số cho sẵn</b> ở một ô. Đề luôn có lời giải và mọi cách điền đúng luật đều thắng.</li>
+<li>Mỗi ngày một đề, giống nhau cho mọi người chơi. Giải xong thì sang ngày hôm sau mới có đề mới.</li></ul>
+<h2>Dùng trong app</h2>
+<ul><li>Chạm một ô rồi chạm số trên bàn phím 49 số. Chọn một số đã có trên bàn thì số đó được chuyển sang ô đang chọn.</li>
+<li>Cột bên phải là tổng từng hàng, hàng dưới là tổng từng cột, thanh trên là tổng hai đường chéo: màu xanh khi đủ ô và đúng 175, màu đỏ khi vượt 175 hoặc đủ ô mà sai.</li>
+<li>Gợi ý: gói tháng 10 lần mỗi ngày, gói năm 20 lần mỗi ngày. Ô được gợi ý bị khóa.</li>
+<li>Thoát ra giữa chừng vẫn giữ nguyên bàn; vào lại trong ngày để giải tiếp.</li></ul>
+<h2>Mẹo</h2><ul><li>175 = 7 × 25 nên 25 là số ở giữa. Các cặp có tổng 50 (1 + 49, 2 + 48...) đặt đối xứng qua tâm bàn giúp các hàng cân bằng.</li></ul>"""),
 }
 
 LEVELS_EN = '<h2>Computer levels and move timer</h2><ul><li>Seven computer levels: Easy, Medium, Good, Strong, Master, Challenger and Supreme. Only Easy is open at first; beat a level to unlock the next one for this game.</li><li>Your time per move against the computer depends on the level: Easy 1 min, Medium 2 min, Good 3 min, Strong 5 min, Master 10 min, Challenger 30 min, Supreme 1 hour. Against people the host picks one of the same seven times (1, 2, 3, 5, 10, 30 minutes or 1 hour). If time runs out, the player to move loses. The yearly plan unlocks every level at once.</li></ul>'
 LEVELS_VI = '<h2>Cấp độ máy và thời gian mỗi nước</h2><ul><li>Máy có 7 cấp: Dễ, Trung bình, Khá, Giỏi, Cao thủ, Thách đấu và Siêu việt. Lúc đầu chỉ mở cấp Dễ; thắng một cấp sẽ mở cấp kế tiếp của game này.</li><li>Thời gian mỗi nước khi chơi với máy tùy cấp: Dễ 1 phút, Trung bình 2 phút, Khá 3 phút, Giỏi 5 phút, Cao thủ 10 phút, Thách đấu 30 phút, Siêu việt 1 giờ. Chơi với người: chủ phòng chọn một trong 7 mức đó (1, 2, 3, 5, 10, 30 phút hoặc 1 giờ). Hết giờ mà chưa đi thì người đang đến lượt bị xử thua. Gói năm mở ngay mọi cấp.</li></ul>'
 
 for gid, g in GAMES.items():
-    solo = gid == "sudoku"
+    solo = gid in ("sudoku", "magic7")
     body = (f'<h1><span data-l="en">{g["en_name"]}</span><span data-l="vi">{g["vi_name"]}</span></h1>'
             + bi(f'<p class="muted">{g["en_intro"]}</p>' + g["en_body"] + ("" if solo else LEVELS_EN),
                  f'<p class="muted">{g["vi_intro"]}</p>' + g["vi_body"] + ("" if solo else LEVELS_VI)))
@@ -334,8 +360,8 @@ for gid, g in GAMES.items():
 # ───────────────────────── Trang chủ ─────────────────────────
 index_body = f"""
 <h1>{APP}</h1>
-{bi("<p class='muted'>A collection of board and brain games for Android: Gomoku, Wall Go, Quoridor, Chess, Xiangqi, Go and Sudoku. Every two-or-more-player game has seven computer levels, from Easy to Supreme.</p>",
-    "<p class='muted'>Bộ sưu tập game bàn cờ và trí tuệ cho Android: Cờ caro, Wall Go, Quoridor, Cờ vua, Cờ tướng, Cờ vây và Sudoku. Mọi game từ 2 người trở lên đều có 7 cấp độ máy, từ Dễ đến Siêu việt.</p>")}
+{bi("<p class='muted'>A collection of board and brain games for Android: Gomoku, Wall Go, Quoridor, Chess, Xiangqi, Go, Sudoku and Magic Square 7×7. Every two-or-more-player game has seven computer levels, from Easy to Supreme.</p>",
+    "<p class='muted'>Bộ sưu tập game bàn cờ và trí tuệ cho Android: Cờ caro, Wall Go, Quoridor, Cờ vua, Cờ tướng, Cờ vây, Sudoku và Ma phương 7×7. Mọi game từ 2 người trở lên đều có 7 cấp độ máy, từ Dễ đến Siêu việt.</p>")}
 <div class="topics"><span style="background:#14937a"><span data-l="en">Puzzle</span><span data-l="vi">Giải đố</span></span><span style="background:#5348c9"><span data-l="en">Intellect</span><span data-l="vi">Trí tuệ</span></span><span style="background:#c27a0a"><span data-l="en">Calculation</span><span data-l="vi">Tính toán</span></span><span style="background:#c93e6b"><span data-l="en">Memory</span><span data-l="vi">Ghi nhớ</span></span></div>
 <h2><span data-l="en">How to play</span><span data-l="vi">Hướng dẫn chơi</span></h2>
 <div class="grid">
@@ -346,6 +372,7 @@ index_body = f"""
 <a href="how-to-play/quoridor.html"><div class="card"><b>Quoridor</b><span class="muted" data-l="en">Race to the far side and block with walls.</span><span class="muted" data-l="vi">Chạy về cạnh đối diện và chặn bằng tường.</span></div></a>
 <a href="how-to-play/wallgo.html"><div class="card"><b>Wall Go</b><span class="muted" data-l="en">Move, build a wall, claim territory.</span><span class="muted" data-l="vi">Đi quân, xây tường, chiếm lãnh thổ.</span></div></a>
 <a href="how-to-play/sudoku.html"><div class="card"><b>Sudoku</b><span class="muted" data-l="en">One given per box, any valid grid wins.</span><span class="muted" data-l="vi">Mỗi khối một gợi ý, điền đúng luật là thắng.</span></div></a>
+<a href="how-to-play/magic7.html"><div class="card"><b><span data-l="en">Magic Square 7×7</span><span data-l="vi">Ma phương 7×7</span></b><span class="muted" data-l="en">Rows, columns and diagonals all sum to 175. Daily puzzle.</span><span class="muted" data-l="vi">Hàng, cột, đường chéo đều có tổng 175. Mỗi ngày một đề.</span></div></a>
 </div>
 <h2><span data-l="en">Using the app</span><span data-l="vi">Cách dùng ứng dụng</span></h2>
 {bi('''<div class="card"><ul>

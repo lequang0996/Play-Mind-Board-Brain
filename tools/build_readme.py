@@ -13,7 +13,11 @@ AVAILABLE NOW — INTELLECT
 • Chess: full rules including castling, en passant, promotion, check, checkmate, stalemate and draws.
 • Xiangqi (Chinese Chess): generals, advisors, elephants, horses, chariots, cannons and soldiers on the river board, including the flying-general rule.
 • Gomoku (Caro): make five in a row on an endless board - drag to explore, pinch to zoom. A line blocked at both ends does not count.
-More games for the Puzzle, Calculation and Memory topics are coming soon.
+
+AVAILABLE NOW — PUZZLE
+• Sudoku: one given number per box, and any grid that follows the rules wins.
+• Magic Square 7×7: place 1 to 49 so every row, column and both diagonals add up to 175. A new puzzle every day.
+More games for the Calculation and Memory topics are coming soon.
 
 PLAY YOUR WAY
 • Against the computer: 7 levels from Easy to Supreme. Start at Easy and win to unlock the next level; Go is powered by KataGo.
@@ -50,7 +54,11 @@ VI = dict(
 • Cờ vua: đầy đủ luật gồm nhập thành, bắt tốt qua đường, phong cấp, chiếu, chiếu hết, hòa cờ và các thế hòa.
 • Cờ tướng: tướng, sĩ, tượng, mã, xe, pháo và tốt trên bàn cờ có sông, kể cả luật hai tướng không được đối mặt.
 • Cờ caro (Gomoku): xếp năm quân liên tiếp trên bàn cờ vô hạn - kéo để di chuyển, chụm để thu phóng. Hàng bị chặn cả hai đầu thì không tính.
-Các game thuộc chủ đề Giải đố, Tính toán và Ghi nhớ sẽ sớm ra mắt.
+
+ĐÃ CÓ — CHỦ ĐỀ GIẢI ĐỐ
+• Sudoku: mỗi khối chỉ gợi ý một số, mọi cách điền đúng luật đều thắng.
+• Ma phương 7×7: xếp các số 1 đến 49 sao cho mọi hàng, cột và hai đường chéo đều có tổng 175. Mỗi ngày một đề.
+Các game thuộc chủ đề Tính toán và Ghi nhớ sẽ sớm ra mắt.
 
 CHƠI THEO CÁCH CỦA BẠN
 • Với máy: 7 cấp từ Dễ đến Siêu việt. Bắt đầu ở cấp Dễ, thắng để mở khóa cấp kế tiếp; Cờ vây dùng KataGo.
