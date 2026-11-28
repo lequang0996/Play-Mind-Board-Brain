@@ -109,6 +109,7 @@
     <string name="multi_bot_fill">开始时空座位由电脑代打。离开、认输或超时的玩家将由电脑接替。</string>
     <string name="multi_continues">你已出局，但其他人的对局仍在继续。若你是房主，离开会结束所有人的房间。</string>
     <string name="multi_seat_free">空座位</string>
+    <string name="music">背景音乐</string>
     <string name="n_players">%d 人</string>
     <string name="nearby">附近对战（无需联网）</string>
     <string name="nearby_card_desc">通过蓝牙或 Wi-Fi，无需网络</string>
@@ -206,6 +207,8 @@
     <string name="side_yellow">黄</string>
     <string name="solo_play">单人游戏</string>
     <string name="sorted_hint">按难度和单局时长排序：从简单、短局到困难、长局</string>
+    <string name="sound">声音</string>
+    <string name="sound_effects">音效</string>
     <string name="st_captured">提子 %d</string>
     <string name="st_cells">%d 格</string>
     <string name="st_walls">%d 堵墙</string>

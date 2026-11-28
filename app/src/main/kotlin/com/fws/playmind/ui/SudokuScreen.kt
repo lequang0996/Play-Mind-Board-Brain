@@ -25,6 +25,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -70,6 +71,8 @@ private fun fmtTime(sec: Int) = "%d:%02d".format(sec / 60, sec % 60)
 @Composable
 fun SudokuScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onExit: () -> Unit) {
     val activity = LocalContext.current as Activity
+    // trong ván: nhạc nền thưa và dịu hơn
+    DisposableEffect(Unit) { app.audio.calm = true; onDispose { app.audio.calm = false } }
     val g = vm.sudoku
     @Suppress("UNUSED_VARIABLE") val dep = vm.sudokuTick
     var sel by remember { mutableIntStateOf(-1) }

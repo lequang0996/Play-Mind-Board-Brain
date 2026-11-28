@@ -109,6 +109,7 @@
     <string name="multi_bot_fill">빈자리는 시작 시 컴퓨터가 플레이합니다. 나가거나 기권하거나 시간이 초과된 플레이어는 컴퓨터가 대신합니다.</string>
     <string name="multi_continues">탈락했지만 다른 플레이어의 게임은 계속됩니다. 방장이 나가면 모두의 방이 종료됩니다.</string>
     <string name="multi_seat_free">빈자리</string>
+    <string name="music">배경 음악</string>
     <string name="n_players">%d명</string>
     <string name="nearby">근거리 (인터넷 불필요)</string>
     <string name="nearby_card_desc">블루투스 또는 Wi-Fi, 인터넷 불필요</string>
@@ -206,6 +207,8 @@
     <string name="side_yellow">노랑</string>
     <string name="solo_play">혼자 하기</string>
     <string name="sorted_hint">쉽고 짧은 게임부터 어렵고 긴 게임 순</string>
+    <string name="sound">사운드</string>
+    <string name="sound_effects">효과음</string>
     <string name="st_captured">따낸 돌 %d</string>
     <string name="st_cells">%d칸</string>
     <string name="st_walls">벽 %d개</string>

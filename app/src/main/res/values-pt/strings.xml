@@ -109,6 +109,7 @@
     <string name="multi_bot_fill">Os lugares vazios são jogados pelo computador no início. Quem sair, desistir ou ficar sem tempo é substituído pelo computador.</string>
     <string name="multi_continues">Você foi eliminado, mas a partida continua para os outros. Se você for o anfitrião, sair encerra a sala para todos.</string>
     <string name="multi_seat_free">Lugar vazio</string>
+    <string name="music">Música de fundo</string>
     <string name="n_players">%d jogadores</string>
     <string name="nearby">Por perto (sem internet)</string>
     <string name="nearby_card_desc">Por Bluetooth ou Wi-Fi, sem internet</string>
@@ -206,6 +207,8 @@
     <string name="side_yellow">Amarelo</string>
     <string name="solo_play">Um jogador</string>
     <string name="sorted_hint">Ordenados do mais fácil e rápido ao mais difícil e longo</string>
+    <string name="sound">Som</string>
+    <string name="sound_effects">Efeitos sonoros</string>
     <string name="st_captured">Capturas %d</string>
     <string name="st_cells">%d casas</string>
     <string name="st_walls">%d muros</string>

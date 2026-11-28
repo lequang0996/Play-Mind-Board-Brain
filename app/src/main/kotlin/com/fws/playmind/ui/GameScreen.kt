@@ -27,6 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -171,6 +172,8 @@ private fun SeatStrip(vm: SessionViewModel, info: GameInfo, turn: Int, over: Boo
 @Composable
 fun GameScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onExit: () -> Unit) {
     val activity = LocalContext.current as Activity
+    // trong ván: nhạc nền thưa và dịu hơn
+    DisposableEffect(Unit) { app.audio.calm = true; onDispose { app.audio.calm = false } }
     val g = vm.game
     val tick = vm.tick
     var confirmResign by remember { mutableStateOf(false) }

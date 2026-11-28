@@ -158,7 +158,7 @@ class BillingManager(private val app: Application, private val wallet: WalletRep
                 // Chỉ cộng kim cương SAU KHI tiêu thụ thành công: mỗi giao dịch chỉ tiêu thụ được một lần nên không bao giờ cộng đôi.
                 val total = gems * p.quantity.coerceAtLeast(1)
                 client.consumeAsync(ConsumeParams.newBuilder().setPurchaseToken(p.purchaseToken).build()) { r, _ ->
-                    if (r.responseCode == BillingClient.BillingResponseCode.OK) { wallet.addDiamonds(total); event = BillingEvent.GemsGranted(total) }
+                    if (r.responseCode == BillingClient.BillingResponseCode.OK) { wallet.addDiamonds(total); event = BillingEvent.GemsGranted(total); (app as? com.fws.playmind.PlayMindApp)?.audio?.play(com.fws.playmind.audio.Sfx.REWARD) }
                 }
             } else if (id == SUB_MONTHLY || id == SUB_YEARLY) {
                 acknowledgeIfNeeded(p)

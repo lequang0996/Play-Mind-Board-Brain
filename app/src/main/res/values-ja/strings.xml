@@ -109,6 +109,7 @@
     <string name="multi_bot_fill">空席は開始時にコンピューターが担当します。退出・投了・時間切れのプレイヤーはコンピューターに交代します。</string>
     <string name="multi_continues">あなたは脱落しましたが、他のプレイヤーの対局は続きます。ホストが退出すると全員のルームが終了します。</string>
     <string name="multi_seat_free">空席</string>
+    <string name="music">BGM</string>
     <string name="n_players">%d人</string>
     <string name="nearby">近くで対戦（通信不要）</string>
     <string name="nearby_card_desc">Bluetooth または Wi-Fi、通信不要</string>
@@ -206,6 +207,8 @@
     <string name="side_yellow">黄</string>
     <string name="solo_play">ひとりで遊ぶ</string>
     <string name="sorted_hint">遊びやすく短いものから、難しく長いものの順</string>
+    <string name="sound">サウンド</string>
+    <string name="sound_effects">効果音</string>
     <string name="st_captured">取り石 %d</string>
     <string name="st_cells">%dマス</string>
     <string name="st_walls">壁 %d枚</string>

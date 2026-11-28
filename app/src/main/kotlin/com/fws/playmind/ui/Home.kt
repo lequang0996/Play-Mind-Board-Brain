@@ -161,7 +161,7 @@ fun HomeScreen(
             }
             Gap(16)
             if (!app.wallet.noDiamonds()) Vault(wallet.diamonds, wallet.streakDays, canCheckIn) {
-                val r = app.wallet.checkIn(); if (r is CheckIn.Done) checkIn = r
+                val r = app.wallet.checkIn(); if (r is CheckIn.Done) { checkIn = r; app.audio.play(com.fws.playmind.audio.Sfx.REWARD) }
             }
             if (plan == Plan.NONE) {
                 Gap(10)

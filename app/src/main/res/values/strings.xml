@@ -110,6 +110,7 @@
     <string name="multi_bot_fill">Empty seats are played by the computer when the game starts. Players who leave, resign or run out of time are replaced by the computer.</string>
     <string name="multi_continues">You are out, but the game continues for the others. If you are the host, leaving ends the room for everyone.</string>
     <string name="multi_seat_free">Empty seat</string>
+    <string name="music">Background music</string>
     <string name="n_players">%d players</string>
     <string name="nearby">Nearby (no internet needed)</string>
     <string name="nearby_card_desc">Bluetooth or Wi-Fi, no internet needed</string>
@@ -207,6 +208,8 @@
     <string name="side_yellow">Yellow</string>
     <string name="solo_play">Solo</string>
     <string name="sorted_hint">Sorted from easiest and quickest to hardest and longest</string>
+    <string name="sound">Sound</string>
+    <string name="sound_effects">Sound effects</string>
     <string name="st_captured">Captured %d</string>
     <string name="st_cells">%d cells</string>
     <string name="st_walls">%d walls</string>

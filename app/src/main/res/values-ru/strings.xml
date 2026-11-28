@@ -109,6 +109,7 @@
     <string name="multi_bot_fill">Свободные места при старте занимает компьютер. Тех, кто вышел, сдался или не уложился во время, заменяет компьютер.</string>
     <string name="multi_continues">Вы выбыли, но игра продолжается для остальных. Если вы хозяин, ваш выход закроет комнату для всех.</string>
     <string name="multi_seat_free">Свободное место</string>
+    <string name="music">Фоновая музыка</string>
     <string name="n_players">%d игрока</string>
     <string name="nearby">Рядом (без интернета)</string>
     <string name="nearby_card_desc">По Bluetooth или Wi-Fi, без интернета</string>
@@ -206,6 +207,8 @@
     <string name="side_yellow">Жёлтые</string>
     <string name="solo_play">Одиночная игра</string>
     <string name="sorted_hint">От самых простых и коротких партий к самым сложным и долгим</string>
+    <string name="sound">Звук</string>
+    <string name="sound_effects">Звуковые эффекты</string>
     <string name="st_captured">Взято: %d</string>
     <string name="st_cells">%d клеток</string>
     <string name="st_walls">Стен: %d</string>

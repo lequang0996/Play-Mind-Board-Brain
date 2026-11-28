@@ -26,6 +26,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -97,6 +99,26 @@ private fun SettingsRow(icon: androidx.compose.ui.graphics.vector.ImageVector, t
 }
 
 @Composable
+private fun ToggleRow(icon: androidx.compose.ui.graphics.vector.ImageVector, text: String, on: Boolean, onChange: (Boolean) -> Unit) {
+    val shape = RoundedCornerShape(16.dp)
+    Row(
+        Modifier.fillMaxWidth().lift(shape, 4.dp).clip(shape).background(cardBrush()).border(1.dp, hairline(), shape)
+            .clickable { onChange(!on) }.padding(horizontal = 16.dp, vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Icon(icon, null, Modifier.size(20.dp), tint = pm.gold)
+        Text(text, Modifier.weight(1f), style = MaterialTheme.typography.titleSmall, color = pm.ink)
+        Switch(
+            on, onChange,
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = pm.surface, checkedTrackColor = pm.gold, checkedBorderColor = pm.gold,
+                uncheckedThumbColor = pm.inkSoft, uncheckedTrackColor = pm.surfaceHigh, uncheckedBorderColor = pm.outline,
+            ),
+        )
+    }
+}
+
+@Composable
 fun SettingsScreen(app: PlayMindApp, onBack: () -> Unit, onGuide: () -> Unit, onShop: () -> Unit) {
     val ctx = LocalContext.current
     val activity = ctx as Activity
@@ -120,6 +142,11 @@ fun SettingsScreen(app: PlayMindApp, onBack: () -> Unit, onGuide: () -> Unit, on
                     focusedTextColor = pm.ink, unfocusedTextColor = pm.ink, cursorColor = pm.gold,
                 ),
             )
+
+            Spacer(Modifier.height(6.dp))
+            SectionTitle(stringResource(R.string.sound))
+            ToggleRow(Ic.Music, stringResource(R.string.music), app.audio.musicOn) { app.audio.updateMusic(it) }
+            ToggleRow(Ic.Speaker, stringResource(R.string.sound_effects), app.audio.sfxOn) { app.audio.updateSfx(it); if (it) app.audio.play(com.fws.playmind.audio.Sfx.MOVE) }
 
             Spacer(Modifier.height(6.dp))
             SettingsRow(Ic.Bag, stringResource(R.string.shop), onShop)

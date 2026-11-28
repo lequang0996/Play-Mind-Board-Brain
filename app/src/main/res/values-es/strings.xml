@@ -109,6 +109,7 @@
     <string name="multi_bot_fill">Los asientos libres los juega el ordenador al empezar. Quien abandone, se rinda o agote su tiempo será sustituido por el ordenador.</string>
     <string name="multi_continues">Has quedado fuera, pero la partida sigue para los demás. Si eres el anfitrión, al salir se cierra la sala para todos.</string>
     <string name="multi_seat_free">Asiento libre</string>
+    <string name="music">Música de fondo</string>
     <string name="n_players">%d jugadores</string>
     <string name="nearby">Cercano (sin internet)</string>
     <string name="nearby_card_desc">Por Bluetooth o Wi-Fi, sin internet</string>
@@ -206,6 +207,8 @@
     <string name="side_yellow">Amarillo</string>
     <string name="solo_play">Un jugador</string>
     <string name="sorted_hint">Ordenados del más fácil y rápido al más difícil y largo</string>
+    <string name="sound">Sonido</string>
+    <string name="sound_effects">Efectos de sonido</string>
     <string name="st_captured">Capturas %d</string>
     <string name="st_cells">%d casillas</string>
     <string name="st_walls">%d muros</string>

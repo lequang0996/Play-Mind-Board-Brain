@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.fws.playmind.PlayMindApp
+import com.fws.playmind.audio.Sfx
 import com.fws.playmind.catalog.GameInfo
 import com.fws.playmind.core.BoardGame
 import com.fws.playmind.core.BotLevel
@@ -288,8 +289,10 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         if (phase != Phase.PLAYING) return
         block(g)
         sudokuTick++
+        graph.audio.play(Sfx.TAP)
         if (g.status != SudokuStatus.PLAYING) {
             phase = Phase.OVER
+            graph.audio.play(if (g.status == SudokuStatus.WON) Sfx.WIN else Sfx.LOSE)
             settle(if (g.status == SudokuStatus.WON) MatchOutcome.WIN else MatchOutcome.LOSS, true)
         }
     }
@@ -749,6 +752,8 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
     private fun afterMove() {
         val g = game ?: return
         tick++
+        if (g.reason != EndReason.RESIGN && g.reason != EndReason.TIMEOUT && g.reason != EndReason.LEAVE)
+            graph.audio.play(if (g.result == Outcome.ONGOING && g.inCheck()) Sfx.CHECK else Sfx.MOVE)
         resetTurnClock()
         if (g.result != Outcome.ONGOING) onGameOver() else scheduleBotIfNeeded()
     }
@@ -814,6 +819,9 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         val g = game ?: return; val inf = info ?: return
         botJob?.cancel(); botThinking = false; turnClock?.cancel()
         phase = Phase.OVER
+        graph.audio.play(if (mode == Mode.LOCAL) Sfx.WIN else when (if (multi && eliminated) MatchOutcome.LOSS else outcomeForMe(g)) {
+            MatchOutcome.WIN -> Sfx.WIN; MatchOutcome.LOSS -> Sfx.LOSE; else -> Sfx.DRAW
+        })
         if (mode == Mode.LOCAL) { finalized = true; return }       // chơi chung một máy: không thưởng, không thống kê
         if (multi) { settle(if (eliminated) MatchOutcome.LOSS else outcomeForMe(g), true); return }
         val out = outcomeForMe(g)

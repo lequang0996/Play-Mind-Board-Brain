@@ -242,3 +242,6 @@ pvp_time_note|Lo elige el anfitrión; quienes se unen usan su tiempo.
 time_n_min|%d min
 time_1h|1 h
 perk_all_levels|Todos los niveles de la máquina desbloqueados
+sound|Sonido
+music|Música de fondo
+sound_effects|Efectos de sonido

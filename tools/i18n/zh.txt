@@ -242,3 +242,6 @@ pvp_time_note|由房主选择；加入的玩家使用房主设定的时间。
 time_n_min|%d 分钟
 time_1h|1 小时
 perk_all_levels|立即解锁所有电脑难度
+sound|声音
+music|背景音乐
+sound_effects|音效

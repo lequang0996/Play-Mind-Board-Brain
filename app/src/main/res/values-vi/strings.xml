@@ -109,6 +109,7 @@
     <string name="multi_bot_fill">Ghế trống sẽ do máy chơi khi bắt đầu. Ai rời ván, đầu hàng hoặc hết giờ sẽ được máy chơi thay.</string>
     <string name="multi_continues">Bạn đã bị loại nhưng ván vẫn tiếp tục cho những người khác. Nếu bạn là chủ phòng, rời đi sẽ kết thúc phòng của mọi người.</string>
     <string name="multi_seat_free">Ghế trống</string>
+    <string name="music">Nhạc nền</string>
     <string name="n_players">%d người</string>
     <string name="nearby">Gần nhau (không cần internet)</string>
     <string name="nearby_card_desc">Qua Bluetooth hoặc Wi-Fi, không cần internet</string>
@@ -206,6 +207,8 @@
     <string name="side_yellow">Vàng</string>
     <string name="solo_play">Chơi một mình</string>
     <string name="sorted_hint">Xếp từ dễ chơi, ván ngắn đến khó chơi, ván dài</string>
+    <string name="sound">Âm thanh</string>
+    <string name="sound_effects">Hiệu ứng âm thanh</string>
     <string name="st_captured">Bắt %d quân</string>
     <string name="st_cells">%d ô</string>
     <string name="st_walls">%d tường</string>

@@ -242,3 +242,6 @@ pvp_time_note|The host chooses; players who join use the host's time.
 time_n_min|%d min
 time_1h|1 h
 perk_all_levels|Every computer level unlocked
+sound|Sound
+music|Background music
+sound_effects|Sound effects
