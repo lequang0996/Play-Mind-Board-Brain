@@ -27,7 +27,7 @@ class SearchLimit(val depth: Int = 0, val nodes: Long = 0, val timeMs: Long = 0)
  * - [limit]: giới hạn tìm kiếm. Siêu việt dùng [SearchLimit.timeMs] = botMillis (điền lúc chạy).
  * - [noiseP], [delta]: với xác suất [noiseP], chọn ngẫu nhiên một nước khác nước tốt nhất nhưng điểm kém không quá [delta]
  *   (đơn vị điểm của engine đó).
- * - [extra]: tham số riêng của game (ví dụ caro: độ sâu VCF tối đa; cờ vây: số lượt mô phỏng).
+ * - [extra]: tham số riêng của game (caro: độ sâu VCF tối đa; Quoridor: xác suất % chỉ đi quân; cờ vây: số lượt mô phỏng).
  */
 class LevelConfig(val limit: SearchLimit, val noiseP: Double = 0.0, val delta: Int = 0, val extra: Int = 0) {
     override fun toString() = "$limit p=$noiseP δ=$delta" + (if (extra != 0) " extra=$extra" else "")
@@ -79,12 +79,13 @@ object BotLevels {
         n(250, 0.03, 200, 12), n(1_000, 0.0, 0, 24), n(4_000, 0.0, 0, 24), top(24),
     )
 
-    // Quoridor (mục 9.3), alpha-beta. Điểm: 100 = một bước đường đi. Thang sức của Quoridor rất nén: tìm sâu thêm cho ít Elo
-    // (Siêu việt hơn n300 khoảng 81%, n1000 khoảng 75%). Nhiễu có delta từ 200 (2 bước) trở lên làm bot đi lòng vòng và thua
-    // vì lặp thế, nên chỉ cấp Dễ dùng mức đó; các cấp khác giữ delta <= 150. Đo 11/2026 trên máy phát triển, xem mục 13.
+    // Quoridor (mục 9.3), alpha-beta. Điểm: 100 = một bước đường đi. extra = xác suất (%) "quên tường": nước đó chỉ xét
+    // đi quân (lớp an toàn vẫn chặn khi đối phương còn một bước). Thang sức của Quoridor rất nén ở trên (tìm sâu thêm cho
+    // ít Elo) và nhiễu delta >= 200 làm bot đi lòng vòng rồi thua vì lặp thế. Nhiễu trên tường còn hại hơn không đặt tường,
+    // nên các cấp dưới kết hợp "quên tường" với nhiễu nhỏ (delta 100) trên nước đi quân. Đo 11/2026, mục 13.
     val quoridor = listOf(
-        d(1, 0.80, 300), d(1, 1.0, 180), d(1, 1.0, 150),
-        d(1, 0.50, 150), d(1), n(300), top(),
+        d(1, 0.95, 100, 100), d(1, 0.70, 100, 100), d(1, 0.42, 100, 100),
+        d(1, extra = 80), d(1, 0.20, 150, 40), n(300), top(),
     )
 
     // Wall Go (mục 10.3), alpha-beta. Điểm: 100 = một ô lãnh thổ. Một nút rất nặng (đánh giá mọi nước con), Siêu việt

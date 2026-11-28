@@ -617,6 +617,7 @@ class QuoridorGame(val players: Int = 2) : BoardGame, LeveledEngine {
         return synchronized(lock) {
             val work = copyGame()
             val me = work.cur
+            val pawnOnly = cfg.extra > 0 && rnd.nextInt(100) < cfg.extra
             Bot.pick(work, cfg, rnd,
                 winNow = { work.pawnMoves(me).firstOrNull { work.atGoal(it, goalSide(players, me)) } ?: -1 },
                 losesNext = { m ->
@@ -624,7 +625,14 @@ class QuoridorGame(val players: Int = 2) : BoardGame, LeveledEngine {
                     if (!c.play(m) || c.result != Outcome.ONGOING) c.result != Outcome.ONGOING && c.winner != me
                     else { val nx = c.cur; c.pawnMoves(nx).any { c.atGoal(it, goalSide(players, nx)) } }
                 },
-            ) { l, allowed, delta -> work.searchRoot(me, l, allowed, delta) }
+            ) { l, allowed, delta ->
+                // extra = xác suất (%) "quên tường": nước này chỉ xét đi quân (lớp an toàn vẫn chặn đối phương sắp về đích)
+                val a = if (pawnOnly) {
+                    val pm = work.pawnMoves(me)
+                    (allowed?.filter { it in pm }?.toIntArray() ?: pm).takeIf { it.isNotEmpty() } ?: allowed
+                } else allowed
+                work.searchRoot(me, l, a, delta)
+            }
         }
     }
 }
