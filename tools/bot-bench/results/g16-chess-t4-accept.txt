@@ -1,0 +1,15 @@
+# date: 2026-11-28
+# note: Nghiệm thu cờ vua với trọng số chess-t4 (+24 Elo so với chess-t3 ở g14): Stockfish 2800 / 3000 và toàn bộ chuỗi 7 cấp.
+gauge chess elo=2800 ms=2000 sfms=2000 threads=3 n=120  W/D/L=39/62/19  S=0.583 [0.523,0.644]  est=2858  plies~93  {'CHECKMATE': 58, 'REPETITION': 62}
+gauge chess elo=3000 ms=2000 sfms=2000 threads=3 n=60  W/D/L=4/44/12  S=0.433 [0.370,0.497]  est=2953  plies~97  {'CHECKMATE': 16, 'REPETITION': 44}
+chess A=6 B=5 ms=2000 n=216  W/D/L=159/30/27  S=0.806 [0.759,0.852]  elo=-  first=0.83 second=0.78  plies~175  {'CHECKMATE': 177, 'FIFTY': 16, 'MATERIAL': 14, 'REPETITION': 9}  ci
+chess A=5 B=4 ms=2000 n=204  W/D/L=125/25/54  S=0.674 [0.614,0.734]  elo=126  first=0.69 second=0.66  plies~166  {'CHECKMATE': 160, 'FIFTY': 19, 'MATERIAL': 6, 'REPETITION': 19}  ci
+chess A=4 B=3 ms=2000 n=204  W/D/L=135/25/44  S=0.723 [0.666,0.780]  elo=167  first=0.73 second=0.72  plies~137  {'CHECKMATE': 163, 'FIFTY': 18, 'MATERIAL': 6, 'REPETITION': 16, 'STALEMATE': 1}  ci
+chess A=3 B=2 ms=2000 n=204  W/D/L=187/2/15  S=0.922 [0.885,0.958]  elo=-  first=0.97 second=0.88  plies~93  {'CHECKMATE': 190, 'FIFTY': 1, 'MATERIAL': 1, 'REPETITION': 12}  ci
+chess A=2 B=1 ms=2000 n=204  W/D/L=168/6/30  S=0.838 [0.789,0.887]  elo=-  first=0.80 second=0.88  plies~110  {'CHECKMATE': 192, 'FIFTY': 3, 'REPETITION': 6, 'STALEMATE': 3}  ci
+chess A=1 B=0 ms=2000 n=408  W/D/L=387/20/1  S=0.973 [0.962,0.985]  elo=-  first=0.98 second=0.97  plies~69  {'CHECKMATE': 388, 'STALEMATE': 20}  ci
+chess A=6 B=4 ms=2000 n=108  W/D/L=100/7/1  S=0.958 [0.929,0.988]  elo=-  first=0.97 second=0.94  plies~153  {'CHECKMATE': 97, 'FIFTY': 6, 'MATERIAL': 1, 'REPETITION': 4}  ci
+chess A=5 B=3 ms=2000 n=102  W/D/L=88/7/7  S=0.897 [0.844,0.951]  elo=-  first=0.89 second=0.90  plies~138  {'CHECKMATE': 87, 'FIFTY': 4, 'MATERIAL': 3, 'REPETITION': 8}  ci
+chess A=4 B=2 ms=2000 n=102  W/D/L=102/0/0  S=1.000 [1.000,1.000]  elo=-  first=1.00 second=1.00  plies~83  {'CHECKMATE': 97, 'REPETITION': 5}  ci
+chess A=3 B=1 ms=2000 n=102  W/D/L=98/0/4  S=0.961 [0.923,0.999]  elo=-  first=0.92 second=1.00  plies~81  {'CHECKMATE': 96, 'REPETITION': 6}  ci
+chess A=2 B=0 ms=2000 n=102  W/D/L=95/5/2  S=0.956 [0.922,0.990]  elo=-  first=0.96 second=0.95  plies~57  {'CHECKMATE': 89, 'REPETITION': 8, 'STALEMATE': 5}  ci

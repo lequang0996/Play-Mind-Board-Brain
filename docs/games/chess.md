@@ -33,12 +33,12 @@ Theo mẫu BOT_GUIDE mục 12.2. Sinh bởi `tools/bot-bench/make_profiles.py`; 
 
 | Cặp | Số ván | Thắng/Hòa/Thua | S | Khoảng tin cậy 95% | Khoảng đạt | Đi trước / đi sau | Kết luận |
 |---|---|---|---|---|---|---|---|
-| Trung bình vs Dễ | 408 | 391/15/2 | 0.977 | 0.96–0.99 | 93%–98% | 0.97 / 0.98 | trong khoảng |
-| Khá vs Trung bình | 204 | 185/5/14 | 0.919 | 0.88–0.95 | 81%–95% | 0.91 / 0.93 | trong khoảng |
-| Giỏi vs Khá | 204 | 187/2/15 | 0.922 | 0.89–0.96 | 85%–96% | 0.95 / 0.89 | trong khoảng |
-| Cao thủ vs Giỏi | 204 | 139/14/51 | 0.716 | 0.66–0.78 | 64%–88% | 0.71 / 0.73 | trong khoảng |
-| Thách đấu vs Cao thủ | 204 | 134/18/52 | 0.701 | 0.64–0.76 | 64%–88% | 0.74 / 0.66 | trong khoảng |
-| Siêu việt vs Thách đấu | 216 | 165/30/21 | 0.833 | 0.79–0.88 | 76%–93% | 0.83 / 0.83 | trong khoảng |
+| Trung bình vs Dễ | 408 | 387/20/1 | 0.973 | 0.96–0.98 | 93%–98% | 0.98 / 0.97 | trong khoảng |
+| Khá vs Trung bình | 204 | 168/6/30 | 0.838 | 0.79–0.89 | 81%–95% | 0.80 / 0.88 | trong khoảng |
+| Giỏi vs Khá | 204 | 187/2/15 | 0.922 | 0.89–0.96 | 85%–96% | 0.97 / 0.88 | trong khoảng |
+| Cao thủ vs Giỏi | 204 | 135/25/44 | 0.723 | 0.67–0.78 | 64%–88% | 0.73 / 0.72 | trong khoảng |
+| Thách đấu vs Cao thủ | 204 | 125/25/54 | 0.674 | 0.61–0.73 | 64%–88% | 0.69 / 0.66 | trong khoảng |
+| Siêu việt vs Thách đấu | 216 | 159/30/27 | 0.806 | 0.76–0.85 | 76%–93% | 0.83 / 0.78 | trong khoảng |
 
 Siêu việt đo trên máy phát triển ở thời gian botMillis ÷ 4 (mục 3.2, k giả định). Số ván mỗi cặp ít hơn yêu cầu nghiệm thu (200, cặp Trung bình vs Dễ 400).
 
