@@ -90,7 +90,7 @@
     <string name="guide_sudoku">Objetivo: rellena todas las casillas para que cada fila, columna y bloque 3×3 contenga del 1 al 9 una sola vez.\n• Introducir: toca una casilla y luego un número. Los números erróneos salen en rojo; corrígelos con Borrar.\n• Notas: activa el lápiz para anotar números candidatos pequeños (en rojo).\n• Borrar vacía la casilla seleccionada. Cada bloque 3×3 empieza con un solo número (9 en total), así que gana cualquier cuadrícula que cumpla las reglas.</string>
     <string name="guide_tangram">Objetivo: usa las 7 piezas (2 triángulos grandes, 1 mediano, 2 pequeños, 1 cuadrado y 1 paralelogramo) para rellenar exactamente la figura gris, sin solapes ni piezas sobrantes.\n• Cada ronda tiene 10 figuras aleatorias, de compactas a llenas de picos. Tienes 3 minutos por figura.\n• Si se acaba el tiempo en cualquier figura, pierdes; completa las 10 para ganar.\n• Arrastra las piezas de la bandeja a la figura. Toca para girar 45° y mantén pulsado el paralelogramo para voltearlo.\n• Si sueltas una pieza cerca de una esquina de la figura o de otra pieza, se ajusta sola.\n• Cualquier disposición que rellene la figura exactamente es válida.\n• Consejo: coloca primero los dos triángulos grandes; ocupan la mitad del área.\n• 7 niveles según el número de piezas: Fácil 4, Medio 5, Bueno 6, Fuerte 7 (el juego clásico), Maestro 8, Retador 9, Supremo 10. Completa las 10 figuras de un nivel para desbloquear el siguiente.</string>
     <string name="guide_wallgo">Objetivo: terminar con más territorio que tus rivales.\n• Preparación: por turnos, coloca tus piedras en casillas vacías (4 cada uno con 2 jugadores, 3 con 3 jugadores, 2 con 4 jugadores).\n• Tu turno: elige una de tus piedras y muévela 0, 1 o 2 casillas arriba, abajo, izquierda o derecha. No puede atravesar muros ni otras piedras.\n• Muro: tras mover, DEBES colocar un muro en un lado libre de la casilla donde te quedas.\n• Territorio: cuando cada zona cercada tenga piedras de un solo jugador, la partida termina. Puntúas las casillas de las zonas que solo contienen tus piedras.\n• Empates: gana la zona única más grande; si no, hay empate. Quien no pueda mover pierde el turno.</string>
-    <string name="guide_wordblocks">Objetivo: en 10 minutos, forma 7 palabras en inglés del tema indicado (por ejemplo Ciudades: PARIS, VIENNA, ...) con bloques de madera con letras.\n• Los bloques son exactamente las letras de las 7 palabras de la solución, mezcladas. Cada bloque se usa una sola vez.\n• Cada reto tiene una única solución: solo un grupo de 7 palabras del tema usa todos los bloques. Solo se aceptan esas 7 palabras; una palabra del tema que no sea respuesta se rechaza.\n• Toca un bloque para añadir su letra a la palabra actual y tócalo de nuevo para quitarla. Borrar quita la última letra y Limpiar quita la palabra entera. Pulsa Formar para enviarla.\n• Forma las 7 palabras para ganar; si se acaban los 10 minutos pierdes y se muestran las palabras de la solución.\n• Toca el botón ? durante la partida para volver a ver cómo jugar.\n• Consejo: busca primero letras raras como Q, Z, J, X y V; suelen pertenecer a una sola palabra.</string>
+    <string name="guide_wordblocks">Objetivo: en 10 minutos, forma 7 palabras en inglés del tema indicado (por ejemplo Ciudades: PARIS, VIENNA, ...) con bloques de madera con letras.\n• Los bloques son exactamente las letras de las 7 palabras de la solución, mezcladas. Cada bloque se usa una sola vez.\n• Cada reto tiene una única solución: solo un grupo de 7 palabras del tema usa todos los bloques. Solo se aceptan esas 7 palabras; una palabra del tema que no sea respuesta se rechaza.\n• Toca un bloque para añadir su letra a la palabra actual y tócalo de nuevo para quitarla. Borrar quita la última letra y Limpiar quita la palabra entera. Pulsa Formar para enviarla.\n• Forma las 7 palabras para ganar; si se acaban los 10 minutos pierdes y se muestran las palabras de la solución.\n• Toca el botón ? durante la partida para volver a ver cómo jugar.\n• Consejo: busca primero letras raras como Q, Z, J, X y V; suelen pertenecer a una sola palabra.\n• Ventajas del plan: el plan mensual muestra la longitud de cada palabra en las casillas; el plan anual añade 2 pistas por partida, cada una coloca una palabra.</string>
     <string name="guide_xiangqi">Objetivo: dar jaque mate al general rival. Empiezan las rojas.\n• El general y los consejeros permanecen en el palacio. Los dos generales nunca pueden quedar frente a frente en una columna libre.\n• Los elefantes se mueven dos puntos en diagonal, no cruzan el río y pueden ser bloqueados en el punto medio.\n• Los caballos se mueven en L pero los bloquea una pieza adyacente. Los carros avanzan en línea recta.\n• Los cañones avanzan en línea recta y capturan saltando exactamente una pieza. Los soldados avanzan y, tras cruzar el río, también van de lado.\n• Quien no tiene movimientos legales pierde. En esta app, quien hace una jugada que repite una posición anterior pierde.</string>
     <string name="how_to_play">Cómo jugar</string>
     <string name="how_to_use">Guía de uso</string>
@@ -303,7 +303,7 @@
     <string name="wb_clear">Limpiar</string>
     <string name="wb_dup">Ya formaste esa palabra</string>
     <string name="wb_found">%1$d/%2$d palabras</string>
-    <string name="wb_goal">Usa los bloques de madera de abajo para formar 7 palabras en inglés de este tema.</string>
+    <string name="wb_hint">Pista</string>
     <string name="wb_howto">1. Los bloques de madera de abajo son las letras de 7 palabras en inglés del tema «%1$s», mezcladas.\n2. Toca los bloques uno a uno para formar una palabra (por ejemplo, tema Ciudades: toca P, A, R, I, S). Toca de nuevo un bloque para quitarlo.\n3. Pulsa Formar. Una palabra correcta va a una casilla de respuesta.\n4. Cada bloque se usa una vez. Forma las 7 palabras en 10 minutos para ganar.\n5. Cada reto tiene un único grupo de 7 palabras que usa todos los bloques. Una palabra del tema que no esté en ese grupo no se acepta.</string>
     <string name="wb_howto_title">Cómo jugar</string>
     <string name="wb_lost">Se acabó el tiempo</string>
@@ -311,10 +311,10 @@
     <string name="wb_not_answer">Es del tema, pero no es una respuesta de este reto</string>
     <string name="wb_not_theme">Esa palabra no es del tema</string>
     <string name="wb_ok">¡Correcto!</string>
+    <string name="wb_plan_perks">Plan mensual: las casillas muestran la longitud de cada palabra. Plan anual: además 2 pistas por partida, cada una coloca una palabra.</string>
     <string name="wb_short">Las palabras necesitan al menos 3 letras</string>
     <string name="wb_submit">Formar</string>
     <string name="wb_tap_hint">Toca los bloques uno a uno para formar una palabra y pulsa Formar</string>
-    <string name="wb_theme">Tema: %s</string>
     <string name="wb_theme_animals">Animales</string>
     <string name="wb_theme_body">Cuerpo humano</string>
     <string name="wb_theme_cities">Ciudades</string>
@@ -325,6 +325,7 @@
     <string name="wb_theme_instruments">Instrumentos</string>
     <string name="wb_theme_jobs">Profesiones</string>
     <string name="wb_theme_kitchen">Cocina</string>
+    <string name="wb_theme_label">Tema</string>
     <string name="wb_theme_space">Espacio</string>
     <string name="wb_theme_sports">Deportes</string>
     <string name="wb_theme_transport">Transporte</string>

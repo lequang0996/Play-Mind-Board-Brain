@@ -12,6 +12,8 @@ object WordBlocks {
     const val SECONDS = 600
     const val MIN_LEN = 3
     const val MAX_LEN = 8
+    /** Gói năm: tối đa 2 gợi ý mỗi ván, mỗi gợi ý tự xếp một từ. */
+    const val HINTS_YEARLY = 2
 
     class Theme(val id: String, words: String) {
         val words: Set<String> = words.trim().split(Regex("\\s+")).toSet()
@@ -174,6 +176,28 @@ class WordBlocksGame(val theme: WordBlocks.Theme, val answers: List<String>, val
         if (w !in answers) return Submit.NOT_ANSWER
         found.add(w to current.toIntArray()); current.clear()
         return Submit.OK
+    }
+
+    /** Số lần gợi ý đã dùng trong ván (gói năm: tối đa [WordBlocks.HINTS_YEARLY]). */
+    var hintsUsed = 0; private set
+
+    /**
+     * Gợi ý: tự xếp một từ đáp án chưa ghép vào ô đáp án (bỏ từ đang ghép dở trước). Vì đề chỉ có một lời giải và game chỉ
+     * nhận từ đáp án, chữ cái của các đáp án còn lại luôn nằm đủ trong các khối rảnh. Trả về từ đã xếp, null nếu không còn.
+     */
+    fun hint(): String? {
+        if (solved) return null
+        clear()
+        val done = found.map { it.first }.toSet()
+        val w = answers.firstOrNull { it !in done } ?: return null
+        val pick = ArrayList<Int>()
+        for (ch in w) {
+            val i = blocks.indices.firstOrNull { !used[it] && blocks[it] == ch && it !in pick } ?: return null
+            pick.add(i)
+        }
+        for (i in pick) used[i] = true
+        found.add(w to pick.toIntArray()); hintsUsed++
+        return w
     }
 
     /** Trả từ đã ghép thứ [k] về lại các khối. */

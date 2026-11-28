@@ -243,7 +243,7 @@ fun GuideScreen(onBack: () -> Unit, focusGame: String?) {
                     }
                 }
             }
-            LevelsCard()
+            if (focusGame == null) LevelsCard()   // 7 cấp độ máy: chỉ ở hướng dẫn dùng app (trang chủ), không lặp ở từng game
             Spacer(Modifier.height(20.dp))
         }
     }

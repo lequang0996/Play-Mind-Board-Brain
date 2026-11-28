@@ -273,6 +273,10 @@ fun main() {
         val many = (0 until 60).map { WordBlocks.generate(kotlin.random.Random(1000 + it)) }
         val ms = (System.nanoTime() - t0) / 1_000_000
         println("      wordblocks: 60 de trong $ms ms")
+        val g4 = WordBlocks.generate(kotlin.random.Random(77))
+        g4.tap(0)
+        val h1 = g4.hint(); val h2 = g4.hint()
+        expect("wordblocks: goi y tu xep 2 tu dap an, bo tu dang ghep do", h1 == g4.answers[0] && h2 == g4.answers[1] && g4.current.isEmpty() && g4.found.size == 2 && g4.hintsUsed == 2)
         expect("wordblocks: moi de sinh ra co dung 1 loi giai", many.all { WordBlocks.countSolutions(it.theme, it.blocks, 2) == 1 })
     }
 

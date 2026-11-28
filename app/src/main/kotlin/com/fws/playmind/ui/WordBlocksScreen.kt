@@ -1,6 +1,7 @@
 package com.fws.playmind.ui
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -15,7 +16,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
@@ -31,11 +34,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -54,12 +62,16 @@ import com.fws.playmind.match.Phase
 import com.fws.playmind.match.SessionViewModel
 import kotlinx.coroutines.delay
 
-/** Màu nền các thanh đáp án (như bảng đáp án mẫu: xanh lá, hồng, xanh ngọc, tím, xanh dương, cam, đào). */
+/** Màu các thanh đáp án (xanh lá, hồng, xanh ngọc, tím, xanh dương, cam, đào). */
 private val WbBars = listOf(
-    Color(0xFF7BD86A), Color(0xFFF08AD8), Color(0xFF6FD3E0), Color(0xFFC79BF0), Color(0xFF7FB2F0), Color(0xFFFF8A3D), Color(0xFFF7B98A),
+    Color(0xFF7BD86A), Color(0xFFF08AD8), Color(0xFF6FD3E0), Color(0xFFC79BF0), Color(0xFF7FB2F0), Color(0xFFFF9A52), Color(0xFFF7B98A),
 )
 private val WbInk = Color(0xFF4A1A0C)
 private val WbFont = FontFamily.Serif
+/** Mặt bàn gỗ óc chó (khay khối gỗ, thanh ghép chữ). */
+private val TableHi = Color(0xFF8A5A33)
+private val TableLo = Color(0xFF5E3A1E)
+private val Paper = Color(0xFFFBF5E8)
 
 private fun fmt(sec: Int) = "%d:%02d".format(sec / 60, sec % 60)
 
@@ -82,16 +94,32 @@ private fun themeName(id: String): Int = when (id) {
     else -> R.string.wb_theme_cities
 }
 
-/** Một khối gỗ chữ cái (vẽ bằng [drawWoodCell] dùng chung với Sudoku / Ma phương). */
+/** Mặt bàn gỗ: nền nâu đậm có vân ngang mờ. */
+private fun Modifier.woodTable(shape: RoundedCornerShape): Modifier = this
+    .clip(shape)
+    .background(Brush.verticalGradient(listOf(TableHi, TableLo)))
+    .drawBehind {
+        var y = size.height * .08f; var k = 0
+        while (y < size.height) {
+            drawLine(Color.Black.copy(alpha = if (k % 2 == 0) .07f else .04f), Offset(0f, y), Offset(size.width, y + size.height * .015f), 2f)
+            y += size.height / 9f; k++
+        }
+    }
+    .border(1.5.dp, Brush.verticalGradient(listOf(Color(0xFFB9875A), Color(0xFF3E2512))), shape)
+
+/** Một khối gỗ chữ cái; [socket] = khối đã dùng, vẽ thành hốc trống trên mặt bàn. */
 @Composable
-private fun WoodBlock(ch: Char, size: Dp, modifier: Modifier = Modifier, dim: Boolean = false, onClick: (() -> Unit)? = null) {
+private fun WoodBlock(ch: Char, size: Dp, socket: Boolean = false, onClick: (() -> Unit)? = null) {
     Box(
-        modifier.size(size).alpha(if (dim) .28f else 1f)
-            .drawBehind { drawWoodCell(Offset.Zero, this.size.width * .94f) }
-            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier),
+        Modifier.size(size)
+            .drawBehind {
+                if (socket) drawRoundRect(Color.Black.copy(alpha = .22f), Offset(this.size.width * .03f, this.size.width * .03f), Size(this.size.width * .9f, this.size.width * .9f), CornerRadius(this.size.width * .12f))
+                else drawWoodCell(Offset.Zero, this.size.width * .94f)
+            }
+            .then(if (onClick != null && !socket) Modifier.clickable(onClick = onClick) else Modifier),
         contentAlignment = Alignment.Center,
     ) {
-        Text(
+        if (!socket) Text(
             ch.toString(), Modifier.padding(end = size * .06f, bottom = size * .04f),
             style = TextStyle(fontFamily = WbFont, fontWeight = FontWeight.Bold, fontSize = (size.value * .56f).sp, color = WbInk),
         )
@@ -99,8 +127,9 @@ private fun WoodBlock(ch: Char, size: Dp, modifier: Modifier = Modifier, dim: Bo
 }
 
 /**
- * Màn hình Khối gỗ ghép chữ: chủ đề + đồng hồ 10 phút ở trên, 7 thanh đáp án, từ đang ghép, rồi các khối gỗ.
- * Chạm khối để thêm chữ (chạm lại để gỡ), "Ghép" để nộp từ. Đề chỉ có một lời giải nên chỉ 7 từ đáp án được nhận.
+ * Màn hình Khối gỗ ghép chữ: bảng chủ đề (tên chủ đề, đồng hồ vòng, 7 chấm tiến độ), bảng 7 đáp án, thanh ghép chữ bằng gỗ,
+ * hàng nút và khay khối gỗ. Chạm khối để thêm chữ (chạm lại để gỡ), "Ghép" để nộp từ. Đề chỉ có một lời giải nên chỉ
+ * 7 từ đáp án được nhận. Gói tháng/năm: ô đáp án hiện số chữ cái; gói năm: thêm 2 gợi ý mỗi ván, mỗi gợi ý tự xếp một từ.
  */
 @Composable
 fun WordBlocksScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onExit: () -> Unit) {
@@ -112,89 +141,90 @@ fun WordBlocksScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onE
     @Suppress("UNUSED_VARIABLE") val dep = vm.wbTick
     var feedback by remember { mutableStateOf<WordBlocksGame.Submit?>(null) }
     var feedbackId by remember { mutableIntStateOf(0) }
-    // hướng dẫn nhanh: tự mở ở lượt đầu tiên, sau đó mở bằng nút "?"
     var showHelp by remember { mutableStateOf(!app.prefs.wordsIntroSeen) }
-
     LaunchedEffect(feedbackId) { if (feedbackId > 0) { delay(1600); feedback = null } }
+    val showLen = vm.wordsShowLengths
+    val hintMax = vm.wordsHintMax
+    val foundSet = g.found.map { it.first }.toSet()
 
     Column(Modifier.fillMaxSize()) {
         TopBar(stringResource(info.name), { if (over) onExit() else confirmLeave = true }) {
-            PmIconButton(Ic.Help, stringResource(R.string.wb_howto_title), { showHelp = true })
-        }
-        Row(Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 4.dp), horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)) {
-            WbChip { Icon(Ic.Check, null, Modifier.size(16.dp), tint = pm.gold); Text(stringResource(R.string.wb_found, g.found.size, WordBlocks.WORDS), style = MaterialTheme.typography.titleSmall, color = pm.ink) }
-            WbChip {
-                Icon(Ic.Hourglass, null, Modifier.size(16.dp), tint = if (vm.wbSeconds <= 60) pm.danger else pm.gold)
-                Text(fmt(vm.wbSeconds), style = MaterialTheme.typography.titleSmall, color = if (vm.wbSeconds <= 60) pm.danger else pm.ink)
-            }
+            HelpPill(info.topic.color) { showHelp = true }
         }
         Column(
             Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()).padding(horizontal = 14.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            // nhiệm vụ: nói rõ phải tìm gì
+            ThemeHeader(info, stringResource(themeName(g.theme.id)), vm.wbSeconds, g.found.size)
+            // bảng đáp án: tờ giấy kem, 7 ô theo thứ tự đáp án (từ ghép đúng vào đúng ô của nó)
             Column(
-                Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(info.topic.color.copy(alpha = .14f))
-                    .border(1.dp, info.topic.color.copy(alpha = .45f), RoundedCornerShape(16.dp)).padding(horizontal = 14.dp, vertical = 10.dp),
-                verticalArrangement = Arrangement.spacedBy(2.dp),
+                Modifier.fillMaxWidth().lift(RoundedCornerShape(18.dp), 8.dp).clip(RoundedCornerShape(18.dp)).background(Paper)
+                    .border(1.dp, Color(0xFFE6D9BE), RoundedCornerShape(18.dp)).padding(10.dp),
+                verticalArrangement = Arrangement.spacedBy(7.dp),
             ) {
-                Text(stringResource(R.string.wb_theme, stringResource(themeName(g.theme.id))), style = MaterialTheme.typography.titleMedium, color = pm.ink)
-                Text(stringResource(R.string.wb_goal), style = MaterialTheme.typography.bodySmall, color = pm.inkSoft)
-            }
-            // kết quả lần bấm Ghép gần nhất (hiện cả khi từ bị từ chối và các chữ vẫn còn trong ô ghép)
-            val fb = feedbackText(feedback)
-            if (fb != null) Text(
-                stringResource(fb),
-                Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp))
-                    .background((if (feedback == WordBlocksGame.Submit.OK) pm.good else pm.danger).copy(alpha = .14f))
-                    .padding(horizontal = 12.dp, vertical = 8.dp),
-                style = MaterialTheme.typography.titleSmall, color = if (feedback == WordBlocksGame.Submit.OK) pm.good else pm.danger,
-            )
-            // 7 thanh đáp án, 2 cột
-            for (r in 0 until 4) Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                for (c in 0 until 2) {
-                    val k = r * 2 + c
-                    // ô đáp án không ghi độ dài từ (tăng độ khó): từ ghép đúng lấp lần lượt các ô
-                    if (k < WordBlocks.WORDS) AnswerBar(k, g.found.getOrNull(k)?.first, Modifier.weight(1f))
-                    else Spacer(Modifier.weight(1f))
-                }
-            }
-            // từ đang ghép
-            BoxWithConstraints(
-                Modifier.fillMaxWidth().height(64.dp).clip(RoundedCornerShape(16.dp)).background(Color(0xFF6B6F78).copy(alpha = .18f))
-                    .border(1.dp, pm.outline, RoundedCornerShape(16.dp)),
-                contentAlignment = Alignment.Center,
-            ) {
-                if (g.current.isEmpty()) {
-                    Text(stringResource(R.string.wb_tap_hint), style = MaterialTheme.typography.bodyMedium, color = pm.inkSoft)
-                } else {
-                    val t = minOf(48.dp, (maxWidth - 16.dp) / WordBlocks.MAX_LEN)
-                    Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
-                        for (i in g.current) WoodBlock(g.blocks[i], t, onClick = if (over) null else ({ vm.wordsEdit { it.tap(i) } }))
+                for (r in 0 until 4) Row(horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+                    for (c in 0 until 2) {
+                        val k = r * 2 + c
+                        if (k < WordBlocks.WORDS) {
+                            val a = g.answers[k]
+                            AnswerSlot(k, if (a in foundSet) a else null, if (showLen) a.length else 0, Modifier.weight(1f), revealed = over && a !in foundSet, answer = a)
+                        } else Spacer(Modifier.weight(1f))
                     }
                 }
             }
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                ToolButton(Ic.Undo, stringResource(R.string.wb_back), { vm.wordsEdit { it.back() } }, Modifier.weight(1f), enabled = !over && g.current.isNotEmpty())
-                ToolButton(Ic.Eraser, stringResource(R.string.wb_clear), { vm.wordsEdit { it.clear() } }, Modifier.weight(1f), enabled = !over && g.current.isNotEmpty())
-                GoldButton(stringResource(R.string.wb_submit), {
-                    feedback = vm.wordsSubmit(); feedbackId++
-                }, Modifier.weight(1.2f), icon = Ic.Check, enabled = !over && g.current.isNotEmpty())
+            // thanh ghép chữ (gỗ) + kết quả lần Ghép gần nhất
+            Box(Modifier.fillMaxWidth()) {
+                BoxWithConstraints(Modifier.fillMaxWidth().height(66.dp).woodTable(RoundedCornerShape(16.dp)), contentAlignment = Alignment.Center) {
+                    if (g.current.isEmpty()) {
+                        Text(stringResource(R.string.wb_tap_hint), Modifier.padding(horizontal = 12.dp), style = MaterialTheme.typography.bodyMedium, color = Color(0xFFF3DFC0), maxLines = 2)
+                    } else {
+                        val t = minOf(48.dp, (maxWidth - 20.dp) / WordBlocks.MAX_LEN)
+                        Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
+                            for (i in g.current) WoodBlock(g.blocks[i], t, onClick = if (over) null else ({ vm.wordsEdit { it.tap(i) } }))
+                        }
+                    }
+                }
+                val fb = feedbackText(feedback)
+                if (fb != null) {
+                    val ok = feedback == WordBlocksGame.Submit.OK
+                    Text(
+                        stringResource(fb),
+                        Modifier.align(Alignment.TopCenter).padding(top = 0.dp).clip(RoundedCornerShape(50))
+                            .background(if (ok) pm.good else pm.danger).padding(horizontal = 14.dp, vertical = 4.dp),
+                        style = MaterialTheme.typography.labelLarge, color = Color.White, maxLines = 1, overflow = TextOverflow.Ellipsis,
+                    )
+                }
             }
-            // các khối gỗ
-            BoxWithConstraints(Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp)).background(Color(0xFF8A8F98).copy(alpha = .22f)).padding(8.dp)) {
+            // hàng nút
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                RoundTool(Ic.Undo, stringResource(R.string.wb_back), !over && g.current.isNotEmpty()) { vm.wordsEdit { it.back() } }
+                RoundTool(Ic.Eraser, stringResource(R.string.wb_clear), !over && g.current.isNotEmpty()) { vm.wordsEdit { it.clear() } }
+                if (hintMax > 0) {
+                    val left = hintMax - g.hintsUsed
+                    Box {
+                        RoundTool(Ic.Bulb, stringResource(R.string.wb_hint), !over && left > 0) { if (vm.wordsHint() != null) { feedback = WordBlocksGame.Submit.OK; feedbackId++ } }
+                        Text(
+                            left.toString(),
+                            Modifier.align(Alignment.TopEnd).size(18.dp).clip(CircleShape).background(if (left > 0) pm.goldBright else pm.outline).padding(top = 1.dp),
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold), color = Color.White,
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                        )
+                    }
+                }
+                GoldButton(stringResource(R.string.wb_submit), { feedback = vm.wordsSubmit(); feedbackId++ }, Modifier.weight(1f), icon = Ic.Check, enabled = !over && g.current.isNotEmpty())
+            }
+            // khay khối gỗ
+            BoxWithConstraints(Modifier.fillMaxWidth().woodTable(RoundedCornerShape(20.dp)).padding(10.dp)) {
                 val cols = if (maxWidth > 560.dp) 12 else 8
                 val gap = 4.dp
                 val t = (maxWidth - gap * (cols - 1)) / cols
                 Column(verticalArrangement = Arrangement.spacedBy(gap)) {
                     for (row in g.blocks.indices.chunked(cols)) Row(horizontalArrangement = Arrangement.spacedBy(gap)) {
-                        for (i in row) {
-                            val busy = g.used[i]
-                            WoodBlock(g.blocks[i], t, dim = busy, onClick = if (over) null else ({ vm.wordsEdit { it.tap(i) } }))
-                        }
+                        for (i in row) WoodBlock(g.blocks[i], t, socket = g.used[i] && i !in g.current, onClick = if (over) null else ({ vm.wordsEdit { it.tap(i) } }))
                     }
                 }
             }
+            if (!showLen) Text(stringResource(R.string.wb_plan_perks), style = MaterialTheme.typography.labelSmall, color = pm.inkSoft)
             Spacer(Modifier.height(8.dp))
         }
     }
@@ -238,30 +268,96 @@ private fun feedbackText(r: WordBlocksGame.Submit?): Int? = when (r) {
     else -> null
 }
 
-/** Thanh đáp án thứ [k]: đã ghép thì hiện từ trên nền màu, chưa thì để trống (không lộ độ dài từ). */
+/** Nút "Cách chơi" gọn ở góc trên: viên thuốc màu chủ đề có biểu tượng ?. */
 @Composable
-private fun AnswerBar(k: Int, word: String?, modifier: Modifier) {
-    val shape = RoundedCornerShape(10.dp)
-    val color = WbBars[k % WbBars.size]
-    Box(
-        modifier.height(40.dp).clip(shape)
-            .background(if (word != null) color else pm.surface.copy(alpha = .6f))
-            .border(1.dp, if (word != null) color.copy(alpha = .9f) else pm.outline, shape),
-        contentAlignment = Alignment.Center,
+private fun HelpPill(color: Color, onClick: () -> Unit) {
+    val shape = RoundedCornerShape(50)
+    Row(
+        Modifier.clip(shape).background(color.copy(alpha = .16f)).border(1.dp, color.copy(alpha = .5f), shape)
+            .clickable(onClick = onClick).padding(start = 8.dp, end = 12.dp, top = 6.dp, bottom = 6.dp),
+        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp),
     ) {
-        Text(
-            word ?: "?",
-            style = TextStyle(fontFamily = WbFont, fontWeight = FontWeight.Bold, fontSize = 20.sp, letterSpacing = 2.sp, color = if (word != null) WbInk else pm.outline),
-            maxLines = 1,
-        )
+        Icon(Ic.Help, null, Modifier.size(18.dp), tint = color.onLight(.3f))
+        Text(stringResource(R.string.wb_howto_title), style = MaterialTheme.typography.labelLarge, color = color.onLight(.45f))
     }
 }
 
+/** Bảng chủ đề: nhãn "Chủ đề", tên chủ đề lớn, 7 chấm tiến độ và đồng hồ vòng đếm ngược. */
 @Composable
-private fun WbChip(content: @Composable () -> Unit) {
-    val chip = RoundedCornerShape(50)
+private fun ThemeHeader(info: GameInfo, theme: String, seconds: Int, found: Int) {
+    val shape = RoundedCornerShape(22.dp)
+    val c = info.topic.color
+    val danger = seconds <= 60
     Row(
-        Modifier.lift(chip, 6.dp).clip(chip).background(cardBrush()).border(1.dp, hairline(), chip).padding(horizontal = 12.dp, vertical = 6.dp),
-        verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp),
-    ) { content() }
+        Modifier.fillMaxWidth().lift(shape, 10.dp, c).clip(shape)
+            .background(Brush.linearGradient(listOf(c, c.onLight(.35f))))
+            .background(Brush.verticalGradient(listOf(Color.White.copy(alpha = .22f), Color.Transparent)))
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Text(stringResource(R.string.wb_theme_label).uppercase(), style = MaterialTheme.typography.labelMedium.copy(letterSpacing = 1.5.sp), color = Color.White.copy(alpha = .85f))
+            Text(theme, style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.ExtraBold), color = Color.White, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                for (k in 0 until WordBlocks.WORDS) Box(
+                    Modifier.size(10.dp).clip(CircleShape).background(if (k < found) Color.White else Color.White.copy(alpha = .28f)),
+                )
+                Spacer(Modifier.width(4.dp))
+                Text(stringResource(R.string.wb_found, found, WordBlocks.WORDS), style = MaterialTheme.typography.labelMedium, color = Color.White)
+            }
+        }
+        // đồng hồ vòng
+        Box(Modifier.size(64.dp), contentAlignment = Alignment.Center) {
+            val frac = seconds / WordBlocks.SECONDS.toFloat()
+            Canvas(Modifier.fillMaxSize()) {
+                val sw = size.width * .1f
+                drawArc(Color.White.copy(alpha = .25f), 0f, 360f, false, topLeft = Offset(sw / 2, sw / 2), size = Size(size.width - sw, size.height - sw), style = Stroke(sw))
+                drawArc(if (danger) Color(0xFFFFD2CC) else Color.White, -90f, 360f * frac, false, topLeft = Offset(sw / 2, sw / 2), size = Size(size.width - sw, size.height - sw), style = Stroke(sw, cap = StrokeCap.Round))
+            }
+            Text(fmt(seconds), style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold), color = if (danger) Color(0xFFFFE3DE) else Color.White)
+        }
+    }
+}
+
+/**
+ * Ô đáp án thứ [k]: số thứ tự trong vòng màu; đã ghép thì hiện từ trên nền màu; chưa thì "?" — hoặc [letters] ô chữ trống
+ * khi có gói tháng/năm. Hết giờ thì hiện đáp án còn thiếu bằng chữ mờ ([revealed]).
+ */
+@Composable
+private fun AnswerSlot(k: Int, word: String?, letters: Int, modifier: Modifier, revealed: Boolean, answer: String) {
+    val shape = RoundedCornerShape(12.dp)
+    val color = WbBars[k % WbBars.size]
+    Row(
+        modifier.height(40.dp).clip(shape)
+            .background(if (word != null) color else Color.White)
+            .border(1.dp, if (word != null) color.onLight(.15f) else Color(0xFFE8DCC3), shape)
+            .padding(horizontal = 6.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Box(
+            Modifier.size(22.dp).clip(CircleShape).background(if (word != null) Color.White.copy(alpha = .6f) else color.copy(alpha = .35f)),
+            contentAlignment = Alignment.Center,
+        ) { Text((k + 1).toString(), style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold), color = WbInk) }
+        Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
+            when {
+                word != null -> Text(word, style = TextStyle(fontFamily = WbFont, fontWeight = FontWeight.Bold, fontSize = 18.sp, letterSpacing = 1.5.sp, color = WbInk), maxLines = 1)
+                revealed -> Text(answer, style = TextStyle(fontFamily = WbFont, fontWeight = FontWeight.Bold, fontSize = 16.sp, letterSpacing = 1.5.sp, color = pm.danger.copy(alpha = .7f)), maxLines = 1)
+                letters > 0 -> Row(horizontalArrangement = Arrangement.spacedBy(3.dp)) {
+                    repeat(letters) { Box(Modifier.width(9.dp).height(3.dp).clip(RoundedCornerShape(2.dp)).background(Color(0xFFB59A70))) }
+                }
+                else -> Text("?", style = TextStyle(fontFamily = WbFont, fontWeight = FontWeight.Bold, fontSize = 18.sp, color = Color(0xFFCDBB98)))
+            }
+        }
+    }
+}
+
+/** Nút tròn có biểu tượng (xóa chữ, xóa hết, gợi ý). */
+@Composable
+private fun RoundTool(icon: ImageVector, label: String, enabled: Boolean, onClick: () -> Unit) {
+    val src = rememberPress()
+    Box(
+        Modifier.bounce(src, .9f).size(50.dp).lift(CircleShape, 6.dp).clip(CircleShape).background(cardBrush()).border(1.dp, hairline(), CircleShape)
+            .tap(src, enabled = enabled, label = label, onClick = onClick),
+        contentAlignment = Alignment.Center,
+    ) { Icon(icon, label, Modifier.size(22.dp), tint = if (enabled) pm.ink else pm.outline) }
 }

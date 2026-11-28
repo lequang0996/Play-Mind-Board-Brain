@@ -290,8 +290,7 @@ tg_level|Cấp độ
 tg_pieces_n|%d mảnh mỗi hình
 game_wordblocks|Khối gỗ ghép chữ
 game_wordblocks_desc|Ghép 7 từ tiếng Anh cùng chủ đề từ các khối gỗ chữ cái trong 10 phút.
-guide_wordblocks|Mục tiêu: trong 10 phút, ghép đủ 7 từ tiếng Anh thuộc chủ đề được cho (ví dụ Thành phố: PARIS, VIENNA, ...) từ các khối gỗ chữ cái.\n• Các khối gỗ đúng bằng chữ cái của 7 từ đáp án, đã xáo trộn. Mỗi khối chỉ dùng một lần.\n• Mỗi đề có đúng một lời giải: trong chủ đề chỉ có duy nhất một bộ 7 từ dùng vừa hết các khối. Chỉ 7 từ đó được nhận; từ đúng chủ đề nhưng không thuộc đáp án sẽ bị từ chối.\n• Chạm khối để thêm chữ vào từ đang ghép, chạm lại để gỡ chữ đó. Nút Xóa chữ bỏ chữ cuối, Xóa hết bỏ cả từ. Bấm Ghép để nộp từ.\n• Ghép đủ 7 từ là thắng; hết 10 phút là thua và hiện các từ đáp án.\n• Bấm nút ? trong màn chơi để xem lại cách chơi.\n• Mẹo: tìm chữ hiếm như Q, Z, J, X, V trước, chúng thường chỉ thuộc một từ.
-wb_theme|Chủ đề: %s
+guide_wordblocks|Mục tiêu: trong 10 phút, ghép đủ 7 từ tiếng Anh thuộc chủ đề được cho (ví dụ Thành phố: PARIS, VIENNA, ...) từ các khối gỗ chữ cái.\n• Các khối gỗ đúng bằng chữ cái của 7 từ đáp án, đã xáo trộn. Mỗi khối chỉ dùng một lần.\n• Mỗi đề có đúng một lời giải: trong chủ đề chỉ có duy nhất một bộ 7 từ dùng vừa hết các khối. Chỉ 7 từ đó được nhận; từ đúng chủ đề nhưng không thuộc đáp án sẽ bị từ chối.\n• Chạm khối để thêm chữ vào từ đang ghép, chạm lại để gỡ chữ đó. Nút Xóa chữ bỏ chữ cuối, Xóa hết bỏ cả từ. Bấm Ghép để nộp từ.\n• Ghép đủ 7 từ là thắng; hết 10 phút là thua và hiện các từ đáp án.\n• Bấm nút ? trong màn chơi để xem lại cách chơi.\n• Mẹo: tìm chữ hiếm như Q, Z, J, X, V trước, chúng thường chỉ thuộc một từ.\n• Quyền lợi gói: gói tháng hiện số chữ cái của mỗi từ trong ô đáp án; gói năm có thêm 2 gợi ý mỗi ván, mỗi gợi ý tự xếp một từ.
 wb_found|Đã ghép %1$d/%2$d từ
 wb_tap_hint|Chạm lần lượt các khối để ghép một từ, rồi bấm Ghép
 wb_back|Xóa chữ
@@ -335,7 +334,9 @@ tag_countdown|Đếm ngược
 tag_time_short|≤ 10 phút
 tag_time_mid|10–20 phút
 tag_time_long|> 20 phút
-wb_goal|Ghép các khối gỗ bên dưới thành 7 từ tiếng Anh thuộc chủ đề này.
 wb_howto_title|Cách chơi
 wb_howto|1. Các khối gỗ bên dưới là chữ cái của 7 từ tiếng Anh thuộc chủ đề „%1$s“, đã bị xáo trộn.\n2. Chạm lần lượt từng khối để ghép một từ (ví dụ chủ đề Thành phố: chạm P, A, R, I, S). Chạm lại khối để gỡ chữ.\n3. Bấm Ghép. Từ đúng sẽ vào một ô đáp án.\n4. Mỗi khối chỉ dùng một lần. Ghép đủ 7 từ trong 10 phút để thắng.\n5. Mỗi đề chỉ có đúng một bộ 7 từ dùng vừa hết các khối. Từ đúng chủ đề nhưng không thuộc bộ đó sẽ không được nhận.
 wb_not_answer|Đúng chủ đề nhưng không phải đáp án của đề này
+wb_hint|Gợi ý
+wb_theme_label|Chủ đề
+wb_plan_perks|Gói tháng: ô đáp án hiện số chữ cái của mỗi từ. Gói năm: thêm 2 gợi ý mỗi ván, mỗi gợi ý tự xếp một từ.

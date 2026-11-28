@@ -90,7 +90,7 @@
     <string name="guide_sudoku">Objetivo: preencha todas as casas para que cada linha, coluna e bloco 3×3 contenha de 1 a 9 uma única vez.\n• Inserir: toque numa casa e depois num número. Números errados ficam vermelhos; corrija-os com Apagar.\n• Notas: ative o lápis para anotar pequenos números candidatos (em vermelho).\n• Apagar limpa a casa selecionada. Cada bloco 3×3 começa com um só número (9 no total), por isso qualquer grelha que siga as regras vence.</string>
     <string name="guide_tangram">Objetivo: use as 7 peças (2 triângulos grandes, 1 médio, 2 pequenos, 1 quadrado e 1 paralelogramo) para preencher exatamente a figura cinza, sem sobreposição e sem sobrar peças.\n• Cada rodada tem 10 figuras aleatórias, das compactas às cheias de pontas. Você tem 3 minutos por figura.\n• Se o tempo acabar em qualquer figura, você perde; complete as 10 para vencer.\n• Arraste as peças da bandeja para a figura. Toque para girar 45° e mantenha pressionado o paralelogramo para virá-lo.\n• Solte uma peça perto de um canto da figura ou de outra peça e ela se encaixa sozinha.\n• Qualquer arranjo que preencha a figura exatamente vale.\n• Dica: coloque primeiro os dois triângulos grandes; eles ocupam metade da área.\n• 7 níveis pelo número de peças: Fácil 4, Médio 5, Bom 6, Forte 7 (o jogo clássico), Mestre 8, Desafiante 9, Supremo 10. Complete as 10 figuras de um nível para desbloquear o próximo.</string>
     <string name="guide_wallgo">Objetivo: terminar com mais território que os rivais.\n• Preparação: em turnos, coloque suas pedras em casas vazias (4 cada com 2 jogadores, 3 com 3 jogadores, 2 com 4 jogadores).\n• Sua vez: escolha uma das suas pedras e mova-a 0, 1 ou 2 casas para cima, baixo, esquerda ou direita. Ela não atravessa muros nem outras pedras.\n• Muro: depois de mover, você DEVE colocar um muro em um lado livre da casa onde parou.\n• Território: quando cada área cercada tiver pedras de um só jogador, a partida termina. Você pontua as casas das áreas que contêm só as suas pedras.\n• Empates: vence a maior área única; senão, empate. Quem não puder mover perde a vez.</string>
-    <string name="guide_wordblocks">Objetivo: em 10 minutos, forme 7 palavras em inglês do tema dado (por exemplo Cidades: PARIS, VIENNA, ...) com blocos de madeira com letras.\n• Os blocos são exatamente as letras das 7 palavras da resposta, embaralhadas. Cada bloco pode ser usado uma vez.\n• Cada desafio tem uma única solução: só um grupo de 7 palavras do tema usa todos os blocos. Só essas 7 palavras são aceitas; uma palavra do tema que não seja resposta é recusada.\n•\n• Toque num bloco para adicionar a letra à palavra atual e toque de novo para removê-la. Apagar remove a última letra e Limpar remove a palavra inteira. Toque em Formar para enviar.\n• Forme as 7 palavras para vencer; se os 10 minutos acabarem você perde e as palavras da resposta aparecem.\n• Toque no botão ? durante o jogo para rever como jogar.\n• Dica: procure primeiro letras raras como Q, Z, J, X e V; geralmente pertencem a uma só palavra.</string>
+    <string name="guide_wordblocks">Objetivo: em 10 minutos, forme 7 palavras em inglês do tema dado (por exemplo Cidades: PARIS, VIENNA, ...) com blocos de madeira com letras.\n• Os blocos são exatamente as letras das 7 palavras da resposta, embaralhadas. Cada bloco pode ser usado uma vez.\n• Cada desafio tem uma única solução: só um grupo de 7 palavras do tema usa todos os blocos. Só essas 7 palavras são aceitas; uma palavra do tema que não seja resposta é recusada.\n•\n• Toque num bloco para adicionar a letra à palavra atual e toque de novo para removê-la. Apagar remove a última letra e Limpar remove a palavra inteira. Toque em Formar para enviar.\n• Forme as 7 palavras para vencer; se os 10 minutos acabarem você perde e as palavras da resposta aparecem.\n• Toque no botão ? durante o jogo para rever como jogar.\n• Dica: procure primeiro letras raras como Q, Z, J, X e V; geralmente pertencem a uma só palavra.\n• Vantagens do plano: o plano mensal mostra o tamanho de cada palavra nas caixas; o plano anual dá mais 2 dicas por rodada, cada uma coloca uma palavra.</string>
     <string name="guide_xiangqi">Objetivo: dar xeque-mate no general adversário. O vermelho começa.\n• O general e os conselheiros ficam dentro do palácio. Os dois generais nunca podem se encarar em uma coluna livre.\n• Elefantes andam duas casas na diagonal, não atravessam o rio e podem ser bloqueados no ponto médio.\n• Cavalos andam em L, mas uma peça adjacente os bloqueia. Carros deslizam em linha reta.\n• Canhões deslizam em linha reta e capturam saltando exatamente uma peça. Soldados avançam e, depois de atravessar o rio, também andam de lado.\n• Quem não tem lance legal perde. Neste app, quem faz um lance que repete uma posição anterior perde.</string>
     <string name="how_to_play">Como jogar</string>
     <string name="how_to_use">Guia de uso</string>
@@ -303,7 +303,7 @@
     <string name="wb_clear">Limpar</string>
     <string name="wb_dup">Você já formou essa palavra</string>
     <string name="wb_found">%1$d/%2$d palavras</string>
-    <string name="wb_goal">Use os blocos de madeira abaixo para formar 7 palavras em inglês deste tema.</string>
+    <string name="wb_hint">Dica</string>
     <string name="wb_howto">1. Os blocos de madeira abaixo são as letras de 7 palavras em inglês do tema “%1$s”, embaralhadas.\n2. Toque nos blocos um a um para formar uma palavra (por exemplo, tema Cidades: toque P, A, R, I, S). Toque de novo num bloco para retirá-lo.\n3. Toque em Formar. Uma palavra correta vai para uma caixa de resposta.\n4. Cada bloco pode ser usado uma vez. Forme as 7 palavras em 10 minutos para vencer.\n5. Cada desafio tem um único grupo de 7 palavras que usa todos os blocos. Uma palavra do tema fora desse grupo não é aceita.</string>
     <string name="wb_howto_title">Como jogar</string>
     <string name="wb_lost">Tempo esgotado</string>
@@ -311,10 +311,10 @@
     <string name="wb_not_answer">É do tema, mas não é uma resposta deste desafio</string>
     <string name="wb_not_theme">Essa palavra não é do tema</string>
     <string name="wb_ok">Correto!</string>
+    <string name="wb_plan_perks">Plano mensal: as caixas mostram o tamanho de cada palavra. Plano anual: mais 2 dicas por rodada, cada uma coloca uma palavra.</string>
     <string name="wb_short">As palavras precisam de pelo menos 3 letras</string>
     <string name="wb_submit">Formar</string>
     <string name="wb_tap_hint">Toque nos blocos um a um para formar uma palavra e toque em Formar</string>
-    <string name="wb_theme">Tema: %s</string>
     <string name="wb_theme_animals">Animais</string>
     <string name="wb_theme_body">Corpo humano</string>
     <string name="wb_theme_cities">Cidades</string>
@@ -325,6 +325,7 @@
     <string name="wb_theme_instruments">Instrumentos</string>
     <string name="wb_theme_jobs">Profissões</string>
     <string name="wb_theme_kitchen">Cozinha</string>
+    <string name="wb_theme_label">Tema</string>
     <string name="wb_theme_space">Espaço</string>
     <string name="wb_theme_sports">Esportes</string>
     <string name="wb_theme_transport">Transporte</string>

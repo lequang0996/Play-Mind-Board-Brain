@@ -290,8 +290,7 @@ tg_level|Level
 tg_pieces_n|%d pieces per shape
 game_wordblocks|Word Blocks
 game_wordblocks_desc|Build 7 English words on one theme from wooden letter blocks in 10 minutes.
-guide_wordblocks|Goal: within 10 minutes, build 7 English words on the given theme (for example Cities: PARIS, VIENNA, ...) from wooden letter blocks.\n• The blocks are exactly the letters of the 7 answer words, shuffled. Each block can be used once.\n• Every puzzle has exactly one solution: only one set of 7 theme words uses up all the blocks. Only those 7 words are accepted; a word on the theme that is not an answer is rejected.\n•\n• Tap a block to add its letter to the current word, tap it again to remove it. Delete removes the last letter, Clear removes the whole word. Press Submit to enter the word.\n• Build all 7 words to win; when the 10 minutes run out you lose and the answer words are shown.\n• Tap the ? button during play to see how to play again.\n• Tip: look for rare letters such as Q, Z, J, X and V first; they usually belong to only one word.
-wb_theme|Theme: %s
+guide_wordblocks|Goal: within 10 minutes, build 7 English words on the given theme (for example Cities: PARIS, VIENNA, ...) from wooden letter blocks.\n• The blocks are exactly the letters of the 7 answer words, shuffled. Each block can be used once.\n• Every puzzle has exactly one solution: only one set of 7 theme words uses up all the blocks. Only those 7 words are accepted; a word on the theme that is not an answer is rejected.\n•\n• Tap a block to add its letter to the current word, tap it again to remove it. Delete removes the last letter, Clear removes the whole word. Press Submit to enter the word.\n• Build all 7 words to win; when the 10 minutes run out you lose and the answer words are shown.\n• Tap the ? button during play to see how to play again.\n• Tip: look for rare letters such as Q, Z, J, X and V first; they usually belong to only one word.\n• Plan perks: the monthly plan shows each word's length in the answer boxes; the yearly plan adds 2 hints per round, each placing one word for you.
 wb_found|%1$d/%2$d words
 wb_tap_hint|Tap blocks one by one to spell a word, then press Submit
 wb_back|Delete
@@ -335,7 +334,9 @@ tag_countdown|Countdown
 tag_time_short|≤ 10 min
 tag_time_mid|10–20 min
 tag_time_long|> 20 min
-wb_goal|Use the wooden blocks below to spell 7 English words on this theme.
 wb_howto_title|How to play
 wb_howto|1. The wooden blocks below are the letters of 7 English words on the theme "%1$s", shuffled.\n2. Tap blocks one by one to spell a word (for example, theme Cities: tap P, A, R, I, S). Tap a block again to take it back.\n3. Press Submit. A correct word goes into an answer box.\n4. Each block can be used once. Build all 7 words within 10 minutes to win.\n5. Each puzzle has exactly one set of 7 words that uses up all the blocks. A word on the theme that is not in that set is not accepted.
 wb_not_answer|On the theme, but not one of this puzzle's answers
+wb_hint|Hint
+wb_theme_label|Theme
+wb_plan_perks|Monthly plan: answer boxes show each word's length. Yearly plan: plus 2 hints per round, each places one word for you.

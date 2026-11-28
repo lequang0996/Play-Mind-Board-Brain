@@ -367,6 +367,20 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         f(g); wbTick++
     }
 
+    /** Quyền lợi gói: gói tháng và gói năm thấy số chữ cái của từng đáp án (ô "_ _ _"). */
+    val wordsShowLengths: Boolean get() = wallet.currentPlan() != Plan.NONE
+    /** Gói năm: số gợi ý tối đa mỗi ván (mỗi gợi ý tự xếp một từ); không có gói năm thì 0. */
+    val wordsHintMax: Int get() = if (wallet.currentPlan() == Plan.YEARLY) WordBlocks.HINTS_YEARLY else 0
+
+    /** Gợi ý (gói năm, tối đa 2 lần mỗi ván): tự xếp một từ đáp án; đủ 7 từ thì thắng. */
+    fun wordsHint(): String? {
+        val g = words ?: return null
+        if (phase != Phase.PLAYING || g.hintsUsed >= wordsHintMax) return null
+        val w = g.hint(); wbTick++
+        if (g.solved) { phase = Phase.OVER; wbClock?.cancel(); settle(MatchOutcome.WIN, true) }
+        return w
+    }
+
     /** Ghép từ đang chọn; đủ 7 từ thì thắng. */
     fun wordsSubmit(): WordBlocksGame.Submit {
         val g = words ?: return WordBlocksGame.Submit.EMPTY
