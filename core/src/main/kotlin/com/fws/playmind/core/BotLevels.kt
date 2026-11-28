@@ -68,7 +68,7 @@ object BotLevels {
     // Hiệu chỉnh 11/2026 (g7, g9): SV-TĐ n8000 khoảng 85% (n6000 88%, n20000 78%); các cấp dưới theo cùng khung với cờ vua.
     val xiangqi = listOf(
         d(1, 0.90, 450), d(1, 0.60, 250), d(2, 0.50, 180),
-        n(300, 0.05, 25), n(1_500), n(8_000), top(),
+        n(300, 0.05, 25), n(3_000), n(16_000), top(),
     )
 
     // Cờ caro (mục 7.4). extra = độ sâu VCF tối đa (0 = tắt); phòng VCF bật từ Giỏi (CaroEngine.levelSearch).
@@ -83,15 +83,15 @@ object BotLevels {
     // (Siêu việt hơn n300 khoảng 81%, n1000 khoảng 75%). Nhiễu có delta từ 200 (2 bước) trở lên làm bot đi lòng vòng và thua
     // vì lặp thế, nên chỉ cấp Dễ dùng mức đó; các cấp khác giữ delta <= 150. Đo 11/2026 trên máy phát triển, xem mục 13.
     val quoridor = listOf(
-        d(1, 0.80, 300), d(1, 1.0, 150), d(1, 0.50, 150),
-        d(1, 0.20, 60), d(1), n(300), top(),
+        d(1, 0.80, 300), d(1, 1.0, 180), d(1, 1.0, 150),
+        d(1, 0.50, 150), d(1), n(300), top(),
     )
 
     // Wall Go (mục 10.3), alpha-beta. Điểm: 100 = một ô lãnh thổ. Một nút rất nặng (đánh giá mọi nước con), Siêu việt
     // chỉ duyệt vài nghìn nút mỗi nước, nên các cấp dùng độ sâu (không đổi theo máy). Đo 11/2026 (200 ván mỗi cặp, máy phát triển):
     // SV-TĐ 83%, TĐ-CT 83%, CT-Giỏi 79%, Giỏi-Khá 86%, Khá-TB 90%, TB-Dễ 96%: cả 6 cặp trong khoảng đạt (mục 1.3).
     val wallgo = listOf(
-        d(1, 1.0, 700), d(1, 0.9, 400), d(1, 0.7, 200),
+        d(1, 1.0, 700), d(1, 0.9, 400), d(1, 0.8, 250),
         d(1), d(2), d(3), top(),
     )
 
