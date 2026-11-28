@@ -850,7 +850,7 @@ Cú pháp: `d<độ sâu>` / `n<số nút>`, `p` xác suất nhiễu, `x` delta 
 | Cờ caro | d1, nhiễu rộng p0.5 | d1, nhiễu rộng p0.15 | d1 p0.2 x800 e3 | n250 p0.03 x200 e12 | n1000 e24 | n4000 e24 | toàn lực e24 |
 | Cờ vây 19×19 | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt | chưa chốt |
 | Quoridor | d1 p0.97 x100 e100 | d1 p0.75 x100 e100 | d1 p0.5 x100 e100 | d1 e80 | d1 p0.1 x150 e25 (g24) | n300 | toàn lực |
-| Cờ cối xay (khởi điểm, chờ g26) | d1 p0.9 x300 | d1 p0.5 x150 | d2 p0.3 x80 | d3 | d4 | n60000 | toàn lực |
+| Cờ cối xay (chỉnh trên máy, chờ g26) | d1 p0.9 x300 | d1 p0.5 x150 | d2 p0.6 x150 | d4 | d6 | n250000 | toàn lực |
 | Lục giác trí nhớ (nhớ đúng / tìm / nhớ bộ đã gọi) | 45% / 34 s / 35% | 60% / 30 s / 60% | 72% / 22 s / 70% | 82% / 16 s / 80% | 86% / 13,5 s / 85% | 90% / 11,5 s / 90% | 93% / 10 s / 95% |
 | Wall Go | d1 p1.0 x700 | d1 p0.9 x400 | d1 p0.8 x250 | d1 | d2 | d3 | toàn lực |
 | Công thức cao thấp (tạm) | MC 4 mẫu p0.7 | MC 8 p0.4 | MC 16 p0.2 | MC 40 p0.08 | MC 100 p0.03 | MC 200 | MC 400 |
