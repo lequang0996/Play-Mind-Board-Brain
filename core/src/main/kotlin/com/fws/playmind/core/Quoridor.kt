@@ -20,7 +20,9 @@ import kotlin.random.Random
 /** Tham số bot Quoridor (để thử A/B: "ww80+lmr4"). */
 object QP {
     val NAMES = arrayOf("ww", "tempo", "walls", "rootw", "dag", "lmr", "hist", "race", "wz", "prog")
-    val DEF = intArrayOf(75, 30, 10, 14, 0, 0, 0, 3000, 0, 0)
+    // 28/11/2026: ww 75 -> 110, wz 150, prog 20 (A/B trên máy, thế mở đầu đa dạng: 300 ms/nước 70,8% và 65% qua hai vòng,
+    // 1000 ms/nước 87,5% so với cấu hình cũ). Lỗi cũ: tiêu hết tường quá sớm, và hết tường thì đi qua đi lại khi đối phương còn tường.
+    val DEF = intArrayOf(110, 30, 10, 14, 0, 0, 0, 3000, 150, 20)
     const val WW = 0; const val TEMPO = 1; const val WALLS = 2; const val ROOTW = 3; const val DAG = 4; const val LMR = 5
     const val HIST = 6; const val RACE = 7
     /** Giá trị thêm của mỗi tường còn lại khi đối phương đã HẾT tường (tường cuối ván chặn hiệu quả hơn nhiều). */
