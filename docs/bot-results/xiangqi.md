@@ -6,8 +6,8 @@ Sinh tự động bởi `tools/bot-bench/make_reports.py` từ `tools/bot-bench/
 
 | Mục | Giá trị |
 |---|---|
-| Số đợt đo | 5 |
-| Tổng số ván đã đấu | 4618 |
+| Số đợt đo | 6 |
+| Tổng số ván đã đấu | 4720 |
 | Cặp kề đạt (kết quả mới nhất) | 5/6 |
 | Nghiệm thu | Chưa đạt (cần đủ 6 cặp kề với đủ số ván, 5 cặp cách hai cấp và đo trên điện thoại thật) |
 
@@ -73,6 +73,13 @@ Nghiệm thu đợt 3: cờ vua với trọng số chess-t3 (toàn bộ chuỗi 
 | Cao thủ vs Giỏi | 2000 ms | 204 | 136/7/61 | 68,4% | 0.74 / 0.63 | Đạt |
 | Thách đấu vs Cao thủ | 2000 ms | 204 | 140/20/44 | 73,5% | 0.74 / 0.73 | Đạt |
 | Siêu việt vs Thách đấu | 2000 ms | 216 | 160/41/15 | 83,6% | 0.84 / 0.83 | Đạt |
+
+### Đợt g15-quoridor-levels-v2 (2026-11-28)
+
+Quoridor: cấp mới dùng "quên tường" (extra = % nước chỉ đi quân) kết hợp nhiễu nhỏ trên nước đi quân; toàn bộ chuỗi 7 cấp. Wall Go Giỏi-Khá đo lại với nhiều ván hơn. Cờ tướng Cao thủ-Khá (cặp cách hai cấp sau khi đổi Cao thủ).
+
+| Cặp | Thời gian Siêu việt (PC) | Số ván | Thắng/Hòa/Thua | Tỉ lệ điểm | Đi trước / đi sau | Kết luận |
+|---|---|---|---|---|---|---|
 
 ### Đợt r1 (2026-11-27)
 

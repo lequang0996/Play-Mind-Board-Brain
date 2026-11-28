@@ -6,8 +6,8 @@ Sinh tự động bởi `tools/bot-bench/make_reports.py` từ `tools/bot-bench/
 
 | Mục | Giá trị |
 |---|---|
-| Số đợt đo | 4 |
-| Tổng số ván đã đấu | 4692 |
+| Số đợt đo | 5 |
+| Tổng số ván đã đấu | 6642 |
 | Cặp kề đạt (kết quả mới nhất) | 2/6 |
 | Nghiệm thu | Chưa đạt (cần đủ 6 cặp kề với đủ số ván, 5 cặp cách hai cấp và đo trên điện thoại thật) |
 
@@ -63,6 +63,19 @@ Nghiệm thu đợt 3: cờ vua với trọng số chess-t3 (toàn bộ chuỗi 
 | Khá vs Trung bình | 2000 ms | 204 | 145/0/59 | 71,1% | 0.69 / 0.74 | Không đạt (hai cấp quá sát) |
 | Giỏi vs Khá | 2000 ms | 204 | 116/0/88 | 56,9% | 0.49 / 0.65 | Không đạt (hai cấp quá sát) |
 | Cao thủ vs Giỏi | 2000 ms | 204 | 127/0/77 | 62,3% | 0.62 / 0.63 | Cần thêm ván |
+
+### Đợt g15-quoridor-levels-v2 (2026-11-28)
+
+Quoridor: cấp mới dùng "quên tường" (extra = % nước chỉ đi quân) kết hợp nhiễu nhỏ trên nước đi quân; toàn bộ chuỗi 7 cấp. Wall Go Giỏi-Khá đo lại với nhiều ván hơn. Cờ tướng Cao thủ-Khá (cặp cách hai cấp sau khi đổi Cao thủ).
+
+| Cặp | Thời gian Siêu việt (PC) | Số ván | Thắng/Hòa/Thua | Tỉ lệ điểm | Đi trước / đi sau | Kết luận |
+|---|---|---|---|---|---|---|
+| Trung bình vs Dễ | 2000 ms | 402 | 382/0/20 | 95,0% | 0.92 / 0.98 | Đạt |
+| Khá vs Trung bình | 2000 ms | 204 | 172/0/32 | 84,3% | 0.86 / 0.82 | Đạt |
+| Giỏi vs Khá | 2000 ms | 204 | 171/0/33 | 83,8% | 0.86 / 0.81 | Cần thêm ván |
+| Cao thủ vs Giỏi | 2000 ms | 204 | 158/0/46 | 77,5% | 0.74 / 0.81 | Đạt |
+| Thách đấu vs Cao thủ | 2000 ms | 204 | 157/0/47 | 77,0% | 0.78 / 0.75 | Đạt |
+| Siêu việt vs Thách đấu | 2000 ms | 216 | 173/0/43 | 80,1% | 0.81 / 0.80 | Đạt |
 
 ### Đợt r1 (2026-11-27)
 
