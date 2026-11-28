@@ -1,0 +1,6 @@
+# chess-t4: game=chess games/proc=800 nodes=8000 iters=2000 shards=20 date=2026-11-28
+positions: 2692712, params: 545
+used: 2692712, skipped: 0, linear-model mismatches: 0
+K = 1.2783, start error = 0.117228
+iter 1000 error = 0.115256
+iter 2000 error = 0.115255
