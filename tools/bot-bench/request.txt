@@ -6,7 +6,7 @@
 #   Mọi dòng thêm được props=k1=v1;k2=v2 (thuộc tính hệ thống, ví dụ pm.level.chess.5=n15000 để thử cấu hình cấp).
 # Cấp: 0 Dễ, 1 Trung bình, 2 Khá, 3 Giỏi, 4 Cao thủ, 5 Thách đấu, 6 Siêu việt.
 tag=g11-accept-chess-xiangqi-caro
-note=Nghiệm thu 7 cấp cờ vua, cờ tướng, caro với cấu hình đã chốt trong BotLevels.kt (6 cặp kề, 5 cặp cách hai cấp). Cờ vua dùng trọng số chess-t2.
+note=Nghiệm thu 7 cấp cờ vua, cờ tướng, caro (caro: nhiễu rộng cho Trung bình và Dễ) với cấu hình đã chốt trong BotLevels.kt (6 cặp kề, 5 cặp cách hai cấp). Cờ vua dùng trọng số chess-t2.
 ladder chess 6 5 pairs=100 ms=2000 shards=4
 ladder chess 5 4 pairs=100 ms=2000 shards=2
 ladder chess 4 3 pairs=100 ms=2000 shards=2

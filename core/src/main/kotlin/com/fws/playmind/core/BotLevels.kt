@@ -72,10 +72,10 @@ object BotLevels {
     )
 
     // Cờ caro (mục 7.4). extra = độ sâu VCF tối đa (0 = tắt); phòng VCF bật từ Giỏi (CaroEngine.levelSearch).
-    // Hiệu chỉnh 11/2026 (g7, g9 và máy phát triển): SV-TĐ(n4000) khoảng 80%, TĐ-CT 72%, CT-Giỏi 78%, Giỏi-Khá 84%.
-    // Hai cặp dưới cùng bị nén (Khá-TB 67%, TB-Dễ 76%): nhiễu ở độ sâu 1 bão hòa và lớp an toàn luôn chặn bốn.
+    // Hiệu chỉnh 11/2026 (g7, g9 và máy phát triển): SV-TĐ(n4000) khoảng 80%, TĐ-CT 72%, CT-Giỏi 78%, Giỏi-Khá 84%,
+    // Khá-TB 90%, TB-Dễ 94%. delta >= GomokuGame.RANDOM_DELTA = nhiễu rộng (đi ngẫu nhiên quanh quân với xác suất p).
     val caro = listOf(
-        d(1, 1.0, 20_000, 0), d(1, 0.40, 2_000, 0), d(1, 0.10, 600, 3),
+        d(1, 0.50, 20_000, 0), d(1, 0.15, 20_000, 0), d(1, 0.10, 600, 3),
         n(250, 0.03, 200, 12), n(1_000, 0.0, 0, 24), n(4_000, 0.0, 0, 24), top(24),
     )
 

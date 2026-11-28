@@ -27,6 +27,8 @@ class GomokuGame : BoardGame, LeveledEngine {
 
         private val DIRS = intArrayOf(1, 0, 0, 1, 1, 1, 1, -1)
         private const val MARGIN = 5
+        /** delta từ mức này trở lên = nhiễu rộng (chọn ngẫu nhiên quanh quân), xem [levelMove]. */
+        const val RANDOM_DELTA = 10_000
 
         @Volatile var lastMode = ""; private set
         @Volatile var lastDepth = 0; private set
@@ -163,6 +165,13 @@ class GomokuGame : BoardGame, LeveledEngine {
         Bot.lastNodes = r.nodes; Bot.lastDepth = r.depth
         lastMode = CaroEngine.lastMode; lastDepth = CaroEngine.lastDepth
         var c = r.best
+        // Nhiễu "rộng" (delta >= RANDOM_DELTA, cấp Dễ): chọn ngẫu nhiên một ô trống trong vòng 2 ô quanh quân, trừ khi phải
+        // thắng / chặn năm / đi VCF (lớp an toàn, BOT_GUIDE mục 4.2 và 7.4: Dễ chỉ chặn bốn trực tiếp).
+        val forcedMode = CaroEngine.lastMode in setOf("win", "block", "vcf")
+        if (cfg.noiseP > 0 && cfg.delta >= RANDOM_DELTA && !forcedMode && rnd.nextDouble() < cfg.noiseP) {
+            val all = legalMoves()
+            if (all.isNotEmpty()) return all[rnd.nextInt(all.size)]
+        }
         if (cfg.noiseP > 0 && r.near.isNotEmpty() && rnd.nextDouble() < cfg.noiseP) c = r.near[rnd.nextInt(r.near.size)]
         if (c < 0) return legalMoves().firstOrNull() ?: -1
         return pack(ox + c % size, oy + c / size)
