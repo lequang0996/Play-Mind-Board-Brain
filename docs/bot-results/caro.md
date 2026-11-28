@@ -6,8 +6,8 @@ Sinh tự động bởi `tools/bot-bench/make_reports.py` từ `tools/bot-bench/
 
 | Mục | Giá trị |
 |---|---|
-| Số đợt đo | 2 |
-| Tổng số ván đã đấu | 1200 |
+| Số đợt đo | 3 |
+| Tổng số ván đã đấu | 1524 |
 | Cặp kề đạt (kết quả mới nhất) | 1/6 |
 | Nghiệm thu | Chưa đạt (cần đủ 6 cặp kề với đủ số ván, 5 cặp cách hai cấp và đo trên điện thoại thật) |
 
@@ -39,6 +39,15 @@ Neo cấp Dễ = 800 theo thang quy ước của guide (mục 1.2), rồi cộng
 "Sơ bộ" = chưa đủ số ván guide yêu cầu nên kết luận chỉ để tham khảo.
 
 ## Lịch sử các đợt đo
+
+### Đợt g9-chess-t2-gauge-chains (2026-11-28)
+
+Cờ vua: trọng số chess-t2 đấu Stockfish 2800 (80 ván) và 3000 (40 ván), 3 luồng; ứng viên cấp Khá. Cờ tướng (Thách đấu n8000) và caro (Thách đấu n4000): chuỗi cấp dưới.
+
+| Cặp | Thời gian Siêu việt (PC) | Số ván | Thắng/Hòa/Thua | Tỉ lệ điểm | Đi trước / đi sau | Kết luận |
+|---|---|---|---|---|---|---|
+| Trung bình vs Dễ | 2000 ms | 204 | 178/0/26 | 87,3% | 0.94 / 0.80 | Không đạt (hai cấp quá sát), sơ bộ |
+| Khá vs Trung bình | 2000 ms | 120 | 111/0/9 | 92,5% | 0.97 / 0.88 | Đạt, sơ bộ |
 
 ### Đợt r1 (2026-11-27)
 
