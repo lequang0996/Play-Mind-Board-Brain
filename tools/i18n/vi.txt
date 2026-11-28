@@ -264,3 +264,15 @@ mg_hints_left|Hôm nay còn %1$d/%2$d gợi ý.
 mg_continue|Giải tiếp
 notice_magic_done|Bạn đã giải xong ma phương hôm nay. Hãy quay lại vào ngày mai để nhận đề mới.
 notice_no_hints|Bạn đã hết gợi ý hôm nay. Gói tháng có 10 gợi ý mỗi ngày, gói năm có 20 gợi ý mỗi ngày.
+game_blindcaro|Cờ caro mù
+game_blindcaro_desc|Cờ caro với quân bốn màu dùng chung: không biết quân nào của ai, hãy nhớ quân của mình.
+guide_blindcaro|Mục tiêu: như cờ caro, xếp được 5 quân của mình liên tiếp (ngang, dọc hoặc chéo); dãy bị chặn cả hai đầu thì không tính.\n• Khác biệt: hai bên dùng chung bộ quân 4 màu (xanh, đỏ, tím, vàng). Bàn cờ chỉ hiện màu, không cho biết quân nào của ai.\n• Người đi trước (X) mỗi lượt chọn một màu bất kỳ ở bảng màu góc dưới rồi chạm bàn để đặt quân.\n• Người đi sau (O) phải đáp lại bằng quân cùng màu với quân người đi trước vừa đặt.\n• Bạn phải tự ghi nhớ vị trí quân của mình (và của đối thủ). Hết ván, dấu X / O mới hiện trên từng quân.\n• Mẹo: người đi trước có thể đổi màu liên tục để làm đối thủ rối; người đi sau hãy nhớ theo vị trí, đừng nhớ theo màu.
+side_x|X
+side_o|O
+bc_hint|Chọn màu ở góc dưới rồi chạm bàn để đặt quân. Hãy nhớ quân nào là của bạn!
+bc_pick|Màu quân
+bc_forced|Cùng màu đối thủ
+bc_blue|Xanh
+bc_red|Đỏ
+bc_purple|Tím
+bc_yellow|Vàng

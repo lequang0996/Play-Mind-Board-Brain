@@ -264,3 +264,15 @@ mg_hints_left|%1$d/%2$d hints left today.
 mg_continue|Continue
 notice_magic_done|You have already solved today's magic square. Come back tomorrow for a new puzzle.
 notice_no_hints|You have used all of today's hints. The monthly plan gives 10 hints per day, the yearly plan 20.
+game_blindcaro|Blind Gomoku
+game_blindcaro_desc|Gomoku with shared stones in four colours: nothing shows whose stone is whose, so remember yours.
+guide_blindcaro|Goal: as in Gomoku, get 5 of your own stones in a row (horizontal, vertical or diagonal); a line blocked at both ends does not count.\n• The twist: both players share one set of stones in 4 colours (blue, red, purple, yellow). The board shows only colours, never whose stone is whose.\n• The first player (X) picks any colour on the palette at the bottom each turn, then taps the board.\n• The second player (O) must answer with a stone of the same colour the first player just placed.\n• You must remember where your stones (and your opponent's) are. X and O marks appear only when the game ends.\n• Tip: the first player can keep switching colours to confuse; as the second player, remember positions, not colours.
+side_x|X
+side_o|O
+bc_hint|Pick a colour at the bottom, then tap the board. Remember which stones are yours!
+bc_pick|Stone colour
+bc_forced|Same colour as opponent
+bc_blue|Blue
+bc_red|Red
+bc_purple|Purple
+bc_yellow|Yellow

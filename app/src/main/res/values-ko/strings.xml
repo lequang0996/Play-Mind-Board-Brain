@@ -4,6 +4,13 @@
     <string name="ad_unavailable">지금은 표시할 광고가 없습니다. 나중에 다시 시도해 주세요.</string>
     <string name="back">뒤로</string>
     <string name="back_to_lobby">메뉴로 돌아가기</string>
+    <string name="bc_blue">파랑</string>
+    <string name="bc_forced">상대와 같은 색</string>
+    <string name="bc_hint">아래에서 색을 고르고 판을 누르세요. 어떤 돌이 내 것인지 기억하세요!</string>
+    <string name="bc_pick">돌 색</string>
+    <string name="bc_purple">보라</string>
+    <string name="bc_red">빨강</string>
+    <string name="bc_yellow">노랑</string>
     <string name="best_value">최고 가성비</string>
     <string name="bill_failed">구매를 완료하지 못했습니다. 나중에 다시 시도해 주세요.</string>
     <string name="bill_ok_gems">계정에 다이아몬드 %d개가 추가되었습니다.</string>
@@ -39,6 +46,8 @@
     <string name="free_n">무료 %d</string>
     <string name="free_today">오늘 무료 플레이 가능</string>
     <string name="free_unlimited">무제한 무료 플레이</string>
+    <string name="game_blindcaro">블라인드 오목</string>
+    <string name="game_blindcaro_desc">네 가지 색 돌을 함께 쓰는 오목: 어느 돌이 누구 것인지 보이지 않으니 내 돌을 기억하세요.</string>
     <string name="game_caro">오목 (카로)</string>
     <string name="game_caro_desc">다섯 개를 이으면 승리합니다. 양쪽 끝이 막히면 인정되지 않습니다.</string>
     <string name="game_chess">체스</string>
@@ -66,6 +75,7 @@
     <string name="guide">가이드</string>
     <string name="guide_app">• 홈: 추천 카드(2분마다 바뀜) 또는 아래 줄의 게임을 선택하세요.\n• 다이아몬드: 매일 출석하면 +1 다이아몬드. 게임마다 하루 1판 무료(월간 플랜 3판, 연간 플랜 무제한), 이후 한 판에 1 다이아몬드가 듭니다. 승리하면 +1 다이아몬드.\n• 친구와 대결: 판마다 각 플레이어 -1 다이아몬드(무료 횟수 미사용), 승자 +1 다이아몬드. 월간·연간 플랜은 다이아몬드가 들지 않습니다.\n• 연승: 한 게임에서 3연승 시 +2, 5연승 시 +3.\n• 충성 보너스: 30일 연속 출석하면 이후 출석할 때마다 +2 다이아몬드(월간 플랜: +4).\n• 모드: 컴퓨터와 대결(항상 선공), 근처 친구와, 방 코드/QR 교환으로 온라인 대결. 일부 게임은 컴퓨터와 함께하는 3~4인 대결도 지원합니다.\n• 컴퓨터 레벨: 쉬움부터 최강까지 7단계. 처음에는 쉬움만 열려 있으며, 이기면 그 게임의 다음 레벨이 열립니다. 연간 플랜은 모든 레벨을 열고 다이아몬드를 완전히 없앱니다.\n• 수당 시간(모든 게임): 1, 2, 3, 5, 10, 30분 또는 1시간. 컴퓨터와 대결 시 레벨별(쉬움 1분 … 최강 1시간), 사람과 대결 시 방장이 이 7단계 중 하나를 고릅니다. 시간이 지나면 차례인 쪽이 패배합니다.\n• 상점: 광고 제거, 무료 횟수 추가, 다이아 구매.\n• 설정에서 언어와 닉네임을 바꿀 수 있습니다.</string>
     <string name="guide_app_title">Play Mind 사용법</string>
+    <string name="guide_blindcaro">목표: 오목처럼 내 돌 5개를 한 줄로 놓으세요(가로, 세로, 대각선). 양 끝이 막힌 줄은 인정되지 않습니다.\n• 다른 점: 두 사람이 4가지 색(파랑, 빨강, 보라, 노랑)의 돌 한 세트를 함께 씁니다. 판에는 색만 보이고 누구 돌인지는 보이지 않습니다.\n• 선(X)은 매 수 아래 팔레트에서 원하는 색을 고른 뒤 판을 누릅니다.\n• 후(O)는 선이 방금 놓은 돌과 같은 색의 돌로 응수해야 합니다.\n• 내 돌(과 상대 돌)의 위치를 스스로 기억해야 합니다. X / O 표시는 대국이 끝나야 나타납니다.\n• 팁: 선은 색을 계속 바꿔 상대를 헷갈리게 할 수 있습니다. 후는 색이 아니라 위치로 기억하세요.</string>
     <string name="guide_caro">목표: 가로, 세로, 대각선으로 자신의 표시 다섯 개 이상을 잇기. X(짙은 색)가 먼저 둡니다.\n• 판에는 가장자리가 없습니다. 한 손가락으로 끌어 이동하고, 두 손가락으로 확대/축소하세요.\n• 줄의 양쪽 끝이 상대 표시로 막혀 있으면 인정되지 않습니다.\n• 빈 칸을 눌러 표시를 놓으세요. 상대의 열린 3, 4를 막으세요!</string>
     <string name="guide_chess">목표: 상대 킹을 체크메이트하는 것.\n• 폰은 앞으로 한 칸 가고 대각선으로 잡습니다. 나이트는 L자로 점프하고, 비숍은 대각선, 룩은 직선, 퀸은 둘 다, 킹은 한 칸 움직입니다.\n• 특수 이동: 캐슬링, 앙파상, 마지막 줄에서의 프로모션.\n• 말을 누른 뒤 강조된 칸을 누르세요. 스테일메이트, 50수 규칙, 기물 부족이면 무승부입니다.\n• 반복: 이전과 같은 국면을 만든 쪽이 패배합니다.</string>
     <string name="guide_go">목표: 상대보다 더 넓은 판을 차지하는 것. 흑이 먼저 둡니다.\n• 따냄: 이웃한 빈 점이 없는(활로가 없는) 돌 무리는 판에서 제거됩니다.\n• 금지: 자기 돌 무리의 활로가 사라지는 수(따내는 경우 제외)와 이전 판 모양의 반복은 둘 수 없습니다.\n• 종료: 상대가 패스하고 더 둘 곳이 없으면 ‘대국 종료’를 눌러 계가합니다.\n• 계가: 면적(중국식) - 내 돌과 나만 접한 빈 영역. 백은 덤 7.5집. 사석은 자동으로 치워지지 않으니 패스 전에 따내세요.\n• 교차점을 눌러 돌을 미리 보고 ‘착수’를 누르세요.</string>
@@ -222,8 +232,10 @@
     <string name="side_black">흑</string>
     <string name="side_blue">파랑</string>
     <string name="side_green">초록</string>
+    <string name="side_o">O</string>
     <string name="side_red">홍</string>
     <string name="side_white">백</string>
+    <string name="side_x">X</string>
     <string name="side_yellow">노랑</string>
     <string name="solo_play">혼자 하기</string>
     <string name="sorted_hint">쉽고 짧은 게임부터 어렵고 긴 게임 순</string>

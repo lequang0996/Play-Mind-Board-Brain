@@ -318,6 +318,28 @@ GAMES = {
 <ul><li>Chạm một ô rồi chạm số. Bàn phím số cho biết mỗi số còn thiếu bao nhiêu lần.</li>
 <li>Bút chì để ghi chú số có thể điền; Xóa để xóa ô; Hoàn tác để lùi thao tác vừa làm; Gợi ý để điền đúng một ô.</li></ul>
 <h2>Mẹo</h2><ul><li>Vì gợi ý rất ít, hãy bắt đầu ở nơi hàng, cột và khối có nhiều ô đã điền nhất, và dùng ghi chú để theo dõi các số có thể điền.</li></ul>"""),
+"blindcaro": dict(
+  en_name="Blind Gomoku", vi_name="Cờ caro mù",
+  en_intro="A memory twist on Gomoku: both players share stones in four colours, and the board never shows whose stone is whose.",
+  vi_intro="Biến thể trí nhớ của cờ caro: hai bên dùng chung quân bốn màu và bàn cờ không cho biết quân nào của ai.",
+  en_body="""
+<h2>Rules</h2>
+<ul><li>Same as Gomoku: get 5 of your own stones in a row (horizontal, vertical or diagonal) on an endless board; a line blocked at both ends does not count.</li>
+<li>Stones come in 4 colours: blue, red, purple and yellow. The first player is X and the second is O whatever colour they use.</li>
+<li>Each turn the first player places a stone of <b>any colour</b>; the second player must answer with a stone of <b>the same colour</b>.</li>
+<li>The board shows only colours. You must remember which stones are yours; X and O marks are revealed when the game ends.</li></ul>
+<h2>Using the app</h2>
+<ul><li>Pick a colour on the palette in the bottom-left corner (the second player's colour is chosen automatically), then tap the board. Drag to move, pinch or use the buttons to zoom.</li></ul>
+<h2>Tips</h2><ul><li>As the first player, switching colours often makes your stones harder to track. As the second player, remember positions rather than colours.</li></ul>""",
+  vi_body="""
+<h2>Luật</h2>
+<ul><li>Như cờ caro: xếp được 5 quân của mình liên tiếp (ngang, dọc hoặc chéo) trên bàn vô hạn; dãy bị chặn cả hai đầu thì không tính.</li>
+<li>Quân có 4 màu: xanh, đỏ, tím, vàng. Người đi trước là X, người đi sau là O, dù dùng màu nào.</li>
+<li>Mỗi lượt người đi trước đặt một quân <b>màu bất kỳ</b>; người đi sau phải đáp lại bằng quân <b>cùng màu</b>.</li>
+<li>Bàn cờ chỉ hiện màu. Bạn phải tự nhớ quân nào của mình; hết ván mới hiện dấu X / O.</li></ul>
+<h2>Dùng trong app</h2>
+<ul><li>Chọn màu ở bảng màu góc dưới bên trái (người đi sau được chọn sẵn màu bắt buộc), rồi chạm bàn để đặt quân. Kéo để di chuyển, chụm hoặc dùng nút để thu phóng.</li></ul>
+<h2>Mẹo</h2><ul><li>Người đi trước đổi màu thường xuyên sẽ khiến quân khó theo dõi hơn. Người đi sau hãy nhớ theo vị trí, đừng nhớ theo màu.</li></ul>"""),
 "magic7": dict(
   en_name="Magic Square 7×7", vi_name="Ma phương 7×7",
   en_intro="A single-player number puzzle on a 7×7 board. One new puzzle every day; there is no opponent and no time limit.",
@@ -360,8 +382,8 @@ for gid, g in GAMES.items():
 # ───────────────────────── Trang chủ ─────────────────────────
 index_body = f"""
 <h1>{APP}</h1>
-{bi("<p class='muted'>A collection of board and brain games for Android: Gomoku, Wall Go, Quoridor, Chess, Xiangqi, Go, Sudoku and Magic Square 7×7. Every two-or-more-player game has seven computer levels, from Easy to Supreme.</p>",
-    "<p class='muted'>Bộ sưu tập game bàn cờ và trí tuệ cho Android: Cờ caro, Wall Go, Quoridor, Cờ vua, Cờ tướng, Cờ vây, Sudoku và Ma phương 7×7. Mọi game từ 2 người trở lên đều có 7 cấp độ máy, từ Dễ đến Siêu việt.</p>")}
+{bi("<p class='muted'>A collection of board and brain games for Android: Gomoku, Wall Go, Quoridor, Chess, Xiangqi, Go, Sudoku, Magic Square 7×7 and Blind Gomoku. Every two-or-more-player game has seven computer levels, from Easy to Supreme.</p>",
+    "<p class='muted'>Bộ sưu tập game bàn cờ và trí tuệ cho Android: Cờ caro, Wall Go, Quoridor, Cờ vua, Cờ tướng, Cờ vây, Sudoku, Ma phương 7×7 và Cờ caro mù. Mọi game từ 2 người trở lên đều có 7 cấp độ máy, từ Dễ đến Siêu việt.</p>")}
 <div class="topics"><span style="background:#14937a"><span data-l="en">Puzzle</span><span data-l="vi">Giải đố</span></span><span style="background:#5348c9"><span data-l="en">Intellect</span><span data-l="vi">Trí tuệ</span></span><span style="background:#c27a0a"><span data-l="en">Calculation</span><span data-l="vi">Tính toán</span></span><span style="background:#c93e6b"><span data-l="en">Memory</span><span data-l="vi">Ghi nhớ</span></span></div>
 <h2><span data-l="en">How to play</span><span data-l="vi">Hướng dẫn chơi</span></h2>
 <div class="grid">
@@ -372,6 +394,7 @@ index_body = f"""
 <a href="how-to-play/quoridor.html"><div class="card"><b>Quoridor</b><span class="muted" data-l="en">Race to the far side and block with walls.</span><span class="muted" data-l="vi">Chạy về cạnh đối diện và chặn bằng tường.</span></div></a>
 <a href="how-to-play/wallgo.html"><div class="card"><b>Wall Go</b><span class="muted" data-l="en">Move, build a wall, claim territory.</span><span class="muted" data-l="vi">Đi quân, xây tường, chiếm lãnh thổ.</span></div></a>
 <a href="how-to-play/sudoku.html"><div class="card"><b>Sudoku</b><span class="muted" data-l="en">One given per box, any valid grid wins.</span><span class="muted" data-l="vi">Mỗi khối một gợi ý, điền đúng luật là thắng.</span></div></a>
+<a href="how-to-play/blindcaro.html"><div class="card"><b><span data-l="en">Blind Gomoku</span><span data-l="vi">Cờ caro mù</span></b><span class="muted" data-l="en">Shared four-colour stones: remember which are yours.</span><span class="muted" data-l="vi">Quân bốn màu dùng chung: nhớ quân nào của mình.</span></div></a>
 <a href="how-to-play/magic7.html"><div class="card"><b><span data-l="en">Magic Square 7×7</span><span data-l="vi">Ma phương 7×7</span></b><span class="muted" data-l="en">Rows, columns and diagonals all sum to 175. Daily puzzle.</span><span class="muted" data-l="vi">Hàng, cột, đường chéo đều có tổng 175. Mỗi ngày một đề.</span></div></a>
 </div>
 <h2><span data-l="en">Using the app</span><span data-l="vi">Cách dùng ứng dụng</span></h2>

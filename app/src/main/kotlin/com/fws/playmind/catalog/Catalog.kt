@@ -3,6 +3,7 @@ package com.fws.playmind.catalog
 import androidx.annotation.StringRes
 import androidx.compose.ui.graphics.Color
 import com.fws.playmind.R
+import com.fws.playmind.core.BlindCaroGame
 import com.fws.playmind.core.BoardGame
 import com.fws.playmind.core.ChessGame
 import com.fws.playmind.core.GoGame
@@ -88,6 +89,9 @@ object Catalog {
             create = { n -> WallGoGame(n) }),
         GameInfo("caro", Topic.MIND, R.string.game_caro, R.string.game_caro_desc, R.string.guide_caro,
             R.string.stone_black, R.string.stone_white, 9, { 6000L }, order = 1, minutes = 5, create = { GomokuGame() }),
+        // Ghi nhớ: luật như cờ caro nhưng quân chỉ có màu, phải tự nhớ quân nào của mình (bot dùng nguyên bot caro)
+        GameInfo("blindcaro", Topic.MEMORY, R.string.game_blindcaro, R.string.game_blindcaro_desc, R.string.guide_blindcaro,
+            R.string.side_x, R.string.side_o, 9, { 6000L }, order = 1, minutes = 8, create = { BlindCaroGame() }),
         GameInfo("sudoku", Topic.PUZZLE, R.string.game_sudoku, R.string.game_sudoku_desc, R.string.guide_sudoku,
             R.string.side_white, R.string.side_black, 0, { 0L }, kind = GameKind.SOLO, order = 1, minutes = 10),
         GameInfo(MAGIC_ID, Topic.PUZZLE, R.string.game_magic7, R.string.game_magic7_desc, R.string.guide_magic7,

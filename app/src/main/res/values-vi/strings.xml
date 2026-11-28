@@ -4,6 +4,13 @@
     <string name="ad_unavailable">Hiện chưa có quảng cáo khả dụng. Vui lòng thử lại sau.</string>
     <string name="back">Quay lại</string>
     <string name="back_to_lobby">Về menu</string>
+    <string name="bc_blue">Xanh</string>
+    <string name="bc_forced">Cùng màu đối thủ</string>
+    <string name="bc_hint">Chọn màu ở góc dưới rồi chạm bàn để đặt quân. Hãy nhớ quân nào là của bạn!</string>
+    <string name="bc_pick">Màu quân</string>
+    <string name="bc_purple">Tím</string>
+    <string name="bc_red">Đỏ</string>
+    <string name="bc_yellow">Vàng</string>
     <string name="best_value">Tiết kiệm nhất</string>
     <string name="bill_failed">Không thể hoàn tất giao dịch. Vui lòng thử lại sau.</string>
     <string name="bill_ok_gems">Đã cộng +%d kim cương vào tài khoản.</string>
@@ -39,6 +46,8 @@
     <string name="free_n">%d miễn phí</string>
     <string name="free_today">Hôm nay còn 1 ván miễn phí</string>
     <string name="free_unlimited">Chơi miễn phí không giới hạn</string>
+    <string name="game_blindcaro">Cờ caro mù</string>
+    <string name="game_blindcaro_desc">Cờ caro với quân bốn màu dùng chung: không biết quân nào của ai, hãy nhớ quân của mình.</string>
     <string name="game_caro">Cờ caro (Gomoku)</string>
     <string name="game_caro_desc">Bàn cờ vô hạn. Xếp đủ năm quân liên tiếp để thắng; bị chặn cả hai đầu thì không tính.</string>
     <string name="game_chess">Cờ vua</string>
@@ -66,6 +75,7 @@
     <string name="guide">Hướng dẫn</string>
     <string name="guide_app">• Trang chủ: chọn thẻ nổi bật (đổi mỗi 2 phút) hoặc bất kỳ game nào ở các hàng bên dưới.\n• Kim cương: điểm danh mỗi ngày +1 kim cương. Mỗi game được chơi miễn phí 1 ván/ngày (gói tháng: 3 ván, gói năm: không giới hạn), sau đó mỗi ván tốn 1 kim cương. Thắng được +1 kim cương.\n• Chơi với bạn bè: mỗi ván mỗi người -1 kim cương (không dùng lượt miễn phí), người thắng +1 kim cương. Gói tháng hoặc gói năm không mất kim cương.\n• Chuỗi thắng: thắng liên tiếp 3 ván ở một game được +2 kim cương, 5 ván được +3.\n• Thưởng gắn bó: điểm danh liên tục 30 ngày thì mỗi lần điểm danh tiếp theo +2 kim cương (gói tháng: +4 kim cương).\n• Chế độ: chơi với máy (bạn luôn đi trước), với bạn ở gần hoặc online bằng cách trao đổi mã phòng/QR. Một số game còn hỗ trợ 3-4 người chơi với máy.\n• Cấp độ máy: 7 cấp từ Dễ đến Siêu việt. Lúc đầu chỉ mở cấp Dễ; thắng một cấp sẽ mở cấp kế tiếp của game đó. Gói năm mở ngay mọi cấp và bỏ hẳn kim cương.\n• Thời gian mỗi nước (mọi game): 1 phút, 2 phút, 3 phút, 5 phút, 10 phút, 30 phút hoặc 1 giờ. Chơi với máy thì theo cấp (Dễ 1 phút ... Siêu việt 1 giờ); chơi với người thì chủ phòng chọn một trong 7 mức này. Hết giờ mà chưa đi thì người đang đến lượt bị xử thua.\n• Cửa hàng: bỏ quảng cáo, thêm lượt chơi miễn phí hoặc mua kim cương.\n• Đổi ngôn ngữ và biệt danh trong Cài đặt.</string>
     <string name="guide_app_title">Cách dùng Play Mind</string>
+    <string name="guide_blindcaro">Mục tiêu: như cờ caro, xếp được 5 quân của mình liên tiếp (ngang, dọc hoặc chéo); dãy bị chặn cả hai đầu thì không tính.\n• Khác biệt: hai bên dùng chung bộ quân 4 màu (xanh, đỏ, tím, vàng). Bàn cờ chỉ hiện màu, không cho biết quân nào của ai.\n• Người đi trước (X) mỗi lượt chọn một màu bất kỳ ở bảng màu góc dưới rồi chạm bàn để đặt quân.\n• Người đi sau (O) phải đáp lại bằng quân cùng màu với quân người đi trước vừa đặt.\n• Bạn phải tự ghi nhớ vị trí quân của mình (và của đối thủ). Hết ván, dấu X / O mới hiện trên từng quân.\n• Mẹo: người đi trước có thể đổi màu liên tục để làm đối thủ rối; người đi sau hãy nhớ theo vị trí, đừng nhớ theo màu.</string>
     <string name="guide_caro">Mục tiêu: xếp năm quân trở lên của bạn liên tiếp theo hàng ngang, dọc hoặc chéo. X (gỗ sẫm) đi trước.\n• Bàn cờ không có giới hạn: kéo một ngón để di chuyển, chụm hai ngón để thu phóng.\n• Nếu cả hai đầu của hàng bị quân đối phương chặn thì không tính thắng.\n• Chạm vào ô trống để đặt quân. Hãy chặn các hàng ba, hàng bốn hở của đối phương!</string>
     <string name="guide_chess">Mục tiêu: chiếu hết vua đối phương.\n• Tốt đi thẳng một ô và ăn chéo. Mã nhảy hình chữ L. Tượng đi chéo, xe đi thẳng, hậu đi cả hai kiểu, vua đi một ô.\n• Nước đặc biệt: nhập thành, bắt tốt qua đường và phong cấp khi tốt tới hàng cuối.\n• Chạm vào quân rồi chạm ô được tô sáng để đi. Ván hòa khi hết nước đi (hòa cờ), luật 50 nước hoặc không đủ quân để thắng.\n• Lặp thế: nước đi tạo lại một thế cờ đã có thì bên vừa đi bị xử thua.</string>
     <string name="guide_go">Mục tiêu: kiểm soát nhiều bàn cờ hơn đối thủ. Đen đi trước.\n• Bắt quân: nhóm quân không còn ô trống kề bên (hết khí) bị nhấc khỏi bàn.\n• Điều cấm: không được đi nước khiến nhóm của mình hết khí (trừ khi bắt được quân) và không được lặp lại thế cờ đã có.\n• Kết thúc: khi đối thủ bỏ lượt và không còn nước hữu ích, bấm Kết thúc ván để tính điểm.\n• Tính điểm: theo diện tích - quân trên bàn cộng vùng trống chỉ tiếp giáp quân của bạn. Trắng được 7,5 điểm komi. Quân chết không tự gỡ, hãy bắt chúng trước khi bỏ lượt.\n• Chạm một giao điểm để xem trước quân, rồi bấm Đặt quân.</string>
@@ -222,8 +232,10 @@
     <string name="side_black">Đen</string>
     <string name="side_blue">Xanh dương</string>
     <string name="side_green">Xanh lá</string>
+    <string name="side_o">O</string>
     <string name="side_red">Đỏ</string>
     <string name="side_white">Trắng</string>
+    <string name="side_x">X</string>
     <string name="side_yellow">Vàng</string>
     <string name="solo_play">Chơi một mình</string>
     <string name="sorted_hint">Xếp từ dễ chơi, ván ngắn đến khó chơi, ván dài</string>

@@ -67,7 +67,7 @@ private fun PieceChoice(type: Int, white: Boolean, onClick: () -> Unit) {
 }
 
 /** Bóng đổ mềm dưới bàn cờ để bàn "nổi" lên khỏi nền. */
-private fun Modifier.boardShadow(radius: Int = 16) = this.shadow(
+internal fun Modifier.boardShadow(radius: Int = 16) = this.shadow(
     14.dp, RoundedCornerShape(radius.dp), ambientColor = Color(0x33000000), spotColor = Color(0x59000000),
 )
 

@@ -340,6 +340,7 @@ fun GameArt(gameId: String, modifier: Modifier = Modifier) {
             "quoridor" -> drawQuoridorArt(ox, oy, s)
             "sudoku" -> drawSudokuArt(tm, ox, oy, s)
             "magic7" -> drawMagicArt(tm, ox, oy, s)
+            "blindcaro" -> drawBlindCaroArt(ox, oy, s)
             else -> {
                 drawCaroPiece(Offset(ox + s * .66f, oy + s * .64f), s * .62f, false)
                 drawCaroPiece(Offset(ox + s * .36f, oy + s * .36f), s * .66f, true)

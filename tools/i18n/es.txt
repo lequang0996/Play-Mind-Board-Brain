@@ -264,3 +264,15 @@ mg_hints_left|Te quedan %1$d/%2$d pistas hoy.
 mg_continue|Continuar
 notice_magic_done|Ya has resuelto el cuadrado mágico de hoy. Vuelve mañana para un reto nuevo.
 notice_no_hints|Has usado todas las pistas de hoy. El plan mensual da 10 pistas al día y el anual 20.
+game_blindcaro|Gomoku a ciegas
+game_blindcaro_desc|Gomoku con fichas compartidas de cuatro colores: no se ve de quién es cada una, así que recuerda las tuyas.
+guide_blindcaro|Objetivo: como en el Gomoku, consigue 5 fichas propias en línea (horizontal, vertical o diagonal); una línea bloqueada por ambos extremos no cuenta.\n• La diferencia: los dos jugadores comparten un juego de fichas de 4 colores (azul, rojo, morado, amarillo). El tablero solo muestra colores, nunca de quién es cada ficha.\n• El primer jugador (X) elige cualquier color en la paleta inferior en cada turno y toca el tablero.\n• El segundo jugador (O) debe responder con una ficha del mismo color que la que acaba de colocar el primero.\n• Debes recordar dónde están tus fichas (y las del rival). Las marcas X y O solo aparecen al terminar la partida.\n• Consejo: el primer jugador puede cambiar de color para confundir; como segundo jugador, recuerda posiciones, no colores.
+side_x|X
+side_o|O
+bc_hint|Elige un color abajo y toca el tablero. ¡Recuerda cuáles son tus fichas!
+bc_pick|Color de ficha
+bc_forced|Mismo color que el rival
+bc_blue|Azul
+bc_red|Rojo
+bc_purple|Morado
+bc_yellow|Amarillo

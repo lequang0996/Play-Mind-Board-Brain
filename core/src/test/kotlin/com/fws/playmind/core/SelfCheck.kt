@@ -211,6 +211,36 @@ fun main() {
     expect("sudoku: o hien tai hop le khi dien theo loi giai", (0 until 81).none { dz.isWrong(it) } && dz.hint() >= 0 && dz.status == SudokuStatus.WON)
     expect("sudoku: sai nhieu loi van khong thua, chi dem loi", sl.status == SudokuStatus.PLAYING && sl.mistakes == 3)
 
+    // ── Cờ caro mù ──
+    run {
+        val P = BlindCaroGame.Companion
+        val b = BlindCaroGame()
+        expect("caro mu: X chon mau tu do", b.forcedColor == -1 && b.play(P.pack(0, 0, 2)))
+        expect("caro mu: O phai cung mau quan vua dat", b.forcedColor == 2 && !b.play(P.pack(1, 0, 1)) && b.play(P.pack(1, 0, 2)))
+        expect("caro mu: khong dat de len o da co quan", !b.play(P.pack(0, 0, 3)) && !b.play(P.pack(1, 0, 3)))
+        // X đặt 5 quân hàng y = 2 với màu khác nhau, O đặt chỗ khác → X thắng dù màu lẫn lộn
+        val w = BlindCaroGame()
+        for (i in 0 until 5) {
+            w.play(P.pack(i, 2, i % 4))
+            if (w.result == Outcome.ONGOING) w.play(P.pack(i, 5, w.forcedColor))
+        }
+        expect("caro mu: 5 quan cua X (khac mau) thang", w.result == Outcome.WIN_FIRST && w.inner.winLine.size == 5)
+        // dãy 5 của X bị O chặn hai đầu thì không thắng (luật caro)
+        val k = BlindCaroGame()
+        k.play(P.pack(0, 0, 0)); k.play(P.pack(-1, 0, 0))
+        k.play(P.pack(1, 0, 1)); k.play(P.pack(5, 0, 1))
+        for (i in 2..4) { k.play(P.pack(i, 0, 3)); if (i < 4) k.play(P.pack(i, 3, 3)) }
+        expect("caro mu: bi chan hai dau khong thang", k.result == Outcome.ONGOING)
+        // bot: nước hợp lệ, đúng màu bắt buộc; chặn được bốn của người đi trước
+        val t = BlindCaroGame()
+        var botOk = true
+        val rr = kotlin.random.Random(3)
+        repeat(12) { if (t.result == Outcome.ONGOING) { val m = t.levelMove(BotLevel.of(it % 7), 100, rr); val f = t.forcedColor; if (m < 0 || (f >= 0 && P.color(m) != f) || !t.play(m)) botOk = false } }
+        expect("caro mu: bot di hop le va dung mau", botOk)
+        val c = t.copyGame()
+        expect("caro mu: sao chep van giu nguyen lich su", c.history == t.history && c.turn == t.turn && c.forcedColor == t.forcedColor)
+    }
+
     // ── Ma phương 7x7 ──
     run {
         val mr = kotlin.random.Random(5)

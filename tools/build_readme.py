@@ -17,7 +17,10 @@ AVAILABLE NOW — INTELLECT
 AVAILABLE NOW — PUZZLE
 • Sudoku: one given number per box, and any grid that follows the rules wins.
 • Magic Square 7×7: place 1 to 49 so every row, column and both diagonals add up to 175. A new puzzle every day.
-More games for the Calculation and Memory topics are coming soon.
+
+AVAILABLE NOW — MEMORY
+• Blind Gomoku: Gomoku with shared stones in four colours. The board never shows whose stone is whose, so you must remember yours.
+More games for the Calculation topic are coming soon.
 
 PLAY YOUR WAY
 • Against the computer: 7 levels from Easy to Supreme. Start at Easy and win to unlock the next level; Go is powered by KataGo.
@@ -58,7 +61,10 @@ VI = dict(
 ĐÃ CÓ — CHỦ ĐỀ GIẢI ĐỐ
 • Sudoku: mỗi khối chỉ gợi ý một số, mọi cách điền đúng luật đều thắng.
 • Ma phương 7×7: xếp các số 1 đến 49 sao cho mọi hàng, cột và hai đường chéo đều có tổng 175. Mỗi ngày một đề.
-Các game thuộc chủ đề Tính toán và Ghi nhớ sẽ sớm ra mắt.
+
+ĐÃ CÓ — CHỦ ĐỀ GHI NHỚ
+• Cờ caro mù: cờ caro với quân bốn màu dùng chung. Bàn cờ không cho biết quân nào của ai, bạn phải tự nhớ quân của mình.
+Các game thuộc chủ đề Tính toán sẽ sớm ra mắt.
 
 CHƠI THEO CÁCH CỦA BẠN
 • Với máy: 7 cấp từ Dễ đến Siêu việt. Bắt đầu ở cấp Dễ, thắng để mở khóa cấp kế tiếp; Cờ vây dùng KataGo.

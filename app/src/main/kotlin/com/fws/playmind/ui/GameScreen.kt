@@ -208,6 +208,7 @@ fun GameScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onExit: (
                 "go" -> GoBoardView(vm)
                 "quoridor" -> QuoridorBoardView(vm)
                 "wallgo" -> WallGoBoardView(vm)
+                "blindcaro" -> BlindCaroBoardView(vm, Modifier.fillMaxSize())
                 else -> GomokuBoardView(vm, Modifier.fillMaxSize())   // bàn vô hạn: lấp đầy khoảng trống, kéo/thu phóng được
             }
         }
