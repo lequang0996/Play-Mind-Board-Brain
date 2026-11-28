@@ -139,6 +139,7 @@ fun AppRoot(app: PlayMindApp, vm: SessionViewModel, update: UpdateManager) {
             Notice.CONN_FAILED -> R.string.notice_conn_failed
             Notice.UNVERIFIED -> R.string.notice_unverified
             Notice.HOST_LEFT -> R.string.notice_host_left
+            Notice.ROOM_TAKEN -> R.string.notice_room_taken
             Notice.NONE -> R.string.empty
         }
         if (n == Notice.NOT_ENOUGH) {

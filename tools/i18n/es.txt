@@ -37,7 +37,7 @@ how_to_play|Cómo jugar
 how_to_use|Guía de uso
 internet|Por internet
 invite|Invitar a un amigo
-join_net_hint|Pide al anfitrión su código de invitación y pégalo o escanéalo.
+join_net_hint|Escanea el código QR del teléfono del anfitrión para entrar al instante, o introduce el código de invitación.
 join_room|Unirse a sala
 kick|Expulsar al rival
 language|Idioma
@@ -246,3 +246,5 @@ sound|Sonido
 music|Música de fondo
 guide_levels_title|Los 7 niveles de la máquina
 guide_levels|• Fácil: para principiantes. La máquina mira solo una o dos jugadas y a menudo juega al azar; basta con conocer las reglas para ganar.\n• Medio: evita errores obvios pero aún falla mucho. Juega con un plan.\n• Bueno: conoce la táctica básica. Calcula unas jugadas por delante y no dejes debilidades.\n• Fuerte: rara vez se equivoca y planifica. Necesitas una estrategia clara para ganar.\n• Maestro: sólido, muy pocos errores. Solo jugadores con experiencia ganan con regularidad.\n• Retador: casi nunca comete errores tácticos. Ganarle es motivo de orgullo.\n• Supremo: la máquina a plena fuerza. En ajedrez juega como un motor de 2800 Elo (escala de motores CCRL): casi imbatible para un humano.\n• Cada nivel es claramente más fuerte que el anterior: el nivel superior gana la mayoría de las partidas (entre 65% y 98%).\n• Desafía tu mente: ¿hasta dónde llegarás? Empieza en Fácil, conquista cada nivel y alcanza el Supremo.
+invite_scan_hint|Tus amigos eligen Por internet, Unirse a sala y escanean este código para entrar al instante. Entra quien escanee primero.
+notice_room_taken|Otra persona entró primero en esta sala o ya se cerró.

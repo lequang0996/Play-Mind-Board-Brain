@@ -79,7 +79,8 @@
     <string name="internet">Over the internet</string>
     <string name="internet_card_desc">Share a room code or QR with your friend</string>
     <string name="invite">Invite a friend</string>
-    <string name="join_net_hint">Ask the host for their invitation code, then paste or scan it.</string>
+    <string name="invite_scan_hint">Friends choose Over the internet, Join room, then scan this code to join right away. Whoever scans first gets in.</string>
+    <string name="join_net_hint">Scan the QR code on the host\'s phone to join right away, or enter the invitation code.</string>
     <string name="join_room">Join room</string>
     <string name="kick">Remove opponent</string>
     <string name="language">Language</string>
@@ -129,6 +130,7 @@
     <string name="notice_not_enough">You need 1 diamond to play. Check in daily, win games or get more in the shop.</string>
     <string name="notice_opp_left">Your opponent left the room.</string>
     <string name="notice_permission">Permission is needed to find players nearby. You can allow it in the app settings.</string>
+    <string name="notice_room_taken">Someone else joined this room first, or it has closed.</string>
     <string name="notice_title">Notice</string>
     <string name="notice_unverified">The result couldn\'t be verified with your opponent, so no reward was given.</string>
     <string name="ok">OK</string>

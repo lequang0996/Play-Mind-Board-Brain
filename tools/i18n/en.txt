@@ -37,7 +37,7 @@ how_to_play|How to play
 how_to_use|User guide
 internet|Over the internet
 invite|Invite a friend
-join_net_hint|Ask the host for their invitation code, then paste or scan it.
+join_net_hint|Scan the QR code on the host's phone to join right away, or enter the invitation code.
 join_room|Join room
 kick|Remove opponent
 language|Language
@@ -246,3 +246,5 @@ sound|Sound
 music|Background music
 guide_levels_title|7 computer levels
 guide_levels|• Easy: for newcomers. The computer looks only one or two moves ahead and often plays at random; knowing the rules is enough to win.\n• Medium: avoids obvious blunders but still makes many mistakes. Play with a plan.\n• Good: knows basic tactics. Calculate a few moves ahead and leave no weaknesses.\n• Strong: rarely errs and plans ahead. You need a clear strategy to win.\n• Master: solid, very few mistakes. Only experienced players win regularly.\n• Challenger: almost never makes a tactical mistake. Beating it is something to be proud of.\n• Supreme: the computer at full strength. In chess it plays like a 2800 Elo engine (CCRL engine rating scale): nearly unbeatable for humans.\n• Each level is clearly stronger than the one below: the higher level wins most games (about 65% to 98%).\n• Challenge your mind: how far can you climb? Start at Easy, conquer each level and reach Supreme.
+invite_scan_hint|Friends choose Over the internet, Join room, then scan this code to join right away. Whoever scans first gets in.
+notice_room_taken|Someone else joined this room first, or it has closed.

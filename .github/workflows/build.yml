@@ -110,6 +110,8 @@ jobs:
           ADMOB_APP_OPEN: ${{ vars.ADMOB_APP_OPEN || secrets.ADMOB_APP_OPEN }}
           REQUIRE_REAL_ADS: "true"
           PRIVACY_URL: ${{ vars.PRIVACY_URL }}
+          # Địa chỉ Firebase Realtime Database làm trạm chuyển mã khi chơi qua internet (tab Variables). Trống = trao đổi mã hai chiều.
+          SIGNAL_DB_URL: ${{ vars.SIGNAL_DB_URL }}
 
       # 5b) Biểu tượng gỡ lỗi native phải nằm trong .aab (nếu không, Play Console cảnh báo và không phân tích được crash/ANR)
       - name: Check native debug symbols in AAB

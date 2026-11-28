@@ -37,7 +37,7 @@ how_to_play|Cách chơi
 how_to_use|Hướng dẫn sử dụng
 internet|Qua internet
 invite|Mời bạn bè
-join_net_hint|Hãy xin chủ phòng mã mời, rồi dán hoặc quét mã.
+join_net_hint|Quét mã QR trên máy chủ phòng để vào ngay, hoặc nhập mã mời.
 join_room|Vào phòng
 kick|Mời đối thủ ra
 language|Ngôn ngữ
@@ -246,3 +246,5 @@ sound|Âm thanh
 music|Nhạc nền
 guide_levels_title|7 cấp độ máy
 guide_levels|• Dễ: cho người mới làm quen. Máy chỉ nhìn một hai nước và hay đi ngẫu nhiên; nắm luật là thắng được.\n• Trung bình: máy tránh được lỗi hiển nhiên nhưng còn sai nhiều. Cần chơi có chủ đích.\n• Khá: máy biết chiến thuật cơ bản. Phải tính trước vài nước và không để lộ sơ hở.\n• Giỏi: máy ít sai và có kế hoạch ngắn hạn. Cần chiến lược rõ ràng mới thắng được.\n• Cao thủ: máy chơi chắc, rất ít sai. Chỉ người chơi giàu kinh nghiệm mới thắng đều.\n• Thách đấu: gần như không mắc sai lầm chiến thuật. Thắng được cấp này là thành tích đáng tự hào.\n• Siêu việt: toàn lực của máy. Ở cờ vua, sức mạnh ngang engine 2800 Elo (thang xếp hạng engine CCRL): gần như bất khả chiến bại với con người.\n• Mỗi cấp mạnh hơn hẳn cấp ngay dưới: cấp trên thắng phần lớn số ván (khoảng 65% đến 98%).\n• Thử thách trí tuệ: bạn sẽ chinh phục được đến cấp nào? Bắt đầu từ Dễ, vượt qua từng cấp và chạm tới Siêu việt.
+invite_scan_hint|Bạn bè chọn Qua internet, Vào phòng rồi quét mã này là vào ngay. Ai quét trước sẽ vào trước.
+notice_room_taken|Phòng đã có người vào trước hoặc đã đóng.

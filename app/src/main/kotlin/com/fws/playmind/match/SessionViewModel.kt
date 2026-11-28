@@ -35,8 +35,10 @@ import com.fws.playmind.net.FoundRoom
 import com.fws.playmind.net.LinkState
 import com.fws.playmind.net.NearbyTransport
 import com.fws.playmind.net.Proto
+import com.fws.playmind.net.Relay
 import com.fws.playmind.net.Transport
 import com.fws.playmind.net.WebRtcTransport
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -49,7 +51,7 @@ import kotlin.random.Random
 enum class Mode { NONE, BOT, LOCAL, SOLO, HOST_NEARBY, HOST_NET, JOIN_NEARBY, JOIN_NET }
 enum class Phase { IDLE, ROOM, PLAYING, OVER }
 enum class Opp { NONE, HUMAN, COMPUTER, HIDDEN_BOT }
-enum class Notice { NONE, NOT_ENOUGH, PERMISSION, CONN_LOST, OPP_LEFT, KICKED, BAD_CODE, CONN_FAILED, UNVERIFIED, HOST_LEFT }
+enum class Notice { NONE, NOT_ENOUGH, PERMISSION, CONN_LOST, OPP_LEFT, KICKED, BAD_CODE, CONN_FAILED, UNVERIFIED, HOST_LEFT, ROOM_TAKEN }
 
 /**
  * Điều phối toàn bộ một phiên chơi: phòng chờ → ván đấu → kết quả. Dùng chung cho 3 chế độ:
@@ -131,6 +133,11 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
     private val botSeats = HashSet<Int>()
     private var hub: NearbyHub? = null
     private var pendingNet: WebRtcTransport? = null
+    /** Phòng đang mở trên trạm chuyển mã (Relay) của máy chủ phòng, để xóa khi không dùng nữa. */
+    private val relayRooms = ArrayList<String>()
+    private var relayJob: Job? = null
+    /** Khách (internet) đã giành được chỗ qua trạm chuyển mã, đang chờ kết nối. */
+    var relayJoined by mutableStateOf(false); private set
     private val peerJobs = ArrayList<Job>()
     private var hostSide = 0
     private var botJob: Job? = null
@@ -235,6 +242,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         game = null; opp = Opp.NONE; oppName = ""; botThinking = false; verifying = false
         sudokuJob?.cancel(); sudokuClock?.cancel(); sudoku = null; sudokuLoading = false; sudokuSeconds = 0; seatNames = emptyList()
         inviteCode = ""; replyCode = ""; inviteBusy = false; inviteOpen = false; guestConnected = false
+        relayJob?.cancel(); relayJob = null; dropRelayRooms(); relayJoined = false
         rematchAsked = false; oppAskedRematch = false; localEnd = null; remoteEnd = null; finalized = false
         nearbyRooms.value = emptyList(); nearbyError.value = false; nearbyErrorCode.value = 0; _link.value = LinkState.IDLE
     }
@@ -330,7 +338,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         val t = WebRtcTransport(getApplication()); pendingNet = t
         inviteCode = ""; replyCode = ""; inviteBusy = true
         peerJobs += viewModelScope.launch {
-            try { inviteCode = t.createInvite() } catch (e: Exception) { notice = Notice.CONN_FAILED }
+            try { inviteCode = hostCode(t, t.createInvite()) { peerJobs += it } } catch (e: Exception) { notice = Notice.CONN_FAILED }
             inviteBusy = false
         }
         peerJobs += viewModelScope.launch {
@@ -447,12 +455,40 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         } else {
             val t = WebRtcTransport(ctx); transport = t
             inviteCode = ""; replyCode = ""; inviteBusy = true
+            relayJob?.cancel(); dropRelayRooms()
             viewModelScope.launch {
-                try { inviteCode = t.createInvite() } catch (e: Exception) { notice = Notice.CONN_FAILED }
+                try { inviteCode = hostCode(t, t.createInvite()) { relayJob = it } } catch (e: Exception) { notice = Notice.CONN_FAILED }
                 inviteBusy = false
             }
         }
         attachTransport()
+    }
+
+    /**
+     * Chủ phòng: đưa offer lên trạm chuyển mã và trả về mã ngắn "PM2.<id>" để hiện QR; một vòng chờ sẽ tự nhận answer
+     * của khách đầu tiên rồi kết nối. Trạm chưa cấu hình hoặc lỗi mạng: trả về chính offer (trao đổi mã hai chiều như cũ).
+     */
+    private suspend fun hostCode(t: WebRtcTransport, offer: String, keep: (Job) -> Unit): String {
+        if (!Relay.enabled) return offer
+        val id = Relay.newId()
+        if (!Relay.publish(id, offer)) return offer
+        relayRooms += id
+        keep(viewModelScope.launch {
+            while (t.state.value != LinkState.CLOSED && t.state.value != LinkState.FAILED) {
+                delay(1500)
+                val ans = Relay.pollAnswer(id) ?: continue
+                if (!t.acceptReply(ans)) notice = Notice.BAD_CODE
+                break
+            }
+            Relay.remove(id); relayRooms -= id
+        })
+        return Relay.code(id)
+    }
+
+    private fun dropRelayRooms() {
+        if (relayRooms.isEmpty()) return
+        val ids = relayRooms.toList(); relayRooms.clear()
+        CoroutineScope(Dispatchers.IO).launch { for (id in ids) Relay.remove(id) }
     }
 
     /** Chủ phòng dán/quét mã trả lời của khách. */
@@ -530,12 +566,44 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
     /** Khách dán/quét mã mời → tạo mã trả lời. */
     fun submitInvite(code: String) {
         val t = transport as? WebRtcTransport ?: return
+        val id = Relay.parse(code)
+        if (id != null) { joinViaRelay(t, id); return }
         inviteBusy = true
         viewModelScope.launch {
             val r = try { t.createReply(code) } catch (e: Exception) { null }
             if (r == null) notice = Notice.BAD_CODE else replyCode = r
             inviteBusy = false
         }
+    }
+
+    /** Khách quét mã PM2: lấy offer từ trạm, tạo answer và giành chỗ. Ai ghi answer trước thì vào phòng. */
+    private fun joinViaRelay(t: WebRtcTransport, id: String) {
+        if (inviteBusy || relayJoined) return
+        inviteBusy = true
+        viewModelScope.launch {
+            val offer = Relay.fetchOffer(id)
+            val reply = if (offer == null) null else try { t.createReply(offer) } catch (e: Exception) { null }
+            if (transport !== t) { inviteBusy = false; return@launch }
+            when {
+                offer == null -> { notice = Notice.ROOM_TAKEN; resetJoinNet() }
+                reply == null -> { notice = Notice.BAD_CODE; resetJoinNet() }
+                else -> when (Relay.claim(id, reply)) {
+                    Relay.Claim.OK -> relayJoined = true
+                    Relay.Claim.TAKEN -> { notice = Notice.ROOM_TAKEN; resetJoinNet() }
+                    Relay.Claim.ERROR -> notice = Notice.CONN_FAILED.also { resetJoinNet() }
+                }
+            }
+            inviteBusy = false
+        }
+    }
+
+    /** Khách (internet): bỏ kết nối dở, sẵn sàng quét lại mã khác. */
+    private fun resetJoinNet() {
+        if (mode != Mode.JOIN_NET) return
+        linkJob?.cancel(); transport?.onMessage = null; transport?.close()
+        transport = WebRtcTransport(getApplication()); relayJoined = false; replyCode = ""
+        _link.value = LinkState.IDLE
+        attachTransport()
     }
 
     // ───────────────────────── kết nối ─────────────────────────
@@ -571,8 +639,8 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
             phase == Phase.ROOM && isHost && opp == Opp.HUMAN -> {
                 opp = Opp.NONE; oppName = ""; notice = Notice.OPP_LEFT; newHostTransport(); armBotTimer(5)
             }
-            phase == Phase.ROOM && !isHost -> { notice = if (failed) Notice.CONN_FAILED else Notice.HOST_LEFT; guestConnected = false }
-            phase == Phase.ROOM && isHost && failed -> notice = Notice.CONN_FAILED
+            phase == Phase.ROOM && !isHost -> { notice = if (failed) Notice.CONN_FAILED else Notice.HOST_LEFT; guestConnected = false; resetJoinNet() }
+            phase == Phase.ROOM && isHost && failed -> { notice = Notice.CONN_FAILED; if (mode == Mode.HOST_NET && !multi) newHostTransport() }
         }
     }
 

@@ -78,7 +78,8 @@
     <string name="internet">Через интернет</string>
     <string name="internet_card_desc">Обменяйтесь с другом кодом комнаты или QR</string>
     <string name="invite">Пригласить друга</string>
-    <string name="join_net_hint">Попросите у хозяина комнаты код приглашения, затем вставьте или отсканируйте его.</string>
+    <string name="invite_scan_hint">Друзья выбирают «Через интернет», «Войти в комнату» и сканируют этот код, чтобы сразу войти. Кто отсканирует первым, тот и войдёт.</string>
+    <string name="join_net_hint">Отсканируйте QR-код на телефоне хозяина комнаты, чтобы сразу войти, или введите код приглашения.</string>
     <string name="join_room">Войти в комнату</string>
     <string name="kick">Удалить соперника</string>
     <string name="language">Язык</string>
@@ -128,6 +129,7 @@
     <string name="notice_not_enough">Для игры нужен 1 алмаз. Получите его ежедневной отметкой, победой или в магазине.</string>
     <string name="notice_opp_left">Соперник покинул комнату.</string>
     <string name="notice_permission">Для поиска игроков рядом нужно разрешение. Его можно дать в настройках приложения.</string>
+    <string name="notice_room_taken">Кто-то другой уже вошёл в эту комнату первым, или она закрыта.</string>
     <string name="notice_title">Уведомление</string>
     <string name="notice_unverified">Не удалось подтвердить результат вместе с соперником, поэтому награда не выдана.</string>
     <string name="ok">ОК</string>

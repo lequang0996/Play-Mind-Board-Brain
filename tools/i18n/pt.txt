@@ -37,7 +37,7 @@ how_to_play|Como jogar
 how_to_use|Guia de uso
 internet|Pela internet
 invite|Convidar um amigo
-join_net_hint|Peça ao anfitrião o código de convite e cole ou escaneie.
+join_net_hint|Escaneie o QR code no celular do anfitrião para entrar na hora, ou digite o código de convite.
 join_room|Entrar na sala
 kick|Remover adversário
 language|Idioma
@@ -246,3 +246,5 @@ sound|Som
 music|Música de fundo
 guide_levels_title|Os 7 níveis da máquina
 guide_levels|• Fácil: para iniciantes. A máquina olha só uma ou duas jogadas e muitas vezes joga ao acaso; conhecer as regras basta para vencer.\n• Médio: evita erros óbvios, mas ainda erra bastante. Jogue com um plano.\n• Bom: conhece táticas básicas. Calcule algumas jogadas à frente e não deixe fraquezas.\n• Forte: raramente erra e planeja. Você precisa de uma estratégia clara para vencer.\n• Mestre: sólido, pouquíssimos erros. Só jogadores experientes vencem com frequência.\n• Desafiante: quase nunca comete erros táticos. Vencê-lo é motivo de orgulho.\n• Supremo: a máquina com força total. No xadrez joga como um motor de 2800 Elo (escala de motores CCRL): quase imbatível para humanos.\n• Cada nível é claramente mais forte que o anterior: o nível de cima vence a maioria das partidas (de 65% a 98%).\n• Desafie sua mente: até onde você chega? Comece no Fácil, conquiste cada nível e alcance o Supremo.
+invite_scan_hint|Seus amigos escolhem Pela internet, Entrar na sala e escaneiam este código para entrar na hora. Quem escanear primeiro entra.
+notice_room_taken|Outra pessoa entrou primeiro nesta sala ou ela já foi fechada.

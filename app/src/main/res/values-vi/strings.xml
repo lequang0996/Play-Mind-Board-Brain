@@ -78,7 +78,8 @@
     <string name="internet">Qua internet</string>
     <string name="internet_card_desc">Trao đổi mã phòng hoặc QR với bạn</string>
     <string name="invite">Mời bạn bè</string>
-    <string name="join_net_hint">Hãy xin chủ phòng mã mời, rồi dán hoặc quét mã.</string>
+    <string name="invite_scan_hint">Bạn bè chọn Qua internet, Vào phòng rồi quét mã này là vào ngay. Ai quét trước sẽ vào trước.</string>
+    <string name="join_net_hint">Quét mã QR trên máy chủ phòng để vào ngay, hoặc nhập mã mời.</string>
     <string name="join_room">Vào phòng</string>
     <string name="kick">Mời đối thủ ra</string>
     <string name="language">Ngôn ngữ</string>
@@ -128,6 +129,7 @@
     <string name="notice_not_enough">Bạn cần 1 kim cương để chơi. Hãy điểm danh mỗi ngày, thắng ván hoặc mua thêm trong cửa hàng.</string>
     <string name="notice_opp_left">Đối thủ đã rời phòng.</string>
     <string name="notice_permission">Cần cấp quyền để tìm người chơi ở gần. Bạn có thể cho phép trong phần cài đặt ứng dụng.</string>
+    <string name="notice_room_taken">Phòng đã có người vào trước hoặc đã đóng.</string>
     <string name="notice_title">Thông báo</string>
     <string name="notice_unverified">Không thể đối chiếu kết quả với đối thủ nên không có thưởng.</string>
     <string name="ok">OK</string>

@@ -78,7 +78,8 @@
     <string name="internet">Por internet</string>
     <string name="internet_card_desc">Comparte un código de sala o QR con tu amigo</string>
     <string name="invite">Invitar a un amigo</string>
-    <string name="join_net_hint">Pide al anfitrión su código de invitación y pégalo o escanéalo.</string>
+    <string name="invite_scan_hint">Tus amigos eligen Por internet, Unirse a sala y escanean este código para entrar al instante. Entra quien escanee primero.</string>
+    <string name="join_net_hint">Escanea el código QR del teléfono del anfitrión para entrar al instante, o introduce el código de invitación.</string>
     <string name="join_room">Unirse a sala</string>
     <string name="kick">Expulsar al rival</string>
     <string name="language">Idioma</string>
@@ -128,6 +129,7 @@
     <string name="notice_not_enough">Necesitas 1 diamante para jugar. Consíguelo con la asistencia diaria, ganando partidas o en la tienda.</string>
     <string name="notice_opp_left">Tu rival salió de la sala.</string>
     <string name="notice_permission">Se necesita permiso para buscar jugadores cercanos. Puedes concederlo en los ajustes de la app.</string>
+    <string name="notice_room_taken">Otra persona entró primero en esta sala o ya se cerró.</string>
     <string name="notice_title">Aviso</string>
     <string name="notice_unverified">No se pudo verificar el resultado con tu rival, así que no se concedió recompensa.</string>
     <string name="ok">Aceptar</string>

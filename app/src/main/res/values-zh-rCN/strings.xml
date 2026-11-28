@@ -78,7 +78,8 @@
     <string name="internet">通过互联网</string>
     <string name="internet_card_desc">与朋友交换房间码或二维码</string>
     <string name="invite">邀请好友</string>
-    <string name="join_net_hint">向房主索取邀请码，然后粘贴或扫描。</string>
+    <string name="invite_scan_hint">好友选择\"通过互联网\"→\"加入房间\"，扫描此码即可直接加入。先扫码者先进入。</string>
+    <string name="join_net_hint">扫描房主手机上的二维码即可直接加入，或输入邀请码。</string>
     <string name="join_room">加入房间</string>
     <string name="kick">移除对手</string>
     <string name="language">语言</string>
@@ -128,6 +129,7 @@
     <string name="notice_not_enough">需要 1 颗钻石才能游戏。每天签到、获胜或在商店获取钻石。</string>
     <string name="notice_opp_left">对手已离开房间。</string>
     <string name="notice_permission">需要权限才能查找附近的玩家，你可以在系统设置中允许。</string>
+    <string name="notice_room_taken">已有其他人先加入该房间，或房间已关闭。</string>
     <string name="notice_title">提示</string>
     <string name="notice_unverified">未能与对手核对结果，因此不发放奖励。</string>
     <string name="ok">确定</string>

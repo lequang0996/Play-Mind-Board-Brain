@@ -78,7 +78,8 @@
     <string name="internet">インターネット</string>
     <string name="internet_card_desc">ルームコードまたはQRを友達と交換</string>
     <string name="invite">友だちを招待</string>
-    <string name="join_net_hint">ホストから招待コードをもらい、貼り付けるかスキャンしてください。</string>
+    <string name="invite_scan_hint">友達は「インターネット」→「ルームに参加」でこのコードをスキャンするとすぐ参加できます。先にスキャンした人が入れます。</string>
+    <string name="join_net_hint">ホストの端末のQRコードをスキャンするとすぐ参加できます。招待コードの入力も可能です。</string>
     <string name="join_room">ルームに参加</string>
     <string name="kick">相手を退出させる</string>
     <string name="language">言語</string>
@@ -128,6 +129,7 @@
     <string name="notice_not_enough">プレイにはダイヤが 1 個必要です。毎日のチェックイン、勝利、またはショップで入手できます。</string>
     <string name="notice_opp_left">相手がルームを退出しました。</string>
     <string name="notice_permission">近くのプレイヤーを探すには権限が必要です。アプリの設定で許可できます。</string>
+    <string name="notice_room_taken">ほかの人が先にこのルームに参加したか、ルームが閉じられました。</string>
     <string name="notice_title">お知らせ</string>
     <string name="notice_unverified">相手と結果を照合できなかったため、報酬は付与されませんでした。</string>
     <string name="ok">OK</string>

@@ -52,6 +52,7 @@ import com.fws.playmind.match.Opp
 import com.fws.playmind.match.SessionViewModel
 import com.fws.playmind.net.FoundRoom
 import com.fws.playmind.net.LinkState
+import com.fws.playmind.net.Relay
 import com.fws.playmind.net.Signal
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
@@ -130,7 +131,7 @@ private fun CodeField(value: String, onChange: (String) -> Unit, label: String, 
 @Composable
 private fun CodeExchangeDialog(
     title: String, myCodeLabel: String, myCode: String, busy: Boolean,
-    otherLabel: String?, actionLabel: String, onAction: (String) -> Unit, onClose: () -> Unit,
+    otherLabel: String?, actionLabel: String, onAction: (String) -> Unit, onClose: () -> Unit, hint: String? = null,
 ) {
     val ctx = LocalContext.current
     val clip = LocalClipboardManager.current
@@ -153,6 +154,7 @@ private fun CodeExchangeDialog(
                     qr?.let {
                         Image(it.asImageBitmap(), null, Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(Color.White).padding(10.dp))
                     }
+                    if (hint != null) Text(hint, style = MaterialTheme.typography.bodyMedium, color = pm.ink)
                     Text(myCode, style = MaterialTheme.typography.labelMedium, color = pm.inkSoft, maxLines = 3, overflow = TextOverflow.Ellipsis)
                     Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                         OutlineButton(stringResource(R.string.copy), { clip.setText(AnnotatedString(myCode)) }, Modifier.weight(1f), Ic.Copy)
@@ -239,9 +241,16 @@ fun RoomScreen(vm: SessionViewModel, onLeave: () -> Unit) {
                     if (vm.guestConnected) {
                         Seat(vm.oppName, false, "")
                         Text(stringResource(R.string.waiting_host_start), color = pm.inkSoft, style = MaterialTheme.typography.bodyMedium)
+                    } else if (vm.relayJoined || vm.inviteBusy) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            CircularProgressIndicator(Modifier.size(18.dp), color = pm.gold, strokeWidth = 2.dp)
+                            Spacer(Modifier.width(10.dp))
+                            Text(stringResource(R.string.connecting), color = pm.inkSoft, style = MaterialTheme.typography.bodyMedium)
+                        }
                     } else if (vm.replyCode.isEmpty()) {
                         Text(stringResource(R.string.join_net_hint), color = pm.inkSoft, style = MaterialTheme.typography.bodyMedium)
-                        GoldButton(stringResource(R.string.enter_invite), { showInvite = true }, Modifier.fillMaxWidth(), Ic.Qr)
+                        GoldButton(stringResource(R.string.scan_qr), { scanQr(ctx) { vm.submitInvite(it) } }, Modifier.fillMaxWidth(), Ic.Scan)
+                        OutlineButton(stringResource(R.string.enter_invite), { showInvite = true }, Modifier.fillMaxWidth(), Ic.Qr)
                     } else {
                         Text(stringResource(R.string.reply_hint), color = pm.inkSoft, style = MaterialTheme.typography.bodyMedium)
                         OutlineButton(stringResource(R.string.show_reply), { showInvite = true }, Modifier.fillMaxWidth(), Ic.Qr)
@@ -259,15 +268,20 @@ fun RoomScreen(vm: SessionViewModel, onLeave: () -> Unit) {
     }
 
     if (showInvite) when (vm.mode) {
-        Mode.HOST_NET -> CodeExchangeDialog(
-            stringResource(R.string.invite), stringResource(R.string.your_invite_code), vm.inviteCode, vm.inviteBusy,
-            stringResource(R.string.paste_reply), stringResource(R.string.connect), { vm.acceptReply(it); showInvite = false }, { showInvite = false },
-        )
+        Mode.HOST_NET -> {
+            // Mã ngắn PM2 (qua trạm chuyển mã): bạn bè quét là vào, không cần dán mã trả lời
+            val relay = Relay.parse(vm.inviteCode) != null
+            CodeExchangeDialog(
+                stringResource(R.string.invite), stringResource(R.string.your_invite_code), vm.inviteCode, vm.inviteBusy,
+                if (relay) null else stringResource(R.string.paste_reply), stringResource(R.string.connect), { vm.acceptReply(it); showInvite = false }, { showInvite = false },
+                hint = if (relay) stringResource(R.string.invite_scan_hint) else null,
+            )
+        }
         Mode.JOIN_NET -> CodeExchangeDialog(
             stringResource(if (vm.replyCode.isEmpty()) R.string.enter_invite else R.string.show_reply),
             if (vm.replyCode.isEmpty()) "" else stringResource(R.string.your_reply_code), vm.replyCode, vm.inviteBusy,
             if (vm.replyCode.isEmpty()) stringResource(R.string.paste_invite) else null,
-            stringResource(R.string.create_reply), { vm.submitInvite(it) }, { showInvite = false },
+            stringResource(R.string.create_reply), { vm.submitInvite(it); if (Relay.parse(it) != null) showInvite = false }, { showInvite = false },
         )
         else -> showInvite = false
     }
