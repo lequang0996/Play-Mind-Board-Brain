@@ -157,7 +157,7 @@ fun BlindCaroBoardView(vm: SessionViewModel, modifier: Modifier = Modifier) {
                 val sx = offX + (BlindCaroGame.px(m) + .5f) * cell; val sy = offY + (BlindCaroGame.py(m) + .5f) * cell
                 if (sx < -cell || sy < -cell || sx > size.width + cell || sy > size.height + cell) continue
                 drawColorStone(Offset(sx, sy), cell * .38f, BlindColors[BlindCaroGame.color(m)])
-                if (over) drawReveal(Offset(sx, sy), cell * .38f, i % 2 == 0)
+                if (over || vm.bcRevealing) drawReveal(Offset(sx, sy), cell * .38f, i % 2 == 0)
             }
             val wl = g.inner.winLine
             if (wl.isNotEmpty()) {
@@ -168,7 +168,15 @@ fun BlindCaroBoardView(vm: SessionViewModel, modifier: Modifier = Modifier) {
                 )
             }
         }
-        if (g.plies < 4) {
+        if (vm.bcRevealing && !over) {
+            Text(
+                stringResource(R.string.bc_revealing),
+                Modifier.align(Alignment.TopCenter).padding(top = 12.dp, start = 12.dp, end = 12.dp)
+                    .clip(RoundedCornerShape(50)).background(pm.goldSoft).border(1.dp, pm.goldBright, RoundedCornerShape(50))
+                    .padding(horizontal = 14.dp, vertical = 6.dp),
+                style = MaterialTheme.typography.labelMedium, color = pm.gold,
+            )
+        } else if (g.plies < 4) {
             Text(
                 stringResource(R.string.bc_hint),
                 Modifier.align(Alignment.TopCenter).padding(top = 12.dp, start = 12.dp, end = 12.dp)
@@ -205,6 +213,16 @@ fun BlindCaroBoardView(vm: SessionViewModel, modifier: Modifier = Modifier) {
             }
         }
         Column(Modifier.align(Alignment.BottomEnd).padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            // gói tháng 1 lần, gói năm 3 lần mỗi ván: hiện X/O thật trong 10 giây
+            val left = vm.bcRevealsLeft()
+            if (!over && vm.bcRevealAllowance() > 0) Box {
+                FloatingRoundButton(Ic.Bulb, stringResource(R.string.bc_reveal), { vm.bcReveal() })
+                Text(
+                    left.toString(),
+                    Modifier.align(Alignment.TopEnd).size(18.dp).clip(CircleShape).background(if (left > 0) pm.goldBright else pm.outline).padding(top = 1.dp),
+                    style = MaterialTheme.typography.labelSmall, color = Color.White, textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                )
+            }
             FloatingRoundButton(Ic.Plus, stringResource(R.string.caro_zoom_in), { zoom = min(2.8f, zoom * 1.25f) })
             FloatingRoundButton(Ic.Minus, stringResource(R.string.caro_zoom_out), { zoom = max(.45f, zoom / 1.25f) })
             FloatingRoundButton(Ic.Target, stringResource(R.string.caro_recenter), {

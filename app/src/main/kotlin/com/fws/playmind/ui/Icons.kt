@@ -108,6 +108,7 @@ object Ic {
     val Warn = build("warn", false, "M12 3.5l9.5 16.5h-19zM12 10v4.5M12 17.2v.01")
     val Skip = build("skip", false, "M6 5v14l9-7zM18 5v14")
     val Brick = build("brick", false, "M3.5 7h17v10h-17zM3.5 12h17M9 7v5M15 12v5")
+    val Search = build("search", false, circle(10.5f, 10.5f, 6f), "M15 15l5 5")
     val Heart = build("heart", true, "M12 20s-7.5-4.6-7.5-10A4.2 4.2 0 0112 7.2 4.2 4.2 0 0119.5 10c0 5.4-7.5 10-7.5 10z")
     val Crosshair = build("crosshair", false, "M12 4v16M4 12h16")
     val Music = build("music", false, "M9 18V5.5l10-2V16", circle(6.5f, 18f, 2.5f), circle(16.5f, 16f, 2.5f))

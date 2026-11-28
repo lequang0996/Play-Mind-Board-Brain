@@ -65,6 +65,12 @@ class Prefs(ctx: Context) {
     val magicSolved: Boolean get() = sp.getBoolean("mg_done", false)
     /** Đã trả lượt / kim cương cho đề của ngày [magicDay]. */
     val magicPaid: Boolean get() = sp.getBoolean("mg_paid", false)
+    /** Game yêu thích (mã game), dùng được khi có gói tháng hoặc gói năm. */
+    var favorites: Set<String>
+        get() = sp.getString("favs", "")!!.split(',').filter { it.isNotBlank() }.toSet()
+        set(v) = sp.edit().putString("favs", v.joinToString(",")).apply()
+    fun toggleFavorite(id: String): Boolean { val f = favorites; favorites = if (id in f) f - id else f + id; return id !in f }
+
     /** Đã xem hướng dẫn nhanh của Khối gỗ ghép chữ (tự mở ở lượt đầu tiên). */
     var wordsIntroSeen: Boolean
         get() = sp.getBoolean("wb_intro", false)

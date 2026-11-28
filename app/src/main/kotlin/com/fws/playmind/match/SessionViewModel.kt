@@ -60,7 +60,7 @@ import kotlin.random.Random
 enum class Mode { NONE, BOT, LOCAL, SOLO, HOST_NEARBY, HOST_NET, JOIN_NEARBY, JOIN_NET }
 enum class Phase { IDLE, ROOM, PLAYING, OVER }
 enum class Opp { NONE, HUMAN, COMPUTER, HIDDEN_BOT }
-enum class Notice { NONE, NOT_ENOUGH, PERMISSION, CONN_LOST, OPP_LEFT, KICKED, BAD_CODE, CONN_FAILED, UNVERIFIED, HOST_LEFT, ROOM_TAKEN, MAGIC_DONE, NO_HINTS }
+enum class Notice { NONE, NOT_ENOUGH, PERMISSION, CONN_LOST, OPP_LEFT, KICKED, BAD_CODE, CONN_FAILED, UNVERIFIED, HOST_LEFT, ROOM_TAKEN, MAGIC_DONE, NO_HINTS, FAV_LOCKED }
 
 /**
  * Điều phối toàn bộ một phiên chơi: phòng chờ → ván đấu → kết quả. Dùng chung cho 3 chế độ:
@@ -368,6 +368,23 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         val g = words ?: return
         if (phase != Phase.PLAYING) return
         f(g); wbTick++
+    }
+
+    // ── Cờ caro mù: xem vị trí thật của X và O trong 10 giây (gói tháng 1 lần, gói năm 3 lần mỗi ván) ──
+    private var bcFor: BoardGame? = null
+    private var bcUsed = 0
+    var bcRevealing by mutableStateOf(false); private set
+    private var bcJob: Job? = null
+    fun bcRevealAllowance(): Int = when (wallet.currentPlan()) { Plan.MONTHLY -> 1; Plan.YEARLY -> 3; else -> 0 }
+    fun bcRevealsLeft(): Int = bcRevealAllowance() - (if (bcFor === game) bcUsed else 0)
+    fun bcReveal() {
+        val g = game ?: return
+        if (phase != Phase.PLAYING || bcRevealing) return
+        if (bcFor !== g) { bcFor = g; bcUsed = 0 }
+        if (bcUsed >= bcRevealAllowance()) return
+        bcUsed++; bcRevealing = true; tick++
+        bcJob?.cancel()
+        bcJob = viewModelScope.launch { delay(10_000); bcRevealing = false; tick++ }
     }
 
     /** Quyền lợi gói: gói tháng và gói năm thấy số chữ cái của từng đáp án (ô "_ _ _"). */
@@ -1161,11 +1178,15 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         else { finalized = true; verifyJob?.cancel(); verifying = false; wallet.cancelMatch(); notice = Notice.UNVERIFIED }
     }
 
+    /** Kim cương cơ bản khi thắng ván này: thắng máy / Xếp hình 7 mảnh theo cấp (Dễ 0 ... Siêu việt 6), còn lại 1. */
+    fun winBase(inf: GameInfo? = info): Int =
+        if (mode == Mode.BOT || (mode == Mode.SOLO && inf?.id == Catalog.TANGRAM_ID)) botLevel.coerceIn(0, Catalog.LEVELS - 1) else 1
+
     private fun settle(out: MatchOutcome, valid: Boolean) {
         if (finalized) return
         finalized = true
         val inf = info ?: return
-        reward = wallet.finishMatch(inf.id, out, valid)
+        reward = wallet.finishMatch(inf.id, out, valid, winBase(inf))
         tick++
     }
 

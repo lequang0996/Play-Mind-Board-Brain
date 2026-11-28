@@ -273,7 +273,12 @@ class WalletRepo(private val ctx: Context) {
      * [valid] = ván đủ điều kiện nhận thưởng (kết thúc tự nhiên hoặc đủ số nước tối thiểu,
      * và với ván online thì hai máy đã đối chiếu cùng kết quả).
      */
-    fun finishMatch(gameId: String, outcome: MatchOutcome, valid: Boolean): Reward {
+    /**
+     * Chốt ván. [base] = kim cương cơ bản khi thắng: thắng máy (và Xếp hình 7 mảnh) theo cấp vừa thắng
+     * (Dễ 0, Trung bình 1, Khá 2, Giỏi 3, Cao thủ 4, Thách đấu 5, Siêu việt 6); các ván khác 1.
+     * Chuỗi thắng chỉ tính các ván thắng có thưởng (base > 0).
+     */
+    fun finishMatch(gameId: String, outcome: MatchOutcome, valid: Boolean, base: Int = 1): Reward {
         val st = st()
         var d = st.diamonds
         var ws = st.winStreak[gameId] ?: 0
@@ -282,8 +287,11 @@ class WalletRepo(private val ctx: Context) {
             MatchOutcome.WIN -> if (noDiamonds()) {
                 if (valid) ws += 1                                   // gói năm: chỉ giữ thống kê, không có kim cương
             } else if (valid && rewardsAllowed) {
-                ws += 1; gained = 1
-                if (ws == STREAK_1) bonus = 2 else if (ws == STREAK_2) { bonus = 3; ws = 0 }
+                gained = base.coerceAtLeast(0)
+                if (gained > 0) {
+                    ws += 1
+                    if (ws == STREAK_1) bonus = 2 else if (ws == STREAK_2) { bonus = 3; ws = 0 }
+                }
                 gained += bonus
             } else if (!rewardsAllowed) blocked = true
             else -> ws = 0

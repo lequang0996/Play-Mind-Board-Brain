@@ -10,6 +10,8 @@
     <string name="bc_pick">Màu quân</string>
     <string name="bc_purple">Tím</string>
     <string name="bc_red">Đỏ</string>
+    <string name="bc_reveal">Xem X/O</string>
+    <string name="bc_revealing">Đang hiện X/O thật trong 10 giây</string>
     <string name="bc_yellow">Vàng</string>
     <string name="best_value">Tiết kiệm nhất</string>
     <string name="bill_failed">Không thể hoàn tất giao dịch. Vui lòng thử lại sau.</string>
@@ -42,6 +44,8 @@
     <string name="create_room">Tạo phòng</string>
     <string name="empty">\</string>
     <string name="enter_invite">Nhập mã mời</string>
+    <string name="favorite">Yêu thích</string>
+    <string name="favorites">Yêu thích</string>
     <string name="free_left_n">Hôm nay còn %d ván miễn phí</string>
     <string name="free_n">%d miễn phí</string>
     <string name="free_today">Hôm nay còn 1 ván miễn phí</string>
@@ -79,9 +83,9 @@
     <string name="go_place">Đặt quân</string>
     <string name="go_score">Đen %1$d – Trắng %2$d (+%3$s điểm komi)</string>
     <string name="guide">Hướng dẫn</string>
-    <string name="guide_app">• Trang chủ: chọn thẻ nổi bật (đổi mỗi 2 phút) hoặc bất kỳ game nào ở các hàng bên dưới.\n• Kim cương: điểm danh mỗi ngày +1 kim cương. Mỗi game được chơi miễn phí 1 ván/ngày (gói tháng: 3 ván, gói năm: không giới hạn), sau đó mỗi ván tốn 1 kim cương. Thắng được +1 kim cương.\n• Chơi với bạn bè: mỗi ván mỗi người -1 kim cương (không dùng lượt miễn phí), người thắng +1 kim cương. Gói tháng hoặc gói năm không mất kim cương.\n• Chuỗi thắng: thắng liên tiếp 3 ván ở một game được +2 kim cương, 5 ván được +3.\n• Thưởng gắn bó: điểm danh liên tục 30 ngày thì mỗi lần điểm danh tiếp theo +2 kim cương (gói tháng: +4 kim cương).\n• Chế độ: chơi với máy (bạn luôn đi trước), với bạn ở gần hoặc online bằng cách trao đổi mã phòng/QR. Một số game còn hỗ trợ 3-4 người chơi với máy.\n• Cấp độ máy: 7 cấp từ Dễ đến Siêu việt. Lúc đầu chỉ mở cấp Dễ; thắng một cấp sẽ mở cấp kế tiếp của game đó. Gói năm mở ngay mọi cấp và bỏ hẳn kim cương.\n• Thời gian mỗi nước (mọi game): 1 phút, 2 phút, 3 phút, 5 phút, 10 phút, 30 phút hoặc 1 giờ. Chơi với máy thì theo cấp (Dễ 1 phút ... Siêu việt 1 giờ); chơi với người thì chủ phòng chọn một trong 7 mức này. Hết giờ mà chưa đi thì người đang đến lượt bị xử thua.\n• Cửa hàng: bỏ quảng cáo, thêm lượt chơi miễn phí hoặc mua kim cương.\n• Đổi ngôn ngữ và biệt danh trong Cài đặt.</string>
+    <string name="guide_app">• Trang chủ: chọn thẻ nổi bật (đổi mỗi 2 phút) hoặc bất kỳ game nào ở các hàng bên dưới.\n• Kim cương: điểm danh mỗi ngày +1 kim cương. Mỗi game được chơi miễn phí 1 ván/ngày (gói tháng: 3 ván, gói năm: không giới hạn), sau đó mỗi ván tốn 1 kim cương. Thắng máy được kim cương theo cấp vừa thắng: Dễ +0, Trung bình +1, Khá +2, Giỏi +3, Cao thủ +4, Thách đấu +5, Siêu việt +6 (thắng cấp cao nhất đã mở thì mở thêm cấp kế tiếp). Các ván khác thắng được +1.\n• Chơi với bạn bè: mỗi ván mỗi người -1 kim cương (không dùng lượt miễn phí), người thắng +1 kim cương. Gói tháng hoặc gói năm không mất kim cương.\n• Chuỗi thắng: thắng liên tiếp 3 ván ở một game được +2 kim cương, 5 ván được +3.\n• Thưởng gắn bó: điểm danh liên tục 30 ngày thì mỗi lần điểm danh tiếp theo +2 kim cương (gói tháng: +4 kim cương).\n• Chế độ: chơi với máy (bạn luôn đi trước), với bạn ở gần hoặc online bằng cách trao đổi mã phòng/QR. Một số game còn hỗ trợ 3-4 người chơi với máy.\n• Cấp độ máy: 7 cấp từ Dễ đến Siêu việt. Lúc đầu chỉ mở cấp Dễ; thắng một cấp sẽ mở cấp kế tiếp của game đó. Gói năm mở ngay mọi cấp và bỏ hẳn kim cương.\n• Thời gian mỗi nước (mọi game): 1 phút, 2 phút, 3 phút, 5 phút, 10 phút, 30 phút hoặc 1 giờ. Chơi với máy thì theo cấp (Dễ 1 phút ... Siêu việt 1 giờ); chơi với người thì chủ phòng chọn một trong 7 mức này. Hết giờ mà chưa đi thì người đang đến lượt bị xử thua.\n• Cửa hàng: bỏ quảng cáo, thêm lượt chơi miễn phí hoặc mua kim cương.\n• Đổi ngôn ngữ và biệt danh trong Cài đặt.</string>
     <string name="guide_app_title">Cách dùng Play Mind</string>
-    <string name="guide_blindcaro">Mục tiêu: như cờ caro, xếp được 5 quân của mình liên tiếp (ngang, dọc hoặc chéo); dãy bị chặn cả hai đầu thì không tính.\n• Khác biệt: hai bên dùng chung bộ quân 4 màu (xanh, đỏ, tím, vàng). Bàn cờ chỉ hiện màu, không cho biết quân nào của ai.\n• Người đi trước (X) mỗi lượt chọn một màu bất kỳ ở bảng màu góc dưới rồi chạm bàn để đặt quân.\n• Người đi sau (O) phải đáp lại bằng quân cùng màu với quân người đi trước vừa đặt.\n• Bạn phải tự ghi nhớ vị trí quân của mình (và của đối thủ). Hết ván, dấu X / O mới hiện trên từng quân.\n• Mẹo: người đi trước có thể đổi màu liên tục để làm đối thủ rối; người đi sau hãy nhớ theo vị trí, đừng nhớ theo màu.</string>
+    <string name="guide_blindcaro">Mục tiêu: như cờ caro, xếp được 5 quân của mình liên tiếp (ngang, dọc hoặc chéo); dãy bị chặn cả hai đầu thì không tính.\n• Khác biệt: hai bên dùng chung bộ quân 4 màu (xanh, đỏ, tím, vàng). Bàn cờ chỉ hiện màu, không cho biết quân nào của ai.\n• Người đi trước (X) mỗi lượt chọn một màu bất kỳ ở bảng màu góc dưới rồi chạm bàn để đặt quân.\n• Người đi sau (O) phải đáp lại bằng quân cùng màu với quân người đi trước vừa đặt.\n• Bạn phải tự ghi nhớ vị trí quân của mình (và của đối thủ). Hết ván, dấu X / O mới hiện trên từng quân.\n• Mẹo: người đi trước có thể đổi màu liên tục để làm đối thủ rối; người đi sau hãy nhớ theo vị trí, đừng nhớ theo màu.\n• Quyền lợi gói: nút bóng đèn hiện vị trí thật của X và O trong 10 giây; gói tháng 1 lần, gói năm 3 lần mỗi ván.</string>
     <string name="guide_caro">Mục tiêu: xếp năm quân trở lên của bạn liên tiếp theo hàng ngang, dọc hoặc chéo. X (gỗ sẫm) đi trước.\n• Bàn cờ không có giới hạn: kéo một ngón để di chuyển, chụm hai ngón để thu phóng.\n• Nếu cả hai đầu của hàng bị quân đối phương chặn thì không tính thắng.\n• Chạm vào ô trống để đặt quân. Hãy chặn các hàng ba, hàng bốn hở của đối phương!</string>
     <string name="guide_chess">Mục tiêu: chiếu hết vua đối phương.\n• Tốt đi thẳng một ô và ăn chéo. Mã nhảy hình chữ L. Tượng đi chéo, xe đi thẳng, hậu đi cả hai kiểu, vua đi một ô.\n• Nước đặc biệt: nhập thành, bắt tốt qua đường và phong cấp khi tốt tới hàng cuối.\n• Chạm vào quân rồi chạm ô được tô sáng để đi. Ván hòa khi hết nước đi (hòa cờ), luật 50 nước hoặc không đủ quân để thắng.\n• Lặp thế: nước đi tạo lại một thế cờ đã có thì bên vừa đi bị xử thua.</string>
     <string name="guide_go">Mục tiêu: kiểm soát nhiều bàn cờ hơn đối thủ. Đen đi trước.\n• Bắt quân: nhóm quân không còn ô trống kề bên (hết khí) bị nhấc khỏi bàn.\n• Điều cấm: không được đi nước khiến nhóm của mình hết khí (trừ khi bắt được quân) và không được lặp lại thế cờ đã có.\n• Kết thúc: khi đối thủ bỏ lượt và không còn nước hữu ích, bấm Kết thúc ván để tính điểm.\n• Tính điểm: theo diện tích - quân trên bàn cộng vùng trống chỉ tiếp giáp quân của bạn. Trắng được 7,5 điểm komi. Quân chết không tự gỡ, hãy bắt chúng trước khi bỏ lượt.\n• Chạm một giao điểm để xem trước quân, rồi bấm Đặt quân.</string>
@@ -177,6 +181,7 @@
     <string name="notice_bad_code">Mã không hợp lệ. Hãy kiểm tra rồi thử lại.</string>
     <string name="notice_conn_failed">Không thể kết nối. Hãy kiểm tra mạng rồi thử lại.</string>
     <string name="notice_conn_lost">Mất kết nối. Ván đấu đã kết thúc.</string>
+    <string name="notice_fav_locked">Tính năng yêu thích mở khi có gói tháng hoặc gói năm.</string>
     <string name="notice_host_left">Chủ phòng đã rời phòng.</string>
     <string name="notice_kicked">Chủ phòng đã mời bạn ra khỏi phòng.</string>
     <string name="notice_magic_done">Bạn đã giải xong ma phương hôm nay. Hãy quay lại vào ngày mai để nhận đề mới.</string>
@@ -250,6 +255,10 @@
     <string name="sd_notes">Ghi chú</string>
     <string name="sd_won">Giải xong!</string>
     <string name="sd_won_text">Thời gian %1$s · %2$d lỗi</string>
+    <string name="search">Tìm kiếm</string>
+    <string name="search_hint">Tìm game: tên, chủ đề, thẻ…</string>
+    <string name="search_none">Không tìm thấy game nào.</string>
+    <string name="search_results_n">%d kết quả</string>
     <string name="searching_rooms">Đang tìm phòng ở gần…</string>
     <string name="see_more">Xem thêm</string>
     <string name="see_more_n">Xem thêm (%d)</string>
@@ -362,6 +371,7 @@
     <string name="wg_hint_pick">Chạm vào một quân của bạn.</string>
     <string name="wg_hint_place">Đặt quân của bạn (%1$d / %2$d).</string>
     <string name="wg_hint_wall">Giờ chạm về phía cạnh muốn đặt tường.</string>
+    <string name="win_reward_n">Thắng cấp này: +%d kim cương</string>
     <string name="winner_is">%s thắng!</string>
     <string name="you">Bạn</string>
     <string name="your_invite_code">Mã mời của bạn</string>

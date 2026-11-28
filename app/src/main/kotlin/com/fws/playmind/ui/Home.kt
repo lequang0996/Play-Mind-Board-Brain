@@ -122,6 +122,8 @@ fun HomeScreen(
     var checkIn by remember { mutableStateOf<CheckIn.Done?>(null) }
     val canCheckIn = wallet.lastCheckInDay != app.wallet.today()
     val plan = app.wallet.currentPlan()
+    var searching by androidx.compose.runtime.saveable.rememberSaveable { mutableStateOf(false) }
+    var query by androidx.compose.runtime.saveable.rememberSaveable { mutableStateOf("") }
 
     Column(Modifier.fillMaxSize()) {
         Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 18.dp)) {
@@ -138,6 +140,8 @@ fun HomeScreen(
                     Text("Play Mind", style = MaterialTheme.typography.headlineMedium, color = pm.ink)
                     Text("Board & Brain", style = MaterialTheme.typography.labelMedium, color = pm.gold)
                 }
+                PmIconButton(Ic.Search, stringResource(R.string.search), { searching = !searching; if (!searching) query = "" })
+                Spacer(Modifier.width(8.dp))
                 Box {
                     PmIconButton(Ic.Menu, stringResource(R.string.menu), { menuOpen = true })
                     DropdownMenu(
@@ -159,6 +163,15 @@ fun HomeScreen(
                     }
                 }
             }
+            if (searching) {
+                Gap(12)
+                GameSearchBar(query, { query = it }) { searching = false; query = "" }
+            }
+            if (searching && query.isNotBlank()) {
+                Gap(14)
+                GameSearchResults(query, onOpenGame)
+                Gap(20)
+            } else {
             Gap(16)
             if (!app.wallet.noDiamonds()) Vault(wallet.diamonds, wallet.streakDays, canCheckIn) {
                 val r = app.wallet.checkIn(); if (r is CheckIn.Done) checkIn = r
@@ -177,6 +190,11 @@ fun HomeScreen(
                         Text(stringResource(R.string.restart), style = MaterialTheme.typography.labelLarge, color = pm.gold)
                     }
                 }
+            }
+            // yêu thích (gói tháng / năm)
+            if (plan != Plan.NONE && app.prefs.favorites.isNotEmpty()) {
+                Gap(16)
+                FavoritesRow(app, onOpenGame)
             }
             Gap(18)
             val pager = rememberPagerState(pageCount = { Topic.entries.size })
@@ -197,6 +215,7 @@ fun HomeScreen(
                 Gap(20)
             }
             Gap(8)
+            }
         }
         if (app.ads.bannerAllowed()) BannerAd()
     }

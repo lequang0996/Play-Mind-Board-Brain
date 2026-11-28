@@ -10,6 +10,8 @@
     <string name="bc_pick">Color de ficha</string>
     <string name="bc_purple">Morado</string>
     <string name="bc_red">Rojo</string>
+    <string name="bc_reveal">Ver X/O</string>
+    <string name="bc_revealing">Mostrando las X/O reales durante 10 segundos</string>
     <string name="bc_yellow">Amarillo</string>
     <string name="best_value">Mejor valor</string>
     <string name="bill_failed">No se pudo completar la compra. Inténtalo de nuevo más tarde.</string>
@@ -42,6 +44,8 @@
     <string name="create_room">Crear sala</string>
     <string name="empty">\</string>
     <string name="enter_invite">Introducir código de invitación</string>
+    <string name="favorite">Favorito</string>
+    <string name="favorites">Favoritos</string>
     <string name="free_left_n">Hoy te quedan %d partidas gratis</string>
     <string name="free_n">%d gratis</string>
     <string name="free_today">Partida gratis disponible hoy</string>
@@ -79,9 +83,9 @@
     <string name="go_place">Colocar piedra</string>
     <string name="go_score">Negro %1$d – Blanco %2$d (+%3$s de komi)</string>
     <string name="guide">Guía</string>
-    <string name="guide_app">• Inicio: elige la tarjeta destacada (cambia cada 2 minutos) o cualquier juego de las filas de abajo.\n• Diamantes: el registro diario da +1 diamante. Cada juego tiene 1 partida gratis al día (plan mensual: 3, plan anual: ilimitadas); después cada partida cuesta 1 diamante. Ganar da +1 diamante.\n• Jugar con amigos: cada partida cuesta 1 diamante a cada jugador (no usa partidas gratis) y el ganador recibe +1 diamante. Con plan mensual o anual no se pagan diamantes.\n• Rachas: 3 victorias seguidas en un juego dan +2 diamantes, 5 seguidas dan +3.\n• Bonus de fidelidad: tras 30 días seguidos de registro, cada registro siguiente da +2 diamantes (plan mensual: +4).\n• Modos: juega contra la máquina (empiezas tú), con un amigo cerca, o en línea intercambiando un código de sala o QR. Algunos juegos admiten 3-4 jugadores contra la máquina.\n• Niveles de la máquina: 7 niveles de Fácil a Supremo. Al principio solo está abierto Fácil; ganar un nivel desbloquea el siguiente en ese juego. El plan anual desbloquea todos los niveles y elimina los diamantes.\n• Tiempo por jugada (todos los juegos): 1, 2, 3, 5, 10 o 30 minutos, o 1 hora. Contra la máquina depende del nivel (Fácil 1 min ... Supremo 1 h); contra personas el anfitrión elige uno de estos siete. Si se agota, pierde quien debe mover.\n• Tienda: quita anuncios, consigue más partidas gratis o compra diamantes.\n• Cambia el idioma y el apodo en Ajustes.</string>
+    <string name="guide_app">• Inicio: elige la tarjeta destacada (cambia cada 2 minutos) o cualquier juego de las filas de abajo.\n• Diamantes: el registro diario da +1 diamante. Cada juego tiene 1 partida gratis al día (plan mensual: 3, plan anual: ilimitadas); después cada partida cuesta 1 diamante. Ganar a la máquina da diamantes según el nivel: Fácil +0, Medio +1, Bueno +2, Fuerte +3, Maestro +4, Retador +5, Supremo +6 (ganar tu nivel más alto abierto también desbloquea el siguiente). Otras victorias dan +1.\n• Jugar con amigos: cada partida cuesta 1 diamante a cada jugador (no usa partidas gratis) y el ganador recibe +1 diamante. Con plan mensual o anual no se pagan diamantes.\n• Rachas: 3 victorias seguidas en un juego dan +2 diamantes, 5 seguidas dan +3.\n• Bonus de fidelidad: tras 30 días seguidos de registro, cada registro siguiente da +2 diamantes (plan mensual: +4).\n• Modos: juega contra la máquina (empiezas tú), con un amigo cerca, o en línea intercambiando un código de sala o QR. Algunos juegos admiten 3-4 jugadores contra la máquina.\n• Niveles de la máquina: 7 niveles de Fácil a Supremo. Al principio solo está abierto Fácil; ganar un nivel desbloquea el siguiente en ese juego. El plan anual desbloquea todos los niveles y elimina los diamantes.\n• Tiempo por jugada (todos los juegos): 1, 2, 3, 5, 10 o 30 minutos, o 1 hora. Contra la máquina depende del nivel (Fácil 1 min ... Supremo 1 h); contra personas el anfitrión elige uno de estos siete. Si se agota, pierde quien debe mover.\n• Tienda: quita anuncios, consigue más partidas gratis o compra diamantes.\n• Cambia el idioma y el apodo en Ajustes.</string>
     <string name="guide_app_title">Cómo usar Play Mind</string>
-    <string name="guide_blindcaro">Objetivo: como en el Gomoku, consigue 5 fichas propias en línea (horizontal, vertical o diagonal); una línea bloqueada por ambos extremos no cuenta.\n• La diferencia: los dos jugadores comparten un juego de fichas de 4 colores (azul, rojo, morado, amarillo). El tablero solo muestra colores, nunca de quién es cada ficha.\n• El primer jugador (X) elige cualquier color en la paleta inferior en cada turno y toca el tablero.\n• El segundo jugador (O) debe responder con una ficha del mismo color que la que acaba de colocar el primero.\n• Debes recordar dónde están tus fichas (y las del rival). Las marcas X y O solo aparecen al terminar la partida.\n• Consejo: el primer jugador puede cambiar de color para confundir; como segundo jugador, recuerda posiciones, no colores.</string>
+    <string name="guide_blindcaro">Objetivo: como en el Gomoku, consigue 5 fichas propias en línea (horizontal, vertical o diagonal); una línea bloqueada por ambos extremos no cuenta.\n• La diferencia: los dos jugadores comparten un juego de fichas de 4 colores (azul, rojo, morado, amarillo). El tablero solo muestra colores, nunca de quién es cada ficha.\n• El primer jugador (X) elige cualquier color en la paleta inferior en cada turno y toca el tablero.\n• El segundo jugador (O) debe responder con una ficha del mismo color que la que acaba de colocar el primero.\n• Debes recordar dónde están tus fichas (y las del rival). Las marcas X y O solo aparecen al terminar la partida.\n• Consejo: el primer jugador puede cambiar de color para confundir; como segundo jugador, recuerda posiciones, no colores.\n• Ventaja del plan: el botón de la bombilla muestra las X y O reales durante 10 segundos; plan mensual 1 vez, plan anual 3 veces por partida.</string>
     <string name="guide_caro">Objetivo: alinear cinco o más marcas tuyas en horizontal, vertical o diagonal. Empieza X (oscura).\n• El tablero no tiene bordes: arrastra con un dedo para moverte y pellizca para hacer zoom.\n• Si ambos extremos de tu línea están bloqueados por marcas rivales, no cuenta.\n• Toca una casilla vacía para colocar tu marca. ¡Bloquea los tres y cuatro abiertos de tu rival!</string>
     <string name="guide_chess">Objetivo: dar jaque mate al rey rival.\n• Los peones avanzan y capturan en diagonal. Los caballos saltan en L. Los alfiles se deslizan en diagonal, las torres en línea recta, la dama de ambas formas y el rey avanza una casilla.\n• Jugadas especiales: enroque, captura al paso y coronación en la última fila.\n• Toca una pieza y luego una casilla resaltada. Hay tablas por rey ahogado, la regla de los 50 movimientos o material insuficiente.\n• Repetición: quien hace una jugada que repite una posición anterior pierde.</string>
     <string name="guide_go">Objetivo: controlar más tablero que tu rival. Las negras juegan primero.\n• Captura: un grupo de piedras sin puntos vacíos adyacentes (sin libertades) se retira.\n• Prohibido: no puedes jugar si tu grupo queda sin libertades (salvo que captures) ni repetir una posición anterior.\n• Final: cuando tu rival pasa y no queda nada útil, toca Terminar partida para contar los puntos.\n• Puntuación: por área: tus piedras más las zonas vacías que solo tú rodeas. Las blancas reciben 7,5 de komi. Las piedras muertas no se retiran solas: captúralas antes de pasar.\n• Toca una intersección para ver la piedra y pulsa Colocar piedra.</string>
@@ -177,6 +181,7 @@
     <string name="notice_bad_code">Ese código no es válido. Compruébalo e inténtalo de nuevo.</string>
     <string name="notice_conn_failed">No se pudo conectar. Revisa tu red e inténtalo de nuevo.</string>
     <string name="notice_conn_lost">Se perdió la conexión. La partida terminó.</string>
+    <string name="notice_fav_locked">Los favoritos se desbloquean con el plan mensual o anual.</string>
     <string name="notice_host_left">El anfitrión salió de la sala.</string>
     <string name="notice_kicked">El anfitrión te expulsó de la sala.</string>
     <string name="notice_magic_done">Ya has resuelto el cuadrado mágico de hoy. Vuelve mañana para un reto nuevo.</string>
@@ -250,6 +255,10 @@
     <string name="sd_notes">Notas</string>
     <string name="sd_won">¡Resuelto!</string>
     <string name="sd_won_text">Tiempo %1$s · %2$d fallos</string>
+    <string name="search">Buscar</string>
+    <string name="search_hint">Buscar juegos: nombre, tema, etiqueta…</string>
+    <string name="search_none">No se encontraron juegos.</string>
+    <string name="search_results_n">%d resultados</string>
     <string name="searching_rooms">Buscando salas cercanas…</string>
     <string name="see_more">Ver todo</string>
     <string name="see_more_n">Ver más (%d)</string>
@@ -362,6 +371,7 @@
     <string name="wg_hint_pick">Toca una de tus fichas.</string>
     <string name="wg_hint_place">Coloca tu ficha (%1$d de %2$d).</string>
     <string name="wg_hint_wall">Ahora toca el lado donde va el muro.</string>
+    <string name="win_reward_n">Ganar este nivel: +%d diamantes</string>
     <string name="winner_is">¡Gana %s!</string>
     <string name="you">Tú</string>
     <string name="your_invite_code">Tu código de invitación</string>

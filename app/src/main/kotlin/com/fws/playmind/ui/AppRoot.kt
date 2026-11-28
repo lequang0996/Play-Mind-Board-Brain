@@ -91,6 +91,15 @@ fun AppRoot(app: PlayMindApp, vm: SessionViewModel, update: UpdateManager) {
         if (top is Screen.Room) exitSession() else pop()
     }
 
+    // Cho chụp màn hình ở mọi màn, trừ khi đang ở trong một ván (FLAG_SECURE chỉ bật ở màn chơi)
+    val activity = androidx.compose.ui.platform.LocalContext.current as? android.app.Activity
+    val inGame = top is Screen.Play
+    androidx.compose.runtime.DisposableEffect(inGame) {
+        val w = activity?.window
+        if (inGame) w?.addFlags(android.view.WindowManager.LayoutParams.FLAG_SECURE) else w?.clearFlags(android.view.WindowManager.LayoutParams.FLAG_SECURE)
+        onDispose { }
+    }
+
     val walletReady by app.wallet.ready.collectAsState()
     AppFrame {
         if (!walletReady) {
@@ -142,9 +151,10 @@ fun AppRoot(app: PlayMindApp, vm: SessionViewModel, update: UpdateManager) {
             Notice.ROOM_TAKEN -> R.string.notice_room_taken
             Notice.MAGIC_DONE -> R.string.notice_magic_done
             Notice.NO_HINTS -> R.string.notice_no_hints
+            Notice.FAV_LOCKED -> R.string.notice_fav_locked
             Notice.NONE -> R.string.empty
         }
-        if (n == Notice.NOT_ENOUGH) {
+        if (n == Notice.NOT_ENOUGH || n == Notice.FAV_LOCKED) {
             SimpleDialog(
                 stringResource(R.string.notice_title), stringResource(msg),
                 stringResource(R.string.shop), { vm.notice = Notice.NONE; if (stack.last() !is Screen.Shop) push(Screen.Shop) },

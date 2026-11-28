@@ -34,7 +34,7 @@ PLAY YOUR WAY
 DAILY DIAMONDS
 • Check in every day for +1 diamond.
 • Every game gives you one free play per day. After that, each game costs 1 diamond.
-• Win a game for +1 diamond. Win 3 in a row in one game for +2 more, and 5 in a row for +3 more.
+• Beat the computer for diamonds by level (Easy +0, Medium +1, Good +2 ... Supreme +6); other wins give +1. Win 3 in a row in one game for +2 more, and 5 in a row for +3 more.
 • Keep a check-in streak above 7 days with more than 10 diamonds and your daily check-in is worth +2.
 • Diamonds are virtual, cannot be bought and have no cash value.
 
@@ -81,7 +81,7 @@ CHƠI THEO CÁCH CỦA BẠN
 KIM CƯƠNG MỖI NGÀY
 • Điểm danh mỗi ngày để nhận +1 kim cương.
 • Mỗi game có một ván chơi miễn phí mỗi ngày. Sau đó mỗi ván tốn 1 kim cương.
-• Thắng một ván được +1 kim cương. Thắng liên tiếp 3 ván ở một game được thêm +2, thắng liên tiếp 5 ván được thêm +3.
+• Thắng máy được kim cương theo cấp (Dễ +0, Trung bình +1, Khá +2 ... Siêu việt +6); các ván thắng khác +1. Thắng liên tiếp 3 ván ở một game được thêm +2, thắng liên tiếp 5 ván được thêm +3.
 • Duy trì điểm danh liên tục trên 7 ngày và có hơn 10 kim cương thì mỗi lần điểm danh được +2.
 • Kim cương là vật phẩm ảo, không thể mua và không có giá trị quy đổi thành tiền.
 

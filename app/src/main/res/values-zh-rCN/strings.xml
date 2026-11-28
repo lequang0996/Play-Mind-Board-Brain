@@ -10,6 +10,8 @@
     <string name="bc_pick">棋子颜色</string>
     <string name="bc_purple">紫</string>
     <string name="bc_red">红</string>
+    <string name="bc_reveal">查看 X/O</string>
+    <string name="bc_revealing">正在显示真实的 X/O（10 秒）</string>
     <string name="bc_yellow">黄</string>
     <string name="best_value">最超值</string>
     <string name="bill_failed">无法完成购买，请稍后再试。</string>
@@ -42,6 +44,8 @@
     <string name="create_room">创建房间</string>
     <string name="empty">\</string>
     <string name="enter_invite">输入邀请码</string>
+    <string name="favorite">收藏</string>
+    <string name="favorites">收藏</string>
     <string name="free_left_n">今天还剩 %d 次免费游戏</string>
     <string name="free_n">免费 %d</string>
     <string name="free_today">今天有一局免费</string>
@@ -79,9 +83,9 @@
     <string name="go_place">落子</string>
     <string name="go_score">黑 %1$d – 白 %2$d（贴目 %3$s）</string>
     <string name="guide">指南</string>
-    <string name="guide_app">• 首页：选择精选卡片（每 2 分钟更换）或下方任意游戏。\n• 钻石：每日签到 +1 钻石。每个游戏每天可免费玩 1 局（月度会员 3 局，年度会员不限），之后每局消耗 1 钻石。获胜 +1 钻石。\n• 与好友对战：每局每位玩家 -1 钻石（不使用免费次数），获胜者 +1 钻石。月度或年度会员不消耗钻石。\n• 连胜：同一游戏连胜 3 局 +2 钻石，连胜 5 局 +3。\n• 忠诚奖励：连续签到 30 天后，之后每次签到 +2 钻石（月度会员：+4）。\n• 模式：与电脑对战（你先手）、与附近朋友，或通过交换房间码/二维码在线对战。部分游戏还支持与电脑进行 3-4 人对战。\n• 电脑难度：从简单到超凡共 7 级。起初只开放简单；战胜一级即可解锁该游戏的下一级。年度套餐立即解锁全部难度并彻底取消钻石。\n• 每步时间（所有游戏）：1、2、3、5、10、30 分钟或 1 小时。与电脑对战按难度（简单 1 分钟……超凡 1 小时）；与真人对战由房主从这 7 档中选择。超时未走即判负。\n• 商店：去广告、获得更多免费次数或购买钻石。\n• 在设置中更改语言和昵称。</string>
+    <string name="guide_app">• 首页：选择精选卡片（每 2 分钟更换）或下方任意游戏。\n• 钻石：每日签到 +1 钻石。每个游戏每天可免费玩 1 局（月度会员 3 局，年度会员不限），之后每局消耗 1 钻石。战胜电脑按所赢等级获得钻石：简单 +0、普通 +1、良好 +2、优秀 +3、高手 +4、挑战 +5、超凡 +6（战胜已开放的最高等级还会解锁下一级）。其他胜局 +1。\n• 与好友对战：每局每位玩家 -1 钻石（不使用免费次数），获胜者 +1 钻石。月度或年度会员不消耗钻石。\n• 连胜：同一游戏连胜 3 局 +2 钻石，连胜 5 局 +3。\n• 忠诚奖励：连续签到 30 天后，之后每次签到 +2 钻石（月度会员：+4）。\n• 模式：与电脑对战（你先手）、与附近朋友，或通过交换房间码/二维码在线对战。部分游戏还支持与电脑进行 3-4 人对战。\n• 电脑难度：从简单到超凡共 7 级。起初只开放简单；战胜一级即可解锁该游戏的下一级。年度套餐立即解锁全部难度并彻底取消钻石。\n• 每步时间（所有游戏）：1、2、3、5、10、30 分钟或 1 小时。与电脑对战按难度（简单 1 分钟……超凡 1 小时）；与真人对战由房主从这 7 档中选择。超时未走即判负。\n• 商店：去广告、获得更多免费次数或购买钻石。\n• 在设置中更改语言和昵称。</string>
     <string name="guide_app_title">使用说明</string>
-    <string name="guide_blindcaro">目标：与五子棋相同，连成 5 颗自己的棋子（横、竖或斜）；两端都被堵住的不算。\n• 不同之处：双方共用一套 4 色棋子（蓝、红、紫、黄）。棋盘只显示颜色，不显示棋子属于谁。\n• 先手（X）每回合在下方调色板任选一种颜色，再点棋盘落子。\n• 后手（O）必须用与先手刚下的棋子相同颜色的棋子应对。\n• 你必须自己记住己方（和对手）棋子的位置。对局结束后才会显示 X / O。\n• 窍门：先手可以不断换色来迷惑对手；后手请按位置记忆，而不是按颜色。</string>
+    <string name="guide_blindcaro">目标：与五子棋相同，连成 5 颗自己的棋子（横、竖或斜）；两端都被堵住的不算。\n• 不同之处：双方共用一套 4 色棋子（蓝、红、紫、黄）。棋盘只显示颜色，不显示棋子属于谁。\n• 先手（X）每回合在下方调色板任选一种颜色，再点棋盘落子。\n• 后手（O）必须用与先手刚下的棋子相同颜色的棋子应对。\n• 你必须自己记住己方（和对手）棋子的位置。对局结束后才会显示 X / O。\n• 窍门：先手可以不断换色来迷惑对手；后手请按位置记忆，而不是按颜色。\n• 套餐权益：灯泡按钮可显示 X 和 O 的真实位置 10 秒；月度套餐每局 1 次，年度套餐每局 3 次。</string>
     <string name="guide_caro">目标：横、竖或斜向连成五个或更多自己的标记。X（深色）先走。\n• 棋盘没有边界：单指拖动移动，双指捏合缩放。\n• 若连线两端都被对方标记堵住，则不算赢。\n• 点击空格落子。注意堵住对方的活三和四！</string>
     <string name="guide_chess">目标：将死对方的王。\n• 兵向前走一格、斜吃；马走“日”字；象斜走；车直走；后可直走和斜走；王每次走一格。\n• 特殊走法：王车易位、吃过路兵、兵到底线升变。\n• 点选棋子，再点选高亮格子即可走棋。无子可动（逼和）、50 回合规则或子力不足时判和。\n• 重复局面：走出与之前相同局面的一方判负。</string>
     <string name="guide_go">目标：比对手控制更多的棋盘。黑先行。\n• 提子：没有相邻空点（无气）的棋块会被提走。\n• 禁着：不能下让自己的棋块无气的子（提子除外），也不能重复之前出现过的局面。\n• 结束：对手停着且已无有效着法时，点按“结束对局”进行计分。\n• 计分：数子法——你的棋子加上只与你相邻的空地。白棋贴 7.5 目。死子不会自动提走，停着前请先提掉。\n• 点按交叉点预览落子，再按“落子”。</string>
@@ -177,6 +181,7 @@
     <string name="notice_bad_code">该代码无效，请检查后重试。</string>
     <string name="notice_conn_failed">无法连接，请检查网络后重试。</string>
     <string name="notice_conn_lost">连接已断开，对局结束。</string>
+    <string name="notice_fav_locked">收藏功能需开通月度或年度套餐。</string>
     <string name="notice_host_left">房主已离开房间。</string>
     <string name="notice_kicked">房主已将你移出房间。</string>
     <string name="notice_magic_done">你已解完今天的幻方，明天再来挑战新题吧。</string>
@@ -250,6 +255,10 @@
     <string name="sd_notes">笔记</string>
     <string name="sd_won">解开了！</string>
     <string name="sd_won_text">用时 %1$s · 失误 %2$d 次</string>
+    <string name="search">搜索</string>
+    <string name="search_hint">搜索游戏：名称、主题、标签……</string>
+    <string name="search_none">没有找到游戏。</string>
+    <string name="search_results_n">%d 个结果</string>
     <string name="searching_rooms">正在查找附近的房间…</string>
     <string name="see_more">查看全部</string>
     <string name="see_more_n">查看更多（%d）</string>
@@ -362,6 +371,7 @@
     <string name="wg_hint_pick">点按你的一枚棋子。</string>
     <string name="wg_hint_place">放置你的棋子（%1$d / %2$d）。</string>
     <string name="wg_hint_wall">现在点按要放墙的那一边。</string>
+    <string name="win_reward_n">战胜此级：+%d 钻石</string>
     <string name="winner_is">%s 获胜！</string>
     <string name="you">你</string>
     <string name="your_invite_code">你的邀请码</string>

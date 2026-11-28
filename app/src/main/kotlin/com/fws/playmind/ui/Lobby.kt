@@ -195,8 +195,15 @@ fun LobbyScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onBack: 
     val onlineOk = !solo
     @Suppress("UNUSED_VARIABLE") val keepRecomposing = wallet.diamonds
 
+    var fav by remember(info.id) { mutableStateOf(info.id in app.prefs.favorites) }
     Column(Modifier.fillMaxSize()) {
-        TopBar(stringResource(info.name), onBack)
+        TopBar(stringResource(info.name), onBack) {
+            // yêu thích: mở khi có gói tháng / năm
+            PmIconButton(Ic.Heart, stringResource(R.string.favorite), {
+                if (app.wallet.currentPlan() == com.fws.playmind.data.Plan.NONE) vm.notice = com.fws.playmind.match.Notice.FAV_LOCKED
+                else fav = app.prefs.toggleFavorite(info.id)
+            }, tint = if (fav) androidx.compose.ui.graphics.Color(0xFFE5483D) else pm.inkSoft)
+        }
         Column(Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(horizontal = 18.dp, vertical = 6.dp), verticalArrangement = Arrangement.spacedBy(18.dp)) {
             // ── Thẻ giới thiệu game ──
             val heroShape = RoundedCornerShape(28.dp)
@@ -245,6 +252,7 @@ fun LobbyScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onBack: 
                 if (!solo) {
                     SectionTitle(stringResource(R.string.bot_level))
                     LevelPicker(vm.botLevel, app.prefs.unlockedLevel(info.id)) { vm.selectLevel(it) }
+                    if (!app.wallet.noDiamonds()) Text(stringResource(R.string.win_reward_n, vm.botLevel), style = MaterialTheme.typography.bodySmall, color = pm.gold)
                 } else if (info.id == Catalog.TANGRAM_ID) {
                     // Xếp hình 7 mảnh: 7 cấp theo số mảnh (Dễ 4 mảnh ... Siêu việt 10 mảnh), xong cấp nào mở cấp kế tiếp
                     SectionTitle(stringResource(R.string.tg_level))
