@@ -411,3 +411,4 @@ hl_won|+%d
 hl_failed|未提交算式
 hl_continue|继续
 reason_chips|只剩一位玩家有筹码
+reason_stall|僵局规则：10 回合无吃子

@@ -269,6 +269,7 @@
     <string name="reason_repetition">이전 국면 반복: 반복한 쪽 패배</string>
     <string name="reason_resign">플레이어가 기권했습니다</string>
     <string name="reason_stalemate">스테일메이트: 무승부</string>
+    <string name="reason_stall">교착 규칙: 10턴 동안 잡기 없음</string>
     <string name="reason_territory">영역으로 승부가 갈렸습니다.</string>
     <string name="reason_timeout">수 제한 시간 초과</string>
     <string name="reply_hint">응답 코드를 방장에게 보내세요. 방장이 입력하면 연결됩니다.</string>

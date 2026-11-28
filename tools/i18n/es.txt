@@ -411,3 +411,4 @@ hl_won|+%d
 hl_failed|No envió expresión
 hl_continue|Continuar
 reason_chips|Solo un jugador conserva fichas
+reason_stall|Regla de bloqueo: 10 turnos sin capturas

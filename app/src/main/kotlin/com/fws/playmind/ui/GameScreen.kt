@@ -287,6 +287,7 @@ private fun reasonText(info: GameInfo, r: EndReason): String = stringResource(wh
     EndReason.TERRITORY -> R.string.reason_territory
     EndReason.MOVE_LIMIT -> R.string.reason_move_limit
     EndReason.CHIPS -> R.string.reason_chips
+    EndReason.STALL -> R.string.reason_stall
     EndReason.NONE -> if (info.id == "quoridor") R.string.reason_goal else R.string.empty
 })
 

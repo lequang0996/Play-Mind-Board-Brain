@@ -269,6 +269,7 @@
     <string name="reason_repetition">Posição repetida: perde quem repetiu</string>
     <string name="reason_resign">Um jogador desistiu</string>
     <string name="reason_stalemate">Afogamento: empate</string>
+    <string name="reason_stall">Regra de impasse: 10 turnos sem captura</string>
     <string name="reason_territory">O território decidiu a partida.</string>
     <string name="reason_timeout">O tempo para jogar acabou</string>
     <string name="reply_hint">Envie seu código de resposta ao anfitrião. A partida conecta quando ele o inserir.</string>

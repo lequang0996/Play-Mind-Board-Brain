@@ -411,3 +411,4 @@ hl_won|+%d
 hl_failed|식 미제출
 hl_continue|계속
 reason_chips|칩이 남은 사람이 한 명뿐
+reason_stall|교착 규칙: 10턴 동안 잡기 없음

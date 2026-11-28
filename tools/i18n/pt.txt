@@ -411,3 +411,4 @@ hl_won|+%d
 hl_failed|Não enviou expressão
 hl_continue|Continuar
 reason_chips|Só um jogador ainda tem fichas
+reason_stall|Regra de impasse: 10 turnos sem captura

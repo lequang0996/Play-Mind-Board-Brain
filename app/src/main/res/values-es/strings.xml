@@ -269,6 +269,7 @@
     <string name="reason_repetition">Posición repetida: pierde quien la repitió</string>
     <string name="reason_resign">Un jugador se rindió</string>
     <string name="reason_stalemate">Rey ahogado: tablas</string>
+    <string name="reason_stall">Regla de bloqueo: 10 turnos sin capturas</string>
     <string name="reason_territory">El territorio decidió la partida.</string>
     <string name="reason_timeout">Se agotó el tiempo para mover</string>
     <string name="reply_hint">Envía tu código de respuesta al anfitrión. La partida se conecta cuando lo introduzca.</string>

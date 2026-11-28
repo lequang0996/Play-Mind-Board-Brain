@@ -411,3 +411,4 @@ hl_won|+%d
 hl_failed|式が未提出
 hl_continue|続ける
 reason_chips|チップが残っているのは 1 人だけ
+reason_stall|膠着ルール：10 手番取りなし

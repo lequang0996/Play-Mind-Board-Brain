@@ -269,6 +269,7 @@
     <string name="reason_repetition">Lặp lại thế cờ đã có: bên lặp bị xử thua</string>
     <string name="reason_resign">Một người chơi đã đầu hàng</string>
     <string name="reason_stalemate">Hòa cờ (hết nước đi)</string>
+    <string name="reason_stall">Hết 10 lượt bế tắc</string>
     <string name="reason_territory">Lãnh thổ quyết định ván đấu.</string>
     <string name="reason_timeout">Hết thời gian đi nước</string>
     <string name="reply_hint">Gửi mã trả lời của bạn cho chủ phòng. Ván sẽ kết nối khi họ nhập mã.</string>

@@ -411,3 +411,4 @@ hl_won|+%d
 hl_failed|No expression submitted
 hl_continue|Continue
 reason_chips|Only one player has chips left
+reason_stall|Stalemate rule: 10 turns without a capture

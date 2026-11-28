@@ -269,6 +269,7 @@
     <string name="reason_repetition">以前の局面を繰り返したため、その側の負け</string>
     <string name="reason_resign">プレイヤーが投了しました</string>
     <string name="reason_stalemate">ステイルメイト：引き分け</string>
+    <string name="reason_stall">膠着ルール：10 手番取りなし</string>
     <string name="reason_territory">領地で勝敗が決まりました。</string>
     <string name="reason_timeout">持ち時間切れ</string>
     <string name="reply_hint">返信コードをホストに送ってください。入力されると接続されます。</string>

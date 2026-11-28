@@ -411,3 +411,4 @@ hl_won|+%d
 hl_failed|Không nộp biểu thức
 hl_continue|Tiếp tục
 reason_chips|Chỉ còn một người có chip
+reason_stall|Hết 10 lượt bế tắc

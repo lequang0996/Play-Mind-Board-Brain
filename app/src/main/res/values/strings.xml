@@ -270,6 +270,7 @@
     <string name="reason_repetition">Repeated an earlier position: that player loses</string>
     <string name="reason_resign">A player resigned</string>
     <string name="reason_stalemate">Stalemate: draw</string>
+    <string name="reason_stall">Stalemate rule: 10 turns without a capture</string>
     <string name="reason_territory">Territory decided the game.</string>
     <string name="reason_timeout">Time ran out for a move</string>
     <string name="reply_hint">Send your reply code to the host. The game connects once they enter it.</string>

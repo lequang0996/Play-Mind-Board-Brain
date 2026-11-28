@@ -269,6 +269,7 @@
     <string name="reason_repetition">重复之前的局面：该方判负</string>
     <string name="reason_resign">有玩家认输</string>
     <string name="reason_stalemate">逼和</string>
+    <string name="reason_stall">僵局规则：10 回合无吃子</string>
     <string name="reason_territory">由领地决定胜负。</string>
     <string name="reason_timeout">走棋超时</string>
     <string name="reply_hint">把你的回复码发给房主，对方输入后即可连接。</string>

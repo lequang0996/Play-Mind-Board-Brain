@@ -269,6 +269,7 @@
     <string name="reason_repetition">Повторение позиции: повторивший проигрывает</string>
     <string name="reason_resign">Игрок сдался</string>
     <string name="reason_stalemate">Пат: ничья</string>
+    <string name="reason_stall">Правило застоя: 10 ходов без взятий</string>
     <string name="reason_territory">Результат решила территория.</string>
     <string name="reason_timeout">Время на ход истекло</string>
     <string name="reply_hint">Отправьте код ответа хозяину комнаты. Соединение установится, когда он его введёт.</string>
