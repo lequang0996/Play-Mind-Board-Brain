@@ -97,42 +97,51 @@ fun HexagonScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onExit
         TopBar(stringResource(info.name), { if (over) onExit() else confirmLeave = true })
         Column(Modifier.weight(1f).padding(horizontal = 16.dp, vertical = 6.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             // điểm hai bên và vòng
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 ScorePill(you, m.scores[0], m.caller == 0, Modifier.weight(1f))
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(
-                        if (m.round > Hexagon.ROUNDS) stringResource(R.string.hx_extra) else stringResource(R.string.hx_round, m.round, Hexagon.ROUNDS),
-                        style = MaterialTheme.typography.labelLarge, color = pm.ink,
-                    )
-                }
+                Text(
+                    if (m.round > Hexagon.ROUNDS) stringResource(R.string.hx_extra) else stringResource(R.string.hx_round, m.round, Hexagon.ROUNDS),
+                    Modifier.clip(RoundedCornerShape(50)).background(HexPurple).padding(horizontal = 10.dp, vertical = 5.dp),
+                    style = MaterialTheme.typography.labelMedium, color = Color.White, maxLines = 1,
+                )
                 ScorePill(botName, m.scores[1], m.caller == 1, Modifier.weight(1f))
             }
-            // mục tiêu + đồng hồ
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                val shape = RoundedCornerShape(14.dp)
-                Column(Modifier.clip(shape).background(Color(0xFFFFF0B3)).border(1.dp, Color(0x33000000), shape), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(stringResource(R.string.hx_target), Modifier.fillMaxWidth().background(HexPurple).padding(vertical = 3.dp), color = Color.White, style = MaterialTheme.typography.labelSmall, textAlign = TextAlign.Center)
-                    Text(if (m.phase == HexPhase.MEMO) "?" else "${m.target}", Modifier.padding(horizontal = 18.dp, vertical = 2.dp), fontSize = 32.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Serif, color = HexDark)
+            // thẻ trạng thái: đồng hồ vòng tròn, lời nhắc, số mục tiêu (bề ngang cố định để không chèn ép nhau)
+            val (label, left, total) = when (m.phase) {
+                HexPhase.MEMO -> Triple(stringResource(R.string.hx_memorize), m.phaseEnds - m.now, Hexagon.MEMO_MS)
+                HexPhase.FIND -> Triple(stringResource(R.string.hx_find), m.idleEnds - m.now, Hexagon.IDLE_MS)
+                HexPhase.CALL -> Triple(if (m.caller == 0) stringResource(R.string.hx_call) else stringResource(R.string.hx_bot_buzzed, botName), m.phaseEnds - m.now, Hexagon.CALL_MS)
+                HexPhase.REVEAL -> Triple(stringResource(R.string.hx_reveal), m.phaseEnds - m.now, Hexagon.REVEAL_MS)
+                HexPhase.OVER -> Triple("", 0L, 1L)
+            }
+            val frac = (left.coerceAtLeast(0).toFloat() / total).coerceIn(0f, 1f)
+            val secs = (left.coerceAtLeast(0) + 999) / 1000
+            val urgent = m.phase == HexPhase.CALL || (m.phase != HexPhase.REVEAL && secs <= 10)
+            val cardShape = RoundedCornerShape(18.dp)
+            Row(
+                Modifier.fillMaxWidth().lift(cardShape, 6.dp).clip(cardShape).background(cardBrush()).border(1.dp, hairline(), cardShape).padding(10.dp),
+                verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                Box(Modifier.size(64.dp), contentAlignment = Alignment.Center) {
+                    val ringBg = pm.outline
+                    val ringFg = if (urgent) pm.danger else pm.goldBright
+                    Canvas(Modifier.fillMaxSize()) {
+                        val st = size.minDimension * .1f
+                        drawArc(ringBg, 0f, 360f, false, topLeft = Offset(st / 2, st / 2), size = androidx.compose.ui.geometry.Size(size.width - st, size.height - st), style = Stroke(st))
+                        drawArc(ringFg, -90f, 360f * frac, false, topLeft = Offset(st / 2, st / 2), size = androidx.compose.ui.geometry.Size(size.width - st, size.height - st), style = Stroke(st, cap = androidx.compose.ui.graphics.StrokeCap.Round))
+                    }
+                    Text("$secs", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold, color = if (urgent) pm.danger else pm.ink)
                 }
-                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                    val (label, left, total) = when (m.phase) {
-                        HexPhase.MEMO -> Triple(stringResource(R.string.hx_memorize), m.phaseEnds - m.now, Hexagon.MEMO_MS)
-                        HexPhase.FIND -> Triple(stringResource(R.string.hx_find), m.idleEnds - m.now, Hexagon.IDLE_MS)
-                        HexPhase.CALL -> Triple(if (m.caller == 0) stringResource(R.string.hx_call) else stringResource(R.string.hx_bot_buzzed, botName), m.phaseEnds - m.now, Hexagon.CALL_MS)
-                        HexPhase.REVEAL -> Triple(stringResource(R.string.hx_reveal), m.phaseEnds - m.now, Hexagon.REVEAL_MS)
-                        HexPhase.OVER -> Triple("", 0L, 1L)
-                    }
-                    Text(label, style = MaterialTheme.typography.labelLarge, color = pm.ink)
-                    Box(Modifier.fillMaxWidth().height(8.dp).clip(RoundedCornerShape(50)).background(pm.outline)) {
-                        Box(Modifier.fillMaxWidth((left.coerceAtLeast(0).toFloat() / total).coerceIn(0f, 1f)).height(8.dp).background(goldBrush()))
-                    }
-                    Text("${(left.coerceAtLeast(0) + 999) / 1000}s", style = MaterialTheme.typography.labelSmall, color = pm.inkSoft)
+                Text(label, Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold, color = pm.ink, maxLines = 3)
+                Column(Modifier.width(84.dp).clip(RoundedCornerShape(12.dp)).background(Color(0xFFFFF0B3)), horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(stringResource(R.string.hx_target), Modifier.fillMaxWidth().background(HexPurple).padding(vertical = 3.dp), color = Color.White, style = MaterialTheme.typography.labelSmall, textAlign = TextAlign.Center, maxLines = 1)
+                    Text(if (m.phase == HexPhase.MEMO) "?" else "${m.target}", Modifier.padding(vertical = 2.dp), fontSize = 34.sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Serif, color = HexDark)
                 }
             }
-            // bàn lục giác
-            BoxWithConstraints(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
+            // bàn lục giác: khóa chạm theo trận (không theo nhịp đồng hồ, nếu không cử chỉ bị hủy mỗi 100 ms)
+            Box(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
                 Canvas(
-                    Modifier.fillMaxSize().pointerInput(t, m.phase, m.caller) {
+                    Modifier.fillMaxSize().pointerInput(m) {
                         detectTapGestures { off ->
                             if (m.phase != HexPhase.CALL || m.caller != 0) return@detectTapGestures
                             val (pts, r) = hexLayout(size.width.toFloat(), size.height.toFloat())
@@ -145,39 +154,49 @@ fun HexagonScreen(app: PlayMindApp, vm: SessionViewModel, info: GameInfo, onExit
                     val (pts, r) = hexLayout(size.width, size.height)
                     val showNums = m.phase == HexPhase.MEMO || m.phase == HexPhase.REVEAL || m.phase == HexPhase.OVER
                     val reveal = if (m.phase == HexPhase.REVEAL || m.phase == HexPhase.OVER) m.solutions.fold(0) { a, b -> a or b } else 0
+                    val myCall = m.phase == HexPhase.CALL && m.caller == 0
                     for (i in 0 until Hexagon.CELLS) {
                         val picked = i in m.picks
                         val inSol = reveal and (1 shl i) != 0
-                        val fill = when { picked -> Color(0xFFFFD54F); showNums -> if (inSol && m.phase != HexPhase.MEMO) Color(0xFFDFF5E1) else HexPaper; else -> HexDark }
-                        val path = hexPath(pts[i], r * .95f)
+                        val fill = when { picked -> Color(0xFFFFD54F); showNums -> if (inSol && m.phase != HexPhase.MEMO) Color(0xFFBFE8C4) else HexPaper; myCall -> Color(0xFF2A2540); else -> HexDark }
+                        val path = hexPath(pts[i], r * .94f)
+                        drawPath(path, Color.Black.copy(alpha = .18f), style = Stroke(r * .12f))
                         drawPath(path, fill)
-                        drawPath(path, Color.Black.copy(alpha = .25f), style = Stroke(r * .04f))
+                        drawPath(path, if (myCall && !picked) Color(0xFFFFD54F).copy(alpha = .6f) else Color.Black.copy(alpha = .25f), style = Stroke(r * .05f))
                         val txt = if (showNums) "${m.values[i]}" else Hexagon.letter(i)
-                        val col = if (picked) HexDark else if (showNums) HexDark else Color.White
-                        val lay = tm.measure(txt, TextStyle(fontSize = (r * .8f / density).sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Serif, color = col))
+                        val col = if (picked || showNums) HexDark else Color.White
+                        val lay = tm.measure(txt, TextStyle(fontSize = (r * .78f / density).sp, fontWeight = FontWeight.Bold, fontFamily = FontFamily.Serif, color = col))
                         drawText(lay, topLeft = Offset(pts[i].x - lay.size.width / 2f, pts[i].y - lay.size.height / 2f))
                     }
                 }
             }
-            // phản hồi lần trả lời gần nhất
-            if (m.answers > 0 && m.lastSeat >= 0) {
-                val who = if (m.lastSeat == 0) you else botName
-                val letters = Hexagon.cellsOf(m.lastMask).joinToString("-") { Hexagon.letter(it) }
-                Text(
-                    "$who: ${letters.ifEmpty { "—" }}  " + if (m.lastOk) stringResource(R.string.hx_correct) else stringResource(R.string.hx_wrong),
-                    Modifier.fillMaxWidth(), style = MaterialTheme.typography.labelLarge, color = if (m.lastOk) pm.good else pm.danger, textAlign = TextAlign.Center,
-                )
+            // phản hồi lần trả lời gần nhất (giữ chỗ cố định để bàn không nhảy)
+            Box(Modifier.fillMaxWidth().height(24.dp), contentAlignment = Alignment.Center) {
+                if (m.answers > 0 && m.lastSeat >= 0) {
+                    val who = if (m.lastSeat == 0) you else botName
+                    val letters = Hexagon.cellsOf(m.lastMask).joinToString("-") { Hexagon.letter(it) }
+                    Text(
+                        "$who: ${letters.ifEmpty { "—" }}  " + if (m.lastOk) stringResource(R.string.hx_correct) else stringResource(R.string.hx_wrong),
+                        style = MaterialTheme.typography.labelLarge, color = if (m.lastOk) pm.good else pm.danger, textAlign = TextAlign.Center,
+                    )
+                }
             }
-            // chuông
+            // chuông (khi mình đang trả lời: hiện số ô đã chọn)
             val canBuzz = m.phase == HexPhase.FIND && !over
             val shape = CircleShape
             Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                 Box(
-                    Modifier.size(84.dp).lift(shape, 8.dp).clip(shape)
-                        .background(if (canBuzz) Brush.radialGradient(listOf(Color(0xFFFF6B6B), Color(0xFFC62828))) else Brush.radialGradient(listOf(pm.outline, pm.outlineDeep)))
+                    Modifier.size(92.dp).lift(shape, 10.dp).clip(shape)
+                        .background(if (canBuzz) Brush.radialGradient(listOf(Color(0xFFFF7A7A), Color(0xFFC62828))) else Brush.radialGradient(listOf(Color(0xFFB9B4C7), Color(0xFF8E88A3))))
+                        .border(3.dp, Color.White.copy(alpha = .7f), shape)
                         .clickable(enabled = canBuzz) { vm.hexBuzz() },
                     contentAlignment = Alignment.Center,
-                ) { Text(stringResource(R.string.hx_buzz), color = Color.White, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium) }
+                ) {
+                    Text(
+                        if (m.phase == HexPhase.CALL && m.caller == 0) "${m.picks.size}/3" else stringResource(R.string.hx_buzz),
+                        color = Color.White, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleLarge,
+                    )
+                }
             }
             Spacer(Modifier.height(4.dp))
         }

@@ -67,7 +67,7 @@ import kotlin.random.Random
 // ─────────────────────────── màu thẻ ───────────────────────────
 
 /** Màu chữ số theo chất: vàng > bạc > đồng > đen. */
-private val SuitColors = listOf(Color(0xFFC8971E), Color(0xFF8E99A6), Color(0xFFB4683A), Color(0xFF2C2A33))
+private val SuitColors = listOf(Color(0xFFB8860B), Color(0xFF6E7B88), Color(0xFFA8572B), Color(0xFF1F1D26))
 private val OpRed = Color(0xFFC0303A)
 private val FeltTop = Color(0xFF2E2550)
 private val FeltBottom = Color(0xFF1C1736)
@@ -111,7 +111,7 @@ private fun HlCard(
     m = m.border(if (selected) 2.dp else 1.dp, if (selected) pm.goldBright else Color(0x22000000), shape)
     if (onClick != null) m = m.clickable(onClick = onClick)
     Box(m, contentAlignment = Alignment.Center) {
-        val fs = (w.value * .5f).sp
+        val fs = (w.value * .62f).sp
         when {
             faceDown -> {
                 Box(Modifier.size(w * .62f, h * .7f).border(1.dp, Color.White.copy(alpha = .35f), RoundedCornerShape(w * .1f)), contentAlignment = Alignment.Center) {
@@ -150,15 +150,16 @@ private fun ChipDot(size: Dp) {
 
 // ─────────────────────────── bàn chơi (kiểu bàn poker) ───────────────────────────
 
-private val FeltA = Color(0xFF1E8C86)
-private val FeltB = Color(0xFF0F5E5A)
-private val Rail = Color(0xFF6B4A2E)
+private val FeltA = Color(0xFF23978F)
+private val FeltB = Color(0xFF0E5753)
+private val Rail = Color(0xFF5A3B22)
+private val RailHi = Color(0xFF8A5E3A)
 
 /**
- * Bàn bài hình bầu dục như bàn poker: đối thủ ngồi quanh mép trên và hai bên, mình ngồi dưới cùng.
- * Mỗi ghế thấy được thẻ phép toán, thẻ úp (mặt sau) và mọi thẻ ngửa; chip đã cược ở vòng này đặt trước ghế; pot ở giữa.
- * Mọi composable con đều nhận và đọc [SessionViewModel.tick] để vẽ lại sau mỗi nước (đối tượng game không đổi tham chiếu,
- * nếu không Compose bỏ qua vẽ lại và bàn đứng yên).
+ * Bàn bài hình bầu dục như bàn poker. Đối thủ ngồi quanh mép bàn (trái, trên, phải); bài của mình nằm ở khung lớn bên dưới.
+ * Mỗi ghế: huy hiệu màu có chữ cái đầu, tên, chip, rồi các thẻ to dễ đọc (thẻ úp mặt sau + thẻ ngửa), phép toán ghi gọn
+ * dạng chữ đỏ. Chip đã cược ở vòng này đặt trước ghế; pot ở giữa bàn.
+ * Mọi composable con đều nhận và đọc [SessionViewModel.tick] để vẽ lại sau mỗi nước (đối tượng game không đổi tham chiếu).
  */
 @Composable
 fun HiLoBoardView(vm: SessionViewModel, info: GameInfo) {
@@ -177,7 +178,7 @@ fun HiLoBoardView(vm: SessionViewModel, info: GameInfo) {
 
     Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Table(vm, info, g, me, tick, Modifier.weight(1f).fillMaxWidth())
-        MyHand(g, me, tick)
+        MyHand(vm, info, g, me, tick)
         if (!over) ActionPanel(vm, info, g, me, act, tick)
     }
     if (sd != null && sd.hand != seenHand && sd.hand > 0) ShowdownDialog(vm, info, g, sd) { seenHand = sd.hand }
@@ -188,54 +189,51 @@ private fun Table(vm: SessionViewModel, info: GameInfo, g: HiLoGame, me: Int, ti
     @Suppress("UNUSED_EXPRESSION") tick
     BoxWithConstraints(modifier) {
         val w = maxWidth; val h = maxHeight
-        // mặt bàn: viền gỗ, nỉ xanh
         Canvas(Modifier.fillMaxSize()) {
             val r = size.minDimension * .5f
-            drawRoundRect(Rail, Offset.Zero, size, CornerRadius(r, r))
-            val inset = size.minDimension * .035f
+            drawRoundRect(Brush.verticalGradient(listOf(RailHi, Rail)), Offset.Zero, size, CornerRadius(r, r))
+            val inset = size.minDimension * .04f
             drawRoundRect(
-                Brush.radialGradient(listOf(FeltA, FeltB), center = Offset(size.width / 2, size.height / 2), radius = size.maxDimension * .6f),
+                Brush.radialGradient(listOf(FeltA, FeltB), center = Offset(size.width / 2, size.height / 2), radius = size.maxDimension * .62f),
                 Offset(inset, inset), Size(size.width - 2 * inset, size.height - 2 * inset), CornerRadius(r - inset, r - inset),
             )
-            drawRoundRect(
-                Color.White.copy(alpha = .12f), Offset(inset * 2.2f, inset * 2.2f), Size(size.width - 4.4f * inset, size.height - 4.4f * inset),
-                CornerRadius(r - inset * 2.2f, r - inset * 2.2f), style = Stroke(size.minDimension * .006f),
-            )
+            val i2 = inset * 2.6f
+            drawRoundRect(Color.White.copy(alpha = .10f), Offset(i2, i2), Size(size.width - 2 * i2, size.height - 2 * i2), CornerRadius(r - i2, r - i2), style = Stroke(size.minDimension * .005f))
         }
         // giữa bàn: pot, ván bài, vòng cược, đồng hồ
-        Column(Modifier.align(Alignment.Center), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(4.dp)) {
+        Column(Modifier.align(Alignment.Center), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(5.dp)) {
             Row(
-                Modifier.clip(RoundedCornerShape(50)).background(Color.Black.copy(alpha = .35f)).padding(horizontal = 14.dp, vertical = 6.dp),
-                verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp),
+                Modifier.clip(RoundedCornerShape(50)).background(Color.Black.copy(alpha = .35f)).border(1.dp, Color.White.copy(alpha = .2f), RoundedCornerShape(50))
+                    .padding(horizontal = 16.dp, vertical = 7.dp),
+                verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                ChipDot(18.dp)
-                Text(stringResource(R.string.hl_pot, g.pot), color = Color.White, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                ChipDot(22.dp)
+                Text("${g.pot}", color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Bold)
             }
-            Text(stringResource(R.string.hl_hand, g.hand.coerceAtLeast(1), HiLoGame.ante(g.hand.coerceAtLeast(1))), color = Color.White.copy(alpha = .85f), style = MaterialTheme.typography.labelSmall)
-            if (g.phase == HiLoPhase.BET) Text(stringResource(R.string.hl_bet_round, g.betRound), color = Color(0xFFFFE08A), style = MaterialTheme.typography.labelSmall)
+            Text(stringResource(R.string.hl_hand, g.hand.coerceAtLeast(1), HiLoGame.ante(g.hand.coerceAtLeast(1))), color = Color.White.copy(alpha = .9f), style = MaterialTheme.typography.labelMedium)
+            if (g.phase == HiLoPhase.BET) Text(stringResource(R.string.hl_bet_round, g.betRound), color = Color(0xFFFFE08A), style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
             if (g.phase != HiLoPhase.OVER && vm.moveSeconds > 0) TurnClock(vm.turnSecondsLeft)
         }
-        // ghế: mình ở dưới cùng, đối thủ trải từ trái lên trên rồi xuống phải
-        val n = g.players
-        val seatW = 104.dp; val seatH = 88.dp
+        // đối thủ quanh bàn: trải từ dưới-trái, lên trên, xuống dưới-phải
+        val others = (1 until g.players).map { (me + it) % g.players }
+        val n = others.size
+        val seatW = 112.dp; val seatH = 104.dp
         val rx = (w - seatW) / 2; val ry = (h - seatH) / 2
-        for (k in 0 until n) {
-            val p = (me + k) % n
-            val deg = if (k == 0) 90.0 else if (n == 2) 270.0 else 150.0 + (k - 1) * (240.0 / (n - 2))
+        for ((k, p) in others.withIndex()) {
+            val deg = if (n == 1) 270.0 else 155.0 + k * (230.0 / (n - 1))
             val rad = Math.toRadians(deg)
             val cs = kotlin.math.cos(rad).toFloat(); val sn = kotlin.math.sin(rad).toFloat()
             val cx = w / 2 + rx * cs; val cy = h / 2 + ry * sn
-            Seat(vm, info, g, p, p == me, tick, Modifier.offset(cx - seatW / 2, cy - seatH / 2).width(seatW))
-            // chip đã cược ở vòng này, đặt trước ghế (về phía giữa bàn)
+            Seat(vm, info, g, p, tick, Modifier.offset(cx - seatW / 2, cy - seatH / 2).width(seatW))
             val bet = if (g.phase == HiLoPhase.BET) g.roundBet[p] else 0
             if (bet > 0) {
-                val bx = w / 2 + rx * .5f * cs; val by = h / 2 + ry * .45f * sn
+                val bx = w / 2 + rx * .48f * cs; val by = h / 2 + ry * .42f * sn
                 Row(
-                    Modifier.offset(bx - 20.dp, by - 10.dp).clip(RoundedCornerShape(50)).background(Color.Black.copy(alpha = .3f)).padding(horizontal = 6.dp, vertical = 2.dp),
-                    verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(3.dp),
+                    Modifier.offset(bx - 22.dp, by - 12.dp).clip(RoundedCornerShape(50)).background(Color.Black.copy(alpha = .35f)).padding(horizontal = 7.dp, vertical = 3.dp),
+                    verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
-                    ChipDot(12.dp)
-                    Text("$bet", color = Color.White, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
+                    ChipDot(14.dp)
+                    Text("$bet", color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -250,66 +248,92 @@ private fun statusText(g: HiLoGame, p: Int): String? = when {
     else -> null
 }
 
-/** Một ghế: tên, chip, trạng thái, thẻ phép toán, thẻ úp (của mình thì thấy mặt số) và thẻ ngửa. */
+/** Phép toán của một người, ghi gọn: "+ − ÷ ×" và "√" nếu có. */
+private fun opsLine(g: HiLoGame, p: Int): String =
+    (g.ops[p].map { opSymbol(it) } + List(g.sqrtN[p]) { "√" }).joinToString(" ")
+
+/** Huy hiệu người chơi: tròn màu ghế, chữ cái đầu tên; người chia bài có dấu D. */
 @Composable
-private fun Seat(vm: SessionViewModel, info: GameInfo, g: HiLoGame, p: Int, mine: Boolean, tick: Int, modifier: Modifier) {
+private fun Avatar(name: String, p: Int, dealer: Boolean, size: androidx.compose.ui.unit.Dp) {
+    Box(Modifier.size(size)) {
+        Box(
+            Modifier.size(size).clip(CircleShape).background(Brush.radialGradient(listOf(playerColor(p).copy(alpha = .85f), playerColor(p))))
+                .border(2.dp, Color.White.copy(alpha = .85f), CircleShape),
+            contentAlignment = Alignment.Center,
+        ) { Text(name.take(1).uppercase(), color = Color.White, fontSize = (size.value * .45f).sp, fontWeight = FontWeight.Bold) }
+        if (dealer) Box(
+            Modifier.align(Alignment.BottomEnd).size(size * .45f).clip(CircleShape).background(Color.White).border(1.dp, Color(0x55000000), CircleShape),
+            contentAlignment = Alignment.Center,
+        ) { Text("D", color = Color(0xFF15131C), fontSize = (size.value * .25f).sp, fontWeight = FontWeight.Bold) }
+    }
+}
+
+@Composable
+private fun Seat(vm: SessionViewModel, info: GameInfo, g: HiLoGame, p: Int, tick: Int, modifier: Modifier) {
     @Suppress("UNUSED_EXPRESSION") tick
     val turn = g.turn == p && g.phase != HiLoPhase.OVER
-    val shape = RoundedCornerShape(12.dp)
+    val shape = RoundedCornerShape(14.dp)
     val faded = g.out[p] || (g.inHand[p] && g.folded[p])
+    val name = seatName(vm, info, p)
     Column(
-        modifier.alpha(if (faded) .45f else 1f).clip(shape).background(Color.Black.copy(alpha = if (turn) .5f else .3f))
-            .border(if (turn) 2.dp else 1.dp, if (turn) Color(0xFFFFD54F) else Color.White.copy(alpha = .18f), shape).padding(5.dp),
-        verticalArrangement = Arrangement.spacedBy(3.dp),
+        modifier.alpha(if (faded) .45f else 1f).clip(shape).background(Color(0xE6141220))
+            .border(if (turn) 2.5.dp else 1.dp, if (turn) Color(0xFFFFD54F) else Color.White.copy(alpha = .15f), shape).padding(6.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-            Box(Modifier.size(16.dp).clip(CircleShape).background(playerColor(p)), contentAlignment = Alignment.Center) {
-                if (g.dealer == p) Text("D", color = Color.White, fontSize = 9.sp, fontWeight = FontWeight.Bold)
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            Avatar(name, p, g.dealer == p, 28.dp)
+            Column(Modifier.weight(1f)) {
+                Text(name, color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(3.dp)) {
+                    ChipDot(11.dp)
+                    Text("${g.chips[p]}", color = Color(0xFFFFE08A), fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                }
             }
-            Text(seatName(vm, info, p), Modifier.weight(1f), color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.SemiBold, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(3.dp)) {
-            ChipDot(10.dp)
-            Text("${g.chips[p]}", color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.Bold)
-            Spacer(Modifier.weight(1f))
-            val st = statusText(g, p)
-            if (st != null) Text(st, color = Color(0xFFFFB4A8), fontSize = 9.sp, maxLines = 1)
-            else if (g.side[p] >= 0 && g.phase == HiLoPhase.BUILD) Text("✓", color = Color(0xFF8CF0B0), fontSize = 10.sp)
-        }
+        val st = statusText(g, p)
+        if (st != null) Text(st, color = Color(0xFFFFB4A8), fontSize = 11.sp, fontWeight = FontWeight.SemiBold, maxLines = 1)
         if (g.inHand[p] && g.nums[p].isNotEmpty()) {
-            Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
-                for (o in g.ops[p]) HlCard(0, 13.dp, op = o)
-                for (c in g.openCards[p]) if (c >= HiLoGame.SQRT_CARD) HlCard(c, 13.dp, sqrt = true)
+            Row(horizontalArrangement = Arrangement.spacedBy(3.dp)) {
+                HlCard(0, 23.dp, faceDown = true)
+                for (c in g.openCards[p]) if (HiLoGame.isNumber(c)) HlCard(c, 23.dp)
             }
-            Row(horizontalArrangement = Arrangement.spacedBy(2.dp)) {
-                if (mine) HlCard(g.nums[p][0], 19.dp) else HlCard(0, 19.dp, faceDown = true)
-                for (c in g.openCards[p]) if (HiLoGame.isNumber(c)) HlCard(c, 19.dp)
-            }
+            Text(opsLine(g, p), color = Color(0xFFFF8A8A), fontSize = 13.sp, fontWeight = FontWeight.Bold, maxLines = 1)
         }
     }
 }
 
-/** Bài của mình, thẻ to: phép toán, thẻ úp (viền tím) và thẻ ngửa. Ẩn khi đang ghép biểu thức (bảng ghép đã có đủ thẻ). */
+/** Bài của mình, thẻ to: tên + chip, thẻ úp (viền tím, thấy mặt số), thẻ ngửa, phép toán. Ẩn khi đang ghép biểu thức. */
 @Composable
-private fun MyHand(g: HiLoGame, me: Int, tick: Int) {
+private fun MyHand(vm: SessionViewModel, info: GameInfo, g: HiLoGame, me: Int, tick: Int) {
     @Suppress("UNUSED_EXPRESSION") tick
-    if (!g.inHand[me] || g.nums[me].isEmpty() || g.phase == HiLoPhase.BUILD) return
-    val shape = RoundedCornerShape(16.dp)
-    Row(
-        Modifier.fillMaxWidth().clip(shape).background(Brush.verticalGradient(listOf(FeltTop, FeltBottom))).border(1.dp, Color.White.copy(alpha = .16f), shape)
-            .padding(8.dp).horizontalScroll(rememberScrollState()),
-        horizontalArrangement = Arrangement.spacedBy(5.dp), verticalAlignment = Alignment.Bottom,
+    val shape = RoundedCornerShape(18.dp)
+    val turn = g.turn == me && g.phase != HiLoPhase.OVER
+    val name = seatName(vm, info, me)
+    Column(
+        Modifier.fillMaxWidth().clip(shape).background(Brush.verticalGradient(listOf(FeltTop, FeltBottom)))
+            .border(if (turn) 2.dp else 1.dp, if (turn) Color(0xFFFFD54F) else Color.White.copy(alpha = .16f), shape).padding(10.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        for (o in g.ops[me]) HlCard(0, 30.dp, op = o)
-        Spacer(Modifier.width(4.dp))
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            HlCard(g.nums[me][0], 30.dp, Modifier.border(1.5.dp, Color(0xFFCDB8FF), RoundedCornerShape(5.dp)))
-            Text(stringResource(R.string.hl_hidden), color = Color(0xFFCDB8FF), fontSize = 9.sp)
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Avatar(name, me, g.dealer == me, 30.dp)
+            Text(name, Modifier.weight(1f), color = Color.White, style = MaterialTheme.typography.titleSmall, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            if (g.phase == HiLoPhase.BET && g.roundBet[me] > 0) Text(stringResource(R.string.hl_in_pot, g.roundBet[me]), color = Color(0xFFCDB8FF), style = MaterialTheme.typography.labelMedium)
+            statusText(g, me)?.let { Text(it, color = Color(0xFFFFB4A8), style = MaterialTheme.typography.labelMedium) }
+            ChipDot(18.dp)
+            Text("${g.chips[me]}", color = Color(0xFFFFE08A), fontSize = 18.sp, fontWeight = FontWeight.Bold)
         }
-        for (c in g.openCards[me]) when {
-            HiLoGame.isNumber(c) -> HlCard(c, 30.dp)
-            c >= HiLoGame.SQRT_CARD -> HlCard(c, 30.dp, sqrt = true)
-            else -> {}
+        if (g.inHand[me] && g.nums[me].isNotEmpty() && g.phase != HiLoPhase.BUILD) Row(
+            Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.Bottom,
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                HlCard(g.nums[me][0], 40.dp, Modifier.border(2.dp, Color(0xFFCDB8FF), RoundedCornerShape(6.dp)))
+                Text(stringResource(R.string.hl_hidden), color = Color(0xFFCDB8FF), fontSize = 10.sp)
+            }
+            for (c in g.openCards[me]) if (HiLoGame.isNumber(c)) HlCard(c, 40.dp)
+            Spacer(Modifier.width(6.dp))
+            for (o in g.ops[me]) HlCard(0, 32.dp, op = o)
+            repeat(g.sqrtN[me]) { HlCard(0, 32.dp, sqrt = true) }
         }
     }
 }
