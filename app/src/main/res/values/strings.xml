@@ -209,7 +209,6 @@
     <string name="solo_play">Solo</string>
     <string name="sorted_hint">Sorted from easiest and quickest to hardest and longest</string>
     <string name="sound">Sound</string>
-    <string name="sound_effects">Sound effects</string>
     <string name="st_captured">Captured %d</string>
     <string name="st_cells">%d cells</string>
     <string name="st_walls">%d walls</string>

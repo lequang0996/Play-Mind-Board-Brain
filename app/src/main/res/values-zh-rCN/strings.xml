@@ -208,7 +208,6 @@
     <string name="solo_play">单人游戏</string>
     <string name="sorted_hint">按难度和单局时长排序：从简单、短局到困难、长局</string>
     <string name="sound">声音</string>
-    <string name="sound_effects">音效</string>
     <string name="st_captured">提子 %d</string>
     <string name="st_cells">%d 格</string>
     <string name="st_walls">%d 堵墙</string>

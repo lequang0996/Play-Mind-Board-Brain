@@ -244,4 +244,3 @@ time_1h|1 ч
 perk_all_levels|Все уровни компьютера открыты
 sound|Звук
 music|Фоновая музыка
-sound_effects|Звуковые эффекты

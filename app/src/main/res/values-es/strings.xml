@@ -208,7 +208,6 @@
     <string name="solo_play">Un jugador</string>
     <string name="sorted_hint">Ordenados del más fácil y rápido al más difícil y largo</string>
     <string name="sound">Sonido</string>
-    <string name="sound_effects">Efectos de sonido</string>
     <string name="st_captured">Capturas %d</string>
     <string name="st_cells">%d casillas</string>
     <string name="st_walls">%d muros</string>

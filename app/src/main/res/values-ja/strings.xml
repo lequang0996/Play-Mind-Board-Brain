@@ -208,7 +208,6 @@
     <string name="solo_play">ひとりで遊ぶ</string>
     <string name="sorted_hint">遊びやすく短いものから、難しく長いものの順</string>
     <string name="sound">サウンド</string>
-    <string name="sound_effects">効果音</string>
     <string name="st_captured">取り石 %d</string>
     <string name="st_cells">%dマス</string>
     <string name="st_walls">壁 %d枚</string>

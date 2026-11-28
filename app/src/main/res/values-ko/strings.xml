@@ -208,7 +208,6 @@
     <string name="solo_play">혼자 하기</string>
     <string name="sorted_hint">쉽고 짧은 게임부터 어렵고 긴 게임 순</string>
     <string name="sound">사운드</string>
-    <string name="sound_effects">효과음</string>
     <string name="st_captured">따낸 돌 %d</string>
     <string name="st_cells">%d칸</string>
     <string name="st_walls">벽 %d개</string>

@@ -244,4 +244,3 @@ time_1h|1時間
 perk_all_levels|コンピューターの全レベルを解放
 sound|サウンド
 music|BGM
-sound_effects|効果音

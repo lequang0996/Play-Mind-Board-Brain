@@ -146,7 +146,6 @@ fun SettingsScreen(app: PlayMindApp, onBack: () -> Unit, onGuide: () -> Unit, on
             Spacer(Modifier.height(6.dp))
             SectionTitle(stringResource(R.string.sound))
             ToggleRow(Ic.Music, stringResource(R.string.music), app.audio.musicOn) { app.audio.updateMusic(it) }
-            ToggleRow(Ic.Speaker, stringResource(R.string.sound_effects), app.audio.sfxOn) { app.audio.updateSfx(it); if (it) app.audio.play(com.fws.playmind.audio.Sfx.MOVE) }
 
             Spacer(Modifier.height(6.dp))
             SettingsRow(Ic.Bag, stringResource(R.string.shop), onShop)

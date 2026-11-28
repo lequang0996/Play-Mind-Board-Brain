@@ -208,7 +208,6 @@
     <string name="solo_play">Одиночная игра</string>
     <string name="sorted_hint">От самых простых и коротких партий к самым сложным и долгим</string>
     <string name="sound">Звук</string>
-    <string name="sound_effects">Звуковые эффекты</string>
     <string name="st_captured">Взято: %d</string>
     <string name="st_cells">%d клеток</string>
     <string name="st_walls">Стен: %d</string>

@@ -244,4 +244,3 @@ time_1h|1 h
 perk_all_levels|Todos os níveis da máquina desbloqueados
 sound|Som
 music|Música de fundo
-sound_effects|Efeitos sonoros

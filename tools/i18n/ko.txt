@@ -244,4 +244,3 @@ time_1h|1시간
 perk_all_levels|모든 컴퓨터 레벨 즉시 해제
 sound|사운드
 music|배경 음악
-sound_effects|효과음

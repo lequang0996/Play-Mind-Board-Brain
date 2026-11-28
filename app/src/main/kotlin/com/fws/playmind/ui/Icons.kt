@@ -111,7 +111,6 @@ object Ic {
     val Heart = build("heart", true, "M12 20s-7.5-4.6-7.5-10A4.2 4.2 0 0112 7.2 4.2 4.2 0 0119.5 10c0 5.4-7.5 10-7.5 10z")
     val Crosshair = build("crosshair", false, "M12 4v16M4 12h16")
     val Music = build("music", false, "M9 18V5.5l10-2V16", circle(6.5f, 18f, 2.5f), circle(16.5f, 16f, 2.5f))
-    val Speaker = build("speaker", false, "M4 9.5h3.5L12 5.5v13l-4.5-4H4z", "M15.5 9a4 4 0 010 6M18 6.5a7.5 7.5 0 010 11")
     val Home = build("home", false, "M4 11l8-6.5 8 6.5", "M6 9.5V19a1 1 0 001 1h3.5v-5h3v5H17a1 1 0 001-1V9.5")
     val Menu = build("menu", false, "M4.5 7h15M4.5 12h15M4.5 17h9")
     /** Hai điện thoại kết nối trực tiếp (Bluetooth / Wi-Fi) - chơi gần nhau. */

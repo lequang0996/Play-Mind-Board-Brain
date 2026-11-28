@@ -244,4 +244,3 @@ time_1h|1 giờ
 perk_all_levels|Mở khóa ngay mọi cấp độ máy
 sound|Âm thanh
 music|Nhạc nền
-sound_effects|Hiệu ứng âm thanh

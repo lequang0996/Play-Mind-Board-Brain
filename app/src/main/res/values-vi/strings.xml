@@ -208,7 +208,6 @@
     <string name="solo_play">Chơi một mình</string>
     <string name="sorted_hint">Xếp từ dễ chơi, ván ngắn đến khó chơi, ván dài</string>
     <string name="sound">Âm thanh</string>
-    <string name="sound_effects">Hiệu ứng âm thanh</string>
     <string name="st_captured">Bắt %d quân</string>
     <string name="st_cells">%d ô</string>
     <string name="st_walls">%d tường</string>
