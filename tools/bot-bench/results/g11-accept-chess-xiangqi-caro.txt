@@ -1,0 +1,35 @@
+# date: 2026-11-28
+# note: Nghiệm thu 7 cấp cờ vua, cờ tướng, caro (caro: nhiễu rộng cho Trung bình và Dễ) với cấu hình đã chốt trong BotLevels.kt (6 cặp kề, 5 cặp cách hai cấp). Cờ vua dùng trọng số chess-t2.
+chess A=6 B=5 ms=2000 n=216  W/D/L=160/35/21  S=0.822 [0.778,0.865]  elo=-  first=0.80 second=0.84  plies~173  {'CHECKMATE': 167, 'FIFTY': 12, 'MATERIAL': 21, 'REPETITION': 14, 'STALEMATE': 2}  ci
+chess A=5 B=4 ms=2000 n=204  W/D/L=131/14/59  S=0.676 [0.615,0.738]  elo=128  first=0.75 second=0.60  plies~152  {'CHECKMATE': 170, 'FIFTY': 5, 'MATERIAL': 9, 'REPETITION': 20}  ci
+chess A=4 B=3 ms=2000 n=204  W/D/L=132/18/54  S=0.691 [0.631,0.751]  elo=140  first=0.69 second=0.69  plies~138  {'CHECKMATE': 165, 'FIFTY': 15, 'MATERIAL': 3, 'REPETITION': 21}  ci
+chess A=3 B=2 ms=2000 n=204  W/D/L=167/3/34  S=0.826 [0.774,0.877]  elo=-  first=0.83 second=0.82  plies~109  {'CHECKMATE': 182, 'FIFTY': 1, 'MATERIAL': 1, 'REPETITION': 19, 'STALEMATE': 1}  ci
+chess A=2 B=1 ms=2000 n=204  W/D/L=185/8/11  S=0.926 [0.893,0.960]  elo=-  first=0.94 second=0.92  plies~96  {'CHECKMATE': 185, 'FIFTY': 1, 'REPETITION': 11, 'STALEMATE': 7}  ci
+chess A=1 B=0 ms=2000 n=408  W/D/L=383/23/2  S=0.967 [0.954,0.980]  elo=-  first=0.96 second=0.97  plies~70  {'CHECKMATE': 383, 'REPETITION': 2, 'STALEMATE': 23}  ci
+chess A=6 B=4 ms=2000 n=108  W/D/L=101/5/2  S=0.958 [0.926,0.990]  elo=-  first=0.96 second=0.95  plies~155  {'CHECKMATE': 98, 'FIFTY': 1, 'MATERIAL': 4, 'REPETITION': 5}  ci
+chess A=5 B=3 ms=2000 n=102  W/D/L=85/10/7  S=0.882 [0.827,0.937]  elo=-  first=0.86 second=0.90  plies~130  {'CHECKMATE': 87, 'FIFTY': 6, 'MATERIAL': 4, 'REPETITION': 5}  ci
+chess A=4 B=2 ms=2000 n=102  W/D/L=101/0/1  S=0.990 [0.971,1.009]  elo=-  first=0.98 second=1.00  plies~88  {'CHECKMATE': 93, 'REPETITION': 9}  ci
+chess A=3 B=1 ms=2000 n=102  W/D/L=100/1/1  S=0.985 [0.964,1.007]  elo=-  first=0.99 second=0.98  plies~83  {'CHECKMATE': 94, 'FIFTY': 1, 'REPETITION': 7}  ci
+chess A=2 B=0 ms=2000 n=102  W/D/L=100/1/1  S=0.985 [0.964,1.007]  elo=-  first=1.00 second=0.97  plies~57  {'CHECKMATE': 97, 'REPETITION': 4, 'STALEMATE': 1}  ci
+xiangqi A=6 B=5 ms=2000 n=216  W/D/L=177/27/12  S=0.882 [0.846,0.918]  elo=-  first=0.89 second=0.87  plies~154  {'CHECKMATE': 113, 'FIFTY': 27, 'NOMOVES': 51, 'REPETITION': 25}  ci
+xiangqi A=5 B=4 ms=2000 n=204  W/D/L=137/13/54  S=0.703 [0.643,0.764]  elo=150  first=0.73 second=0.68  plies~138  {'CHECKMATE': 123, 'FIFTY': 13, 'NOMOVES': 37, 'REPETITION': 31}  ci
+xiangqi A=4 B=3 ms=2000 n=204  W/D/L=109/11/84  S=0.561 [0.495,0.628]  elo=43  first=0.58 second=0.54  plies~132  {'CHECKMATE': 128, 'FIFTY': 11, 'NOMOVES': 16, 'REPETITION': 49}  ci
+xiangqi A=3 B=2 ms=2000 n=204  W/D/L=171/2/31  S=0.843 [0.794,0.893]  elo=-  first=0.90 second=0.79  plies~100  {'CHECKMATE': 139, 'FIFTY': 2, 'NOMOVES': 20, 'REPETITION': 43}  ci
+xiangqi A=2 B=1 ms=2000 n=204  W/D/L=177/3/24  S=0.875 [0.830,0.920]  elo=-  first=0.89 second=0.86  plies~99  {'CHECKMATE': 158, 'FIFTY': 3, 'NOMOVES': 16, 'REPETITION': 27}  ci
+xiangqi A=1 B=0 ms=2000 n=408  W/D/L=406/0/2  S=0.995 [0.988,1.002]  elo=-  first=1.00 second=1.00  plies~80  {'CHECKMATE': 367, 'NOMOVES': 30, 'REPETITION': 11}  ci
+xiangqi A=6 B=4 ms=2000 n=108  W/D/L=98/7/3  S=0.940 [0.902,0.978]  elo=-  first=0.95 second=0.93  plies~137  {'CHECKMATE': 60, 'FIFTY': 7, 'NOMOVES': 22, 'REPETITION': 19}  ci
+xiangqi A=5 B=3 ms=2000 n=102  W/D/L=77/4/21  S=0.775 [0.695,0.854]  elo=214  first=0.79 second=0.75  plies~125  {'CHECKMATE': 65, 'FIFTY': 4, 'NOMOVES': 12, 'REPETITION': 21}  ci
+xiangqi A=4 B=2 ms=2000 n=102  W/D/L=94/2/6  S=0.931 [0.884,0.979]  elo=-  first=0.92 second=0.94  plies~96  {'CHECKMATE': 79, 'FIFTY': 2, 'NOMOVES': 2, 'REPETITION': 19}  ci
+xiangqi A=3 B=1 ms=2000 n=102  W/D/L=99/0/3  S=0.971 [0.938,1.004]  elo=-  first=0.96 second=0.98  plies~76  {'CHECKMATE': 78, 'NOMOVES': 7, 'REPETITION': 17}  ci
+xiangqi A=2 B=0 ms=2000 n=102  W/D/L=101/0/1  S=0.990 [0.971,1.009]  elo=-  first=1.00 second=0.98  plies~56  {'CHECKMATE': 74, 'NOMOVES': 7, 'REPETITION': 21}  ci
+caro A=6 B=5 ms=2000 n=216  W/D/L=166/0/50  S=0.769 [0.712,0.825]  elo=208  first=0.90 second=0.64  plies~40  {'FIVE': 216}  ci
+caro A=5 B=4 ms=2000 n=204  W/D/L=147/0/57  S=0.721 [0.659,0.782]  elo=165  first=0.85 second=0.59  plies~42  {'FIVE': 204}  ci
+caro A=4 B=3 ms=2000 n=204  W/D/L=166/0/38  S=0.814 [0.760,0.867]  elo=-  first=0.90 second=0.73  plies~38  {'FIVE': 204}  ci
+caro A=3 B=2 ms=2000 n=204  W/D/L=163/0/41  S=0.799 [0.744,0.854]  elo=240  first=0.89 second=0.71  plies~37  {'FIVE': 204}  ci
+caro A=2 B=1 ms=2000 n=204  W/D/L=182/0/22  S=0.892 [0.849,0.935]  elo=-  first=0.89 second=0.89  plies~35  {'FIVE': 204}  ci
+caro A=1 B=0 ms=2000 n=408  W/D/L=384/0/24  S=0.941 [0.918,0.964]  elo=-  first=0.95 second=0.94  plies~18  {'FIVE': 408}  ci
+caro A=6 B=4 ms=2000 n=108  W/D/L=105/0/3  S=0.972 [0.941,1.003]  elo=-  first=1.00 second=0.94  plies~33  {'FIVE': 108}  ci
+caro A=5 B=3 ms=2000 n=102  W/D/L=89/0/13  S=0.873 [0.808,0.938]  elo=-  first=0.92 second=0.82  plies~37  {'FIVE': 102}  ci
+caro A=4 B=2 ms=2000 n=102  W/D/L=98/0/4  S=0.961 [0.923,0.999]  elo=-  first=0.98 second=0.94  plies~34  {'FIVE': 102}  ci
+caro A=3 B=1 ms=2000 n=102  W/D/L=101/0/1  S=0.990 [0.971,1.009]  elo=-  first=0.98 second=1.00  plies~27  {'FIVE': 102}  ci
+caro A=2 B=0 ms=2000 n=102  W/D/L=102/0/0  S=1.000 [1.000,1.000]  elo=-  first=1.00 second=1.00  plies~17  {'FIVE': 102}  ci

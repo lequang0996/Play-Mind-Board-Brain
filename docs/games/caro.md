@@ -21,12 +21,12 @@ Theo mẫu BOT_GUIDE mục 12.2. Sinh bởi `tools/bot-bench/make_profiles.py`; 
 
 | Cấp | Cấu hình |
 |---|---|
-| Dễ | độ sâu 1; nhiễu p = 0.45, δ = 3_000; VCF tắt |
-| Trung bình | độ sâu 2; nhiễu p = 0.25, δ = 1_500; VCF tắt |
-| Khá | độ sâu 4; nhiễu p = 0.10, δ = 600; VCF tới 5 |
-| Giỏi | 8_000 nút; nhiễu p = 0.03, δ = 200; VCF tới 12 |
-| Cao thủ | 25_000 nút; VCF tới 24 |
-| Thách đấu | 70_000 nút; VCF tới 24 |
+| Dễ | độ sâu 1; nhiễu p = 0.50, δ = 20_000; VCF tắt |
+| Trung bình | độ sâu 1; nhiễu p = 0.15, δ = 20_000; VCF tắt |
+| Khá | độ sâu 1; nhiễu p = 0.10, δ = 600; VCF tới 3 |
+| Giỏi | 250 nút; nhiễu p = 0.03, δ = 200; VCF tới 12 |
+| Cao thủ | 1_000 nút; VCF tới 24 |
+| Thách đấu | 4_000 nút; VCF tới 24 |
 | Siêu việt | toàn lực, thời gian botMillis; VCF tới 24 |
 
 ## Kết quả 6 cặp kề (đo sơ bộ, CHƯA nghiệm thu)

@@ -21,17 +21,26 @@ Theo mẫu BOT_GUIDE mục 12.2. Sinh bởi `tools/bot-bench/make_profiles.py`; 
 
 | Cấp | Cấu hình |
 |---|---|
-| Dễ | độ sâu 1; nhiễu p = 0.50, δ = 150 |
-| Trung bình | độ sâu 3; nhiễu p = 0.30, δ = 80 |
-| Khá | độ sâu 5; nhiễu p = 0.15, δ = 40 |
-| Giỏi | 10_000 nút; nhiễu p = 0.05, δ = 20 |
-| Cao thủ | 40_000 nút |
-| Thách đấu | 120_000 nút |
+| Dễ | độ sâu 1; nhiễu p = 1.0, δ = 500 |
+| Trung bình | độ sâu 1; nhiễu p = 0.60, δ = 200 |
+| Khá | độ sâu 2; nhiễu p = 0.40, δ = 120 |
+| Giỏi | 700 nút; nhiễu p = 0.05, δ = 20 |
+| Cao thủ | 4_000 nút |
+| Thách đấu | 15_000 nút |
 | Siêu việt | toàn lực, thời gian botMillis |
 
 ## Kết quả 6 cặp kề (đo sơ bộ, CHƯA nghiệm thu)
 
-Chưa đo.
+| Cặp | Số ván | Thắng/Hòa/Thua | S | Khoảng tin cậy 95% | Khoảng đạt | Đi trước / đi sau | Kết luận |
+|---|---|---|---|---|---|---|---|
+| Trung bình vs Dễ | 408 | 383/23/2 | 0.967 | 0.95–0.98 | 93%–98% | 0.96 / 0.97 | trong khoảng |
+| Khá vs Trung bình | 204 | 185/8/11 | 0.926 | 0.89–0.96 | 81%–95% | 0.94 / 0.92 | trong khoảng |
+| Giỏi vs Khá | 204 | 167/3/34 | 0.826 | 0.77–0.88 | 85%–96% | 0.83 / 0.82 | thấp hơn khoảng (cấp quá sát nhau) |
+| Cao thủ vs Giỏi | 204 | 132/18/54 | 0.691 | 0.63–0.75 | 64%–88% | 0.69 / 0.69 | trong khoảng |
+| Thách đấu vs Cao thủ | 204 | 131/14/59 | 0.676 | 0.61–0.74 | 64%–88% | 0.75 / 0.60 | trong khoảng |
+| Siêu việt vs Thách đấu | 216 | 160/35/21 | 0.822 | 0.78–0.86 | 76%–93% | 0.80 / 0.84 | trong khoảng |
+
+Siêu việt đo trên máy phát triển ở thời gian botMillis ÷ 4 (mục 3.2, k giả định). Số ván mỗi cặp ít hơn yêu cầu nghiệm thu (200, cặp Trung bình vs Dễ 400).
 
 ## Còn thiếu để nghiệm thu (mục 11.1)
 

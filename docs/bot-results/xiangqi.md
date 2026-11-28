@@ -6,9 +6,9 @@ Sinh tự động bởi `tools/bot-bench/make_reports.py` từ `tools/bot-bench/
 
 | Mục | Giá trị |
 |---|---|
-| Số đợt đo | 2 |
-| Tổng số ván đã đấu | 400 |
-| Cặp kề đạt (kết quả mới nhất) | 1/6 |
+| Số đợt đo | 3 |
+| Tổng số ván đã đấu | 2356 |
+| Cặp kề đạt (kết quả mới nhất) | 3/6 |
 | Nghiệm thu | Chưa đạt (cần đủ 6 cặp kề với đủ số ván, 5 cặp cách hai cấp và đo trên điện thoại thật) |
 
 ## Chỉ số thông minh (PM-Elo ước lượng)
@@ -20,10 +20,10 @@ Neo cấp Dễ = 800 theo thang quy ước của guide (mục 1.2), rồi cộng
 | Dễ | 800 | 800 | (neo) |
 | Trung bình | 1350 | ~1721 | +371 |
 | Khá | 1700 | ~2172 | +472 |
-| Giỏi | 2100 | chưa đo |  |
-| Cao thủ | 2300 | chưa đo |  |
-| Thách đấu | 2500 | chưa đo |  |
-| Siêu việt | 2800 | chưa đo |  |
+| Giỏi | 2100 | ~2462 | +362 |
+| Cao thủ | 2300 | 2505 | +205 |
+| Thách đấu | 2500 | 2654 | +154 |
+| Siêu việt | 2800 | ~3001 | +201 |
 
 ## Kết quả mới nhất từng cặp kề
 
@@ -31,14 +31,27 @@ Neo cấp Dễ = 800 theo thang quy ước của guide (mục 1.2), rồi cộng
 |---|---|---|---|---|---|---|---|---|
 | Trung bình vs Dễ | r2 | 100 (400) | 100/0/0 | 100,0% | 100,0%–100,0% | 93,0%–98,0% | ~+921 (550) | Không đạt (hai cấp quá xa), sơ bộ |
 | Khá vs Trung bình | r2 | 100 (200) | 93/1/6 | 93,5% | 88,7%–98,3% | 81,0%–95,0% | ~+451 (350) | Đạt, sơ bộ |
-| Giỏi vs Khá | | (200) | | | | 85,0%–96,0% | (400) | Chưa đo |
-| Cao thủ vs Giỏi | | (200) | | | | 64,0%–88,0% | (200) | Chưa đo |
-| Thách đấu vs Cao thủ | | (200) | | | | 64,0%–88,0% | (200) | Chưa đo |
-| Siêu việt vs Thách đấu | | (200) | | | | 76,0%–93,0% | (300) | Chưa đo |
+| Giỏi vs Khá | g11-accept-chess-xiangqi-caro | 204 (200) | 171/2/31 | 84,3% | 79,4%–89,3% | 85,0%–96,0% | ~+290 (400) | Cần thêm ván |
+| Cao thủ vs Giỏi | g11-accept-chess-xiangqi-caro | 204 (200) | 109/11/84 | 56,1% | 49,5%–62,8% | 64,0%–88,0% | +43 (200) | Không đạt (hai cấp quá sát) |
+| Thách đấu vs Cao thủ | g11-accept-chess-xiangqi-caro | 204 (200) | 137/13/54 | 70,3% | 64,3%–76,4% | 64,0%–88,0% | +149 (200) | Đạt |
+| Siêu việt vs Thách đấu | g11-accept-chess-xiangqi-caro | 216 (200) | 177/27/12 | 88,2% | 84,6%–91,8% | 76,0%–93,0% | ~+346 (300) | Đạt |
 
 "Sơ bộ" = chưa đủ số ván guide yêu cầu nên kết luận chỉ để tham khảo.
 
 ## Lịch sử các đợt đo
+
+### Đợt g11-accept-chess-xiangqi-caro (2026-11-28)
+
+Nghiệm thu 7 cấp cờ vua, cờ tướng, caro (caro: nhiễu rộng cho Trung bình và Dễ) với cấu hình đã chốt trong BotLevels.kt (6 cặp kề, 5 cặp cách hai cấp). Cờ vua dùng trọng số chess-t2.
+
+| Cặp | Thời gian Siêu việt (PC) | Số ván | Thắng/Hòa/Thua | Tỉ lệ điểm | Đi trước / đi sau | Kết luận |
+|---|---|---|---|---|---|---|
+| Trung bình vs Dễ | 2000 ms | 408 | 406/0/2 | 99,5% | 1.00 / 1.00 | Không đạt (hai cấp quá xa) |
+| Khá vs Trung bình | 2000 ms | 204 | 177/3/24 | 87,5% | 0.89 / 0.86 | Đạt |
+| Giỏi vs Khá | 2000 ms | 204 | 171/2/31 | 84,3% | 0.90 / 0.79 | Cần thêm ván |
+| Cao thủ vs Giỏi | 2000 ms | 204 | 109/11/84 | 56,1% | 0.58 / 0.54 | Không đạt (hai cấp quá sát) |
+| Thách đấu vs Cao thủ | 2000 ms | 204 | 137/13/54 | 70,3% | 0.73 / 0.68 | Đạt |
+| Siêu việt vs Thách đấu | 2000 ms | 216 | 177/27/12 | 88,2% | 0.89 / 0.87 | Đạt |
 
 ### Đợt r1 (2026-11-27)
 

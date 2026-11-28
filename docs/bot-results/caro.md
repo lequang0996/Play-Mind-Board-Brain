@@ -6,8 +6,8 @@ Sinh tự động bởi `tools/bot-bench/make_reports.py` từ `tools/bot-bench/
 
 | Mục | Giá trị |
 |---|---|
-| Số đợt đo | 3 |
-| Tổng số ván đã đấu | 1524 |
+| Số đợt đo | 4 |
+| Tổng số ván đã đấu | 3480 |
 | Cặp kề đạt (kết quả mới nhất) | 1/6 |
 | Nghiệm thu | Chưa đạt (cần đủ 6 cặp kề với đủ số ván, 5 cặp cách hai cấp và đo trên điện thoại thật) |
 
@@ -39,6 +39,19 @@ Neo cấp Dễ = 800 theo thang quy ước của guide (mục 1.2), rồi cộng
 "Sơ bộ" = chưa đủ số ván guide yêu cầu nên kết luận chỉ để tham khảo.
 
 ## Lịch sử các đợt đo
+
+### Đợt g11-accept-chess-xiangqi-caro (2026-11-28)
+
+Nghiệm thu 7 cấp cờ vua, cờ tướng, caro (caro: nhiễu rộng cho Trung bình và Dễ) với cấu hình đã chốt trong BotLevels.kt (6 cặp kề, 5 cặp cách hai cấp). Cờ vua dùng trọng số chess-t2.
+
+| Cặp | Thời gian Siêu việt (PC) | Số ván | Thắng/Hòa/Thua | Tỉ lệ điểm | Đi trước / đi sau | Kết luận |
+|---|---|---|---|---|---|---|
+| Trung bình vs Dễ | 2000 ms | 408 | 384/0/24 | 94,1% | 0.95 / 0.94 | Đạt |
+| Khá vs Trung bình | 2000 ms | 204 | 182/0/22 | 89,2% | 0.89 / 0.89 | Đạt |
+| Giỏi vs Khá | 2000 ms | 204 | 163/0/41 | 79,9% | 0.89 / 0.71 | Cần thêm ván |
+| Cao thủ vs Giỏi | 2000 ms | 204 | 166/0/38 | 81,4% | 0.90 / 0.73 | Đạt |
+| Thách đấu vs Cao thủ | 2000 ms | 204 | 147/0/57 | 72,1% | 0.85 / 0.59 | Đạt |
+| Siêu việt vs Thách đấu | 2000 ms | 216 | 166/0/50 | 76,9% | 0.90 / 0.64 | Đạt |
 
 ### Đợt g9-chess-t2-gauge-chains (2026-11-28)
 
