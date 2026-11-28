@@ -19,15 +19,17 @@ class GoKata(private val level: Int, private val svMs: Long) {
     private val synced = ArrayList<Int>()
     var genmoves = 0; private set
     var genmoveNanos = 0L; private set
+    private val errTail = ArrayDeque<String>()
+    private fun errText() = synchronized(errTail) { errTail.joinToString(" | ") }
 
     init {
         val bin = System.getenv("KATAGO") ?: error("thiếu biến KATAGO")
         val model = System.getenv(if (lv.model == "b6") "KG_B6" else "KG_B10") ?: error("thiếu mạng ${lv.model}")
         val cfg = File.createTempFile("pm-kata-$level-", ".cfg")
         cfg.deleteOnExit()
-        cfg.writeText(KataLevels.configText(lv, 1, (svMs / 1000.0).coerceAtLeast(1.0)))
+        cfg.writeText(KataLevels.configText(lv, 1, (svMs / 1000.0).coerceAtLeast(1.0)).replace("logToStderr = false", "logToStderr = true"))
         proc = ProcessBuilder(bin, "gtp", "-model", model, "-config", cfg.absolutePath).start()
-        Thread({ try { proc.errorStream.bufferedReader().forEachLine { } } catch (_: Exception) {} }, "kg-err").apply { isDaemon = true }.start()
+        Thread({ try { proc.errorStream.bufferedReader().forEachLine { synchronized(errTail) { errTail.addLast(it); if (errTail.size > 12) errTail.removeFirst() } } } catch (_: Exception) {} }, "kg-err").apply { isDaemon = true }.start()
         out = OutputStreamWriter(proc.outputStream); inp = BufferedReader(InputStreamReader(proc.inputStream))
         cmd("boardsize 19"); cmd("komi ${KataLevels.KOMI}")
     }
@@ -36,12 +38,12 @@ class GoKata(private val level: Int, private val svMs: Long) {
         out.write(c); out.write("\n"); out.flush()
         val sb = StringBuilder(); var first: String? = null
         while (true) {
-            val line = inp.readLine() ?: error("KataGo đã thoát khi chạy '$c'")
+            val line = inp.readLine() ?: run { Thread.sleep(300); error("KataGo đã thoát khi chạy '$c': ${errText()}") }
             if (first == null) { if (line.isBlank()) continue; first = line } else if (line.isBlank()) break
             sb.append(line).append('\n')
         }
         val s = sb.toString().trim()
-        check(s.startsWith("=")) { "KataGo lỗi '$c': $s" }
+        check(s.startsWith("=")) { "KataGo lỗi '$c': $s / ${errText()}" }
         return s.substring(1).trim()
     }
 

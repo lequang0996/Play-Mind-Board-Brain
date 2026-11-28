@@ -77,6 +77,18 @@ jobs:
         if: contains(matrix.cmds, 'ladder go ')
         run: |
           sudo apt-get install -y -qq libgomp1 zlib1g >/dev/null || true
+          # thử khởi động: in kết quả thành annotation (đọc được không cần đăng nhập) để biết lỗi nếu có
+          printf 'logToStderr = true
+logSearchInfo = false
+' > kgsmoke.cfg
+          out=$(printf 'version
+boardsize 19
+kata-raw-nn b 0
+quit
+' | timeout 120 kgbin/katago gtp -model kgbin/b6.bin.gz -config kgsmoke.cfg 2>&1 | head -c 1500 | tr '
+' ' ' || true)
+          echo "::warning::KataGo smoke: ${out:0:900}"
+          ldd kgbin/katago | grep -i "not found" && echo "::error::thiếu thư viện" || true
           echo "KATAGO=$PWD/kgbin/katago" >> "$GITHUB_ENV"; echo "KG_B6=$PWD/kgbin/b6.bin.gz" >> "$GITHUB_ENV"; echo "KG_B10=$PWD/kgbin/b10.bin.gz" >> "$GITHUB_ENV"
       - name: Run
         env: { CMDS: "${{ matrix.cmds }}" }
@@ -92,7 +104,7 @@ jobs:
           wait
           mkdir -p part; bad=0
           for f in out-*.txt; do
-            { echo "# job=${{ matrix.job }} shard=${{ matrix.shard }} cpu=$(nproc) $(grep -m1 'model name' /proc/cpuinfo | cut -d: -f2)"; grep -E '^(R|G|TOTAL|# engine) ' "$f"; } > "part/${{ matrix.label }}-$f"
+            { echo "# job=${{ matrix.job }} shard=${{ matrix.shard }} cpu=$(nproc) $(grep -m1 'model name' /proc/cpuinfo | cut -d: -f2)"; grep -E '^(R|G|TOTAL|# engine) ' "$f" || true; } > "part/${{ matrix.label }}-$f"
             if ! grep -q '^TOTAL' "$f"; then
               # lỗi: ghi 15 dòng cuối vào phần kết quả (collect.py chép vào tệp kết quả để đọc được mà không cần đăng nhập)
               echo "::error::lỗi chạy đo"; cat "$f"; bad=1
