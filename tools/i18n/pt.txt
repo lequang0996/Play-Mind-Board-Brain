@@ -204,7 +204,7 @@ winner_is|%s venceu!
 menu|Menu
 other_apps|Mais apps da FWs Studio
 see_more_n|Ver mais (%d)
-sorted_hint|Ordenados do mais fácil e rápido ao mais difícil e longo
+sorted_hint|Ordenado por popularidade: jogos mais originais primeiro. Escolha uma etiqueta para trazer os jogos correspondentes ao topo.
 minutes_n|~%d min
 nearby_card_desc|Por Bluetooth ou Wi-Fi, sem internet
 internet_card_desc|Compartilhe um código de sala ou QR com seu amigo
@@ -288,3 +288,51 @@ tg_lost_text|A figura %1$d não foi concluída em 3 minutos.
 tg_hint|Arraste as peças para a figura cinza. Toque para girar, mantenha pressionado para virar.
 tg_level|Nível
 tg_pieces_n|%d peças por figura
+game_wordblocks|Blocos de palavras
+game_wordblocks_desc|Forme 7 palavras em inglês de um tema com blocos de madeira em 10 minutos.
+guide_wordblocks|Objetivo: em 10 minutos, forme 7 palavras em inglês do tema dado (por exemplo Países: JAPAN, BRAZIL, ...) com blocos de madeira com letras.\n• Os blocos são exatamente as letras das 7 palavras, embaralhadas. Cada bloco pode ser usado uma vez.\n• Toque num bloco para adicionar a letra à palavra atual e toque de novo para removê-la. Apagar remove a última letra e Limpar remove a palavra inteira.\n• Toque em Formar para enviar a palavra. Vale qualquer palavra do tema com pelo menos 3 letras.\n• Se os blocos restantes não formarem mais palavras, toque numa palavra formada para devolver os blocos.\n• Forme as 7 palavras para vencer; se os 10 minutos acabarem você perde e as palavras da resposta aparecem.\n• Dica: procure primeiro letras raras como Q, Z, J e X; geralmente pertencem a uma só palavra.
+wb_theme|Tema: %s
+wb_found|%1$d/%2$d palavras
+wb_tap_hint|Toque nos blocos de madeira para formar uma palavra
+wb_back|Apagar
+wb_clear|Limpar
+wb_submit|Formar
+wb_ok|Correto!
+wb_not_theme|Essa palavra não é do tema
+wb_dup|Você já formou essa palavra
+wb_short|As palavras precisam de pelo menos 3 letras
+wb_won|Concluído!
+wb_won_text|Você formou as 7 palavras em %1$s.
+wb_lost|Tempo esgotado
+wb_lost_text|Palavras da resposta: %1$s
+wb_unfind_hint|Toque numa palavra formada para devolver os blocos.
+wb_theme_countries|Países
+wb_theme_animals|Animais
+wb_theme_fruits|Frutas
+wb_theme_colors|Cores
+wb_theme_sports|Esportes
+wb_theme_jobs|Profissões
+wb_theme_body|Corpo humano
+wb_theme_vegetables|Legumes
+wb_theme_instruments|Instrumentos
+wb_theme_kitchen|Cozinha
+wb_theme_weather|Clima
+wb_theme_clothes|Roupas
+wb_theme_transport|Transporte
+wb_theme_space|Espaço
+wb_theme_cities|Cidades
+tag_all|Todos
+tag_duel|Duelo
+tag_party|Multijogador
+tag_board|Jogo de tabuleiro
+tag_strategy|Estratégia
+tag_classic|Clássico
+tag_words|Palavras
+tag_numbers|Números
+tag_shapes|Formas
+tag_memory|Memória
+tag_daily|Diário
+tag_countdown|Contagem regressiva
+tag_time_short|≤ 10 min
+tag_time_mid|10–20 min
+tag_time_long|> 20 min

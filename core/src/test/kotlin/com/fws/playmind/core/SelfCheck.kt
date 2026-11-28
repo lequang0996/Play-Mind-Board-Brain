@@ -237,6 +237,34 @@ fun main() {
         expect("tangram: de 10 manh ghep dung thi khop", Tangram.coverError(hard[9].pieces.map { it.poly }, hard[9]) < Tangram.SOLVED_ERROR)
     }
 
+    // ── Khối gỗ ghép chữ ──
+    run {
+        val okLists = WordBlocks.THEMES.all { th -> th.words.size >= 25 && th.words.all { Regex("[A-Z]{3,8}").matches(it) } }
+        expect("wordblocks: moi chu de >= 25 tu A-Z 3-8 chu", okLists)
+        val g = WordBlocks.generate(kotlin.random.Random(11), "countries")
+        expect("wordblocks: 7 dap an thuoc chu de, khoi = dung chu cai dap an",
+            g.answers.size == 7 && g.answers.toSet().size == 7 && g.answers.all { it in g.theme.words } &&
+                g.blocks.sorted() == g.answers.joinToString("").toList().sorted())
+        // ghép đúng từng đáp án bằng cách chạm các khối
+        fun spell(w: String) { for (ch in w) { val i = g.blocks.indices.first { !g.used[it] && g.blocks[it] == ch }; g.tap(i) } }
+        spell(g.answers[0])
+        expect("wordblocks: ghep dap an thu nhat", g.submit() == WordBlocksGame.Submit.OK && g.found.size == 1)
+        spell(g.answers[1].take(2)); g.tap(g.current.last())
+        expect("wordblocks: cham lai khoi thi go ra", g.current.size == 1)
+        g.clear()
+        expect("wordblocks: tra tu ve khoi", g.unfind(0) && g.found.isEmpty() && g.used.none { it })
+        val g2 = WordBlocksGame(WordBlocks.theme("countries"), listOf("PERU"), "PERUXYZ".toCharArray())
+        g2.tap(4); g2.tap(5); g2.tap(6)
+        val r1 = g2.submit(); g2.clear(); g2.tap(0); g2.tap(1)
+        val r2 = g2.submit(); g2.tap(2); g2.tap(3)
+        expect("wordblocks: tu ngoai chu de / qua ngan bi tu choi, PERU duoc nhan",
+            r1 == WordBlocksGame.Submit.NOT_IN_THEME && r2 == WordBlocksGame.Submit.TOO_SHORT && g2.submit() == WordBlocksGame.Submit.OK)
+        for (a in g.answers) { spell(a); g.submit() }
+        expect("wordblocks: ghep du 7 tu thi xong, het khoi", g.solved && g.used.all { it })
+        val sizes = (0 until 50).map { WordBlocks.generate(kotlin.random.Random(it)).blocks.size }
+        expect("wordblocks: so khoi trong khoang 21-56", sizes.all { it in 21..56 })
+    }
+
     // ── Cờ caro mù ──
     run {
         val P = BlindCaroGame.Companion

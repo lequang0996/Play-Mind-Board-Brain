@@ -193,7 +193,7 @@ st_walls|%d muros
 store_unavailable|No disponible
 subscribe|Suscribirse
 tag_players|%1$d–%2$d jugadores
-tag_solo|Solitario
+tag_solo|Individual
 turn_of|Turno de %s
 vs_computers_note|Juegas contra %d máquinas.
 wg_hint_dest|Toca una casilla brillante para mover (toca tu ficha otra vez para quedarte).
@@ -204,7 +204,7 @@ winner_is|¡Gana %s!
 menu|Menú
 other_apps|Más apps de FWs Studio
 see_more_n|Ver más (%d)
-sorted_hint|Ordenados del más fácil y rápido al más difícil y largo
+sorted_hint|Ordenado por popularidad: primero los juegos más originales. Elige una etiqueta para subir los juegos que coinciden.
 minutes_n|~%d min
 nearby_card_desc|Por Bluetooth o Wi-Fi, sin internet
 internet_card_desc|Comparte un código de sala o QR con tu amigo
@@ -288,3 +288,51 @@ tg_lost_text|No completaste la figura %1$d en 3 minutos.
 tg_hint|Arrastra las piezas a la figura gris. Toca para girar, mantén pulsado para voltear.
 tg_level|Nivel
 tg_pieces_n|%d piezas por figura
+game_wordblocks|Bloques de palabras
+game_wordblocks_desc|Forma 7 palabras en inglés de un tema con bloques de madera en 10 minutos.
+guide_wordblocks|Objetivo: en 10 minutos, forma 7 palabras en inglés del tema indicado (por ejemplo Países: JAPAN, BRAZIL, ...) con bloques de madera con letras.\n• Los bloques son exactamente las letras de las 7 palabras, mezcladas. Cada bloque se usa una sola vez.\n• Toca un bloque para añadir su letra a la palabra actual y tócalo de nuevo para quitarla. Borrar quita la última letra y Limpiar quita la palabra entera.\n• Pulsa Formar para enviar la palabra. Vale cualquier palabra del tema de al menos 3 letras.\n• Si los bloques restantes ya no forman palabras, toca una palabra formada para devolver sus bloques.\n• Forma las 7 palabras para ganar; si se acaban los 10 minutos pierdes y se muestran las palabras de la solución.\n• Consejo: busca primero letras raras como Q, Z, J y X; suelen pertenecer a una sola palabra.
+wb_theme|Tema: %s
+wb_found|%1$d/%2$d palabras
+wb_tap_hint|Toca los bloques de madera para formar una palabra
+wb_back|Borrar
+wb_clear|Limpiar
+wb_submit|Formar
+wb_ok|¡Correcto!
+wb_not_theme|Esa palabra no es del tema
+wb_dup|Ya formaste esa palabra
+wb_short|Las palabras necesitan al menos 3 letras
+wb_won|¡Completado!
+wb_won_text|Formaste las 7 palabras en %1$s.
+wb_lost|Se acabó el tiempo
+wb_lost_text|Palabras de la solución: %1$s
+wb_unfind_hint|Toca una palabra formada para devolver sus bloques.
+wb_theme_countries|Países
+wb_theme_animals|Animales
+wb_theme_fruits|Frutas
+wb_theme_colors|Colores
+wb_theme_sports|Deportes
+wb_theme_jobs|Profesiones
+wb_theme_body|Cuerpo humano
+wb_theme_vegetables|Verduras
+wb_theme_instruments|Instrumentos
+wb_theme_kitchen|Cocina
+wb_theme_weather|Clima
+wb_theme_clothes|Ropa
+wb_theme_transport|Transporte
+wb_theme_space|Espacio
+wb_theme_cities|Ciudades
+tag_all|Todos
+tag_duel|Duelo
+tag_party|Multijugador
+tag_board|Juego de mesa
+tag_strategy|Estrategia
+tag_classic|Clásico
+tag_words|Palabras
+tag_numbers|Números
+tag_shapes|Formas
+tag_memory|Memoria
+tag_daily|Diario
+tag_countdown|Contrarreloj
+tag_time_short|≤ 10 min
+tag_time_mid|10–20 min
+tag_time_long|> 20 min

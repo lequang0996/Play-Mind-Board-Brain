@@ -318,6 +318,26 @@ GAMES = {
 <ul><li>Chạm một ô rồi chạm số. Bàn phím số cho biết mỗi số còn thiếu bao nhiêu lần.</li>
 <li>Bút chì để ghi chú số có thể điền; Xóa để xóa ô; Hoàn tác để lùi thao tác vừa làm; Gợi ý để điền đúng một ô.</li></ul>
 <h2>Mẹo</h2><ul><li>Vì gợi ý rất ít, hãy bắt đầu ở nơi hàng, cột và khối có nhiều ô đã điền nhất, và dùng ghi chú để theo dõi các số có thể điền.</li></ul>"""),
+"wordblocks": dict(
+  en_name="Word Blocks", vi_name="Khối gỗ ghép chữ",
+  en_intro="A single-player word game: build 7 English words on one theme from shuffled wooden letter blocks within 10 minutes.",
+  vi_intro="Trò chơi chữ một người: ghép 7 từ tiếng Anh cùng chủ đề từ các khối gỗ chữ cái đã xáo trộn trong 10 phút.",
+  en_body="""
+<h2>Rules</h2>
+<ul><li>Each round picks a random theme (countries, animals, fruits, colours, sports, jobs, the human body, vegetables, instruments, kitchen, weather, clothes, transport, space or cities).</li>
+<li>The blocks are exactly the letters of 7 words on that theme, shuffled. Each block can be used once.</li>
+<li>Any English word on the theme with at least 3 letters counts. Build 7 words within 10 minutes to win; otherwise the answer words are shown.</li></ul>
+<h2>Using the app</h2>
+<ul><li>Tap blocks to spell a word, tap a block again to take it back, then press Submit. Tap a word you already built to return its blocks.</li></ul>
+<h2>Tips</h2><ul><li>Start with rare letters such as Q, Z, J and X: they usually belong to a single word.</li></ul>""",
+  vi_body="""
+<h2>Luật</h2>
+<ul><li>Mỗi lượt chọn ngẫu nhiên một chủ đề (quốc gia, con vật, trái cây, màu sắc, thể thao, nghề nghiệp, cơ thể người, rau củ, nhạc cụ, nhà bếp, thời tiết, quần áo, phương tiện, vũ trụ hoặc thành phố).</li>
+<li>Các khối gỗ đúng bằng chữ cái của 7 từ thuộc chủ đề, đã xáo trộn. Mỗi khối chỉ dùng một lần.</li>
+<li>Mọi từ tiếng Anh thuộc chủ đề, dài ít nhất 3 chữ cái, đều được tính. Ghép đủ 7 từ trong 10 phút là thắng; hết giờ thì hiện các từ đáp án.</li></ul>
+<h2>Dùng trong app</h2>
+<ul><li>Chạm các khối để ghép chữ, chạm lại một khối để gỡ, rồi bấm Ghép. Chạm một từ đã ghép để trả các khối về.</li></ul>
+<h2>Mẹo</h2><ul><li>Bắt đầu từ chữ hiếm như Q, Z, J, X: chúng thường chỉ thuộc một từ.</li></ul>"""),
 "tangram": dict(
   en_name="Tangram", vi_name="Xếp hình Tangram",
   en_intro="A single-player shape puzzle with tangram pieces. Seven levels from 4 pieces (Easy) to 10 pieces (Supreme); each round has 10 random shapes and 3 minutes per shape.",
@@ -402,8 +422,8 @@ for gid, g in GAMES.items():
 # ───────────────────────── Trang chủ ─────────────────────────
 index_body = f"""
 <h1>{APP}</h1>
-{bi("<p class='muted'>A collection of board and brain games for Android: Gomoku, Wall Go, Quoridor, Chess, Xiangqi, Go, Sudoku, Magic Square 7×7, Tangram and Blind Gomoku. Every two-or-more-player game has seven computer levels, from Easy to Supreme.</p>",
-    "<p class='muted'>Bộ sưu tập game bàn cờ và trí tuệ cho Android: Cờ caro, Wall Go, Quoridor, Cờ vua, Cờ tướng, Cờ vây, Sudoku, Ma phương 7×7, Xếp hình Tangram và Cờ caro mù. Mọi game từ 2 người trở lên đều có 7 cấp độ máy, từ Dễ đến Siêu việt.</p>")}
+{bi("<p class='muted'>A collection of board and brain games for Android: Gomoku, Wall Go, Quoridor, Chess, Xiangqi, Go, Sudoku, Magic Square 7×7, Tangram, Word Blocks and Blind Gomoku. Every two-or-more-player game has seven computer levels, from Easy to Supreme.</p>",
+    "<p class='muted'>Bộ sưu tập game bàn cờ và trí tuệ cho Android: Cờ caro, Wall Go, Quoridor, Cờ vua, Cờ tướng, Cờ vây, Sudoku, Ma phương 7×7, Xếp hình Tangram, Khối gỗ ghép chữ và Cờ caro mù. Mọi game từ 2 người trở lên đều có 7 cấp độ máy, từ Dễ đến Siêu việt.</p>")}
 <div class="topics"><span style="background:#14937a"><span data-l="en">Puzzle</span><span data-l="vi">Giải đố</span></span><span style="background:#5348c9"><span data-l="en">Intellect</span><span data-l="vi">Trí tuệ</span></span><span style="background:#c27a0a"><span data-l="en">Calculation</span><span data-l="vi">Tính toán</span></span><span style="background:#c93e6b"><span data-l="en">Memory</span><span data-l="vi">Ghi nhớ</span></span></div>
 <h2><span data-l="en">How to play</span><span data-l="vi">Hướng dẫn chơi</span></h2>
 <div class="grid">
@@ -414,6 +434,7 @@ index_body = f"""
 <a href="how-to-play/quoridor.html"><div class="card"><b>Quoridor</b><span class="muted" data-l="en">Race to the far side and block with walls.</span><span class="muted" data-l="vi">Chạy về cạnh đối diện và chặn bằng tường.</span></div></a>
 <a href="how-to-play/wallgo.html"><div class="card"><b>Wall Go</b><span class="muted" data-l="en">Move, build a wall, claim territory.</span><span class="muted" data-l="vi">Đi quân, xây tường, chiếm lãnh thổ.</span></div></a>
 <a href="how-to-play/sudoku.html"><div class="card"><b>Sudoku</b><span class="muted" data-l="en">One given per box, any valid grid wins.</span><span class="muted" data-l="vi">Mỗi khối một gợi ý, điền đúng luật là thắng.</span></div></a>
+<a href="how-to-play/wordblocks.html"><div class="card"><b><span data-l="en">Word Blocks</span><span data-l="vi">Khối gỗ ghép chữ</span></b><span class="muted" data-l="en">7 English words on one theme in 10 minutes.</span><span class="muted" data-l="vi">7 từ tiếng Anh cùng chủ đề trong 10 phút.</span></div></a>
 <a href="how-to-play/tangram.html"><div class="card"><b><span data-l="en">Tangram</span><span data-l="vi">Xếp hình Tangram</span></b><span class="muted" data-l="en">7 levels, 4 to 10 pieces, 10 shapes per round.</span><span class="muted" data-l="vi">7 cấp, 4 đến 10 mảnh, mỗi lượt 10 hình.</span></div></a>
 <a href="how-to-play/blindcaro.html"><div class="card"><b><span data-l="en">Blind Gomoku</span><span data-l="vi">Cờ caro mù</span></b><span class="muted" data-l="en">Shared four-colour stones: remember which are yours.</span><span class="muted" data-l="vi">Quân bốn màu dùng chung: nhớ quân nào của mình.</span></div></a>
 <a href="how-to-play/magic7.html"><div class="card"><b><span data-l="en">Magic Square 7×7</span><span data-l="vi">Ma phương 7×7</span></b><span class="muted" data-l="en">Rows, columns and diagonals all sum to 175. Daily puzzle.</span><span class="muted" data-l="vi">Hàng, cột, đường chéo đều có tổng 175. Mỗi ngày một đề.</span></div></a>

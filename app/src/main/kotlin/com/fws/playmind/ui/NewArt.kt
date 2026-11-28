@@ -82,6 +82,21 @@ fun DrawScope.drawMagicArt(tm: TextMeasurer, ox: Float, oy: Float, s: Float) {
     }
 }
 
+/** Tranh minh hoạ Khối gỗ ghép chữ: tháp khối gỗ chữ cái (như tháp chữ C-O-D-E). */
+fun DrawScope.drawWordBlocksArt(tm: TextMeasurer, ox: Float, oy: Float, s: Float) {
+    val t = s * .30f; val gap = s * .03f
+    val rows = listOf("A", "BC", "XYZ")
+    for ((r, row) in rows.withIndex()) {
+        val w = row.length * t + (row.length - 1) * gap
+        for ((c, ch) in row.withIndex()) {
+            val p = Offset(ox + (s - w) / 2f + c * (t + gap), oy + s * .04f + r * (t + gap))
+            val hi = r == 0
+            drawWoodCell(p, t, tone = if (hi) .4f else 0f)
+            centerText(tm, ch.toString(), p + Offset(t / 2f, t / 2f), t * .58f, if (hi) Color(0xFFC8372D) else Color(0xFF5A2A10))
+        }
+    }
+}
+
 /** Tranh minh hoạ Wall Go: bàn lưới có tường màu và hai quân. */
 fun DrawScope.drawWallGoArt(ox: Float, oy: Float, s: Float) {
     val b = s * .86f; val x0 = ox + s * .07f; val y0 = oy + s * .10f

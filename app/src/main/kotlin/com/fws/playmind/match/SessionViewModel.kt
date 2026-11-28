@@ -20,6 +20,8 @@ import com.fws.playmind.core.MagicStatus
 import com.fws.playmind.core.SudokuGame
 import com.fws.playmind.core.Tangram
 import com.fws.playmind.core.TangramPuzzle
+import com.fws.playmind.core.WordBlocks
+import com.fws.playmind.core.WordBlocksGame
 import com.fws.playmind.core.SudokuLevel
 import com.fws.playmind.core.SudokuStatus
 import com.fws.playmind.core.QuoridorGame
@@ -111,6 +113,11 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
     var tgSolved by mutableStateOf(false); private set
     private var tgJob: Job? = null
     private var tgClock: Job? = null
+    // Khối gỗ ghép chữ: 7 từ cùng chủ đề trong 10 phút
+    var words by mutableStateOf<WordBlocksGame?>(null); private set
+    var wbTick by mutableIntStateOf(0); private set
+    var wbSeconds by mutableIntStateOf(WordBlocks.SECONDS); private set
+    private var wbClock: Job? = null
     /** Đồng hồ nước đi: thời điểm (ms, đồng hồ hệ thống) hết giờ của lượt hiện tại và số giây còn lại để hiển thị. */
     var turnDeadline by mutableStateOf(0L); private set
     var turnSecondsLeft by mutableIntStateOf(0); private set
@@ -238,7 +245,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         val g = game
         val inf = info
         val sd = sudoku
-        if (phase == Phase.PLAYING && inf != null && inf.id == Catalog.TANGRAM_ID) {
+        if (phase == Phase.PLAYING && inf != null && (inf.id == Catalog.TANGRAM_ID || inf.id == Catalog.WORDS_ID)) {
             wallet.finishMatch(inf.id, MatchOutcome.LOSS, true)
         } else if (phase == Phase.PLAYING && sd != null && inf != null && sd.status == SudokuStatus.PLAYING) {
             sd.giveUp()
@@ -273,6 +280,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         sudokuJob?.cancel(); sudokuClock?.cancel(); sudoku = null; sudokuLoading = false; sudokuSeconds = 0; seatNames = emptyList()
         magicClock?.cancel(); saveMagic(); magic = null; magicSeconds = 0
         tgJob?.cancel(); tgClock?.cancel(); tangram = emptyList(); tgIndex = 0; tgSeconds = Tangram.SECONDS_PER_PUZZLE; tgTotal = 0; tgSolved = false
+        wbClock?.cancel(); words = null; wbSeconds = WordBlocks.SECONDS
         inviteCode = ""; replyCode = ""; inviteBusy = false; inviteOpen = false; guestConnected = false
         relayJob?.cancel(); relayJob = null; dropRelayRooms(); relayJoined = false
         rematchAsked = false; oppAskedRematch = false; localEnd = null; remoteEnd = null; finalized = false
@@ -326,7 +334,46 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
     fun startSolo(): Boolean = when (info?.id) {
         Catalog.MAGIC_ID -> startMagic()
         Catalog.TANGRAM_ID -> startTangram()
+        Catalog.WORDS_ID -> startWords()
         else -> startSudoku(Catalog.SUDOKU_LEVEL)
+    }
+
+    // ───────────────────────── Khối gỗ ghép chữ ─────────────────────────
+    /** Một lượt: chủ đề ngẫu nhiên, khối gỗ đúng bằng chữ cái của 7 từ; ghép đủ 7 từ trong 10 phút là thắng, hết giờ là thua. */
+    fun startWords(): Boolean {
+        val inf = info ?: return false
+        if (!wallet.canStart(inf.id)) { notice = Notice.NOT_ENOUGH; return false }
+        teardown()
+        if (wallet.startMatch(inf.id) == StartCost.INSUFFICIENT) { notice = Notice.NOT_ENOUGH; return false }
+        mode = Mode.SOLO; reward = null; finalized = false; unlockedNow = -1
+        words = WordBlocks.generate(Random(System.nanoTime()))
+        phase = Phase.PLAYING; tick++; wbTick++
+        val my = ++epoch
+        wbClock = viewModelScope.launch {
+            while (true) {
+                delay(1000)
+                if (my != epoch || phase != Phase.PLAYING) break
+                wbSeconds--
+                if (wbSeconds <= 0) { phase = Phase.OVER; settle(MatchOutcome.LOSS, true); break }
+            }
+        }
+        return true
+    }
+
+    /** Sửa từ đang ghép (chạm khối, xóa chữ, xóa hết, trả từ). */
+    fun wordsEdit(f: (WordBlocksGame) -> Unit) {
+        val g = words ?: return
+        if (phase != Phase.PLAYING) return
+        f(g); wbTick++
+    }
+
+    /** Ghép từ đang chọn; đủ 7 từ thì thắng. */
+    fun wordsSubmit(): WordBlocksGame.Submit {
+        val g = words ?: return WordBlocksGame.Submit.EMPTY
+        if (phase != Phase.PLAYING) return WordBlocksGame.Submit.EMPTY
+        val r = g.submit(); wbTick++
+        if (g.solved) { phase = Phase.OVER; wbClock?.cancel(); settle(MatchOutcome.WIN, true) }
+        return r
     }
 
     // ───────────────────────── Xếp hình 7 mảnh ─────────────────────────
@@ -1094,7 +1141,7 @@ class SessionViewModel(app: Application) : AndroidViewModel(app) {
         val inf = info ?: return
         if (phase != Phase.OVER) return
         if (mode == Mode.LOCAL) { beginMatch(); return }
-        if (mode == Mode.SOLO) { when (inf.id) { Catalog.MAGIC_ID -> {}; Catalog.TANGRAM_ID -> startTangram(); else -> startSudoku(option) }; return }
+        if (mode == Mode.SOLO) { when (inf.id) { Catalog.MAGIC_ID -> {}; Catalog.TANGRAM_ID -> startTangram(); Catalog.WORDS_ID -> startWords(); else -> startSudoku(option) }; return }
         if (multi) return                                       // phòng nhiều người: về phòng chờ để tạo ván mới
         if (!wallet.canStart(inf.id, roomMode)) { notice = Notice.NOT_ENOUGH; return }
         if (isOnline && opp == Opp.HUMAN) { rematchAsked = true; transport?.send(Proto.REMATCH); maybeRematch() }

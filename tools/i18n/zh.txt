@@ -204,7 +204,7 @@ winner_is|%s 获胜！
 menu|菜单
 other_apps|FWs Studio 的更多应用
 see_more_n|查看更多（%d）
-sorted_hint|按难度和单局时长排序：从简单、短局到困难、长局
+sorted_hint|按热门程度排序：小众游戏在前。选择标签可把相关游戏排到最前。
 minutes_n|约 %d 分钟
 nearby_card_desc|通过蓝牙或 Wi-Fi，无需网络
 internet_card_desc|与朋友交换房间码或二维码
@@ -288,3 +288,51 @@ tg_lost_text|图形 %1$d 未在 3 分钟内完成。
 tg_hint|把拼板拖到灰色图形上。点击旋转，长按翻面。
 tg_level|等级
 tg_pieces_n|每个图形 %d 块
+game_wordblocks|木块拼词
+game_wordblocks_desc|用字母木块在 10 分钟内拼出同一主题的 7 个英文单词。
+guide_wordblocks|目标：在 10 分钟内，用字母木块拼出给定主题的 7 个英文单词（例如国家：JAPAN、BRAZIL……）。\n• 木块恰好是这 7 个单词的全部字母，已打乱。每块只能用一次。\n• 点击木块把字母加到当前单词，再点一次可移除。删除键去掉最后一个字母，清空键去掉整个单词。\n• 按“拼写”提交单词。任何属于该主题、至少 3 个字母的单词都算。\n• 如果剩下的木块拼不出单词，点击已拼好的单词可把木块退回。\n• 拼出全部 7 个单词即获胜；10 分钟用完即失败，并显示答案单词。\n• 窍门：先找 Q、Z、J、X 等少见字母，它们通常只属于一个单词。
+wb_theme|主题：%s
+wb_found|已拼 %1$d/%2$d 个单词
+wb_tap_hint|点击木块拼写单词
+wb_back|删除
+wb_clear|清空
+wb_submit|拼写
+wb_ok|正确！
+wb_not_theme|这个单词不属于该主题
+wb_dup|这个单词已经拼过了
+wb_short|单词至少需要 3 个字母
+wb_won|完成！
+wb_won_text|你在 %1$s 内拼出了全部 7 个单词。
+wb_lost|时间到
+wb_lost_text|答案单词：%1$s
+wb_unfind_hint|点击已拼好的单词可退回木块。
+wb_theme_countries|国家
+wb_theme_animals|动物
+wb_theme_fruits|水果
+wb_theme_colors|颜色
+wb_theme_sports|运动
+wb_theme_jobs|职业
+wb_theme_body|人体
+wb_theme_vegetables|蔬菜
+wb_theme_instruments|乐器
+wb_theme_kitchen|厨房
+wb_theme_weather|天气
+wb_theme_clothes|服装
+wb_theme_transport|交通工具
+wb_theme_space|太空
+wb_theme_cities|城市
+tag_all|全部
+tag_duel|对战
+tag_party|多人
+tag_board|棋盘游戏
+tag_strategy|策略
+tag_classic|经典
+tag_words|词汇
+tag_numbers|数字
+tag_shapes|图形
+tag_memory|记忆
+tag_daily|每日
+tag_countdown|倒计时
+tag_time_short|≤ 10 分钟
+tag_time_mid|10–20 分钟
+tag_time_long|> 20 分钟

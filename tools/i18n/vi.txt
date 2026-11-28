@@ -193,7 +193,7 @@ st_walls|%d tường
 store_unavailable|Chưa khả dụng
 subscribe|Đăng ký
 tag_players|%1$d–%2$d người
-tag_solo|1 người
+tag_solo|Một người
 turn_of|Lượt của %s
 vs_computers_note|Bạn đấu với %d máy.
 wg_hint_dest|Chạm ô đang sáng để đi (chạm lại quân để đứng yên).
@@ -204,7 +204,7 @@ winner_is|%s thắng!
 menu|Menu
 other_apps|Ứng dụng khác của FWs Studio
 see_more_n|Xem thêm (%d)
-sorted_hint|Xếp từ dễ chơi, ván ngắn đến khó chơi, ván dài
+sorted_hint|Xếp theo độ phổ biến: game độc lạ lên trước. Chọn thẻ để đưa game phù hợp lên đầu.
 minutes_n|~%d phút
 nearby_card_desc|Qua Bluetooth hoặc Wi-Fi, không cần internet
 internet_card_desc|Trao đổi mã phòng hoặc QR với bạn
@@ -288,3 +288,51 @@ tg_lost_text|Bạn chưa ghép xong hình %1$d trong 3 phút.
 tg_hint|Kéo mảnh vào hình xám. Chạm để xoay, nhấn giữ để lật.
 tg_level|Cấp độ
 tg_pieces_n|%d mảnh mỗi hình
+game_wordblocks|Khối gỗ ghép chữ
+game_wordblocks_desc|Ghép 7 từ tiếng Anh cùng chủ đề từ các khối gỗ chữ cái trong 10 phút.
+guide_wordblocks|Mục tiêu: trong 10 phút, ghép đủ 7 từ tiếng Anh thuộc chủ đề được cho (ví dụ Quốc gia: JAPAN, BRAZIL, ...) từ các khối gỗ chữ cái.\n• Các khối gỗ đúng bằng chữ cái của 7 từ, đã xáo trộn. Mỗi khối chỉ dùng một lần.\n• Chạm khối để thêm chữ vào từ đang ghép, chạm lại để gỡ chữ đó. Nút Xóa chữ bỏ chữ cuối, Xóa hết bỏ cả từ.\n• Bấm Ghép để nộp từ. Mọi từ thuộc chủ đề, dài ít nhất 3 chữ cái, đều được tính.\n• Nếu thấy các khối còn lại không ghép được nữa, chạm một từ đã ghép để trả các khối về.\n• Ghép đủ 7 từ là thắng; hết 10 phút là thua và hiện các từ đáp án.\n• Mẹo: tìm chữ hiếm như Q, Z, J, X trước, chúng thường chỉ thuộc một từ.
+wb_theme|Chủ đề: %s
+wb_found|Đã ghép %1$d/%2$d từ
+wb_tap_hint|Chạm các khối gỗ để ghép chữ
+wb_back|Xóa chữ
+wb_clear|Xóa hết
+wb_submit|Ghép
+wb_ok|Chính xác!
+wb_not_theme|Từ này không thuộc chủ đề
+wb_dup|Bạn đã ghép từ này rồi
+wb_short|Từ cần ít nhất 3 chữ cái
+wb_won|Hoàn thành!
+wb_won_text|Bạn đã ghép đủ 7 từ trong %1$s.
+wb_lost|Hết giờ
+wb_lost_text|Các từ đáp án: %1$s
+wb_unfind_hint|Chạm một từ đã ghép để trả các khối về.
+wb_theme_countries|Quốc gia
+wb_theme_animals|Con vật
+wb_theme_fruits|Trái cây
+wb_theme_colors|Màu sắc
+wb_theme_sports|Thể thao
+wb_theme_jobs|Nghề nghiệp
+wb_theme_body|Cơ thể người
+wb_theme_vegetables|Rau củ
+wb_theme_instruments|Nhạc cụ
+wb_theme_kitchen|Nhà bếp
+wb_theme_weather|Thời tiết
+wb_theme_clothes|Quần áo
+wb_theme_transport|Phương tiện
+wb_theme_space|Vũ trụ
+wb_theme_cities|Thành phố
+tag_all|Tất cả
+tag_duel|Đối kháng
+tag_party|Nhiều người
+tag_board|Cờ bàn
+tag_strategy|Chiến thuật
+tag_classic|Cổ điển
+tag_words|Từ vựng
+tag_numbers|Con số
+tag_shapes|Hình khối
+tag_memory|Ghi nhớ
+tag_daily|Mỗi ngày
+tag_countdown|Đếm ngược
+tag_time_short|≤ 10 phút
+tag_time_mid|10–20 phút
+tag_time_long|> 20 phút

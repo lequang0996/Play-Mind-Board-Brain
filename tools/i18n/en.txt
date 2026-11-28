@@ -204,7 +204,7 @@ winner_is|%s wins!
 menu|Menu
 other_apps|More apps from FWs Studio
 see_more_n|See more (%d)
-sorted_hint|Sorted from easiest and quickest to hardest and longest
+sorted_hint|Sorted by popularity: unusual games first. Pick a tag to bring matching games to the top.
 minutes_n|~%d min
 nearby_card_desc|Bluetooth or Wi-Fi, no internet needed
 internet_card_desc|Share a room code or QR with your friend
@@ -288,3 +288,51 @@ tg_lost_text|Shape %1$d was not finished within 3 minutes.
 tg_hint|Drag pieces onto the grey shape. Tap to rotate, long-press to flip.
 tg_level|Level
 tg_pieces_n|%d pieces per shape
+game_wordblocks|Word Blocks
+game_wordblocks_desc|Build 7 English words on one theme from wooden letter blocks in 10 minutes.
+guide_wordblocks|Goal: within 10 minutes, build 7 English words on the given theme (for example Countries: JAPAN, BRAZIL, ...) from wooden letter blocks.\n• The blocks are exactly the letters of the 7 words, shuffled. Each block can be used once.\n• Tap a block to add its letter to the current word, tap it again to remove it. Delete removes the last letter, Clear removes the whole word.\n• Press Submit to enter the word. Any word on the theme with at least 3 letters counts.\n• If the remaining blocks no longer form words, tap a word you built to return its blocks.\n• Build all 7 words to win; when the 10 minutes run out you lose and the answer words are shown.\n• Tip: look for rare letters such as Q, Z, J and X first; they usually belong to only one word.
+wb_theme|Theme: %s
+wb_found|%1$d/%2$d words
+wb_tap_hint|Tap the wooden blocks to spell a word
+wb_back|Delete
+wb_clear|Clear
+wb_submit|Submit
+wb_ok|Correct!
+wb_not_theme|That word is not on the theme
+wb_dup|You already built that word
+wb_short|Words need at least 3 letters
+wb_won|Complete!
+wb_won_text|You built all 7 words in %1$s.
+wb_lost|Time's up
+wb_lost_text|Answer words: %1$s
+wb_unfind_hint|Tap a word you built to return its blocks.
+wb_theme_countries|Countries
+wb_theme_animals|Animals
+wb_theme_fruits|Fruits
+wb_theme_colors|Colours
+wb_theme_sports|Sports
+wb_theme_jobs|Jobs
+wb_theme_body|Human body
+wb_theme_vegetables|Vegetables
+wb_theme_instruments|Instruments
+wb_theme_kitchen|Kitchen
+wb_theme_weather|Weather
+wb_theme_clothes|Clothes
+wb_theme_transport|Transport
+wb_theme_space|Space
+wb_theme_cities|Cities
+tag_all|All
+tag_duel|Versus
+tag_party|Multiplayer
+tag_board|Board game
+tag_strategy|Strategy
+tag_classic|Classic
+tag_words|Words
+tag_numbers|Numbers
+tag_shapes|Shapes
+tag_memory|Memory
+tag_daily|Daily
+tag_countdown|Countdown
+tag_time_short|≤ 10 min
+tag_time_mid|10–20 min
+tag_time_long|> 20 min

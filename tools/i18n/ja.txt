@@ -193,7 +193,7 @@ st_walls|壁 %d枚
 store_unavailable|利用できません
 subscribe|登録する
 tag_players|%1$d〜%2$d人
-tag_solo|1人用
+tag_solo|ひとり
 turn_of|%sの番
 vs_computers_note|コンピューター%d体と対戦します。
 wg_hint_dest|光るマスをタップして移動（自分の駒をもう一度タップで動かない）。
@@ -204,7 +204,7 @@ winner_is|%sの勝ち！
 menu|メニュー
 other_apps|FWs Studio の他のアプリ
 see_more_n|もっと見る（%d）
-sorted_hint|遊びやすく短いものから、難しく長いものの順
+sorted_hint|人気順：珍しいゲームが先頭。タグを選ぶと該当ゲームが上に来ます。
 minutes_n|約%d分
 nearby_card_desc|Bluetooth または Wi-Fi、通信不要
 internet_card_desc|ルームコードまたはQRを友達と交換
@@ -288,3 +288,51 @@ tg_lost_text|%1$d 問目を 3 分以内に完成できませんでした。
 tg_hint|ピースを灰色の形へドラッグ。タップで回転、長押しで裏返し。
 tg_level|レベル
 tg_pieces_n|1 問 %d ピース
+game_wordblocks|ワードブロック
+game_wordblocks_desc|木の文字ブロックで、同じテーマの英単語 7 つを 10 分以内に作ろう。
+guide_wordblocks|目標：10 分以内に、木の文字ブロックを使って指定テーマの英単語を 7 つ作ります（例：国 → JAPAN、BRAZIL など）。\n• ブロックは 7 単語の文字をちょうど集めてシャッフルしたものです。各ブロックは 1 回だけ使えます。\n• ブロックをタップすると作成中の単語に文字が加わり、もう一度タップすると外れます。「1 文字消す」で最後の文字、「全部消す」で単語全体を消します。\n• 「決定」で単語を提出します。テーマに合う 3 文字以上の単語ならどれでも正解です。\n• 残りのブロックで単語が作れなくなったら、作った単語をタップしてブロックを戻せます。\n• 7 単語すべて作れば勝ち。10 分が過ぎると負けで、答えの単語が表示されます。\n• コツ：Q・Z・J・X などの珍しい文字から探しましょう。たいてい 1 つの単語にしか入りません。
+wb_theme|テーマ：%s
+wb_found|%1$d/%2$d 語
+wb_tap_hint|木のブロックをタップして単語を作ろう
+wb_back|1 文字消す
+wb_clear|全部消す
+wb_submit|決定
+wb_ok|正解！
+wb_not_theme|その単語はテーマに合いません
+wb_dup|その単語はもう作りました
+wb_short|単語は 3 文字以上必要です
+wb_won|クリア！
+wb_won_text|%1$s で 7 単語すべてを作りました。
+wb_lost|時間切れ
+wb_lost_text|答えの単語：%1$s
+wb_unfind_hint|作った単語をタップするとブロックが戻ります。
+wb_theme_countries|国
+wb_theme_animals|動物
+wb_theme_fruits|果物
+wb_theme_colors|色
+wb_theme_sports|スポーツ
+wb_theme_jobs|職業
+wb_theme_body|人体
+wb_theme_vegetables|野菜
+wb_theme_instruments|楽器
+wb_theme_kitchen|キッチン
+wb_theme_weather|天気
+wb_theme_clothes|服
+wb_theme_transport|乗り物
+wb_theme_space|宇宙
+wb_theme_cities|都市
+tag_all|すべて
+tag_duel|対戦
+tag_party|多人数
+tag_board|ボードゲーム
+tag_strategy|戦略
+tag_classic|定番
+tag_words|ことば
+tag_numbers|数字
+tag_shapes|図形
+tag_memory|記憶
+tag_daily|毎日
+tag_countdown|制限時間
+tag_time_short|10 分以内
+tag_time_mid|10〜20 分
+tag_time_long|20 分超
