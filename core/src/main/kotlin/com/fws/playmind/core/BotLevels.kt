@@ -83,7 +83,7 @@ object BotLevels {
     // ít Elo) và nhiễu delta >= 200 làm bot đi lòng vòng rồi thua vì lặp thế. Nhiễu trên tường còn hại hơn không đặt tường,
     // nên các cấp dưới kết hợp "quên tường" với nhiễu nhỏ (delta 100) trên nước đi quân. Đo 11/2026, mục 13.
     val quoridor = listOf(
-        d(1, 0.95, 100, 100), d(1, 0.70, 100, 100), d(1, 0.42, 100, 100),
+        d(1, 0.97, 100, 100), d(1, 0.75, 100, 100), d(1, 0.50, 100, 100),
         d(1, extra = 80), d(1, 0.20, 150, 40), n(300), top(),
     )
 
