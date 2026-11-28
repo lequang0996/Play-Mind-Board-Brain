@@ -6,8 +6,8 @@ Sinh tự động bởi `tools/bot-bench/make_reports.py` từ `tools/bot-bench/
 
 | Mục | Giá trị |
 |---|---|
-| Số đợt đo | 10 |
-| Tổng số ván đã đấu | 7688 |
+| Số đợt đo | 11 |
+| Tổng số ván đã đấu | 8096 |
 | Cặp kề đạt (kết quả mới nhất) | 6/6 |
 | Nghiệm thu | Đạt (cần đủ 6 cặp kề với đủ số ván, 5 cặp cách hai cấp và đo trên điện thoại thật) |
 
@@ -98,4 +98,11 @@ Nghiệm thu cờ vua với trọng số chess-t4 (+24 Elo so với chess-t3 ở
 | Cao thủ vs Giỏi | 2000 ms | 204 | 135/25/44 | 72,3% | 0.73 / 0.72 | Đạt |
 | Thách đấu vs Cao thủ | 2000 ms | 204 | 125/25/54 | 67,4% | 0.69 / 0.66 | Đạt |
 | Siêu việt vs Thách đấu | 2000 ms | 216 | 159/30/27 | 80,6% | 0.83 / 0.78 | Đạt |
+
+### Đợt g18-chess-kha-de (2026-11-28)
+
+Cờ vua Khá vs Dễ đo lại với 400 ván (g16: 95,6% trên 102 ván, g13: 98,0%).
+
+| Cặp | Thời gian Siêu việt (PC) | Số ván | Thắng/Hòa/Thua | Tỉ lệ điểm | Đi trước / đi sau | Kết luận |
+|---|---|---|---|---|---|---|
 
