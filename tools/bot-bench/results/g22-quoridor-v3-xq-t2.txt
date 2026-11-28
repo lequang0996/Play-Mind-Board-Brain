@@ -1,0 +1,14 @@
+# date: 2026-11-28
+# note: Quoridor engine mới (ww110, wz150, prog20: +340 Elo ở 1 s/nước so với engine cũ): đo lại cả chuỗi 6 cặp kề + 5 cặp cách hai cấp. Cờ tướng: A/B trọng số Texel xiangqi-t2 so với trọng số đang dùng (t1).
+quoridor A=6 B=5 ms=2000 n=216  W/D/L=191/0/25  S=0.884 [0.841,0.927]  elo=-  first=0.88 second=0.89  plies~62  {'NONE': 216}  ci
+quoridor A=5 B=4 ms=2000 n=216  W/D/L=199/0/17  S=0.921 [0.885,0.957]  elo=-  first=0.93 second=0.92  plies~59  {'NONE': 216}  ci
+quoridor A=4 B=3 ms=2000 n=216  W/D/L=169/0/47  S=0.782 [0.727,0.838]  elo=222  first=0.80 second=0.77  plies~52  {'NONE': 216}  ci
+quoridor A=3 B=2 ms=2000 n=204  W/D/L=181/0/23  S=0.887 [0.844,0.931]  elo=-  first=0.89 second=0.88  plies~37  {'NONE': 204}  ci
+quoridor A=2 B=1 ms=2000 n=204  W/D/L=180/0/24  S=0.882 [0.838,0.927]  elo=-  first=0.89 second=0.87  plies~47  {'NONE': 204}  ci
+quoridor A=1 B=0 ms=2000 n=204  W/D/L=192/0/12  S=0.941 [0.909,0.974]  elo=-  first=0.89 second=0.99  plies~65  {'NONE': 204}  ci
+quoridor A=6 B=4 ms=2000 n=108  W/D/L=100/0/8  S=0.926 [0.876,0.976]  elo=-  first=0.91 second=0.94  plies~51  {'NONE': 108}  ci
+quoridor A=5 B=3 ms=2000 n=108  W/D/L=102/0/6  S=0.944 [0.901,0.988]  elo=-  first=0.93 second=0.96  plies~49  {'NONE': 108}  ci
+quoridor A=4 B=2 ms=2000 n=102  W/D/L=100/0/2  S=0.980 [0.953,1.007]  elo=-  first=0.96 second=1.00  plies~42  {'NONE': 102}  ci
+quoridor A=3 B=1 ms=2000 n=102  W/D/L=102/0/0  S=1.000 [1.000,1.000]  elo=-  first=1.00 second=1.00  plies~35  {'NONE': 102}  ci
+quoridor A=2 B=0 ms=2000 n=102  W/D/L=101/0/1  S=0.990 [0.971,1.009]  elo=-  first=0.98 second=1.00  plies~48  {'NONE': 102}  ci
+exp ab xiangqi new@w:xiangqi-t2-vs-new ms=1000 props=- n=408  W/D/L=197/49/162  S=0.543 [0.498,0.588]  elo=+30  plies~158  {'CHECKMATE': 231, 'FIFTY': 31, 'NOMOVES': 49, 'NONE': 18, 'REPETITION': 79}

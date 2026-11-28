@@ -6,8 +6,8 @@ Sinh tự động bởi `tools/bot-bench/make_reports.py` từ `tools/bot-bench/
 
 | Mục | Giá trị |
 |---|---|
-| Số đợt đo | 6 |
-| Tổng số ván đã đấu | 7758 |
+| Số đợt đo | 7 |
+| Tổng số ván đã đấu | 9540 |
 | Cặp kề đạt (kết quả mới nhất) | 2/6 |
 | Nghiệm thu | Chưa đạt (cần đủ 6 cặp kề với đủ số ván, 5 cặp cách hai cấp và đo trên điện thoại thật) |
 
@@ -86,6 +86,19 @@ Quoridor: Khá p0.5, Trung bình p0.75, Dễ p0.97 (sau g15: Giỏi-Khá 83,8%).
 | Trung bình vs Dễ | 2000 ms | 402 | 386/0/16 | 96,0% | 0.94 / 0.99 | Đạt |
 | Khá vs Trung bình | 2000 ms | 204 | 179/0/25 | 87,7% | 0.84 / 0.91 | Đạt |
 | Giỏi vs Khá | 2000 ms | 204 | 189/0/15 | 92,6% | 0.93 / 0.92 | Đạt |
+
+### Đợt g22-quoridor-v3-xq-t2 (2026-11-28)
+
+Quoridor engine mới (ww110, wz150, prog20: +340 Elo ở 1 s/nước so với engine cũ): đo lại cả chuỗi 6 cặp kề + 5 cặp cách hai cấp. Cờ tướng: A/B trọng số Texel xiangqi-t2 so với trọng số đang dùng (t1).
+
+| Cặp | Thời gian Siêu việt (PC) | Số ván | Thắng/Hòa/Thua | Tỉ lệ điểm | Đi trước / đi sau | Kết luận |
+|---|---|---|---|---|---|---|
+| Trung bình vs Dễ | 2000 ms | 204 | 192/0/12 | 94,1% | 0.89 / 0.99 | Đạt, sơ bộ |
+| Khá vs Trung bình | 2000 ms | 204 | 180/0/24 | 88,2% | 0.89 / 0.87 | Đạt |
+| Giỏi vs Khá | 2000 ms | 204 | 181/0/23 | 88,7% | 0.89 / 0.88 | Đạt |
+| Cao thủ vs Giỏi | 2000 ms | 216 | 169/0/47 | 78,2% | 0.80 / 0.77 | Đạt |
+| Thách đấu vs Cao thủ | 2000 ms | 216 | 199/0/17 | 92,1% | 0.93 / 0.92 | Không đạt (hai cấp quá xa) |
+| Siêu việt vs Thách đấu | 2000 ms | 216 | 191/0/25 | 88,4% | 0.88 / 0.89 | Đạt |
 
 ### Đợt r1 (2026-11-27)
 
